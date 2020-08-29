@@ -25,7 +25,7 @@ app/Http/Controllers/vendor/skymeyer/vatsimphp/app/logs/pilots.log
 
 .vscode/
 
-error_log
+*/error_log
 
 .idea/
 
@@ -34,3 +34,5 @@ error_log
 training.yaml
 
 */404.blade.php
+
+.editorconfig

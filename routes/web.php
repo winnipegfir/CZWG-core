@@ -71,8 +71,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::group(['middleware' => 'staff'], function () {
         Route::prefix('admin')->group(function () {
             //Image Uploads
-            Route::get('/imageupload', 'Users\ImageUploadController@imageUpload')->middleware('staff')->name('dashboard.image');
-            Route::post('/imageupload', 'Users\ImageUploadController@imageUploadPost')->middleware('staff')->name('dashboard.image.upload');
+            Route::get('/imageupload', 'Publications\ImageUploadController@imageUpload')->middleware('staff')->name('dashboard.image');
+            Route::post('/imageupload', 'Publications\ImageUploadController@imageUploadPost')->middleware('staff')->name('dashboard.image.upload');
             //View Feedback
             Route::get('/feedback', 'Feedback\FeedbackController@index')->name('staff.feedback.index');
             Route::get('/feedback/controller/{id}', 'Feedback\FeedbackController@viewControllerFeedback')->name('staff.feedback.controller');

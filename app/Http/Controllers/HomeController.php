@@ -49,7 +49,7 @@ class HomeController extends Controller
 
         //News
         $news = News::where('visible', true)->get()->sortByDesc('published')->take(3);
-        
+
         //Event
         $nextEvent = Event::where('start_timestamp', '>', Carbon::now())->get()->sortByDesc('id')->first();
 
@@ -77,7 +77,7 @@ class HomeController extends Controller
             array_push($topControllersArray, $top);
         }
 
-        return view('index', compact('finalPositions', 'news', 'vatcanNews', 'certifications', 'carouselItems', 'planes', 'nextEvent', 'metar', 'topControllersArray'));
+        return view('index', compact('finalPositions', 'news', 'planes', 'nextEvent', 'topControllersArray'));
     }
 
     public function map()
