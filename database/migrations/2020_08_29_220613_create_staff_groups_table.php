@@ -18,7 +18,7 @@ class CreateStaffGroupsTable extends Migration
             $table->string('name');
             $table->string('slug');
             $table->text('description')->nullable();
-            $table->tinyInteger('can_receive_tickets')->default(1);
+            $table->tinyInteger('can_recieve_tickets')->default(1);
             $table->timestamps();
         });
     }
