@@ -13,7 +13,7 @@ class UpdateUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table) {
             $table->unsignedInteger('id')->unique();
             $table->string('fname');
             $table->string('lname');
