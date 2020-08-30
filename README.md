@@ -28,10 +28,11 @@ Guidelines for submitting a **pull request**:
 
 1. Follow the steps found at https://laravel.com/docs to install the latest Laravel version.
 2. Clone our GitHub repository, and place it over your laravel installation.
-3. Rename `.env.example` to `.env` and fill required fields. The VATSIM connect demo URI is already placed in there. Get your ID and put your redirect URI into http://auth-dev.vatsim.net.
-4. Run `php artisan migrate --seed` (runs database migrations and seeds with required rows).
-5. Run `php artisan key:generate`.
-6. Login with one of the accounts found at http://wiki.vatsim.net/connect.
-7. Give that new account in the `users` table a `permissions` value of `5`.
+3. Run `composer install`
+4. Rename `.env.example` to `.env` and fill required fields. The VATSIM connect demo URI is already placed in there. Get your ID and put your redirect URI into http://auth-dev.vatsim.net.
+5. Run `php artisan migrate --seed` (runs database migrations and seeds with required rows).
+6. Run `php artisan key:generate`.
+7. Login with one of the accounts found at http://wiki.vatsim.net/connect.
+8. Give that new account in the `users` table a `permissions` value of `5`.
 
 

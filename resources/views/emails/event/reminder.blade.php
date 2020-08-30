@@ -5,9 +5,9 @@
 @stop
 
 @section('message-content')
-
+    24 hours until {{$event->name}}!
 @stop
 
 @section('footer-reason-line')
-    as you signed up for Winnipeg FIR event notifications.
+    you signed up for Winnipeg FIR event notifications.
 @endsection

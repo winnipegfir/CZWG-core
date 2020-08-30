@@ -2,10 +2,12 @@
 
 namespace App\Notifications\events;
 
+use App\Models\Events\Event;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use App\Models\Events\EventConfirm;
 
 class EventReminder extends Notification
 {
@@ -16,9 +18,10 @@ class EventReminder extends Notification
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($event, $application)
     {
-        //
+        $this->event = $event;
+        $this->application = $application;
     }
 
     /**
@@ -40,10 +43,8 @@ class EventReminder extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+        return (new MailMessage)->view('emails.event.reminder',  ['event' => $this->event, 'positions' => EventConfirm::where(['user_id' => $this->application->user_id, 'event_id' => $this->event->id])->get()])
+            ->subject('24 Hour Reminder for '.$this->event->name);
     }
 
     /**

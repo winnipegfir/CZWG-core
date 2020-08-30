@@ -72,7 +72,7 @@ class EventController extends Controller
             AuditLogEntry::insert(Auth::user(), 'Webhook failed', Auth::user(), 0);
         }
 
-        if (Auth::user()->gdpr_subsribed_emails == 1) {
+        if (Auth::user()->gdpr_subscribed_emails == 1) {
             $application->user->notify(new EventSignup($application, $event_id = $request->get('event_id')));
         }
         return redirect()->back()->with('success', 'Thanks for applying! If you need to make any adjustments to your application, please <a href="https://site-dev.winnipegfir.ca/staff">contact the Events Coordinator.');

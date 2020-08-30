@@ -4,6 +4,8 @@ namespace App\Console;
 
 use App\AuditLogEntry;
 use App\Models\AtcTraining\RosterMember;
+use App\Models\Events\Event;
+use App\Models\Events\EventConfirm;
 use App\Models\Network\MonitoredPosition;
 use App\Models\Network\SessionLog;
 use App\Models\Users\User;
@@ -15,8 +17,7 @@ use App\Models\Settings\CoreSettings;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\Network\OneMonthInactivityReminder;
-use RestCord\DiscordClient;
-use GuzzleHttp\Client;
+use App\Notifications\events\EventReminder;
 use Illuminate\Support\Str;
 
 class Kernel extends ConsoleKernel
@@ -182,6 +183,31 @@ class Kernel extends ConsoleKernel
                                 }
                                 // Save roster member
                                 $roster_member->save();
+                            }
+                        }
+                    }
+                }
+            }
+
+            //Event Reminders
+
+            $events = Event::all();
+            foreach($events as $e) {
+                //Check if there is less than 24 hours before the event
+                if (Carbon::now()->diffInHours($e->start_timestamp, false) < 24 && Carbon::now()->diffInHours($e->start_timestamp, false) > 0) {
+                    $confirmedControllers = EventConfirm::where('event_id', $e->id)->get();
+                    foreach ($confirmedControllers as $c) {
+                        //If they are subscribed to event notifications
+                        if ($c->user->gdpr_subscribed_emails == 1) {
+                            //No email yet... send one!
+                            if ($c->email_sent != 1) {
+                                $c->user->notify(new EventReminder($e, $c));
+                                //Make sure they only get one email
+                                $confirms = EventConfirm::where(['user_id' => $c->user_id, 'event_id' => $e->id])->get();
+                                foreach ($confirms as $con) {
+                                    $con->email_sent = 1;
+                                    $con->save();
+                                }
                             }
                         }
                     }
