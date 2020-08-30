@@ -14,7 +14,7 @@ class UpdateUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->unsignedInteger('id')->unique();
+            $table->unsignedInteger('id')->unique()->change();
             $table->string('fname');
             $table->string('lname');
             $table->string('email')->change();
@@ -35,8 +35,7 @@ class UpdateUsersTable extends Migration
             $table->integer('init')->default(0);
             $table->string('avatar')->default('/img/default-profile-img.jpg');
             $table->longText('bio')->nullable();
-            $table->rememberToken();
-            $table->timestamps();
+            $table->rememberToken()->change();
             $table->tinyInteger('display_cid_only')->default(0);
             $table->string('display_fname')->nullable();
             $table->tinyInteger('display_last_name')->default(1);
@@ -55,6 +54,9 @@ class UpdateUsersTable extends Migration
      */
     public function down()
     {
-
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('email_verified_at');
+            $table->dropColumn('password');
+        });
     }
 }

@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder
             'id' => 1,
             'fname' => 'System',
             'lname' => 'User',
+            'name' => 'System User',
             'email' => 'no-reply@ganderoceanic.com',
             'permissions' => 4,
             'display_fname' => 'System',
