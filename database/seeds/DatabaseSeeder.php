@@ -43,7 +43,7 @@ class DatabaseSeeder extends Seeder
             'fname' => 'Roster',
             'lname' => 'Placeholder',
             'name' => 'Roster Placeholder',
-            'email' => 'no-reply@info.com',
+            'email' => 'no-reply1@info.com',
             'permissions' => 1,
             'display_fname' => 'Roster',
         ]);
@@ -59,7 +59,8 @@ class DatabaseSeeder extends Seeder
         DB::table('staff_member')->insert([
             'group' => 'exec',
            'position' => 'FIR Chief',
-           'group_id' => 1,
+            'user_id' => 1,
+            'group_id' => 1,
            'description' => 'Head of Winnipeg’s day-to-day operations, manages all staff in the FIR, and keeps VATCAN updated with Winnipeg. Also is currently the interim Events Coordinator.',
             'email' => 'chief@info.com',
             'shortform' => 'firchief',
