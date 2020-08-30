@@ -125,7 +125,7 @@ class LoginController extends Controller
             'state' => $state,
         ]);
 
-        return redirect("https://auth.vatsim.net/oauth/authorize?".$query);
+        return redirect(config('connect.url')."/oauth/authorize?".$query);
     }
 
     public function validateConnectLogin(Request $request)
@@ -133,7 +133,7 @@ class LoginController extends Controller
         //Written by Harrison Scott
         $http = new Client;
         try {
-        $response = $http->post('https://auth.vatsim.net/oauth/token', [
+        $response = $http->post(config('connect.url').'/oauth/token', [
             'form_params' => [
                 'grant_type' => 'authorization_code',
                 'client_id' => config('connect.client_id'),
@@ -147,7 +147,7 @@ class LoginController extends Controller
         }
         session()->put('token', json_decode((string) $response->getBody(), true));
         try{
-        $response = (new \GuzzleHttp\Client)->get('https://auth.vatsim.net/api/user', [
+        $response = (new \GuzzleHttp\Client)->get(config('connect.url').'/api/user', [
             'headers' => [
                 'Accept' => 'application/json',
                 'Authorization' => 'Bearer '.session()->get('token.access_token')
