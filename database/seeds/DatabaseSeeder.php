@@ -33,7 +33,7 @@ class DatabaseSeeder extends Seeder
             'fname' => 'System',
             'lname' => 'User',
             'name' => 'System User',
-            'email' => 'no-reply@ganderoceanic.com',
+            'email' => 'no-reply@info.com',
             'permissions' => 4,
             'display_fname' => 'System',
         ]);
@@ -42,7 +42,8 @@ class DatabaseSeeder extends Seeder
             'id' => 2,
             'fname' => 'Roster',
             'lname' => 'Placeholder',
-            'email' => 'no-reply@ganderoceanic.com',
+            'name' => 'Roster Placeholder',
+            'email' => 'no-reply@info.com',
             'permissions' => 1,
             'display_fname' => 'Roster',
         ]);
@@ -51,23 +52,7 @@ class DatabaseSeeder extends Seeder
             'id' => 1,
             'name' => 'Executive Team',
             'slug' => 'executive',
-            'description' => 'CZQO\'s executive team oversees FIR operations',
-            'can_receive_tickets' => true,
-        ]);
-
-        DB::table('staff_groups')->insert([
-            'id' => 2,
-            'name' => 'Web Team',
-            'slug' => 'web',
-            'description' => 'Team responsible for developing CZQO\'s web precense',
-            'can_receive_tickets' => true,
-        ]);
-
-        DB::table('staff_groups')->insert([
-            'id' => 3,
-            'name' => 'Marketing Team',
-            'slug' => 'marketing',
-            'description' => 'Team responsible for marketing CZQO',
+            'description' => 'CZWG\'s executive team oversees FIR operations',
             'can_receive_tickets' => true,
         ]);
 
@@ -75,50 +60,10 @@ class DatabaseSeeder extends Seeder
             'group' => 'exec',
            'position' => 'FIR Chief',
            'group_id' => 1,
-           'description' => 'Ensures that CZQO is running optimally. In charge of day to day operations',
-            'email' => 'chief@czqo.vatcan.ca',
+           'description' => 'Head of Winnipeg’s day-to-day operations, manages all staff in the FIR, and keeps VATCAN updated with Winnipeg. Also is currently the interim Events Coordinator.',
+            'email' => 'chief@info.com',
             'shortform' => 'firchief',
         ]);
 
-        DB::table('staff_member')->insert([
-            'group' => 'exec',
-
-            'position' => 'Deputy FIR Chief',
-            'group_id' => 1,
-            'description' => 'Assistant to the FIR Chief.',
-            'email' => 'deputy@czqo.vatcan.ca',
-            'shortform' => 'dfirchief',
-        ]);
-
-        DB::table('staff_member')->insert([
-            'group' => 'exec',
-
-            'position' => 'Chief Instructor',
-            'group_id' => 1,
-            'description' => 'Manages the CZQO training program, including the talented team of Gander instructors.',
-            'email' => 'training@czqo.vatcan.ca',
-            'shortform' => 'cinstructor',
-        ]);
-
-        DB::table('staff_member')->insert([
-            'group' => 'exec',
-
-            'position' => 'Events and Marketing Director',
-            'group_id' => 1,
-            'description' => 'Devises awesome events for the Gander Oceanic FIR',
-            'email' => 'events@czqo.vatcan.ca',
-            'shortform' => 'eventsmarketing',
-        ]);
-
-        DB::table('staff_member')->insert([
-            'group' => 'exec',
-
-            'position' => 'Facility Engineer',
-            'group_id' => 1,
-            'description' => 'Manages and develops sector files and the Euroscope package for Gander Oceanic.',
-            'email' => 'engineer@czqo.vatcan.ca',
-            'shortform' => 'fengineer',
-
-        ]);
     }
 }
