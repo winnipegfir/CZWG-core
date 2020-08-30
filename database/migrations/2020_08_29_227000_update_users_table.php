@@ -17,7 +17,7 @@ class CreateUsersTable extends Migration
             $table->unsignedInteger('id')->unique();
             $table->string('fname');
             $table->string('lname');
-            $table->string('email');
+            $table->string('email')->change();
             $table->integer('rating_id')->default(null)->nullable();
             $table->string('rating_short')->default(null)->nullable();
             $table->string('rating_long')->default(null)->nullable();
@@ -55,6 +55,6 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+
     }
 }
