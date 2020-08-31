@@ -14,7 +14,6 @@
 
 //ALL Public Views
 Route::get('/', 'HomeController@view')->name('index');
-Route::get('/map', 'HomeController@map')->name('map');
 Route::get('/airports', 'HomeController@airports')->name('airports');
 Route::get('/nate', 'HomeController@nate')->name('nate');
 Route::get('/roster', 'AtcTraining\RosterController@showPublic')->name('roster.public');
@@ -28,7 +27,6 @@ Route::get('/meetingminutes', 'News\NewsController@minutesIndex')->name('meeting
 Route::get('/bookings', 'ControllerBookings\ControllerBookingsController@indexPublic')->name('controllerbookings.public');
 Route::view('/privacy', 'privacy')->name('privacy');
 Route::view('/changelog', 'changelog')->name('changelog');
-Route::view('/emailtest', 'emails.announcement');
 Route::get('/events', 'Events\EventController@index')->name('events.index');
 Route::get('/events/{slug}', 'Events\EventController@viewEvent')->name('events.view');
 Route::view('/about', 'about')->name('about');
@@ -36,9 +34,6 @@ Route::view('/branding', 'branding')->name('branding');
 Route::get('/news/{id}', 'News\NewsController@viewArticlePublic')->name('news.articlepublic')->where('id', '[0-9]+');
 Route::get('/news/{slug}', 'News\NewsController@viewArticlePublic')->name('news.articlepublic');
 Route::get('/news', 'News\NewsController@viewAllPublic')->name('news');
-Route::post('/instructor/add', 'AtcTraining\TrainingController@assignStudent')->middleware('staff')->name('instructor.student.add');
-Route::post('/instructor/add', 'AtcTraining\TrainingController@newStudent')->middleware('staff')->name('instructor.student.add.new');
-Route::get('/instructor/delete/{id}', 'AtcTraining\TrainingController@deleteStudent')->middleware('staff')->name('instructor.student.delete');
 
 
 //Authentication
