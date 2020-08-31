@@ -147,7 +147,7 @@
                         <li class="nav-item  {{ Request::is('staff') ? 'active' : '' }}">
                             <a class="nav-link" href="{{url ('/staff')}}" aria-expanded="false">Staff</a>
                         </li>
-                        <li class="nav-item dropdown {{ Request::is('feedback') || Request::is('meetingminutes') ? 'active' : ''}}">
+                        <li class="nav-item dropdown {{ Request::is('feedback') ? 'active' : ''}}">
                             <a class="nav-link" href="{{url ('/feedback')}}" aria-expanded="false">Feedback</a>
                         </li>
                     </ul>

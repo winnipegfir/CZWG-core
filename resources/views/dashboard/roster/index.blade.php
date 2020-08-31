@@ -79,7 +79,7 @@
                             <tr>
                                 <th scope="row"><b>{{$controller->cid}}</b></th>
                                 <td align="center">
-                                    {{$controller->full_name}}
+                                    {{$controller->user->fullName('FL')}}
                                 </td>
                                 <td align="center">
                                     {{$controller->user->rating_short}}
@@ -194,7 +194,7 @@
                                                         Deletion</h5><br>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <p style="font-weight:bold">Name: {{$controller->full_name}}</p>
+                                                    <p style="font-weight:bold">Name: {{$controller->user->fullName('FL')}}</p>
                                                     <p style="font-weight:bold">CID: {{$controller->cid}}</p>
                                                     <h3 style="font-weight:bold; color:red">Are you sure you want to do
                                                         this?</h3>
@@ -272,7 +272,7 @@
                         <tr>
                             <th scope="row"><b>{{$visitcontroller->cid}}</b></th>
                             <td align="center">
-                                {{$visitcontroller->full_name}}
+                                {{$visitcontroller->user->fullName('FL')}}
                             </td>
                             <td align="center">
                                 {{$visitcontroller->user->rating_short}}
@@ -383,7 +383,7 @@
                                                     <br>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <p style="font-weight:bold">Name: {{$visitcontroller->full_name}}</p>
+                                                    <p style="font-weight:bold">Name: {{$visitcontroller->user->fullName('FL')}}</p>
                                                     <p style="font-weight:bold">CID: {{$visitcontroller->cid}}</p>
                                                     <h3 style="font-weight:bold; color:red">Are you sure you want to do
                                                         this?</h3>
