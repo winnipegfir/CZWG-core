@@ -278,6 +278,8 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/staff/{id}', 'Users\StaffListController@editStaffMember')->name('settings.staff.editmember');
             Route::post('/staff/a/add', 'Users\StaffListController@addStaffMember')->name('settings.staff.addmember');
             Route::post('/staff/{id}/delete', 'Users\StaffListController@deleteStaffMember')->name('settings.staff.deletemember');
+            Route::get('/banner', 'Settings\SettingsController@banner')->name('settings.banner');
+            Route::post('/banner', 'Settings\SettingsController@bannerEdit')->name('settings.banner.edit');
 
         });
 

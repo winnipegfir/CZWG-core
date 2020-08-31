@@ -132,4 +132,43 @@ class SettingsController extends Controller
         $image->delete();
         return redirect()->back()->with('info', 'Image deleted.');
     }
+
+    public function banner() {
+        $banner = CoreSettings::find(1);
+
+        return view('admin.settings.banner', compact('banner'));
+    }
+
+    public function bannerEdit(Request $request) {
+        //Get the settings
+        $coreSettings = CoreSettings::find(1);
+
+        if ($request->get('bannerMessage') == null) {
+            $bannerMessage = "";
+        } else {
+            $bannerMessage = $request->get('bannerMessage');
+        }
+
+        if ($request->get('bannerLink') == null) {
+            $bannerLink = "";
+        } else {
+            $bannerLink = $request->get('bannerLink');
+        }
+
+        if ($request->get('bannerMode') == null) {
+            $bannerMode = "";
+            $bannerMessage = "";
+            $bannerLink = "";
+        } else {
+            $bannerMode = $request->get('bannerMode');
+        }
+
+        $coreSettings->banner = $bannerMessage;
+        $coreSettings->bannerMode = $bannerMode;
+        $coreSettings->bannerLink = $bannerLink;
+        $coreSettings->save();
+
+
+        return back()->withSuccess('The banner has been updated!');
+    }
 }
