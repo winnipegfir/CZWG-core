@@ -18,10 +18,10 @@ class EventReminder extends Notification
      *
      * @return void
      */
-    public function __construct($event, $application)
+    public function __construct($event, $positions)
     {
         $this->event = $event;
-        $this->application = $application;
+        $this->positions = $positions;
     }
 
     /**
@@ -43,7 +43,7 @@ class EventReminder extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)->view('emails.event.reminder',  ['event' => $this->event, 'positions' => EventConfirm::where(['user_id' => $this->application->user_id, 'event_id' => $this->event->id])->get()])
+        return (new MailMessage)->view('emails.event.reminder',  ['event' => $this->event, 'positions' => $this->positions->sortBy('start_timestamp')])
             ->subject('24 Hour Reminder for '.$this->event->name);
     }
 

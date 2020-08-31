@@ -195,18 +195,24 @@ class Kernel extends ConsoleKernel
             foreach($events as $e) {
                 //Check if there is less than 24 hours before the event
                 if (Carbon::now()->diffInHours($e->start_timestamp, false) < 24 && Carbon::now()->diffInHours($e->start_timestamp, false) > 0) {
-                    $confirmedControllers = EventConfirm::where('event_id', $e->id)->get();
-                    foreach ($confirmedControllers as $c) {
-                        //If they are subscribed to event notifications
-                        if ($c->user->gdpr_subscribed_emails == 1) {
-                            //No email yet... send one!
-                            if ($c->email_sent != 1) {
-                                $c->user->notify(new EventReminder($e, $c));
-                                //Make sure they only get one email
-                                $confirms = EventConfirm::where(['user_id' => $c->user_id, 'event_id' => $e->id])->get();
-                                foreach ($confirms as $con) {
-                                    $con->email_sent = 1;
-                                    $con->save();
+                    $rosterMembers = RosterMember::all();
+                    foreach ($rosterMembers as $r) {
+                        //Check if they are in our event
+                        $inEvent = EventConfirm::where(['user_id' => $r->cid, 'event_id' => $e->id])->first();
+                        if($inEvent) {
+                            //Do they need a reminder email?
+                            if($inEvent->email_sent == 0) {
+                                //Do they want emails?
+                                if($r->user->gdpr_subscribed_emails == 1) {
+                                    //They want/need an email, send er bud!
+                                    $positions = EventConfirm::where(['user_id' => $r->cid, 'event_id' => $e->id])->get();
+                                    $r->user->notify(new EventReminder($e, $positions));
+
+                                    //Set our DB flag so they don't get another
+                                    foreach($positions as $p) {
+                                        $p->email_sent = 1;
+                                        $p->save();
+                                    }
                                 }
                             }
                         }
@@ -215,242 +221,6 @@ class Kernel extends ConsoleKernel
             }
             file_get_contents(env('CRON_MINUTE_URL'));
         })->everyMinute();
-
-        /* ActivityBot logging
-        $schedule->call(function () {
-            // Because OOMs
-            DB::connection()->disableQueryLog();
-
-            // Load VATSIM data
-            $vatsim = new \Vatsimphp\VatsimData();
-            $vatsim->loadData();
-
-            // Active lists
-            $onlineControllers = array();
-
-            // Getters
-            $positions = MonitoredPosition::all();
-            $controllers = $vatsim->getControllers();
-            $staffOnly = false;
-
-            // Scan controller list for callsign relationships
-            foreach ($controllers as $controller) {
-
-                // Flag to set to true if position was in the monitored table
-                $identFound = false;
-
-                // Loop through position table
-                foreach ($positions as $position) {
-                    if (($controller['callsign'] == $position->identifier)) {
-                        if ($position->staff_only) {
-                            $staffOnly = true;
-                        }
-                        $identFound = true; // set flag
-                        array_push($onlineControllers, $controller); // Add if the callsign is the same as the position identifier
-                    }
-                }
-
-                // If it wasn't found, check if it has the correct callsign prefix
-                if (!$identFound) {
-
-                  if (substr($controller['callsign'], 0, 4) == "CZWG" || substr($controller['callsign'], 0, 4) == "CYWG" || substr($controller['callsign'], 0, 3) == "ZWG" || substr($controller['callsign'], 0, 4) == "CYAV" || substr($controller['callsign'], 0, 4) == "CYQT" || substr($controller['callsign'], 0, 4) == "CYQR" || substr($controller['callsign'], 0, 4) == "CYXE" || substr($controller['callsign'], 0, 4) == "CYPG" || substr($controller['callsign'], 0, 4) == "CYMJ") {
-                  if (substr($controller['callsign'], 5, 4) != "ATIS" && $controller['facilitytype'] != 0  && !Str::contains($controller['callsign'], '_OBS')) {
-                          // Add position to table if so, and email
-                          $monPos = new MonitoredPosition();
-                          $monPos->identifier = $controller["callsign"];
-                          $monPos->save();
-                          // todo: send email so we know that a new position was created
-
-                  array_push($onlineControllers, $controller); // Add controller because they have logged on an oceanic position
-                                    }
-                                }
-                            }
-                        }
-
-            // List of session logs
-            $sessionLogs =  SessionLog::where("session_end", null)->get();
-
-            // Check logs against currently online controllers
-            foreach ($onlineControllers as $oc) {
-                $matchFound = false;
-                $ocLogon = null;
-                foreach ($sessionLogs as $log) {
-                    // Parse logon time lol
-                    // Change this to the Y-m-d H:i:s format, as I changed the column type to 'dateTime'
-                    $ocLogon = substr($oc['time_logon'], 0, 4).'-'
-                        .substr($oc['time_logon'], 4, 2).'-'
-                        .substr($oc['time_logon'], 6, 2).' '
-                        .substr($oc['time_logon'], 8, 2).':'
-                        .substr($oc['time_logon'], 10, 2).':'
-                        .substr($oc['time_logon'], 12, 2);
-
-                    // If a match is found
-                    if ($ocLogon == $log->session_start) {
-                        if (!$log->roster_member_id || RosterMember::where('cid', $log->cid)->first()->status == 'not_certified') { // Check if they're naughty
-                            if ($log->emails_sent < 1) {
-                              //  Notification::route('mail', CoreSettings::find(1)->emailfirchief)->notify(new ControllerNotCertified($log));
-                                $log->emails_sent++;
-                                $log->save();
-                            }
-                        } else if (!RosterMember::where('cid', $log->cid)->first()->active) { // inactive
-                            if ($log->emails_sent < 1) {
-                              //  Notification::route('mail', CoreSettings::find(1)->emailfirchief)->notify(new ControllerInactive($log));
-                                $log->emails_sent++;
-                                $log->save();
-                            }
-                        } else if (RosterMember::where('cid', $log->cid)->first()->status == 'training') {
-                            if ($log->emails_sent < 1) {
-                              //  Notification::route('mail', CoreSettings::find(1)->emailfirchief)->notify(new ControllerIsStudent($log));
-                                error_log('user in training');
-                                $log->emails_sent++;
-                                $log->save();
-                            }
-                        } else if ($staffOnly && (RosterMember::where('cid', $log->cid)->first()->status != 'instructor')) { // instructor
-                            if ($log->emails_sent < 1) {
-                              //  Notification::route('mail', CoreSettings::find(1)->emailfirchief)->notify(new ControllerNotStaff($log));
-                                $log->emails_sent++;
-                                $log->save();
-                            }
-                        }
-
-                        $matchFound = true;
-                    } else {
-                        continue; // No match was found
-                    }
-                }
-
-                // Create log variable here so it's within appropriate scope
-                $sessionLog = null;
-
-                // If no match was found
-                if (!$matchFound) {
-
-                    // Parse logon time again lol
-                    // Change this to the Y-m-d H:i:s format, as I changed the column type to 'dateTime'
-                    $ocLogon = substr($oc['time_logon'], 0, 4).'-'
-                        .substr($oc['time_logon'], 4, 2).'-'
-                        .substr($oc['time_logon'], 6, 2).' '
-                        .substr($oc['time_logon'], 8, 2).':'
-                        .substr($oc['time_logon'], 10, 2).':'
-                        .substr($oc['time_logon'], 12, 2);
-
-                    // Build new session log
-                    $sessionLog = new SessionLog();
-                    $sessionLog->cid = $oc['cid'];
-                    $sessionLog->callsign = $oc['callsign'];
-                    $sessionLog->session_start = $ocLogon;
-                    $sessionLog->monitored_position_id = MonitoredPosition::where('identifier', $oc['callsign'])->first()->id;
-                    $sessionLog->emails_sent = 0;
-
-                    // Check the user's CID against the roster
-                    $user = RosterMember::where('cid', $oc['cid'])->first();
-                    if ($user && $user->status != 'training' && $user->status != 'not_certified') { // Add if on roster, don't if not (big problem lmao)
-                        $sessionLog->roster_member_id = $user->id;
-                        if ($staffOnly && ($user->status != 'instructor')) {
-                            if ($sessionLog->emails_sent < 1) {
-                              //  Notification::route('mail', CoreSettings::find(1)->emailfirchief)->notify(new ControllerNotStaff($sessionLog));
-                                $sessionLog->emails_sent++;
-                                $sessionLog->save();
-                            }
-                        } else if (!$user->active) { // inactive
-                            if ($sessionLog->emails_sent < 1) {
-                              //  Notification::route('mail', CoreSettings::find(1)->emailfirchief)->notify(new ControllerInactive($sessionLog));
-                                $sessionLog->emails_sent++;
-                                $sessionLog->save();
-                            }
-                        }
-                      } else { // Send unauthorised notification to FIR Chief
-                          if ($user) {
-                              $sessionLog->roster_member_id = $user->id;
-                              if (!$user->active) { // inactive
-                                  if ($sessionLog->emails_sent < 1) {
-                                    //  Notification::route('mail', CoreSettings::find(1)->emailfirchief)->notify(new ControllerInactive($sessionLog));
-                                      $sessionLog->emails_sent++;
-                                      $sessionLog->save();
-                                  }
-                              } else if ($user->status == 'training') {
-                                  if ($sessionLog->emails_sent < 1) {
-                                    //  Notification::route('mail', CoreSettings::find(1)->emailfirchief)->notify(new ControllerIsStudent($sessionLog));
-                                      $sessionLog->emails_sent++;
-                                      $sessionLog->save();
-                                  }
-                              } else if ($sessionLog->emails_sent < 1) {
-                                //  Notification::route('mail', CoreSettings::find(1)->emailfirchief)->notify(new ControllerNotCertified($sessionLog));
-                                  $sessionLog->emails_sent++;
-                                  $sessionLog->save();
-                              }
-                          } else {
-                            //  Notification::route('mail', CoreSettings::find(1)->emailfirchief)->notify(new ControllerNotCertified($sessionLog));
-                              $sessionLog->emails_sent++;
-                              $sessionLog->save();
-                          }
-                      }
-
-                    // Add session
-                    $sessionLog->save();
-                }
-            }
-
-            // Now check to see if any sessions should be marked as finished
-            foreach ($sessionLogs as $log) {
-                // Are they still online?
-                $stillOnline = false;
-
-                                // Loop through online controller list to find a match
-                                foreach ($onlineControllers as $oc) {
-                                    if ($oc['cid'] == $log->cid) { // If CID matches
-                                        // If callsign matches
-                                        if (MonitoredPosition::where('id', $log->monitored_position_id)->first()->identifier == $oc['callsign']) {
-                                        if ($ocLogon == $log->session_start) {
-                                          $stillOnline = true;
-                            }
-                          }
-                      }
-                  }
-
-                // Check if the controller has indeed logged off
-                if (!$stillOnline) {
-
-                    // Start and end values parsed so Carbon can understand them
-                    $start = Carbon::create($log->session_start);
-                    $end = Carbon::now();
-
-                    // Calculate decimal difference (difference is the total hours gained) ie. 30 minutes = 0.5
-                    $difference = $start->floatDiffInMinutes($end) / 60;
-
-                    // Populate remaining columns
-                    $log->session_end = $end;
-                    $log->duration = $difference;
-
-                    error_log($difference);
-
-                    // Save the log
-                    $log->save();
-
-                    // Add hours
-                    $roster_member = RosterMember::where('cid', $log->cid)->first();
-
-                    // check it exists
-                    if ($roster_member) {
-                        if ($roster_member->status == 'home' || $roster_member->status == 'instructor' || $roster_member->status == 'visit') {
-                            if ($roster_member->active) {
-                                // Add hours
-                                $roster_member->currency = $roster_member->currency + $difference;
-
-                                // Add hours to leaderboard
-                                $roster_member->monthly_hours = $roster_member->monthly_hours + $difference;
-                                if ($roster_member->rating == 'S1' || $roster_member->rating == 'S2' || $roster_member->rating == 'S3') {
-                                  $roster_member->rating_hours = $roster_member->rating_hours + $difference;
-                                }
-                                // Save roster member
-                                $roster_member->save();
-                            }
-                        }
-                    }
-                }
-            }
-            file_get_contents(env('CRON_MINUTE_URL'));
-        })->everyMinute(); */
 
         //VATSIM Rating Update because Nate is making me
         $schedule->call(function () {
