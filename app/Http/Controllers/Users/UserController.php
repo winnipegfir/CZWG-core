@@ -352,7 +352,6 @@ class UserController extends Controller
     {
         $this->validate($request, [
             'content' => 'required',
-            'position' => 'required',
         ]);
 
         $user = User::where('id', $id)->firstOrFail();
@@ -362,7 +361,6 @@ class UserController extends Controller
             'user_id' => $user->id,
             'author' => Auth::user()->id,
             'author_name' => $instructor->fullName('FLC'),
-            'position' => $request->get('position'),
             'content' => $content,
             'timestamp' => date('Y-m-d H:i:s'),
         ]);
@@ -373,7 +371,7 @@ class UserController extends Controller
 
         $note->save();
 
-        return redirect()->route('users.viewprofile', $user->id)->with('success', 'Training note saved!');
+        return redirect()->route('users.viewprofile', $user->id)->with('success', 'User note saved!');
     }
 
     public function deleteUserNote($user_id, $note_id)
@@ -395,7 +393,7 @@ class UserController extends Controller
 
         $note->delete();
 
-        return redirect()->route('users.viewprofile', $user->id)->with('success', 'Training note deleted.');
+        return redirect()->route('users.viewprofile', $user->id)->with('success', 'User note deleted.');
     }
 
     public function changeAvatar(Request $request)

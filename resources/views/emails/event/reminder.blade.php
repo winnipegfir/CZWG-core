@@ -9,7 +9,7 @@
     <br>
     @foreach($positions as $p)
         <br>
-        <b>{{$p->airport}} {{$p->position}}</b> | {{$p->start_timestamp}} to {{$p->end_timestamp}}
+        <b>{{$p->airport}} {{$p->position}}</b> | {{$p->start_timestamp}}z to {{$p->end_timestamp}}z
         <br>
     @endforeach
     <br>

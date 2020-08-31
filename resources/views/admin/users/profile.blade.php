@@ -290,7 +290,7 @@
                     This user does not have a linked Discord account.
                     @endif
                 </div><br>
-                <h2 class="font-weight-bold blue-text pb-2">Training Notes</h2>
+                <h2 class="font-weight-bold blue-text pb-2">User Notes</h2>
                 <div class="card p-3">
                 <a href="#" data-toggle="modal" data-target="#addNoteModal" class="btn btn-sm bg-czqo-blue-light">Add Note</a>
                 <a href="#" data-toggle="modal" data-target="#viewNotesModal" class="btn btn-sm bg-primary text-light">View Notes</a>
@@ -302,7 +302,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">New Training Note</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">User Note</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -310,10 +310,6 @@
                 <div class="modal-body">
                     <form action="{{route('users.createnote', $user->id)}}" method="POST">
                     @csrf
-                    <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Position</label>
-                        {!! Form::text('position', null, ['class' => 'form-control']) !!}
-                    </div>
                     <div class="form-group">
                         <label for="recipient-name" class="col-form-label">Content</label>
                         {!! Form::textarea('content', null, ['class' => 'form-control']) !!}
@@ -337,7 +333,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">View Training Notes</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">View User Notes</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -347,15 +343,12 @@
                     <div class="list-group-item pr-0">
                         <div class="d-flex flex-row justify-content-between">
                         <ul class="list-unstyled">
-                            <li><p>Instructor: {{$note->author_name}}</p></li>
-                            <li><p>Position: {{$note->position}}</p></li>
+                            <li><p>Author: {{$note->author_name}}</p></li>
                             <li><p>Date/Time: {{$note->timestamp}}</p></li>
                             <li><p>Notes: {{$note->html()}}</p></li>
-                            @if ($note->author == Auth::user()->id)
                             <form action="{{route('users.deletenote', [$user->id, $note->id])}}" method="GET">
                             <button class="btn btn-sm btn-danger" class="mt-1">Delete</button>
                             </form>
-                            @endif
                         </ul>
                         </div>
                     </div>
