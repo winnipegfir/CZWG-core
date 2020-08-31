@@ -17,3 +17,6 @@
     <br/>
     You can view their application <a href="{{route('training.viewapplication', $application->application_id)}}">here.</a>
 @stop
+@section('footer-reason-line')
+    you are a Winnipeg FIR Executive.
+@endsection

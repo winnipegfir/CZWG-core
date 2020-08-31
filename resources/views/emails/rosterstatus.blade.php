@@ -6,12 +6,6 @@
 @section('message-content')
     The Winnipeg FIR Staff have changed your status on the controller roster to:<br/>
     @switch ($controller->status)
-        @case ('certified')
-            <b>Certification:</b>&nbsp;CZWG Certified
-        @break
-        @case ('not_certified')
-            <b>Certification:</b>&nbsp;Not Certified to Control
-        @break
         @case ('training')
             <b>Certification:</b>&nbsp;In Training
         @break
