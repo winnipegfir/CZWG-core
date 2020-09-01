@@ -27,6 +27,8 @@ app/Http/Controllers/vendor/skymeyer/vatsimphp/app/logs/pilots.log
 
 */error_log
 
+error_log
+
 .idea/
 
 .DS_Store
