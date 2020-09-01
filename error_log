@@ -1,0 +1,27 @@
+[31-Aug-2020 18:49:45 UTC] PHP Fatal error:  Cannot declare class CreateStudentsTable, because the name is already in use in /home/czwgfir/winnipegfir.ca/database/migrations/2020_08_29_221132_create_students_table.php on line 38
+[31-Aug-2020 20:59:50 UTC] PHP Fatal error:  Declaration of App\Exceptions\Handler::report(Throwable $exception) must be compatible with Illuminate\Foundation\Exceptions\Handler::report(Exception $e) in /home/czwgfir/winnipegfir.ca/app/Exceptions/Handler.php on line 8
+[31-Aug-2020 20:59:50 UTC] PHP Fatal error:  Uncaught ReflectionException: Class App\Exceptions\Handler does not exist in /home/czwgfir/winnipegfir.ca/vendor/laravel/framework/src/Illuminate/Container/Container.php:804
+Stack trace:
+#0 /home/czwgfir/winnipegfir.ca/vendor/laravel/framework/src/Illuminate/Container/Container.php(804): ReflectionClass->__construct('App\\Exceptions\\...')
+#1 /home/czwgfir/winnipegfir.ca/vendor/laravel/framework/src/Illuminate/Container/Container.php(682): Illuminate\Container\Container->build('App\\Exceptions\\...')
+#2 /home/czwgfir/winnipegfir.ca/vendor/laravel/framework/src/Illuminate/Container/Container.php(266): Illuminate\Container\Container->resolve('App\\Exceptions\\...', Array, false)
+#3 /home/czwgfir/winnipegfir.ca/vendor/laravel/framework/src/Illuminate/Container/Container.php(800): Illuminate\Container\Container->Illuminate\Container\{closure}(Object(Illuminate\Foundation\Application), Array)
+#4 /home/czwgfir/winnipegfir.ca/vendor/laravel/framework/src/Illuminate/Container/Container.php(682): Illuminate\Container\ in /home/czwgfir/winnipegfir.ca/vendor/laravel/framework/src/Illuminate/Container/Container.php on line 806
+[31-Aug-2020 20:59:56 UTC] PHP Fatal error:  Declaration of App\Exceptions\Handler::report(Throwable $exception) must be compatible with Illuminate\Foundation\Exceptions\Handler::report(Exception $e) in /home/czwgfir/winnipegfir.ca/app/Exceptions/Handler.php on line 8
+[31-Aug-2020 20:59:56 UTC] PHP Fatal error:  Uncaught ReflectionException: Class App\Exceptions\Handler does not exist in /home/czwgfir/winnipegfir.ca/vendor/laravel/framework/src/Illuminate/Container/Container.php:804
+Stack trace:
+#0 /home/czwgfir/winnipegfir.ca/vendor/laravel/framework/src/Illuminate/Container/Container.php(804): ReflectionClass->__construct('App\\Exceptions\\...')
+#1 /home/czwgfir/winnipegfir.ca/vendor/laravel/framework/src/Illuminate/Container/Container.php(682): Illuminate\Container\Container->build('App\\Exceptions\\...')
+#2 /home/czwgfir/winnipegfir.ca/vendor/laravel/framework/src/Illuminate/Container/Container.php(266): Illuminate\Container\Container->resolve('App\\Exceptions\\...', Array, false)
+#3 /home/czwgfir/winnipegfir.ca/vendor/laravel/framework/src/Illuminate/Container/Container.php(800): Illuminate\Container\Container->Illuminate\Container\{closure}(Object(Illuminate\Foundation\Application), Array)
+#4 /home/czwgfir/winnipegfir.ca/vendor/laravel/framework/src/Illuminate/Container/Container.php(682): Illuminate\Container\ in /home/czwgfir/winnipegfir.ca/vendor/laravel/framework/src/Illuminate/Container/Container.php on line 806
+[31-Aug-2020 21:29:31 UTC] PHP Warning:  include(/home/czwgfir/winnipegfir.ca/vendor/composer/../../app/Console/Kernel.php): failed to open stream: No such file or directory in /home/czwgfir/winnipegfir.ca/vendor/composer/ClassLoader.php on line 444
+[31-Aug-2020 21:29:31 UTC] PHP Warning:  include(/home/czwgfir/winnipegfir.ca/vendor/composer/../../app/Console/Kernel.php): failed to open stream: No such file or directory in /home/czwgfir/winnipegfir.ca/vendor/composer/ClassLoader.php on line 444
+[31-Aug-2020 21:29:31 UTC] PHP Warning:  include(): Failed opening '/home/czwgfir/winnipegfir.ca/vendor/composer/../../app/Console/Kernel.php' for inclusion (include_path='.:/opt/alt/php72/usr/share/pear') in /home/czwgfir/winnipegfir.ca/vendor/composer/ClassLoader.php on line 444
+[31-Aug-2020 21:29:31 UTC] PHP Fatal error:  Uncaught ReflectionException: Class App\Console\Kernel does not exist in /home/czwgfir/winnipegfir.ca/vendor/laravel/framework/src/Illuminate/Container/Container.php:804
+Stack trace:
+#0 /home/czwgfir/winnipegfir.ca/vendor/laravel/framework/src/Illuminate/Container/Container.php(804): ReflectionClass->__construct('App\\Console\\Ker...')
+#1 /home/czwgfir/winnipegfir.ca/vendor/laravel/framework/src/Illuminate/Container/Container.php(682): Illuminate\Container\Container->build('App\\Console\\Ker...')
+#2 /home/czwgfir/winnipegfir.ca/vendor/laravel/framework/src/Illuminate/Container/Container.php(266): Illuminate\Container\Container->resolve('App\\Console\\Ker...', Array, false)
+#3 /home/czwgfir/winnipegfir.ca/vendor/laravel/framework/src/Illuminate/Container/Container.php(800): Illuminate\Container\Container->Illuminate\Container\{closure}(Object(Illuminate\Foundation\Application), Array)
+#4 /home/czwgfir/winnipegfir.ca/vendor/laravel/framework/src/Illuminate/Container/Container.php(682): Illuminate\Container\Cont in /home/czwgfir/winnipegfir.ca/vendor/laravel/framework/src/Illuminate/Container/Container.php on line 806
