@@ -11,7 +11,8 @@
             <ul class="h5">
                 <li>What you were trying to access</li>
                 <li>What URL you were on</li>
-                <li>Any other relevent information</li>
+                <li>What time (in z) you tried to access at</li>
+                <li>Any other relevant information</li>
             </ul>
         </div>
     </div>

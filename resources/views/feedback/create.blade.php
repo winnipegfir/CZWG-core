@@ -61,7 +61,7 @@
                         </div>
                         <div class="md-form" id="positionGroup" style="display:none">
                             <p>Position</p>
-                            <input type="name" name="position" class="form-control">
+                            <input type="name" name="position" class="form-control" placeholder="CZWG_CTR">
                         </div>
                         <div class="md-form" id="subjectGroup" style="display:none">
                             <p>Subject</p>

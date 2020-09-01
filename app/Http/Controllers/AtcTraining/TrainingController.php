@@ -26,6 +26,7 @@ use Carbon\Carbon;
 use Flash;
 use Illuminate\Http\Request;
 use Mail;
+use Illuminate\Support\Str;
 
 class TrainingController extends Controller
 {
@@ -34,7 +35,10 @@ public function index()
 {
   $user = Auth::user();
   $instructor = Instructor::where('user_id', $user->id)->first();
-  $yourStudents = Student::where('instructor_id', $instructor->id)->get();
+  $yourStudents = null;
+  if($instructor) {
+      $yourStudents = Student::where('instructor_id', $instructor->id)->get();
+  }
   return view('dashboard.training.indexinstructor', compact('yourStudents'));
 }
 
@@ -75,12 +79,12 @@ public function instructorsIndex()
 
 public function addInstructor(Request $request)
 {
-  $instructor = Instructor::create([
+  Instructor::create([
     'user_id' => $request->input('cid'),
     'qualification' => $request->input('qualification'),
     'email' => $request->input('email'),
   ]);
-  return redirect()->back()->withSuccess('Added '.$request->input('cid'). 'as an Instructor!');
+  return redirect()->back()->withSuccess('Added '.$request->input('cid'). ' as an Instructor!');
 }
 
 public function newStudent(Request $request)
