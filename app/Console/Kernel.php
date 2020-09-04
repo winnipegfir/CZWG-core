@@ -47,6 +47,7 @@ class Kernel extends ConsoleKernel
 
             // Load VATSIM data
             $vatsim = new \Vatsimphp\VatsimData();
+            $vatsim->refreshInterval = 60;
             $vatsim->loadData();
 
             // Active lists
@@ -56,10 +57,11 @@ class Kernel extends ConsoleKernel
             $positions = MonitoredPosition::all();
             $controllers = $vatsim->getControllers();
 
-            //Set our flag
-            $identFound = false;
 
             foreach ($controllers as $controller) {
+                //Set our flag
+                $identFound = false;
+
                 foreach ($positions as $position) {
                     if (($controller['callsign'] == $position->identifier)) {
                         $identFound = true; // set flag
@@ -84,10 +86,11 @@ class Kernel extends ConsoleKernel
             //Grab our open sessions
             $sessionLogs =  SessionLog::where("session_end", null)->get();
 
-            //Set our flag like a fish, FISH ON!
-            $logFound = false;
 
             foreach ($onlineControllers as $oc) {
+                //Set our flag like a fish, FISH ON!
+                $logFound = false;
+
                 //Let's see if they have an open session
                 foreach($sessionLogs as $log) {
                     if($log->cid == $oc['cid']) {
@@ -159,8 +162,6 @@ class Kernel extends ConsoleKernel
                     $log->session_end = $end;
                     $log->duration = $difference;
 
-                    error_log($difference);
-
                     // Save the log
                     $log->save();
 
@@ -176,8 +177,6 @@ class Kernel extends ConsoleKernel
                                 // Add hours
                                 $roster_member->currency += $difference;
 
-                                // Add hours to leaderboard
-                                $roster_member->monthly_hours += $difference;
                                 if ($roster_member->rating == 'S1' || $roster_member->rating == 'S2' || $roster_member->rating == 'S3') {
                                     $roster_member->rating_hours += $difference;
                                 }
@@ -228,7 +227,7 @@ class Kernel extends ConsoleKernel
             $ratings = [
                 -1 => ["IACT", "Inactive"],
                 0 => ["SUSP", "Suspended"],
-                1 => ["OBS", "Observer"],
+                1 => ["OBS", "Pilot/Observer"],
                 2 => ["S1", "Tower Trainee"],
                 3 => ["S2", "Tower Controller"],
                 4 => ["S3", "TMA Controller"],

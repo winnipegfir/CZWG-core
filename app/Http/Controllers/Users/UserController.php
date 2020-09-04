@@ -155,7 +155,7 @@ class UserController extends Controller
             return $retval;
         }
 
-        $connections = SessionLog::where('cid', $id)->get()->sortByDesc('session_end');
+        $connections = SessionLog::where('cid', $id)->get()->sortByDesc('session_start');
         $user = User::where('id', $id)->first();
 
         foreach ($connections as $c) {
