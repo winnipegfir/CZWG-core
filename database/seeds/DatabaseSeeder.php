@@ -41,7 +41,7 @@ class DatabaseSeeder extends Seeder
             'id' => 2,
             'fname' => 'Roster',
             'lname' => 'Placeholder',
-            'email' => 'no-reply@info.com',
+            'email' => 'no-reply@info.ca',
             'permissions' => 1,
             'display_fname' => 'Roster',
         ]);
