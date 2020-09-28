@@ -22,13 +22,6 @@
             </div>
             <div class="col-md-3 mb-3">
                 <div class="card h-100 p-4 btn-primary shadow-none">
-                    <h3>Rotation images</h3>
-                    <p>Banner used throughout the site.<br>&nbsp;</p><br>
-                    <a class="white-text font-weight-bold" href="{{route('settings.rotationimages')}}">Go <i class="fas fa-arrow-right"></i></a>
-                </div>
-            </div>
-            <div class="col-md-3 mb-3">
-                <div class="card h-100 p-4 btn-primary shadow-none">
                     <h3>Audit Log</h3>
                     <p>Log of all Core events.<br>&nbsp;</p><br>
                     <a class="white-text font-weight-bold" href="{{route('settings.auditlog')}}">Go <i class="fas fa-arrow-right"></i></a>

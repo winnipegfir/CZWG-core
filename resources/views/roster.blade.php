@@ -13,6 +13,7 @@
 <div class="container" style="margin-top: 20px;">
         <h1 class="blue-text font-weight-bold">Controller Roster</h1>
     <hr>
+
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
                 <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home Controllers</a>
@@ -20,6 +21,10 @@
             <li class="nav-item">
                 <a class="nav-link" id="visit-tab" data-toggle="tab" href="#visit" role="tab" aria-controls="visit" aria-selected="false">Visiting Controllers</a>
             </li>
+            @if (Auth::check() && Auth::user()->permissions >= 4)
+            <li class="nav-item">
+                <a class="nav-link" href="{{route('roster.index')}}" style="color:brown">Edit Roster</a>
+            @endif
           </ul>
         <div class="tab-content" id="myTabContent">
             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab"><br>

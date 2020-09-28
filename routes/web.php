@@ -26,6 +26,7 @@ Route::get('/policies', 'Publications\PoliciesController@index')->name('policies
 Route::get('/meetingminutes', 'News\NewsController@minutesIndex')->name('meetingminutes');
 Route::get('/bookings', 'ControllerBookings\ControllerBookingsController@indexPublic')->name('controllerbookings.public');
 Route::view('/privacy', 'privacy')->name('privacy');
+Route::view('/yourfeedback', 'yourfeedback')->name('yourfeedback');
 Route::view('/changelog', 'changelog')->name('changelog');
 Route::get('/events', 'Events\EventController@index')->name('events.index');
 Route::get('/events/{slug}', 'Events\EventController@viewEvent')->name('events.view');

@@ -168,7 +168,6 @@ class LoginController extends Controller
         if ($checkrating != null) {
         if ($checkrating->rating != $response->data->vatsim->rating->short) {
           $checkrating->rating_hours = 0;
-          $checkrating->rating = $response->data->vatsim->rating->short;
           $checkrating->save();
         }
       }

@@ -248,7 +248,7 @@
             <p style="color:white">For Flight Simulation Use Only - Not to be used for real-world navigation. By using this site, you agree to hold harmless and indemnify the owners and authors of these web pages, those listed on these pages, and all pages that this site that may be pointed to (i.e. external links).</p>
             <p style="color:white">Copyright © {{App\Models\Settings\CoreSettings::where('id', 1)->firstOrFail()->copyright_year}} Winnipeg FIR | All Rights Reserved.</p>
             <div class="flex-left mt-3">
-            <a href="{{route('about')}}" class="white-text">WPGCore</a>
+            <a href="{{route('about')}}" class="white-text">Github</a>
                 &nbsp;
                 •
                 &nbsp;
@@ -269,11 +269,10 @@
                 •
                 &nbsp;
                 <a href="https://www.vatsim.net" class="white-text">VATSIM</a>
-
-
             </div>
+            
             <div class="mt-3">
-                <a href="{{route('about')}}"><small class="text-muted">{{App\Models\Settings\CoreSettings::where('id', 1)->firstOrFail()->sys_name}} {{App\Models\Settings\CoreSettings::where('id', 1)->firstOrFail()->release}} ({{App\Models\Settings\CoreSettings::where('id', 1)->firstOrFail()->sys_build}})</small></a> <small>- <a target="_blank" href="https://blog.winnipegfir.ca" class="text-muted">The Winnipeg FIR Blog</a></small>
+                <a href="{{route('about')}}"><small class="text-muted">{{App\Models\Settings\CoreSettings::where('id', 1)->firstOrFail()->sys_name}} {{App\Models\Settings\CoreSettings::where('id', 1)->firstOrFail()->release}} ({{App\Models\Settings\CoreSettings::where('id', 1)->firstOrFail()->sys_build}})</small></a> <small>- <a target="_blank" href="https://blog.winnipegfir.ca" class="text-muted">The Winnipeg FIR Blog</a></small> 
             </div>
         </div>
     </footer>

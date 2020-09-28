@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title', 'Winnipeg Events')
+@section('title', 'Events - Winnipeg FIR')
 @section('description', 'Check out the Winnipeg FIR events!')
 @section('content')
     <div class="container py-4">
@@ -10,7 +10,7 @@
         <hr>
         <ul class="list-unstyled">
             @if (count($events) == 0)
-            <li>No Events... Yet.</li>
+            <li>No Events... Stay tuned!</li>
             @endif
             @foreach($events as $e)
             <div class="card my-2" style="height:150px;">
@@ -28,12 +28,11 @@
                         @endif
                     </div>
                     @if ($e->image_url)
-                    <a href="{{route('events.view', $e->slug)}}" style="width: 35%; height: 150px;">
-                        <div style="width: 100%; height: 150px; background-image:url({{$e->image_url}}); background-position: center;" class="waves-effect">
-                        </div>
+                    <a href="{{route('events.view', $e->slug)}}" style="width: 53%; height: 150px;">
+                        <img class="w-100" src="{{$e->image_url}}">
                     </a>
                     @else
-                    <a href="{{route('events.view', $e->slug)}}" style="width: 35%; height 150px;">
+                    <a href="{{route('events.view', $e->slug)}}" style="width: 50%; height 150px;">
                         <div style="width: 100%; height: 150px;" class="grey waves-effect">
                         </div>
                     </a>
@@ -43,7 +42,7 @@
             @endforeach
         </ul>
         <br>
-        <h4><a data-toggle="collapse" data-target="#pastEvents">Show Past Events <i class="fas fa-caret-down"></i></a></h4>
+        <h5><a data-toggle="collapse" data-target="#pastEvents">Show Past Events <i class="fas fa-caret-down"></i></a></h5>
         <div class="collapse" id="pastEvents">
             <ul class="list-unstyled">
                 @if (count($pastEvents) == 0)

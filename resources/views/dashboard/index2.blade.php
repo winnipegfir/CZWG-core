@@ -313,5 +313,97 @@
         </div>
     </div>
     <!--End biography modal-->
+    <div class="modal fade" id="discordModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            @if (!Auth::user()->hasDiscord())
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Link your Discord account</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <img style="height: 50px;" src="{{asset('/img/discord/CZWGplusdiscord.png')}}"
+                             class="img-fluid mb-2" alt="">
+                        <p>Linking your Discord account with Winnipeg FIR allows you to:</p>
+                        <ul>
+                            <li>Join our Discord community</li>
+                            <li>Receive notifications for ticket replies, training updates, and more</li>
+                            <li>Use your Discord avatar on the website</li>
+                        </ul>
+                        <p>To link your account, click the button below. You will be redirected to Discord to approve
+                            the link. Information on data stored through Discord OAuth is available in the <a
+                                href="{{route('privacy')}}">privacy policy.</a></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-dismiss="modal">Dismiss</button>
+                        <a role="button" type="submit" href="{{route('me.discord.link')}}" class="btn btn-primary">Link
+                            Account</a>
+                    </div>
+                </div>
+            @else
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Unlink your Discord account</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Fair Warning: Unlinking your account will:</p>
+                        <ul>
+                            <li>Remove you from the CZWG Discord, if you're a member</li>
+                            <li>Remove a Discord avatar if you have it selected</li>
+                            <li>Stop sending you notifications via Discord</li>
+                        </ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light" data-dismiss="modal">Dismiss</button>
+                        <a role="button" type="submit" href="{{route('me.discord.unlink')}}" class="btn btn-danger">Unlink
+                            Account</a>
+                    </div>
+                </div>
+            @endif
+        </div>
+    </div>
+    <script>
+        //$("#discordModal").modal();
+    </script>
+    <!--End Discord modal-->
+
+    <div class="modal fade" id="joinDiscordServerModal" tabindex="-1" role="dialog"
+         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Join the Winnipeg FIR Discord server</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Joining the Winnipeg FIR Discord server allows you to join the Winnipeg FIR controller and pilot
+                        community.</p>
+                    <h5>Rules</h5>
+                    <ul>
+                        <li>1. The VATSIM Code of Conduct applies.</li>
+                        <li>2. Always show respect and common decency to fellow members.</li>
+                        <li>3. Do not send server invites to servers unrelated to VATSIM without staff permission. Do
+                            not send ANY invites via DMs unless asked to.
+                        </li>
+                        <li>4. Do not send spam in the server, including images, text, or emotes.</li>
+                    </ul>
+                    <p>Clicking the 'Join' button will redirect you to Discord. We require the Join Server permission to
+                        add your Discord account to the server.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Dismiss</button>
+                    <a role="button" type="submit" href="{{route('me.discord.join')}}" class="btn btn-primary">Join</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
 @endsection

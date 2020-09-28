@@ -28,7 +28,7 @@ class AtcResourcesController extends Controller
         $resource->description = $request->get('description');
         $resource->url = $request->get('url');
 
-        if ($request->get('atc_only') == 'yes') {
+        if ($request->get('atc_only') == 'on') {
             $resource->atc_only = true;
         }
 

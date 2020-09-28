@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title', 'Branding')
+@section('title', 'Branding - Winnipeg FIR')
 @section('content')
 <div class="container py-4">
     <h1 class="font-weight-bold blue-text">Branding</h1>
@@ -14,7 +14,7 @@
                 <br/>
                 <a href="https://i.imgur.com/j1Y60BQ.png">Blue Wordmark on Transparent</a>
             </div>
-            
+
             <div class="col-md-3 d-flex flex-column align-items-center justify-content-center">
                 <img style="background-color: #444444;" src="https://i.imgur.com/c5dlKqc.png" class="img-fluid" alt="">
                 <br/>

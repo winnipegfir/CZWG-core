@@ -16,7 +16,8 @@
       <div class="text-white text-left py-1 px-4" style="background-color:#013162">
           <div class="container">
               <div align="center" class="py-5">
-                  <h1 align="center" class="h1" style="font-size: 3em;">{{$event->name}}</h1>
+                  <h1 align="center" class="h1" style="font-size: 4em;">{{$event->name}}</h1>
+                  <h4>{{$event->start_timestamp_pretty()}} - {{$event->end_timestamp_pretty()}}</h4>
                   @if ($event->departure_icao && $event->arrival_icao)
                   <h3>{{$event->departure_icao_data()['name']}} ({{$event->departure_icao}})&nbsp;&nbsp;<i class="fas fa-plane"></i>&nbsp;&nbsp;{{$event->arrival_icao_data()['name']}} ({{$event->arrival_icao}})</h3>
                   @endif
@@ -32,7 +33,7 @@
       &nbsp
       @endif
 
-    </div>
+      </div>
     <div class="container py-4">
         <div class="row">
             <div class="col-md-3">
@@ -131,23 +132,21 @@
                 @endif
                 @endif
 
-<br>
+                
                 <hr>
-                <h3>Updates</h3>
                 @if (count($updates) == 0)
-                None yet!
-                @else
-                @foreach($updates as $u)
-                <div class="card p-3">
-                    <a href="{{Request::url()}}#{{$u->slug}}" name={{$u->slug}}>
-                    <h4>{{$u->title}}</h4>
-                    </a>
-                    <div class="d-flex flex-row align-items-center">
-                        <i class="far fa-clock"></i>&nbsp;&nbsp;Created {{$u->created_pretty()}}</span>&nbsp;&nbsp;•&nbsp;&nbsp;<i class="far fa-user-circle"></i>&nbsp;&nbsp;{{$u->author_pretty()}}
-                    </div>
-                    <hr>
-                    {{$u->html()}}
-                </div>
+                @elseif (count($updates) >0 )
+                    <h4 class="font-weight-bold blue-text">Updates</h4>
+                        @foreach($updates as $u)
+                            <div class="card p-3">
+                                <a href="{{Request::url()}}#{{$u->slug}}" name={{$u->slug}}> <h4>{{$u->title}}</h4></a>
+                                    <div class="d-flex flex-row align-items-center">
+                                        <i class="far fa-clock"></i>&nbsp;&nbsp;Posted {{$u->created_pretty()}}</span>&nbsp;&nbsp;•&nbsp;&nbsp;<i class="far fa-user-circle"></i>&nbsp;&nbsp;{{$u->author_pretty()}}
+                                    </div>
+                                <hr>
+                                {{$u->html()}}
+                            </div>
+                        <br>
                 @endforeach
                 @endif
             </div>

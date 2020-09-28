@@ -14,7 +14,6 @@ use App\Models\Users\User;
 use App\Models\Users\UserNote;
 use App\Models\Users\UserNotification;
 use App\Models\AtcTraining\RosterMember;
-use App\Models\AtcTraining\VisitRosterMember;
 use App\Notifications\WelcomeNewUser;
 use Auth;
 use Exception;
@@ -174,13 +173,9 @@ class UserController extends Controller
         $certification = null;
         $active = null;
         $potentialRosterMember = RosterMember::where('user_id', $user->id)->first();
-        $potentialVisitRosterMember = VisitRosterMember::where('user_id', $user->id)->first();
         if ($potentialRosterMember !== null) {
           $certification = $potentialRosterMember->status;
           $active = $potentialRosterMember->active;
-        } elseif ($potentialVisitRosterMember !== null) {
-          $certification = $potentialVisitRosterMember->status;
-          $active = $potentialVisitRosterMember->active;
         }
 
 
@@ -196,18 +191,12 @@ class UserController extends Controller
 {
     $user = User::where('id', $id)->firstorFail();
     $roster = RosterMember::where('cid', $id)->first();
-    $visitroster = VisitRosterMember::where('cid', $id)->first();
     $user->permissions = $request->input('permissions');
     $user->save();
     if($roster != null) {
     $roster->status = $request->input('certification');
     $roster->save();
   }
-    if($visitroster != null) {
-      $visitroster->status = $request->input('certification');
-      $visitroster->save();
-
-    }
       return redirect()->back()->withSuccess('User Permissions Changed!');
     }
 

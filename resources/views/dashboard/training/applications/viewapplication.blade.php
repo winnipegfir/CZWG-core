@@ -88,7 +88,7 @@
         <h6>Submitted at {{ $application->submitted_at }} Zulu</h6>
         <br/>
         <div>
-            <a class="btn btn-secondary" href="{{url('dashboard/training/applications')}}">
+            <a class="btn btn-light" href="{{url('dashboard/training/applications')}}">
                 Go back
             </a>
             @if ($application->status == 0 && Auth::user()->permissions >= 4)

@@ -64,7 +64,7 @@ class RosterController extends Controller
                 'cid' => $users->id,
                 'user_id' => $users->id,
                 'full_name' => $users->fullName('FL'),
-                'rating' => $users->rating_short,
+                'status' => 'home',
                 'visit' => '0',
             ]);
         } else {
@@ -86,8 +86,8 @@ class RosterController extends Controller
                     'cid' => $users->id,
                     'user_id' => $users->id,
                     'full_name' => $users->fullName('FL'),
-                    'rating' => $users->rating_short,
-                    'visit' => '1',
+                    'status' => 'visit',
+                    'visit' => 1,
                 ]);
             } else {
                 return redirect()->back()->withErrors('Member: '.$users->fullName('FL').' CID: '.$users->id.' is already on the roster!');

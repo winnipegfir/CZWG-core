@@ -30,21 +30,18 @@
                     </div>
                 @endif
                 <br>
-                <div data-step="2"
-                     data-intro="Here is where you manage and view the data we store on you and your CZWG profile."
-                     class="card ">
+                <div data-step="2" data-intro="Here is where you manage and view the data we store on you and your CZWG profile." class="card ">
                     <div class="card-body">
                         <h3 class="font-weight-bold blue-text pb-2">Your Account</h3>
                         <div class="row">
-                            <div class="col" data-step="3"
-                                 data-intro="Here is an overview of your profile, including your CZWG roles. You can change the way your name is displayed by clicking on your name, at the top of the panel. (CoC A4(b))">
+                            <div class="col" data-step="3" data-intro="Here is an overview of your profile, including your CZWG roles. You can change the way your name is displayed by clicking on your name, at the top of the panel. (CoC A4(b))">
                                 <h5 class="card-title">
                                     {{ Auth::user()->fullName('FLC') }}
                                 </h5>
                                 <h6 class="card-subtitle mb-2 text-muted">
                                     {{Auth::user()->rating_GRP}} ({{Auth::user()->rating_short}})
                                 </h6>
-                                <p class="font-italic" style="color: darkblue;" data-toggle="modal" data-target="#ratingChange">Why is my rating wrong?</p>
+                                <p><a class="font-italic" style="color: blue;" data-toggle="modal" data-target="#ratingChange">Rating incorrect?</a></p>
                                 Role: {{Auth::user()->permissions()}}<br/>
                                 @if(Auth::user()->staffProfile)
                                     Staff Role: {{Auth::user()->staffProfile->position}}
@@ -179,11 +176,11 @@
                                         @endforeach
                                     @endforeach
                                 @endif
-                                <hr>
+                                
                                 @if (count($unconfirmedapp) < 1)
                                     <p>
                                         You have
-                                        <text class="text-primary"><b>0</b></text>
+                                        <text class="text-primary"><b>no</b></text>
                                         active event applications
                                     </p>
                                 @elseif (count($unconfirmedapp) == 1)
@@ -982,7 +979,7 @@
 
 
 
-                                      </li>
+                                      </li><br>
 
 
                                           @endif

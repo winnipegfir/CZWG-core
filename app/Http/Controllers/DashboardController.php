@@ -33,13 +33,9 @@ class DashboardController extends Controller
         $active = null;
         $confirmedevent = [];
         $potentialRosterMember = RosterMember::where('user_id', $user->id)->first();
-        $potentialVisitRosterMember = VisitRosterMember::where('user_id', $user->id)->first();
         if ($potentialRosterMember !== null) {
           $certification = $potentialRosterMember->status;
           $active = $potentialRosterMember->active;
-        } elseif ($potentialVisitRosterMember !== null) {
-          $certification = $potentialVisitRosterMember->status;
-          $active = $potentialVisitRosterMember->active;
         }
         $openTickets = Ticket::where('user_id', $user->id)->where('status', 0)->get();
         $staffTickets = Ticket::where('staff_member_cid', $user->id)->where('status', 0)->get();

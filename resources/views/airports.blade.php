@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title', 'Airports')
+@section('title', 'Airports - Winnipeg FIR')
 @section('content')
 
     <style>

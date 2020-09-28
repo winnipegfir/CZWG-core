@@ -30,7 +30,6 @@
             <hr>
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                    <h4 align="center">Winnipeg Controllers</h4>
                     <div class="row">
                         <div class="col-md-3">
                             <h4 class="font-weight-bold blue-text">Actions</h4>
@@ -173,7 +172,7 @@
                             <!--Edit controller-->
                                 <td align="center" style="width=100px">
                                     <a href="{{route('roster.editcontrollerform', [$controller->cid]) }}">
-                                        <button class="btn btn-sm btn-outline-info"
+                                        <button class="btn btn-sm btn-info"
                                                 style="vertical-align:top; float:left;">Edit
                                         </button>
                                     </a>
@@ -218,7 +217,7 @@
                                     <!--end delete controller-->
                                     <a role="button" data-toggle="modal"
                                        data-target="#deleteController{{$controller->id}}"
-                                       class="btn btn-sm btn-outline-danger"
+                                       class="btn btn-sm btn-danger"
                                        style="vertical-align:bottom; float:right;">Delete</a>
                 </div>
             </div>
@@ -230,9 +229,7 @@
             </table>
         </div>
 
-        <div class="tab-pane fade" id="visit" role="tabpanel" aria-labelledby="visit-tab">
-            <h4 align="center">Visiting Controllers</h4>
-
+        <div class="tab-pane fade" id="visit" role="tabpanel" aria-labelledby="visit-tab">   
             <div class="row">
                 <div class="col-md-3">
                     <h4 class="font-weight-bold blue-text">Actions</h4>
@@ -365,7 +362,7 @@
                         @endif
                             <td align="center">
                                 <a href="{{route('roster.editcontrollerform', [$visitcontroller->cid]) }}">
-                                    <button class="btn btn-sm btn-outline-info" style="vertical-align:top; float:left;">
+                                    <button class="btn btn-sm btn-info" style="vertical-align:top; float:left;">
                                         Edit
                                     </button>
                                 </a>
@@ -408,7 +405,7 @@
 
                                     <a role="button" data-toggle="modal"
                                        data-target="#deleteVisitController{{$visitcontroller->id}}"
-                                       class="btn btn-sm btn-outline-danger" style="vertical-align:bottom; float:right;">Delete</a>
+                                       class="btn btn-sm btn-danger" style="vertical-align:bottom; float:right;">Delete</a>
                                 </div>
                             </td>
                         </tr>
@@ -466,7 +463,7 @@
                                 <td align="center">
                                     @csrf
                                     <p class="font-weight-bold"> *This will add them to the Home Controller Roster*</p>
-                                    <button type="submit" class="btn btn-outline-success">Add User</button>
+                                    <button type="submit" class="btn btn-success">Add User</button>
 
                                 </td>
                             </form>
@@ -522,7 +519,7 @@
                                 <td align="center">
                                     @csrf
                                     <p class="font-weight-bold"> *This will add them to the Visiting Controller Roster*</p>
-                                    <button type="submit" class="btn btn-outline-success">Add User</button>
+                                    <button type="submit" class="btn btn-success">Add User</button>
 
                                 </td>
                             </form>
@@ -641,7 +638,7 @@
                                 <textarea id="remarks" rows="4" cols="30">
                 </textarea>
                                 <br><br><br>
-                                <input type="submit" value="Edit Controller" style="btn btn-outline-info">
+                                <input type="submit" value="Edit Controller" style="btn btn-info">
                 </form>
             </div>
         </div>

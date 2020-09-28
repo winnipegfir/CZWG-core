@@ -29,7 +29,7 @@
             <div class="container">
                 <div class="py-5">
                     <h1 class="h1 my-4 py-2" style="font-size: 4em; color: #fff;">We Are Winnipeg.</h1>
-                    <h4><a href="#blueBannerMid" id="discoverMore" class="white-text" style="transition:fade 0.4s;">We're in Beta, baby! Release is up next.&nbsp;&nbsp;
+                    <h4><a href="#blueBannerMid" id="discoverMore" class="white-text" style="transition:fade 0.4s;">Check out our new site.&nbsp;&nbsp;
                     <i class="fas fa-arrow-down"></i></a></h4>
                 </div>
                 <div class="container">
@@ -165,7 +165,7 @@
                         @if(!Auth::check() || !Auth::user()->rosterProfile)
                             <a href="{{route('application.start')}}" class="btn bg-czqo-blue-light" role="button">Apply Now!</a>
                         @endif
-                        <a href="{{route('roster.public')}}" class="btn btn-primary" role="button">View our Controller Roster </a>
+                        <a href="{{route('yourfeedback')}}" class="btn btn-primary" role="button">See What Pilots Say About Us! </a>
                     </div>
                     <br>
                     <h1 class="font-weight-bold blue-text">Our Top 5 Controllers This Month</h1>
@@ -238,7 +238,7 @@
     <script>
         jarallax(document.querySelectorAll('.jarallax'), {
             speed: 1.5,
-            videoSrc: 'mp4:{{url('/images/whonk2.mp4')}}',
+            videoSrc: 'mp4:{{url('/images/V')}}',
             videoLoop: true
         });
     </script>

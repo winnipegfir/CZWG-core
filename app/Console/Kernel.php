@@ -47,7 +47,7 @@ class Kernel extends ConsoleKernel
 
             // Load VATSIM data
             $vatsim = new \Vatsimphp\VatsimData();
-            $vatsim->refreshInterval = 60;
+            $vatsim->setConfig('dataRefresh', 60);
             $vatsim->loadData();
 
             // Active lists
@@ -323,7 +323,6 @@ class Kernel extends ConsoleKernel
             // Loop through all roster members
             foreach (RosterMember::all() as $rosterMember) {
                 // Reset the hours for every member
-                $rosterMember->monthly_hours = 0.0;
                 $rosterMember->currency = 0.0;
                 $rosterMember->save();
             }

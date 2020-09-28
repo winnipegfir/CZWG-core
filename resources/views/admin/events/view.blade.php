@@ -79,6 +79,7 @@
                         <hr>
                         {{$u->html()}}
                     </div>
+                    <br>
                 @endforeach
             @endif<hr>
            <h4 class="font-weight-bold blue-text mt-3">Event Roster</h4>
@@ -91,14 +92,14 @@
                     @foreach($eventroster as $roster)
                     @if($roster->position == $position->position && $roster->position != "Relief")
                     <form method="POST" action="{{route('event.deletecontroller', [$roster->user_id])}}">
-                    <nobr><text class="font-weight-bold">{{$roster->user->fullName('FLC')}}</text> is controlling {{$roster->airport}} {{$roster->position}} from {{$roster->start_timestamp}}z to {{$roster->end_timestamp}}z <button type="submit" class="btn btn-sm btn-danger" style="font-size:10px;height:20px;width:100px">Delete</button></nobr><br>
+                        <text class="font-weight-bold">{{$roster->user->fullName('FLC')}}</text> is controlling {{$roster->airport}} {{$roster->position}} from {{$roster->start_timestamp}}z to {{$roster->end_timestamp}}z. <a role="button" type="submit" style="color: red">Delete.</a><br>
                     <input type="hidden" name="id" value="{{$roster->event_id}}"></input>
                     @csrf
                     </form>
                     @endif
                     @if($roster->position == "Relief" && $position->position == "Relief")
                     <form method="POST" action="{{route('event.deletecontroller', [$roster->user_id])}}">
-                    <nobr><text class="font-weight-bold">{{$roster->user->fullName('FLC')}}</text> is on Stand-by available from {{$roster->start_timestamp}}z to {{$roster->end_timestamp}}z <button type="submit" class="btn btn-sm btn-danger" style="font-size:10px;height:20px;width:100px">Delete</button></nobr><br>
+                    <text class="font-weight-bold">{{$roster->user->fullName('FLC')}}</text> is on Stand-by available from {{$roster->start_timestamp}}z to {{$roster->end_timestamp}}z. <a role="button" type="submit" style="color: red"> Delete.</a><br>
                     <input type="hidden" name="id" value="{{$roster->event_id}}"></input>
                     @csrf
                     </form>
