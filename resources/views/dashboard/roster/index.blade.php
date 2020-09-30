@@ -193,7 +193,7 @@
                                                         Deletion</h5><br>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <p style="font-weight:bold">Name: {{$controller->user->fullName('FL')}}</p>
+                                                    <p style="font-weight:bold">Name: Dummy</p>
                                                     <p style="font-weight:bold">CID: {{$controller->cid}}</p>
                                                     <h3 style="font-weight:bold; color:red">Are you sure you want to do
                                                         this?</h3>
