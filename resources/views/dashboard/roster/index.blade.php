@@ -229,7 +229,7 @@
             </table>
         </div>
 
-        <div class="tab-pane fade" id="visit" role="tabpanel" aria-labelledby="visit-tab">   
+        <div class="tab-pane fade" id="visit" role="tabpanel" aria-labelledby="visit-tab">
             <div class="row">
                 <div class="col-md-3">
                     <h4 class="font-weight-bold blue-text">Actions</h4>
