@@ -75,7 +75,7 @@ class UserController extends Controller
         $rosterMember = RosterMember::where('user_id', $id)->first();
         if($rosterMember) {
             $logs = SessionLog::where('cid', $id)->get();
-            $monthlyHours = clockalize(RosterMember::where('cid', $id)->firstOrFail()->currency);
+            $monthlyHours = decimal_to_hm(RosterMember::where('cid', $id)->firstOrFail()->currency);
 
             //Start our array
             $time = [
