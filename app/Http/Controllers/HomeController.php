@@ -177,18 +177,25 @@ class HomeController extends Controller
     }
 
     public function nate() {
-            $url = 'https://api.vatsim.net/api/ratings/1233493/rating_times/';
-
+        function getStuff($url) {
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            $json = curl_exec($ch);
+            $json = json_decode(curl_exec($ch));
             curl_close($ch);
 
-            $atcTime = json_decode($json)->atc;
-            $pilotTime = json_decode($json)->pilot;
-            $totalTime = $atcTime + $pilotTime;
+            return $json;
+        }
 
-        return view('nate', compact('atcTime', 'pilotTime', 'totalTime'));
+            $hours = getStuff('https://api.vatsim.net/api/ratings/1233493/rating_times/');
+
+            $atcTime = decimal_to_hm($hours->atc);
+            $pilotTime = decimal_to_hm($hours->pilot);
+            $totalTime =decimal_to_hm($hours->atc + $hours->pilot);
+
+            $timeOnNetwork = str_replace("T", " ", getStuff('https://api.vatsim.net/api/ratings/1233493/')->reg_date);
+            $yearsOnNetwork = Carbon::now()->diffInYears($timeOnNetwork);
+
+        return view('nate', compact('atcTime', 'pilotTime', 'totalTime', 'yearsOnNetwork'));
     }
 }

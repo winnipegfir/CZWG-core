@@ -15,7 +15,7 @@
              src="https://media-exp1.licdn.com/dms/image/C5603AQHyYM77iig0hA/profile-displayphoto-shrink_200_200/0?e=1603929600&v=beta&t=pMbmSmn8z6qvXESPCAoQGNuaTMTN7hYNTOauAzssFgo"></img>
         <br>
         <h3 class="blue-text">Nate's VATSIM career!</h3><br>
-            <h5>Nate has been on the Virtual Air Traffic Simulation Network (also known as VATSIM to most people) for over 6 years!</h5>
+            <h5>Nate has been on the Virtual Air Traffic Simulation Network (also known as VATSIM to most people) for over 🎉 {{$yearsOnNetwork}} years! 🎉</h5>
             <br>
             <p>Nate has {{$atcTime}} hours as a VATSIM controller and {{$pilotTime}} as a pilot! This comes to a total of {{$totalTime}}, Nate really has put in a lot of time eh? He started on the VATSIM network like most people do, flying. During this time, aviation started to get a strong love for all things aviation, which he carries on to this very day. But, one day, he decided that he wanted to enhance his VATSIM experience by becoming a controller, of course. Nate started in the Moncton/Gander FIR because it was where he lives.</p>
             <p>Once Nate was done with Moncton/Gander FIR, he eventually moved over to Winnipeg (where he is today, obviously). During this time, he quickly became an important member in the FIR, as he was a mentor, an instructor and was eventually appointed to the role of Chief Instructor. When he was appointed, Karl Sawatzky (the FIR Chief at the time) said "[Nate] has an impressive knowledge about Air Traffic Services, is an exemplary instructor, and most importantly, a strong leader."</p>
