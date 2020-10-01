@@ -58,13 +58,13 @@ class FeedbackController extends Controller
         $feedback = ControllerFeedback::where('id', $id)->firstOrFail();
 
         if($feedback->approval == 1) {
-            return redirect()->back()->withErrors('Feedback ID#'.$feedback->id.' has already been denied!');
+            return redirect()->back()->withErrors('Controller Feedback ID#'.$feedback->id.' has already been denied!');
         }
 
         $feedback->approval = 1;
         $feedback->save();
 
-        return redirect()->back()->withSuccess('Feedback ID#'.$feedback->id.' has been denied!');
+        return redirect()->back()->withSuccess('Controller Feedback ID#'.$feedback->id.' has been denied!');
     }
 
     public function deleteControllerFeedback($id)
@@ -72,7 +72,22 @@ class FeedbackController extends Controller
         $feedback = ControllerFeedback::where('id', $id)->firstOrFail();
         $feedback->delete();
 
-        return redirect()->to(route('staff.feedback.index'))->withSuccess('Feedback ID#' . $feedback->id . ' has been deleted!');
+        return redirect()->to(route('staff.feedback.index'))->withSuccess('Controller Feedback ID#' . $feedback->id . ' has been deleted!');
+    }
+
+    public function viewWebsiteFeedback($id) {
+        $submitter = User::where('id', WebsiteFeedback::where('id', $id)->firstOrFail()->user_id)->firstOrFail();
+        $feedback = WebsiteFeedback::where('id', $id)->firstOrFail();
+
+        return view('feedback.websiteview', compact('id', 'submitter', 'feedback'));
+    }
+
+    public function deleteWebsiteFeedback($id)
+    {
+        $feedback = WebsiteFeedback::where('id', $id)->firstOrFail();
+        $feedback->delete();
+
+        return redirect()->to(route('staff.feedback.index'))->withSuccess('Website Feedback ID#' . $feedback->id . ' has been deleted!');
     }
 
     public function create()
