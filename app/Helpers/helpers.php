@@ -1,7 +1,7 @@
 <?php
 
 function decimal_to_hms($decimal) {
-    $hours = floor($decimal / 60);
+    $hours = floor($decimal);
     $minutes = floor($decimal % 60);
     $seconds = $decimal - (int)$decimal;
     $seconds = round($seconds * 60);
