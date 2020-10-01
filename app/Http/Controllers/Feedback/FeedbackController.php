@@ -22,20 +22,57 @@ class FeedbackController extends Controller
     public function index() {
         $controller_feedback = ControllerFeedback::all()->sortByDesc('created_at');
         $website_feedback = WebsiteFeedback::all()->sortByDesc('created_at');
+        $controller_feedback_attention = ControllerFeedback::where('approval', 0)->get();
 
-        return view('feedback.index', compact('controller_feedback', 'website_feedback'));
+        return view('feedback.index', compact('controller_feedback', 'website_feedback', 'controller_feedback_attention'));
+    }
+
+    public function yourFeedback() {
+        $feedback = ControllerFeedback::where('approval', 2)->get();
+
+        return view('feedback.yourfeedback', compact('feedback'));
     }
 
     public function viewControllerFeedback($id) {
-        $submitter = User::where('id', ControllerFeedback::where('id', $id)->firstOrFail()->user_id)->firstOrFail()->fullName('FLC');
-        $submitterAvatar = User::where('id', ControllerFeedback::where('id', $id)->firstOrFail()->user_id)->firstOrFail()->avatar();
-        $controller = User::where('id', ControllerFeedback::where('id', $id)->firstOrFail()->controller_cid)->firstOrFail()->fullName('FLC');
-        $controllerAvatar = User::where('id', ControllerFeedback::where('id', $id)->firstOrFail()->controller_cid)->firstOrFail()->avatar();
-        $position = ControllerFeedback::where('id', $id)->firstOrFail()->position;
-        $content = ControllerFeedback::where('id', $id)->firstOrFail()->content;
-        $submitted = ControllerFeedback::where('id', $id)->firstOrFail()->created_at;
+        $submitter = User::where('id', ControllerFeedback::where('id', $id)->firstOrFail()->user_id)->firstOrFail();
+        $controller = User::where('id', ControllerFeedback::where('id', $id)->firstOrFail()->controller_cid)->firstOrFail();
+        $feedback = ControllerFeedback::where('id', $id)->firstOrFail();
 
-        return view('feedback.controllerview', compact('id', 'submitter', 'submitterAvatar', 'controller', 'controllerAvatar', 'position', 'content', 'submitted'));
+        return view('feedback.controllerview', compact('id', 'submitter',  'controller',  'feedback'));
+    }
+
+    public function approveControllerFeedback($id) {
+        $feedback = ControllerFeedback::where('id', $id)->firstOrFail();
+
+        if($feedback->approval == 2) {
+            return redirect()->back()->withErrors('Feedback ID#'.$feedback->id.' has already been approved!');
+        }
+
+        $feedback->approval = 2;
+        $feedback->save();
+
+        return redirect()->back()->withSuccess('Feedback ID#'.$feedback->id.' has been approved!');
+    }
+
+    public function denyControllerFeedback($id) {
+        $feedback = ControllerFeedback::where('id', $id)->firstOrFail();
+
+        if($feedback->approval == 1) {
+            return redirect()->back()->withErrors('Feedback ID#'.$feedback->id.' has already been denied!');
+        }
+
+        $feedback->approval = 1;
+        $feedback->save();
+
+        return redirect()->back()->withSuccess('Feedback ID#'.$feedback->id.' has been denied!');
+    }
+
+    public function deleteControllerFeedback($id)
+    {
+        $feedback = ControllerFeedback::where('id', $id)->firstOrFail();
+        $feedback->delete();
+
+        return redirect()->to(route('staff.feedback.index'))->withSuccess('Feedback ID#' . $feedback->id . ' has been deleted!');
     }
 
     public function create()

@@ -21,12 +21,11 @@ Route::get('/roster/{id}', 'Users\UserController@viewProfile');
 Route::get('/roster/{id}/connections', 'Users\UserController@viewConnections');
 Route::get('/join', 'AtcTraining\ApplicationsController@joinWinnipeg')->name('join.public');
 Route::get('/staff', 'Users\StaffListController@index')->name('staff');
-Route::view('/pilots/tutorial', 'pilots.tutorial');
 Route::get('/policies', 'Publications\PoliciesController@index')->name('policies');
 Route::get('/meetingminutes', 'News\NewsController@minutesIndex')->name('meetingminutes');
 Route::get('/bookings', 'ControllerBookings\ControllerBookingsController@indexPublic')->name('controllerbookings.public');
 Route::view('/privacy', 'privacy')->name('privacy');
-Route::view('/yourfeedback', 'yourfeedback')->name('yourfeedback');
+Route::get('/yourfeedback', 'Feedback\FeedbackController@yourFeedback')->name('yourfeedback');
 Route::view('/changelog', 'changelog')->name('changelog');
 Route::get('/events', 'Events\EventController@index')->name('events.index');
 Route::get('/events/{slug}', 'Events\EventController@viewEvent')->name('events.view');
@@ -72,6 +71,9 @@ Route::group(['middleware' => 'auth'], function () {
             //View Feedback
             Route::get('/feedback', 'Feedback\FeedbackController@index')->name('staff.feedback.index');
             Route::get('/feedback/controller/{id}', 'Feedback\FeedbackController@viewControllerFeedback')->name('staff.feedback.controller');
+            Route::get('/feedback/controller/{id}/approve', 'Feedback\FeedbackController@approveControllerFeedback');
+            Route::get('/feedback/controller/{id}/deny', 'Feedback\FeedbackController@denyControllerFeedback');
+            Route::get('/feedback/controller/{id}/delete', 'Feedback\FeedbackController@deleteControllerFeedback');
             Route::get('/feedback/website/{id}', 'Feedback\FeedbackController@viewWebsiteFeedback')->name('staff.feedback.website');
 
         });

@@ -255,10 +255,10 @@ class Kernel extends ConsoleKernel
                             ->update(['rating_id' => $ratingID, 'rating_short' => $ratings[$ratingID][0], 'rating_long' => $ratings[$ratingID][1], 'rating_GRP' => $ratings[$ratingID][1]]);
 
                         if($rosterMember) {
-                            Log::info("--> Updating rating, setting rating hours to 0");
+                            Log::info("--> Setting rating hours to 0");
 
                             RosterMember::where('cid', $u->id)
-                                ->update(['rating' => $ratings[$ratingID][0], 'rating_hours' => 0]);
+                                ->update(['rating_hours' => 0]);
                         }
 
                         Log::info('--> Completed!');

@@ -147,8 +147,12 @@
                         <li class="nav-item  {{ Request::is('staff') ? 'active' : '' }}">
                             <a class="nav-link" href="{{url ('/staff')}}" aria-expanded="false">Staff</a>
                         </li>
-                        <li class="nav-item dropdown {{ Request::is('feedback') ? 'active' : ''}}">
-                            <a class="nav-link" href="{{url ('/feedback')}}" aria-expanded="false">Feedback</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" style="cursor:pointer" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Feedback</a>
+                            <div class="dropdown-menu" aria-labelledby="dropdown01">
+                                <a class="dropdown-item {{ Request::is('feedback') ? 'active white-text' : '' }}" href="{{route('feedback.create')}}">Submit Feedback</a>
+                                <a class="dropdown-item {{ Request::is('yourfeedback') ? 'active white-text' : '' }}" href="{{route('yourfeedback')}}">Your Feedback</a>
+                            </div>
                         </li>
                     </ul>
                     <ul class="navbar-nav ml-auto nav-flex-icons">
