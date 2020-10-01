@@ -72,19 +72,6 @@ class UserController extends Controller
     public function viewProfile($id) {
         $user = User::where('id', $id)->firstOrFail();
 
-        function clockalize($in){
-
-            $h = intval($in);
-            $m = round((((($in - $h) / 100.0) * 60.0) * 100), 0);
-            if ($m == 60)
-            {
-                $h++;
-                $m = 0;
-            }
-            $retval = sprintf("%02d:%02d", $h, $m);
-            return $retval;
-        }
-
         $rosterMember = RosterMember::where('user_id', $id)->first();
         if($rosterMember) {
             $logs = SessionLog::where('cid', $id)->get();
@@ -118,17 +105,17 @@ class UserController extends Controller
             }
 
             //Make the time's readable
-            $time['del'] = clockalize($time['del']);
-            $time['gnd'] = clockalize($time['gnd']);
-            $time['twr'] = clockalize($time['twr']);
-            $time['dep'] = clockalize($time['dep']);
-            $time['app'] = clockalize($time['app']);
-            $time['ctr'] = clockalize($time['ctr']);
+            $time['del'] = decimal_to_hm($time['del']);
+            $time['gnd'] = decimal_to_hm($time['gnd']);
+            $time['twr'] = decimal_to_hm($time['twr']);
+            $time['dep'] = decimal_to_hm($time['dep']);
+            $time['app'] = decimal_to_hm($time['app']);
+            $time['ctr'] = decimal_to_hm($time['ctr']);
 
             $connections = SessionLog::where('cid', $id)->get()->sortByDesc('session_end');
 
             foreach($connections as $c) {
-                $c['duration'] = clockalize($c['duration']);
+                $c['duration'] = decimal_to_hm($c['duration']);
             }
 
         } else {

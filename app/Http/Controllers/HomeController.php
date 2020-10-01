@@ -53,27 +53,13 @@ class HomeController extends Controller
         //Event
         $nextEvent = Event::where('start_timestamp', '>', Carbon::now())->get()->sortByDesc('id')->first();
 
-        //Top 5 controllers of the month
-        function clockalize($in){
-
-            $h = intval($in);
-            $m = round((((($in - $h) / 100.0) * 60.0) * 100), 0);
-            if ($m == 60)
-            {
-                $h++;
-                $m = 0;
-            }
-            $retval = sprintf("%02d:%02d", $h, $m);
-            return $retval;
-        }
-
         $topControllersArray = [];
 
         $topControllers = RosterMember::all()->sortByDesc('currency');
         foreach($topControllers as $top) {
             $top = [
                 'cid' => $top['user_id'],
-                'time' => clockalize($top['currency'])];
+                'time' => decimal_to_hm($top['currency'])];
             array_push($topControllersArray, $top);
         }
 
