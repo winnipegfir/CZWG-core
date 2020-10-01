@@ -274,15 +274,9 @@ class EventController extends Controller
             $basePath = 'public/files/'.Carbon::now()->toDateString().'/'.rand(1000,2000);
             $path = $request->file('image')->store($basePath);
             $event->image_url = Storage::url($path);
-
-            //Add to uploaded images
-            $uploadedImg = new UploadedImage();
-            $uploadedImg->path = Storage::url($path);
-            $uploadedImg->user_id = Auth::id();
-            $uploadedImg->save();
         }
 
-        //If there is a uplaoded image selected lets put it on there
+        //If there is a uploaded image selected lets put it on there
         if ($request->get('uploadedImage')) {
             $event->image_url = UploadedImage::whereId($request->get('uploadedImage'))->first()->path;
         }
