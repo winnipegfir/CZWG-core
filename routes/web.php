@@ -66,9 +66,9 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::group(['middleware' => 'staff'], function () {
         Route::prefix('admin')->group(function () {
-            //Image Uploads
-            Route::get('/imageupload', 'Publications\ImageUploadController@imageUpload')->middleware('staff')->name('dashboard.image');
-            Route::post('/imageupload', 'Publications\ImageUploadController@imageUploadPost')->middleware('staff')->name('dashboard.image.upload');
+            //Uploads
+            Route::get('/upload', 'Publications\UploadController@upload')->middleware('staff')->name('dashboard.upload');
+            Route::post('/upload', 'Publications\UploadController@uploadPost')->middleware('staff')->name('dashboard.upload.post');
             //View Feedback
             Route::get('/feedback', 'Feedback\FeedbackController@index')->name('staff.feedback.index');
             Route::get('/feedback/controller/{id}', 'Feedback\FeedbackController@viewControllerFeedback')->name('staff.feedback.controller');
@@ -267,9 +267,6 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/emails', 'Settings\SettingsController@emails')->name('settings.emails');
             Route::post('/emails', 'Settings\SettingsController@saveEmails')->name('settings.emails.post');
             Route::get('/audit-log', 'Settings\SettingsController@auditLog')->name('settings.auditlog');
-            Route::get('/rotation-images', 'Settings\SettingsController@rotationImages')->name('settings.rotationimages');
-            Route::get('/rotation-images/delete/{image_id}', 'Settings\SettingsController@deleteRotationImage')->name('settings.rotationimages.deleteimg');
-            Route::post('/rotation-images/uploadimg', 'Settings\SettingsController@uploadRotationImage')->name('settings.rotationimages.uploadimg');
             Route::get('/staff', 'Users\StaffListController@editIndex')->name('settings.staff');
             Route::post('/staff/{id}', 'Users\StaffListController@editStaffMember')->name('settings.staff.editmember');
             Route::post('/staff/a/add', 'Users\StaffListController@addStaffMember')->name('settings.staff.addmember');

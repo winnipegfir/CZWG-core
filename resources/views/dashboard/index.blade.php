@@ -631,13 +631,13 @@
                                                 class="black-text">View Feedback</span></a>
                                     </li>
                                     <li class="mb-2">
-                                        <a href="{{(route('dashboard.image'))}}" style="text-decoration:none;">
+                                        <a href="{{(route('dashboard.upload'))}}" style="text-decoration:none;">
                                     <span class="blue-text">
                                         <i class="fas fa-chevron-right"></i>
                                     </span>
                                             &nbsp;
                                             <span class="black-text">
-                                        Upload Image to WPG Server
+                                        Upload Files
                                     </span>
                                         </a>
                                     </li>
