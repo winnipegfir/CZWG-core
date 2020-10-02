@@ -152,7 +152,6 @@ return [
         /*
          * Package Service Providers...
          */
-        Barryvdh\DomPDF\ServiceProvider::class,
         MisterPhilip\MaintenanceMode\MaintenanceModeServiceProvider::class,
         MisterPhilip\MaintenanceMode\MaintenanceCommandServiceProvider::class,
         NotificationChannels\Discord\DiscordServiceProvider::class,
