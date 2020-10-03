@@ -1,11 +1,11 @@
 # Winnipeg FIR Core 
-### The (new) website for VATSIM's Winnipeg FIR
+### The website for the Virtual Winnipeg FIR on VATSIM - https://winnipegfir.ca
 
-### Thank you to CZQO for developing the inital core! https://github.com/gander-oceanic-fir-vatsim/czqo-core/
+### Thank you to the team at the [Gander Oceanic OCA](https://github.com/gander-oceanic-fir-vatsim) for developing the inital core! [Click here to visit their repository.](https://github.com/gander-oceanic-fir-vatsim/czqo-core)
 ---
 ### Contributing
 
-We would love you to help out with the website! If you find something and fix it, or notice something, or even have a feature request, feel free to make a pull request or an issue.
+We would love to have your ideas put into the website. Anything can be put into either a pull request or an issue for our review!
 
 #### Submitting an Issue or Pull Request
 Guidelines for submitting an **issue**:
@@ -26,13 +26,12 @@ Guidelines for submitting a **pull request**:
 
 ### Initial setup process
 
-1. Follow the steps found at https://laravel.com/docs to install the latest Laravel version.
-2. Clone our GitHub repository, and place it over your laravel installation.
-3. Run `composer install`
-4. Rename `.env.example` to `.env` and fill required fields. The VATSIM connect demo URI is already placed in there. Get your ID and put your redirect URI into http://auth-dev.vatsim.net.
-5. Run `php artisan migrate --seed` (runs database migrations and seeds with required rows).
-6. Run `php artisan key:generate`.
-7. Login with one of the accounts found at http://wiki.vatsim.net/connect.
-8. Give that new account in the `users` table a `permissions` value of `5`.
+1. Clone the repository.
+1. Run `composer install`
+1. Rename `.env.example` to `.env` and fill required fields. The VATSIM connect demo URI is already placed in there. Get your ID and put your redirect URI into http://auth-dev.vatsim.net.
+1. Run `php artisan migrate --seed` (runs database migrations and seeds with required rows).
+1. Run `php artisan key:generate`.
+1. Login with one of the accounts found at http://wiki.vatsim.net/connect.
+1. Give that new account in the `users` table a `permissions` value of `5`.
 
 
