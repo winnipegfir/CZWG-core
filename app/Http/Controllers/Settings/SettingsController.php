@@ -97,42 +97,6 @@ class SettingsController extends Controller
         return view('admin.settings.auditlog', compact('entries'));
     }
 
-    /*
-    Rotation images
-    */
-    public function rotationImages()
-    {
-        $images = RotationImage::all()->sortByDesc('created_at');
-
-        return view('admin.settings.rotationimages', compact('images'));
-    }
-
-    public function uploadRotationImage(Request $request)
-    {
-        $this->validate($request, [
-            'file' => 'required|image|mimes:jpeg,png,jpg'
-        ]);
-
-        $image = new RotationImage();
-
-        $basePath = 'public/files/rotation/'.Carbon::now()->toDateString().'/'.rand(1000,2000);
-        $path = $request->file('file')->store($basePath);
-        $image->path = Storage::url($path);
-
-        $image->user_id = Auth::id();
-
-        $image->save();
-
-        return redirect()->back()->with('success', 'Image uploaded.');
-    }
-
-    public function deleteRotationImage($image_id)
-    {
-        $image = RotationImage::whereId($image_id)->firstOrFail();
-        $image->delete();
-        return redirect()->back()->with('info', 'Image deleted.');
-    }
-
     public function banner() {
         $banner = CoreSettings::find(1);
 

@@ -255,10 +255,10 @@ class Kernel extends ConsoleKernel
                             ->update(['rating_id' => $ratingID, 'rating_short' => $ratings[$ratingID][0], 'rating_long' => $ratings[$ratingID][1], 'rating_GRP' => $ratings[$ratingID][1]]);
 
                         if($rosterMember) {
-                            Log::info("--> Updating rating, setting rating hours to 0");
+                            Log::info("--> Setting rating hours to 0");
 
                             RosterMember::where('cid', $u->id)
-                                ->update(['rating' => $ratings[$ratingID][0], 'rating_hours' => 0]);
+                                ->update(['rating_hours' => 0]);
                         }
 
                         Log::info('--> Completed!');
@@ -274,24 +274,6 @@ class Kernel extends ConsoleKernel
         // Monthly leaderboard wipe + currency wipe + notify staff + session log wipe
         $schedule->call(function () {
 
-            //How to make your time's look pretty, with Winnipeg!
-            function convertTime($dec) {
-                // start by converting to seconds
-                $seconds = ($dec * 3600);
-                // we're given hours, so let's get those the easy way
-                $hours = floor($dec);
-                // since we've "calculated" hours, let's remove them from the seconds variable
-                $seconds -= $hours * 3600;
-                // calculate minutes left
-                $minutes = floor($seconds / 60);
-                // return the time formatted HH:MM:SS
-                return lz($hours).":".lz($minutes);
-            }
-
-            function lz($num) {
-                return (strlen($num) < 2) ? "0{$num}" : $num;
-            }
-
             //Send Email to FIR Chief, Deputy Chief, and Chief Instructor alerting of inactivity
             $badMembers = [];
             foreach (RosterMember::all()->sortBy('currency') as $rosterMember) {
@@ -300,21 +282,21 @@ class Kernel extends ConsoleKernel
                         $memberName = $rosterMember->full_name . ' ' . $rosterMember->cid;
                         $memberEmail = User::where('id', $rosterMember->cid)->first()->email;
                         $memberActivity = $rosterMember->currency;
-                        array_push($badMembers, ['name' => $memberName, 'email' => $memberEmail, 'activity' => convertTime($memberActivity), 'requirement' => '01:00']);
+                        array_push($badMembers, ['name' => $memberName, 'email' => $memberEmail, 'activity' => decimal_to_hm($memberActivity), 'requirement' => '01:00']);
                     }
                 } elseif ($rosterMember->status == 'home') {
                     if ($rosterMember->currency < 2) {
                         $memberName = $rosterMember->full_name . ' ' . $rosterMember->cid;
                         $memberEmail = User::where('id', $rosterMember->cid)->first()->email;
                         $memberActivity = $rosterMember->currency;
-                        array_push($badMembers, ['name' => $memberName, 'email' => $memberEmail, 'activity' => convertTime($memberActivity), 'requirement' => '02:00']);
+                        array_push($badMembers, ['name' => $memberName, 'email' => $memberEmail, 'activity' => decimal_to_hm($memberActivity), 'requirement' => '02:00']);
                     }
                 } elseif ($rosterMember->status == 'instructor') {
                     if ($rosterMember->currency < 3) {
                         $memberName = $rosterMember->full_name . ' ' . $rosterMember->cid;
                         $memberEmail = User::where('id', $rosterMember->cid)->first()->email;
                         $memberActivity = $rosterMember->currency;
-                        array_push($badMembers, ['name' => $memberName, 'email' => $memberEmail, 'activity' => convertTime($memberActivity), 'requirement' => '03:00']);
+                        array_push($badMembers, ['name' => $memberName, 'email' => $memberEmail, 'activity' => decimal_to_hm($memberActivity), 'requirement' => '03:00']);
                     }
                 }
             }

@@ -229,7 +229,7 @@
             </table>
         </div>
 
-        <div class="tab-pane fade" id="visit" role="tabpanel" aria-labelledby="visit-tab">   
+        <div class="tab-pane fade" id="visit" role="tabpanel" aria-labelledby="visit-tab">
             <div class="row">
                 <div class="col-md-3">
                     <h4 class="font-weight-bold blue-text">Actions</h4>
@@ -651,33 +651,6 @@
     </div>
     </div>
     </div>
-
-    <!--Edit Winnipeg controller modal-->
-    <!--Confirm Delete controller button-->
-    <div class="modal fade" id="deleteController" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-         aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Confirm Deletion</h5><br>
-                </div>
-                <div class="modal-body">
-                    <p style="font-weight:bold">Name: {{$controller->full_name}}</p>
-                    <p style="font-weight:bold">CID: {{$controller->cid}}</p>
-                    <h3 style="font-weight:bold; color:red">Are you sure you want to do this?</h3>
-                    <p style="font-weight:bold">Deleting this member from the roster will delete their session logs.</p>
-                </div>
-                <div class="modal-footer">
-                    <form method="GET" action="{{ route('roster.deletecontroller', [$controller->id]) }}">
-                        {{ csrf_field() }}
-                        <button class="btn btn-danger" type="submit" href="#">Delete</button>
-                    </form>
-                    <button class="btn btn-light" data-dismiss="modal" style="width:375px">Dismiss</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!--end delete controller-->
 
     <div class="modal fade" id="joinDiscordServerModal" tabindex="-1" role="dialog"
          aria-labelledby="exampleModalCenterTitle" aria-hidden="true">

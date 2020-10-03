@@ -16,28 +16,11 @@
                     <div class="pl-0 mt-2 d-flex flex-row justify-content-left">
                         <a href="javascript:editEnable()" class="btn btn-success btn-sm"><i class="fas fa-edit"></i> Edit</a>
                         <a href="#" class="ml-2 btn btn-danger btn-sm"><i class="fas fa-trash"></i> Delete</a>
-                    
+
                 </div>
             </form>
         </div>
         <div class="col-md-6">
-            <h4>Map</h4>
-            @if ($position->polygon_coordinates)
-            <div id="map" style="height: 250px; margin:0; background:#000; z-index: 0 !important; position: relative;">
-                <div class="container flex-center">
-                    <h5 style="color:#fff;"><i class="fas fa-circle-notch fa-spin"></i>
-                        &nbsp;
-                        Loading map...
-                    </h5>
-                </div>
-            </div>
-            <script src="{{asset('js/positionmap.js')}}"></script>
-            <script>
-                createPositionMap(@php echo json_encode($position); @endphp);
-            </script>
-            @else
-            No coordinates specified.
-            @endif
         </div>
     </div>
     <h4>Sessions</h4>

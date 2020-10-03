@@ -21,12 +21,11 @@ Route::get('/roster/{id}', 'Users\UserController@viewProfile');
 Route::get('/roster/{id}/connections', 'Users\UserController@viewConnections');
 Route::get('/join', 'AtcTraining\ApplicationsController@joinWinnipeg')->name('join.public');
 Route::get('/staff', 'Users\StaffListController@index')->name('staff');
-Route::view('/pilots/tutorial', 'pilots.tutorial');
 Route::get('/policies', 'Publications\PoliciesController@index')->name('policies');
 Route::get('/meetingminutes', 'News\NewsController@minutesIndex')->name('meetingminutes');
 Route::get('/bookings', 'ControllerBookings\ControllerBookingsController@indexPublic')->name('controllerbookings.public');
 Route::view('/privacy', 'privacy')->name('privacy');
-Route::view('/yourfeedback', 'yourfeedback')->name('yourfeedback');
+Route::get('/yourfeedback', 'Feedback\FeedbackController@yourFeedback')->name('yourfeedback');
 Route::view('/changelog', 'changelog')->name('changelog');
 Route::get('/events', 'Events\EventController@index')->name('events.index');
 Route::get('/events/{slug}', 'Events\EventController@viewEvent')->name('events.view');
@@ -66,14 +65,17 @@ Route::group(['middleware' => 'auth'], function () {
 
     Route::group(['middleware' => 'staff'], function () {
         Route::prefix('admin')->group(function () {
-            //Image Uploads
-            Route::get('/imageupload', 'Publications\ImageUploadController@imageUpload')->middleware('staff')->name('dashboard.image');
-            Route::post('/imageupload', 'Publications\ImageUploadController@imageUploadPost')->middleware('staff')->name('dashboard.image.upload');
+            //Uploads
+            Route::get('/upload', 'Publications\UploadController@upload')->middleware('staff')->name('dashboard.upload');
+            Route::post('/upload', 'Publications\UploadController@uploadPost')->middleware('staff')->name('dashboard.upload.post');
             //View Feedback
             Route::get('/feedback', 'Feedback\FeedbackController@index')->name('staff.feedback.index');
             Route::get('/feedback/controller/{id}', 'Feedback\FeedbackController@viewControllerFeedback')->name('staff.feedback.controller');
+            Route::get('/feedback/controller/{id}/approve', 'Feedback\FeedbackController@approveControllerFeedback');
+            Route::get('/feedback/controller/{id}/deny', 'Feedback\FeedbackController@denyControllerFeedback');
+            Route::get('/feedback/controller/{id}/delete', 'Feedback\FeedbackController@deleteControllerFeedback');
             Route::get('/feedback/website/{id}', 'Feedback\FeedbackController@viewWebsiteFeedback')->name('staff.feedback.website');
-
+            Route::get('/feedback/website/{id}/delete', 'Feedback\FeedbackController@deleteWebsiteFeedback');
         });
 
         //Closing, re-opening, and placing tickets on hold
@@ -267,9 +269,6 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/emails', 'Settings\SettingsController@emails')->name('settings.emails');
             Route::post('/emails', 'Settings\SettingsController@saveEmails')->name('settings.emails.post');
             Route::get('/audit-log', 'Settings\SettingsController@auditLog')->name('settings.auditlog');
-            Route::get('/rotation-images', 'Settings\SettingsController@rotationImages')->name('settings.rotationimages');
-            Route::get('/rotation-images/delete/{image_id}', 'Settings\SettingsController@deleteRotationImage')->name('settings.rotationimages.deleteimg');
-            Route::post('/rotation-images/uploadimg', 'Settings\SettingsController@uploadRotationImage')->name('settings.rotationimages.uploadimg');
             Route::get('/staff', 'Users\StaffListController@editIndex')->name('settings.staff');
             Route::post('/staff/{id}', 'Users\StaffListController@editStaffMember')->name('settings.staff.editmember');
             Route::post('/staff/a/add', 'Users\StaffListController@addStaffMember')->name('settings.staff.addmember');

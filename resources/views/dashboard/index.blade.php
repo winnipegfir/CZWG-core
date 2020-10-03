@@ -34,7 +34,7 @@
                     <div class="card-body">
                         <h3 class="font-weight-bold blue-text pb-2">Your Account</h3>
                         <div class="row">
-                            <div class="col" data-step="3" data-intro="Here is an overview of your profile, including your CZWG roles. You can change the way your name is displayed by clicking on your name, at the top of the panel. (CoC A4(b))">
+                            <div class="col" data-step="3" data-intro="Here is an overview of your profile, including your CZWG roles. You can change the way your name is displayed by clicking on the 'Change display name' button. (CoC A4(b))">
                                 <h5 class="card-title">
                                     {{ Auth::user()->fullName('FLC') }}
                                 </h5>
@@ -55,7 +55,7 @@
                                     </h6>
                                 @else
                                     @if ($certification == "training")
-                                        You do not have an Instructor Yet!
+                                        You do not have an Instructor yet!
                                     @endif
                                 @endif
                                 <br/>
@@ -374,11 +374,11 @@
                                     @if (!Auth::user()->rosterProfile->currency == 0)
                                         @if (Auth::user()->rosterProfile->currency < 2.0)
                                             <h3><span class="badge rounded shadow-none blue">
-                            {{decimal_to_hms(Auth::user()->rosterProfile->currency)}} hours recorded
+                            {{decimal_to_hm(Auth::user()->rosterProfile->currency)}} hours recorded
                           </span></h3>
                                         @elseif (Auth::user()->rosterProfile->currency >= 2.0)
                                             <h3><span class="badge rounded shadow-none green">
-                            {{decimal_to_hms(Auth::user()->rosterProfile->currency)}} hours recorded
+                            {{decimal_to_hm(Auth::user()->rosterProfile->currency)}} hours recorded
                           </span></h3>
                                         @endif
                                     @endif
@@ -391,11 +391,11 @@
                                     @if (!Auth::user()->rosterProfile->currency == 0)
                                         @if (Auth::user()->rosterProfile->currency < 2.0)
                                             <h3><span class="badge rounded shadow-none blue">
-                            {{decimal_to_hms(Auth::user()->rosterProfile->currency)}} hours recorded
+                            {{decimal_to_hm(Auth::user()->rosterProfile->currency)}} hours recorded
                           </span></h3>
                                         @elseif (Auth::user()->rosterProfile->currency >= 2.0)
                                             <h3><span class="badge rounded shadow-none green">
-                            {{decimal_to_hms(Auth::user()->rosterProfile->currency)}} hours recorded
+                            {{decimal_to_hm(Auth::user()->rosterProfile->currency)}} hours recorded
                           </span></h3>
                                         @endif
                                     @endif
@@ -408,11 +408,11 @@
                                     @if (!Auth::user()->rosterProfile->currency == 0)
                                         @if (Auth::user()->rosterProfile->currency < 1.0)
                                             <h3><span class="badge rounded shadow-none blue">
-                              {{decimal_to_hms(Auth::user()->rosterProfile->currency)}} hours recorded
+                              {{decimal_to_hm(Auth::user()->rosterProfile->currency)}} hours recorded
                           </span></h3>
                                         @elseif (Auth::user()->rosterProfile->currency >= 1.0)
                                             <h3><span class="badge rounded shadow-none green">
-                              {{decimal_to_hms(Auth::user()->rosterProfile->currency)}} hours recorded
+                              {{decimal_to_hm(Auth::user()->rosterProfile->currency)}} hours recorded
                           </span></h3>
                                         @endif
                                     @endif
@@ -426,11 +426,11 @@
                                     @if (!Auth::user()->rosterProfile->currency == 0)
                                         @if (Auth::user()->rosterProfile->currency < 3.0)
                                             <h3><span class="badge rounded shadow-none blue">
-                                                {{decimal_to_hms(Auth::user()->rosterProfile->currency)}} hours recorded
+                                                {{decimal_to_hm(Auth::user()->rosterProfile->currency)}} hours recorded
                                             </span></h3>
                                         @elseif (Auth::user()->rosterProfile->currency >= 3.0)
                                             <h3><span class="badge rounded shadow-none green">
-                                                {{decimal_to_hms(Auth::user()->rosterProfile->currency)}} hours recorded
+                                                {{decimal_to_hm(Auth::user()->rosterProfile->currency)}} hours recorded
                                             </span></h3>
                                         @endif
                                     @endif
@@ -631,13 +631,13 @@
                                                 class="black-text">View Feedback</span></a>
                                     </li>
                                     <li class="mb-2">
-                                        <a href="{{(route('dashboard.image'))}}" style="text-decoration:none;">
+                                        <a href="{{(route('dashboard.upload'))}}" style="text-decoration:none;">
                                     <span class="blue-text">
                                         <i class="fas fa-chevron-right"></i>
                                     </span>
                                             &nbsp;
                                             <span class="black-text">
-                                        Upload Image to WPG Server
+                                        Upload Files
                                     </span>
                                         </a>
                                     </li>

@@ -53,27 +53,13 @@ class HomeController extends Controller
         //Event
         $nextEvent = Event::where('start_timestamp', '>', Carbon::now())->get()->sortByDesc('id')->first();
 
-        //Top 5 controllers of the month
-        function clockalize($in){
-
-            $h = intval($in);
-            $m = round((((($in - $h) / 100.0) * 60.0) * 100), 0);
-            if ($m == 60)
-            {
-                $h++;
-                $m = 0;
-            }
-            $retval = sprintf("%02d:%02d", $h, $m);
-            return $retval;
-        }
-
         $topControllersArray = [];
 
         $topControllers = RosterMember::all()->sortByDesc('currency');
         foreach($topControllers as $top) {
             $top = [
                 'cid' => $top['user_id'],
-                'time' => clockalize($top['currency'])];
+                'time' => decimal_to_hm($top['currency'])];
             array_push($topControllersArray, $top);
         }
 
@@ -191,18 +177,25 @@ class HomeController extends Controller
     }
 
     public function nate() {
-            $url = 'https://api.vatsim.net/api/ratings/1233493/rating_times/';
-
+        function getStuff($url) {
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            $json = curl_exec($ch);
+            $json = json_decode(curl_exec($ch));
             curl_close($ch);
 
-            $atcTime = json_decode($json)->atc;
-            $pilotTime = json_decode($json)->pilot;
-            $totalTime = $atcTime + $pilotTime;
+            return $json;
+        }
 
-        return view('nate', compact('atcTime', 'pilotTime', 'totalTime'));
+            $hours = getStuff('https://api.vatsim.net/api/ratings/1233493/rating_times/');
+
+            $atcTime = decimal_to_hm($hours->atc);
+            $pilotTime = decimal_to_hm($hours->pilot);
+            $totalTime =decimal_to_hm($hours->atc + $hours->pilot);
+
+            $timeOnNetwork = str_replace("T", " ", getStuff('https://api.vatsim.net/api/ratings/1233493/')->reg_date);
+            $yearsOnNetwork = Carbon::now()->diffInYears($timeOnNetwork);
+
+        return view('nate', compact('atcTime', 'pilotTime', 'totalTime', 'yearsOnNetwork'));
     }
 }

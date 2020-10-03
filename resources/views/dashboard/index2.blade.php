@@ -12,14 +12,14 @@
                         <h3 class="font-weight-bold blue-text pb-2">Your Account</h3>
                         <div class="row">
                             <div class="col" data-step="3"
-                                 data-intro="Here is an overview of your profile, including your CZWG roles. You can change the way your name is displayed by clicking on your name, at the top of the panel. (CoC A4(b))">
+                                 data-intro="Here is an overview of your profile, including your CZWG roles. You can change the way your name is displayed by clicking on the 'Change display name' button. (CoC A4(b))">
                                 <h5 class="card-title">
                                     {{ Auth::user()->fullName('FLC') }}
                                 </h5>
                                 <h6 class="card-subtitle mb-2 text-muted">
                                     {{Auth::user()->rating_GRP}} ({{Auth::user()->rating_short}})
                                 </h6>
-                                <p class="font-italic" style="color: darkblue;" data-toggle="modal" data-target="#ratingChange">Why is my rating wrong?</p>
+                                <p><a class="font-italic" style="color: blue;" data-toggle="modal" data-target="#ratingChange">Rating incorrect?</a></p>
                                 Role: {{Auth::user()->permissions()}}<br/>
                                 <br/>
                                 <div data-step="4" data-intro="Here you can link your Discord account to receive reminders for training sessions, and gain access to the CZWG Discord.">

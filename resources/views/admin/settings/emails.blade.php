@@ -41,7 +41,7 @@
                     </tr>
                     <tr>
                     <th scope="row">
-                        Events and Marketing
+                        Events Coordinator
                     </th>
                     <td>
                         <input required type="text" value="{{$coreSettings->emaileventc}}" name="emaileventc" id="" class="form-control form-control-sm border">
@@ -49,7 +49,7 @@
                     </tr>
                     <tr>
                     <th scope="row">
-                        Operations
+                        Facility Engineer
                     </th>
                     <td>
                         <input required type="text" value="{{$coreSettings->emailfacilitye}}" name="emailfacilitye" id="" class="form-control form-control-sm border">

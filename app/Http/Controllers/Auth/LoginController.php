@@ -193,7 +193,7 @@ class LoginController extends Controller
 
         if($user->display_fname === null) {
             User::updateOrCreate(['id' => $response->data->cid], [
-                'display_fname' => $response->data->personal->name_first
+                'display_fname' => isset($response->data->personal->name_first) ? utf8_decode($response->data->personal->name_first) : $response->data->cid,
             ]);
         }
 
