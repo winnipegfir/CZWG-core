@@ -9,8 +9,6 @@
     "type": "project",
     "require": {
         "php": "^7.2",
-        "barryvdh/laravel-dompdf": "^0.8.5",
-        "cobaltgrid/aviation-weather": "^1.0",
         "fideloper/proxy": "^4.0",
         "guzzlehttp/guzzle": "^6.3.3",
         "intervention/image": "^2.5",
@@ -25,7 +23,7 @@
         "sendgrid/sendgrid": "~7",
         "skymeyer/vatsimphp": "1.0.*",
         "socialiteproviders/discord": "^2.0",
-        "spatie/laravel-google-calendar": "^2.3",
+        "spatie/laravel-google-calendar": "^2.6.2",
         "thujohn/twitter": "^2.2",
         "vatsim/sso": "3.*",
         "vemcogroup/laravel-sparkpost-driver": "^1.0",
