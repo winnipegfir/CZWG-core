@@ -218,7 +218,7 @@ class Kernel extends ConsoleKernel
                     }
                 }
             }
-            file_get_contents(env('CRON_MINUTE_URL'));
+            file_get_contents(config('cronurls.minute'));
         })->everyMinute();
 
         //VATSIM Rating Update because Nate is making me
@@ -268,7 +268,7 @@ class Kernel extends ConsoleKernel
                     }
                 }
             }
-            file_get_contents(env('CRON_DAILY_URL'));
+            file_get_contents(config('cronurls.daily'));
         })->daily()->timezone('America/New_York');
 
         // Monthly leaderboard wipe + currency wipe + notify staff + session log wipe
@@ -312,7 +312,7 @@ class Kernel extends ConsoleKernel
             //Remove our session logs because we don't need them anymore
             SessionLog::query()->truncate();
 
-            file_get_contents(env('CRON_MONTHLY_URL'));
+            file_get_contents(config('cronurls.monthly'));
         })->monthlyOn(1, '00:00');
 }
     /**
