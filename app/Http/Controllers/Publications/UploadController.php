@@ -31,6 +31,6 @@ class UploadController extends Controller
         );
 
         return back()
-            ->with('success','File uploaded to: <a href="https://winnipegfir.ca/storage/files/uploads/'.$fileName.'">https://winnipegfir.ca/storage/files/uploads/'.$fileName.'</a>');
+            ->with('success','File uploaded to: <a href='.config('app.url').'/storage/files/uploads/'.$fileName.'">'.config('app.url').'/storage/files/uploads/'.$fileName.'</a>');
     }
 }
