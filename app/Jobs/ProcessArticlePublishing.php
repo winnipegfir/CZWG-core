@@ -85,7 +85,7 @@ class ProcessArticlePublishing implements ShouldQueue
                     "color" => hexdec( "2196f3" ),
 
                     "image" => [
-                        "url" => $this->article->image ? "https://winnipegfir.ca/".$this->article->image : null
+                        "url" => $this->article->image ? config('app.url')."/".$this->article->image : null
                     ],
 
                     // Footer object
