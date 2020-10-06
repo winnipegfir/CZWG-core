@@ -189,7 +189,7 @@
 <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; font-family: Tahoma, Verdana, sans-serif"><![endif]-->
 <div style="color:#555555;font-family:'Source Sans Pro', Tahoma, Verdana, Segoe, sans-serif;line-height:1.2;padding-top:10px;padding-right:10px;padding-bottom:10px;padding-left:10px;">
 <div style="font-size: 14px; line-height: 1.2; color: #555555; font-family: 'Source Sans Pro', Tahoma, Verdana, Segoe, sans-serif; mso-line-height-alt: 17px;">
-<p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;">To change your subscription options or manage your membership with Winnipeg, <a href="https://winnipegfir.ca" rel="noopener" style="text-decoration: underline; color: #0068A5;" target="_blank">visit our website.</a></p>
+<p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;">To change your subscription options or manage your membership with Winnipeg, <a href="{{config('app.url')}}" rel="noopener" style="text-decoration: underline; color: #0068A5;" target="_blank">visit our website.</a></p>
 </div>
 </div>
 <!--[if mso]></td></tr></table><![endif]-->
@@ -203,7 +203,7 @@
 <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px; font-family: Tahoma, Verdana, sans-serif"><![endif]-->
 <div style="color:#555555;font-family:'Source Sans Pro', Tahoma, Verdana, Segoe, sans-serif;line-height:1.2;padding-top:10px;padding-right:10px;padding-bottom:10px;padding-left:10px;">
 <div style="line-height: 1.2; font-size: 12px; color: #555555; font-family: 'Source Sans Pro', Tahoma, Verdana, Segoe, sans-serif; mso-line-height-alt: 14px;">
-<p style="line-height: 1.2; word-break: break-word; font-size: 14px; mso-line-height-alt: 17px; margin: 0;"><span style="font-size: 14px;"><strong><a href="https://winnipegfir.ca" rel="noopener" style="text-decoration: underline; color: #0068A5;" target="_blank">https://winnipegfir.ca</a> |  <a href="https://winnipegfir.ca/staff" rel="noopener" style="text-decoration: underline; color: #0068A5;" target="_blank">Contact Us</a> |  <a href="https://winnipegfir.ca/privacy" rel="noopener" style="text-decoration: underline; color: #0068A5;" target="_blank">Privacy Policy</a></strong></span></p>
+<p style="line-height: 1.2; word-break: break-word; font-size: 14px; mso-line-height-alt: 17px; margin: 0;"><span style="font-size: 14px;"><strong><a href="{{config('app.url')}}" rel="noopener" style="text-decoration: underline; color: #0068A5;" target="_blank">{{config('app.url')}}/a> |  <a href="{{config('app.url')}}/staff" rel="noopener" style="text-decoration: underline; color: #0068A5;" target="_blank">Contact Us</a> |  <a href="{{config('app.url')}}/privacy" rel="noopener" style="text-decoration: underline; color: #0068A5;" target="_blank">Privacy Policy</a></strong></span></p>
 </div>
 </div>
 <!--[if mso]></td></tr></table><![endif]-->
