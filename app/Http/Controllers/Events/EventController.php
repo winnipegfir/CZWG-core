@@ -75,7 +75,7 @@ class EventController extends Controller
         if (Auth::user()->gdpr_subscribed_emails == 1) {
             $application->user->notify(new EventSignup($application, $event_id = $request->get('event_id')));
         }
-        return redirect()->back()->with('success', 'Thanks for applying! If you need to make any adjustments to your application, please <a href="https://site-dev.winnipegfir.ca/staff">contact the Events Coordinator.');
+        return redirect()->back()->with('success', 'Thanks for applying! If you need to make any adjustments to your application, please <a href='.config('app.url').'/staff>contact the Events Coordinator.');
     }
 
     public function viewApplications($id)
