@@ -156,11 +156,20 @@ public function changeStudentStatus(Request $request, $id)
 public function assignInstructorToStudent(Request $request, $id)
 {
   $student = Student::where('id', $id)->firstorFail();
+  $instructor = $request->input('instructor');
   if ($student != null) {
+    if ($instructor != 'unassign') {
   $student->instructor_id = $request->input('instructor');
   $student->save();
+    return redirect()->back()->withSuccess('Paired '.$student->user->fullName('FLC'). 'with Instructor ' .$student->instructor->user->fullName('FLC'). '');
   }
-  return redirect()->back()->withSuccess('Paired '.$student->user->fullName('FLC'). 'with Instructor ' .$student->instructor->user->fullName('FLC'). '');
+  if ($instructor == 'unassign') {
+    $student->instructor_id = null;
+    $student->save();
+      return redirect()->back()->withSuccess('Unassigned '.$student->user->fullName('FLC'). ' from Instructor ');
+  }
+}
+
   if ($student == null) {
     return redirect()->back()->withError('Unable to find a student with CID '.$student->user->id. '');
   }
