@@ -14,10 +14,8 @@
         <div class="col-md-2">
           @include('includes.moduleMenu2')
         </div>
+
     <div class="col-md-10">
-      <!--Admin Functions-->
-
-
       {{$currentlesson->name}}<br><br>
       {{$currentlesson->content_html}}
 

@@ -47,12 +47,14 @@ public function moduleindex()
     return redirect()->back()->withError('You do not have any assigned modules! Contact your Instructor at '.$student->instructor->email. '');
     }
   }
-      //Allow Mentor->Admin view ALL modules
-  if (Auth::user()->permissions >= 3) {
-    $modules = CbtModule::all();
-  }
 
   return view('dashboard.training.CBT.modules', compact('modules'));
+}
+
+public function moduleindexadmin()
+{
+  $modules = CbtModule::all();
+  return view('dashboard.training.CBT.modulesadmin', compact('modules'));
 }
 
 public function viewmodule($id, $progress)
