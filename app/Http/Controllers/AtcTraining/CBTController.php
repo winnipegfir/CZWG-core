@@ -44,7 +44,12 @@ public function moduleindex()
   if ($student != null) {
   $modules = CbtModuleAssign::where('student_id', $student->id)->get();
   if (count($modules) < 1) {
+    if ($student->instructor != null) {
     return redirect()->back()->withError('You do not have any assigned modules! Contact your Instructor at '.$student->instructor->email. '');
+    }
+      if ($student->instructor == null) {
+    return redirect()->back()->withError('You do not have any assigned modules or an assigned Instructor! Please contact the Chief Instructor for help!');
+      }
     }
   }
 
