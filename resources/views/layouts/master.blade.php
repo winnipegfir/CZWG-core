@@ -247,32 +247,32 @@
     </div>
     <!-- Footer -->
     <!-- Footer -->
-    <footer class="page-footer text-dark font-small py-4 {{Request::is('/dashboard') ? 'mt-5' : ''}}" style="background-color:#013162">
+    <footer class="page-footer text-light font-small py-4 bg-dark {{Request::is('/dashboard') ? 'mt-5' : ''}}">
         <div class="container">
             <p style="color:white">For Flight Simulation Use Only - Not to be used for real-world navigation. By using this site, you agree to hold harmless and indemnify the owners and authors of these web pages, those listed on these pages, and all pages that this site that may be pointed to (i.e. external links).</p>
             <p style="color:white">Copyright © {{App\Models\Settings\CoreSettings::where('id', 1)->firstOrFail()->copyright_year}} Winnipeg FIR | All Rights Reserved.</p>
             <div class="flex-left mt-3">
-            <a href="{{route('about')}}" class="white-text">Github</a>
+            <a href="{{route('about')}}">Github</a>
                 &nbsp;
                 •
                 &nbsp;
-                <a href="{{route('feedback.create')}}" class="white-text">Feedback</a>
+                <a href="{{route('feedback.create')}}">Feedback</a>
                 &nbsp;
                 •
                 &nbsp;
-                <a href="{{route('privacy')}}" class="white-text">Privacy Policy</a>
+                <a href="{{route('privacy')}}">Privacy Policy</a>
                 &nbsp;
                 •
                 &nbsp;
-                <a href="{{route('branding')}}" class="white-text">Branding</a>
+                <a href="{{route('branding')}}">Branding</a>
                 &nbsp;
                 •
                 &nbsp;
-                <a href="https://www.vatcan.ca" class="white-text">VATCAN</a>
+                <a href="https://www.vatcan.ca">VATCAN</a>
                 &nbsp;
                 •
                 &nbsp;
-                <a href="https://www.vatsim.net" class="white-text">VATSIM</a>
+                <a href="https://www.vatsim.net">VATSIM</a>
             </div>
 
             <div class="mt-3">
