@@ -219,7 +219,7 @@ class Kernel extends ConsoleKernel
                 }
             }
             file_get_contents(config('cronurls.minute'));
-        })->everyMinute();
+        })->everyMinute()->evenInMaintenanceMode();
 
         //VATSIM Rating Update because Nate is making me
         $schedule->call(function () {
@@ -243,7 +243,7 @@ class Kernel extends ConsoleKernel
             // Check each user to see if their rating has changed
             foreach($users as $u) {
                 //Because of the vacant user ugh
-                if($u->id != 1) {
+                if($u->id != 1 | $u->id != 2) {
                     $rosterMember = RosterMember::where('cid', $u->id)->first();
                     $getRating = json_decode(file_get_contents('https://api.vatsim.net/api/ratings/' . $u->id . '/'));
                     $ratingID = $getRating->rating;

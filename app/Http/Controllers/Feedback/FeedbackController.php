@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\AtcTraining\RosterMember;
 use App\Models\Feedback\ControllerFeedback;
 use App\Models\Feedback\WebsiteFeedback;
+use App\Models\Settings\AuditLogEntry;
 use App\Models\Settings\CoreSettings;
 use App\Models\Users\User;
 use App\Notifications\Feedback\NewControllerFeedback;
@@ -45,26 +46,43 @@ class FeedbackController extends Controller
         $feedback = ControllerFeedback::where('id', $id)->firstOrFail();
 
         if($feedback->approval == 2) {
-            return redirect()->back()->withErrors('Feedback ID#'.$feedback->id.' has already been approved!');
+            return redirect()->back()->withErrors('Feedback ID#'.$id.' has already been approved!');
         }
 
         $feedback->approval = 2;
         $feedback->save();
 
-        return redirect()->back()->withSuccess('Feedback ID#'.$feedback->id.' has been approved!');
+        return redirect()->back()->withSuccess('Feedback ID#'.$id.' has been approved!');
     }
 
     public function denyControllerFeedback($id) {
         $feedback = ControllerFeedback::where('id', $id)->firstOrFail();
 
         if($feedback->approval == 1) {
-            return redirect()->back()->withErrors('Controller Feedback ID#'.$feedback->id.' has already been denied!');
+            return redirect()->back()->withErrors('Controller Feedback ID#'.$id.' has already been denied!');
         }
 
         $feedback->approval = 1;
         $feedback->save();
 
-        return redirect()->back()->withSuccess('Controller Feedback ID#'.$feedback->id.' has been denied!');
+        return redirect()->back()->withSuccess('Controller Feedback ID#'.$id.' has been denied!');
+    }
+
+    public function editControllerFeedback(Request $request, $id)
+    {
+        $feedback = ControllerFeedback::where('id', $id)->firstOrFail();
+        $feedback->content = $request->get('content');
+        $feedback->save();
+
+        $log = new AuditLogEntry();
+        $log->user_id = Auth::user()->id;
+        $log->affected_id = $feedback->controller_cid;
+        $log->action = "Edited Controller Feedback ID#".$id;
+        $log->time = date('Y-m-d H:i:s');
+        $log->private = 0;
+        $log->save();
+
+        return redirect()->back()->withSuccess('Controller Feedback ID#' . $feedback->id . ' has been edited!');
     }
 
     public function deleteControllerFeedback($id)
@@ -72,7 +90,7 @@ class FeedbackController extends Controller
         $feedback = ControllerFeedback::where('id', $id)->firstOrFail();
         $feedback->delete();
 
-        return redirect()->to(route('staff.feedback.index'))->withSuccess('Controller Feedback ID#' . $feedback->id . ' has been deleted!');
+        return redirect()->to(route('staff.feedback.index'))->withSuccess('Controller Feedback ID#' . $id . ' has been deleted!');
     }
 
     public function viewWebsiteFeedback($id) {
@@ -87,7 +105,7 @@ class FeedbackController extends Controller
         $feedback = WebsiteFeedback::where('id', $id)->firstOrFail();
         $feedback->delete();
 
-        return redirect()->to(route('staff.feedback.index'))->withSuccess('Website Feedback ID#' . $feedback->id . ' has been deleted!');
+        return redirect()->to(route('staff.feedback.index'))->withSuccess('Website Feedback ID#' . $id . ' has been deleted!');
     }
 
     public function create()

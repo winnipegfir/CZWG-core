@@ -72,6 +72,7 @@ Route::group(['middleware' => 'auth'], function () {
             //View Feedback
             Route::get('/feedback', 'Feedback\FeedbackController@index')->name('staff.feedback.index');
             Route::get('/feedback/controller/{id}', 'Feedback\FeedbackController@viewControllerFeedback')->name('staff.feedback.controller');
+            Route::post('/feedback/controller/{id}', 'Feedback\FeedbackController@editControllerFeedback')->name('staff.feedback.controller.edit');
             Route::get('/feedback/controller/{id}/approve', 'Feedback\FeedbackController@approveControllerFeedback');
             Route::get('/feedback/controller/{id}/deny', 'Feedback\FeedbackController@denyControllerFeedback');
             Route::get('/feedback/controller/{id}/delete', 'Feedback\FeedbackController@deleteControllerFeedback');
