@@ -5,10 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\AtcTraining\RosterMember;
 use App\Models\Events\Event;
 use App\Models\News\News;
-use App\Models\News\CarouselItem;
+use App\Models\Settings\HomepageImages;
 use Auth;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
@@ -43,27 +42,58 @@ class HomeController extends Controller
                     }
             }
 
-            //$topHomeControllers
-
-            $planes = $vatsim->getPilots()->toArray();
 
         //News
         $news = News::where('visible', true)->get()->sortByDesc('published')->take(3);
 
         //Event
-        $nextEvent = Event::where('start_timestamp', '>', Carbon::now())->get()->sortByDesc('id')->first();
+        $nextEvents = Event::where('start_timestamp', '>', Carbon::now())->get()->sortByDesc('id')->take(3);
 
+        //Top Controllers
         $topControllersArray = [];
 
-        $topControllers = RosterMember::all()->sortByDesc('currency');
+        $topControllers = RosterMember::where('currency', '!=', 0)->get()->sortByDesc('currency');
+
+        $n = -1;
         foreach($topControllers as $top) {
             $top = [
+                'id' => $n += 1,
                 'cid' => $top['user_id'],
                 'time' => decimal_to_hm($top['currency'])];
             array_push($topControllersArray, $top);
         }
 
-        return view('index', compact('finalPositions', 'news', 'planes', 'nextEvent', 'topControllersArray'));
+        $colourArray = [
+            0 => 'gold',
+            1 => 'grey',
+            2 => '#8e3c00',
+            3 => 'lightgray',
+            4 => 'lightgray',
+        ];
+
+        //Weather
+        $weather = Cache::remember('weather.data', 900, function () {
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, 'https://api.checkwx.com/metar/CYWG,CYXE,CYQR,CYQT,CYPG,CYMJ/decoded?pretty=1');
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ['X-API-Key: ' . env('AIRPORT_API_KEY')]);
+
+            $resp = json_decode(curl_exec($ch));
+
+            curl_close($ch);
+
+            $weatherArray = [];
+            foreach ($resp->data as $w) {
+                array_push($weatherArray, $w);
+            }
+
+            return($weatherArray);
+        });
+
+        //Background Image
+        $background = HomepageImages::all()->random();
+
+        return view('index', compact('finalPositions', 'news', 'planes', 'nextEvents', 'topControllersArray', 'colourArray', 'weather', 'background'));
     }
 
     public function map()

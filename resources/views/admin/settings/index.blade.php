@@ -29,6 +29,13 @@
             </div>
             <div class="col-md-3 mb-3">
                 <div class="card h-100 p-4 btn-primary shadow-none">
+                    <h3>Homepage Images</h3>
+                    <p>Add, remove or amend homepage images.<br>&nbsp;</p>
+                    <a class="white-text font-weight-bold" href="{{route('settings.images')}}">Go <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <div class="card h-100 p-4 btn-primary shadow-none">
                     <h3>Staff</h3>
                     <p>Who's on the team? Find out (and make changes) here.<br>&nbsp;</p>
                     <a class="white-text font-weight-bold" href="{{route('settings.staff')}}">Go <i class="fas fa-arrow-right"></i></a>

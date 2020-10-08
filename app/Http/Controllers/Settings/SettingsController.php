@@ -5,15 +5,12 @@ namespace App\Http\Controllers\Settings;
 use App\Http\Controllers\Controller;
 use App\Models\Settings\AuditLogEntry;
 use App\Models\Settings\CoreSettings;
-use App\Models\Settings\MaintenanceIPExemption;
 use App\Models\Settings\RotationImage;
+use App\Models\Settings\HomepageImages;
 use App\Notifications\MaintenanceNotification;
-use App\Models\Users\User;
 use Artisan;
 use Auth;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class SettingsController extends Controller
 {
@@ -134,5 +131,32 @@ class SettingsController extends Controller
 
 
         return back()->withSuccess('The banner has been updated!');
+    }
+
+    public function imagesIndex() {
+        $images = HomepageImages::all();
+
+        return view('admin.settings.homepageimages', compact('images'));
+    }
+
+    public function uploadImage(Request $request) {
+        $this->validate($request, [
+            'URL' => 'required',
+            'nameCredit' => 'required'
+        ]);
+
+        $image = new HomepageImages();
+        $image->url = $request->URL;
+        $image->credit = $request->nameCredit;
+        $image->save();
+
+        return back()->withSuccess('Image uploaded successfully!');
+    }
+
+    public function deleteImage($id) {
+        $image = HomepageImages::where('id', $id)->first();
+        $image->delete();
+
+        return back()->withSuccess('Image deleted successfully!');
     }
 }

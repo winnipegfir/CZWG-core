@@ -31,6 +31,7 @@ Route::get('/events', 'Events\EventController@index')->name('events.index');
 Route::get('/events/{slug}', 'Events\EventController@viewEvent')->name('events.view');
 Route::view('/about', 'about')->name('about');
 Route::view('/branding', 'branding')->name('branding');
+Route::view('/new', 'new');
 Route::get('/news/{id}', 'News\NewsController@viewArticlePublic')->name('news.articlepublic')->where('id', '[0-9]+');
 Route::get('/news/{slug}', 'News\NewsController@viewArticlePublic')->name('news.articlepublic');
 Route::get('/news', 'News\NewsController@viewAllPublic')->name('news');
@@ -279,7 +280,9 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/staff/{id}/delete', 'Users\StaffListController@deleteStaffMember')->name('settings.staff.deletemember');
             Route::get('/banner', 'Settings\SettingsController@banner')->name('settings.banner');
             Route::post('/banner', 'Settings\SettingsController@bannerEdit')->name('settings.banner.edit');
-
+            Route::get('/images', 'Settings\SettingsController@imagesIndex')->name('settings.images');
+            Route::post('images', 'Settings\SettingsController@uploadImage')->name('settings.images.upload');
+            Route::get('/images/delete/{id}', 'Settings\SettingsController@deleteImage')->name('settings.images.delete');
         });
 
 
