@@ -148,9 +148,31 @@ class SettingsController extends Controller
         $image = new HomepageImages();
         $image->url = $request->URL;
         $image->credit = $request->nameCredit;
+        $image->css = $request->CSS;
         $image->save();
 
         return back()->withSuccess('Image uploaded successfully!');
+    }
+
+    public function editImage(Request $request, $id) {
+        $this->validate($request, [
+            'URL' => 'required',
+            'nameCredit' => 'required'
+        ]);
+
+        $image = HomepageImages::where('id', $id)->first();
+        $image->url = $request->URL;
+        $image->credit = $request->nameCredit;
+        $image->CSS = $request->CSS;
+        $image->save();
+
+        return back()->withSuccess('Image edited successfully!');
+    }
+
+    public function testImage($id) {
+        $image = HomepageImages::where('id', $id)->first();
+
+        return view('admin.settings.testimage', compact('image'));
     }
 
     public function deleteImage($id) {

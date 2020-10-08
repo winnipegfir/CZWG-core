@@ -282,6 +282,8 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/banner', 'Settings\SettingsController@bannerEdit')->name('settings.banner.edit');
             Route::get('/images', 'Settings\SettingsController@imagesIndex')->name('settings.images');
             Route::post('images', 'Settings\SettingsController@uploadImage')->name('settings.images.upload');
+            Route::post('/images/edit/{id}', 'Settings\SettingsController@editImage')->name('settings.images.edit');
+            Route::get('/images/test/{id}', 'Settings\SettingsController@testImage')->name('settings.images.test');
             Route::get('/images/delete/{id}', 'Settings\SettingsController@deleteImage')->name('settings.images.delete');
         });
 

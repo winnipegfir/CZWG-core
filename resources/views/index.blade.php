@@ -8,8 +8,12 @@
             background-color: #013162;
         }
 
-        .card-background {
-            background: #c7c7c7;
+        .card {
+            background: #ededed;
+        }
+
+        .card-body {
+            background-color: #ffffff;
         }
 
         .corner {
@@ -32,7 +36,7 @@
     <div class="winnipeg-blue">
         <div data-jarallax data-speed="0.2" class="jarallax" style="height: calc(100vh - 59px)">
             <div class="mask flex-center flex-column"
-                 style="z-index: 1; width: 100%; background-image: url({{$background->url}}); background-position: bottom;">
+                 style="z-index: 1; width: 100%; background-image: url({{$background->url}}); {{$background->css}}">
                 <div class="container" style="padding-bottom: 20em">
                     <div class="py-5">
                         <div>
@@ -74,7 +78,7 @@
                         <div class="card-header" style="color: #013162;">
                             <h2 class="font-weight-bold" style="text-align: center"><i class="fas fa-calendar"></i>&nbsp;&nbsp;Upcoming Events</h2>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body" style="background-color: #fff">
                             @if(count($nextEvents) == 0)
                                 <h5 style="text-align: center;">Stay tuned here for upcoming events!</h5>
                             @endif
@@ -112,6 +116,8 @@
                                     </h2>
                                 @endif
                             @endforeach
+                        </div>
+                        <div class="card-footer">
                         </div>
                     </div>
                 </div>
@@ -164,6 +170,8 @@
                                     <br><br>
                                 @endforeach
                             </div>
+                        </div>
+                        <div class="card-footer">
                         </div>
                     </div>
                 </div>
