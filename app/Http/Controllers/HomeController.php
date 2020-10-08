@@ -82,18 +82,37 @@ class HomeController extends Controller
 
             curl_close($ch);
 
-            $weatherArray = [];
             foreach ($resp->data as $w) {
-                array_push($weatherArray, $w);
+                switch ($w->icao) {
+                    case "CYWG":
+                        $weatherArray[0] = $w;
+                        break;
+                    case "CYXE":
+                        $weatherArray[1] = $w;
+                        break;
+                    case "CYQT":
+                        $weatherArray[2] = $w;
+                        break;
+                    case "CYQR":
+                        $weatherArray[3] = $w;
+                        break;
+                    case "CYMJ":
+                        $weatherArray[4] = $w;
+                        break;
+                    case "CYPG":
+                        $weatherArray[5] = $w;
+                        break;
+                }
             }
 
+            ksort($weatherArray);
             return($weatherArray);
         });
 
         //Background Image
         $background = HomepageImages::all()->random();
 
-        return view('index', compact('finalPositions', 'news', 'planes', 'nextEvents', 'topControllersArray', 'colourArray', 'weather', 'background'));
+        return view('index', compact('finalPositions','news', 'planes', 'nextEvents', 'topControllersArray', 'colourArray', 'weather', 'background'));
     }
 
     public function map()

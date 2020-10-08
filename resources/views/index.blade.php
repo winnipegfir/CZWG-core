@@ -41,14 +41,14 @@
                     <div class="py-5">
                         <div>
                             <div class="winnipeg-blue corner" style="width: max-content;">
-                                <h1 style="font-size: 6em; color: #fff; padding: 10px;">We Are Winnipeg</h1>
+                                <h1 style="font-size: 6em; color: #fff; padding: 10px;">We Are Winnipeg.</h1>
                             </div>
                             <div class="winnipeg-blue corner" style="width: max-content;">
                                 <h6 style="font-size: 1.25em; color: #fff; padding: 5px;">Screenshot by {{$background->credit}}</h6>
                             </div>
                             <br>
                             <div class="winnipeg-blue corner" style="width: max-content;">
-                                <h4 style="font-size: 2em; color: #fff; padding: 5px;"><a href="#mid" id="discoverMore" class="white-text">Explore Central Canada Below</a></h4>
+                                <h4 style="font-size: 2em; color: #fff; padding: 5px;"><a href="#mid" id="discoverMore" class="white-text">Explore Central Canada Below</a>&nbsp;&nbsp;<i class="fas fa-arrow-down"></i></h4>
                             </div>
                         </div>
                     </div>
