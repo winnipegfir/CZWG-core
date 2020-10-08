@@ -9,7 +9,7 @@
         }
 
         .card {
-            background: #ededed;
+            background: #f5f5f5;
         }
 
         .card-body {
@@ -100,12 +100,12 @@
                         </div>
                         <div class="card-body">
                             @if(count($topControllersArray) == 0)
-                                <h5 style="text-align: center;">No recorded hours yet.</h5>
+                                <h5 style="text-align: center;">No data yet.</h5>
                             @endif
                             @foreach($topControllersArray as $t)
                                 @if($t['time'] != 0)
                                     <h2>
-                                        <span class="badge badge-light w-100" style="background-color: {{$colourArray[$t['id']]}} !important;">
+                                        <span class="badge badge-light w-100" style="background-color: {{$t['colour']}} !important;">
                                             <div style="float: left;">
                                                 {{User::where('id', $t['cid'])->first()->fullName('FLC')}}
                                             </div>

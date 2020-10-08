@@ -14,7 +14,7 @@
 
 //ALL Public Views
 Route::get('/', 'HomeController@view')->name('index');
-Route::get('/airports', 'HomeController@airports')->name('airports');
+Route::view('/airports', 'airports')->name('airports');
 Route::get('/nate', 'HomeController@nate')->name('nate');
 Route::get('/roster', 'AtcTraining\RosterController@showPublic')->name('roster.public');
 Route::get('/roster/{id}', 'Users\UserController@viewProfile');
