@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('title', $event->name.' - Winnipeg FIR')
-@section('description')
+@section('description', 'View the upcoming event: '.$event->name)
 @if ($event->departure_icao && $event->arrival_icao) {{$event->departure_icao_data()['name']}} ({{$event->departure_icao}}) to {{$event->arrival_icao_data()['name']}} ({{$event->arrival_icao}}). @endif Starting {{$event->start_timestamp_pretty()}}
 @endsection
 @if($event->image_url)
@@ -132,7 +132,7 @@
                 @endif
                 @endif
 
-                
+
                 <hr>
                 @if (count($updates) == 0)
                 @elseif (count($updates) >0 )

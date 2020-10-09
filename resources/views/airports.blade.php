@@ -1,5 +1,6 @@
 @extends('layouts.master')
 @section('title', 'Airports - Winnipeg FIR')
+@section('description', 'Winnipeg FIR\'s weather and airports')
 @section('content')
 
     <style>

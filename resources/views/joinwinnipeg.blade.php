@@ -1,5 +1,6 @@
 @extends('layouts.master')
-@section('title', 'Join Winnipeg')
+@section('title', 'Join Winnipeg - Winnipeg FIR')
+@section('description', 'Join the controlling team at the Winnipeg FIR')
 
 @section('content')
 

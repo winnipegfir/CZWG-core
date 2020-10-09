@@ -19,7 +19,7 @@
         <title>@yield('title', 'Winnipeg FIR')</title>
         <meta name="description" content="@yield('description', '')">
         <meta name="theme-color" content="#013162">
-        <meta name="og:title" content="@yield('title', '')Winnipeg FIR">
+        <meta name="og:title" content="@yield('title', 'Winnipeg FIR')">
         <meta name="og:description" content="@yield('description', '')">
         <meta name="og:image" content="@yield('image','https://i.imgur.com/7Rz1DOr.png')">
         <link rel="shortcut icon" href="{{ asset('winnipeg.ico') }}" type="image/x-icon">
