@@ -18,6 +18,7 @@ class CreateStudentsTable extends Migration
             $table->integer('user_id')->unsigned();
             $table->foreign('user_id')->references('id')->on('users');
             $table->integer('status')->default(0);
+            $table->text('entry_type')->default(null);
             $table->integer('instructor_id')->unsigned()->nullable();
             $table->foreign('instructor_id')->references('id')->on('instructors');
             $table->dateTime('last_status_change')->nullable();

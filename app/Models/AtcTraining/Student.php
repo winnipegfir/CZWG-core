@@ -10,7 +10,7 @@ use App\Models\AtcTraining\CBT\CbtModuleAssign;
 class Student extends Model
 {
     protected $fillable = [
-        'user_id', 'status', 'instructor_id', 'last_status_change', 'accepted_application',
+        'user_id', 'status', 'instructor_id', 'last_status_change', 'accepted_application', 'entry_type',
     ];
 
     public function user()

@@ -9,7 +9,7 @@
 @section('content')
     @include('includes.trainingMenu')
     <div class="container" style="margin-top: 20px;">
-        <h1>Waitlist <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#newStudent" style="float: right;">Add New Student</button></h1>
+        <h1>Waitlist <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#newStudent" style="float: right;">Add to Waitlist</button></h1>
 
         <hr>
         <table id="dataTable" class="table table-hover">
@@ -17,7 +17,9 @@
                 <tr>
                     <th scope="col">CID</th>
                     <th scope="col">Student Name</th>
-                    <th scope="col">Instructor Name</th>
+                    <th scope="col">Date of Application</th>
+                    <th scope="col">Entry</th>
+                    <th scope="col">Email</th>
                 </tr>
             </thead>
             @if (count($students) < 1)
@@ -33,13 +35,17 @@
                     </a>
                 </td>
                 <td>
-                    @if ($student->instructor !== null)
-                        <a href="#">
-                            {{$student->instructor->user->fullName('FLC')}}
-                        </a>
-                    @else
-                        No instructor assigned
-                    @endif
+                    {{$student->application->processed_at}}
+                </td>
+                <td>
+                  {{$student->entry_type}}
+                </td>
+                <td>
+                  @if (Auth::user()->permissions >= 4)
+                  {{$student->user->email}}
+                  @else
+                  <i>Hidden for Privacy</i>
+                  @endif
                 </td>
             </tr>
             @endforeach
@@ -64,12 +70,7 @@
                             <option value="{{$u->id}}">{{$u->id}} - {{$u->fullName('FL')}}</option>
                             @endforeach
                             </select>
-                            <label class="form-control">Choose an Instructor</label>
-                            <select name="instructor_id" id="instructor_id" class="form-control">
-                              <option value="unassign">No Instructor</option>
-                                @foreach ($instructors as $i)
-                                    <option value="{{$i->id}}">{{$i->user->id}} - {{$i->user->fullName('FL')}}</option>
-                                @endforeach
+                            <input type="hidden" name="instructor" id="instructor" value="unassign">
                             </select>
 
 
