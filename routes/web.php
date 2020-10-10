@@ -31,6 +31,7 @@ Route::view('/about', 'about')->name('about');
 Route::view('/branding', 'branding')->name('branding');
 Route::get('/news/{slug}', 'News\NewsController@viewArticlePublic')->name('news.articlepublic');
 Route::get('/news', 'News\NewsController@viewAllPublic')->name('news');
+Route::get('/training', 'AtcTraining\TrainingController@trainingTime')->name('training');
 
 
 //Authentication
@@ -299,6 +300,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 //AtcTraining
 Route::get('/dashboard/training', 'AtcTraining\TrainingController@index')->name('training.index');
+Route::post('/training', 'AtcTraining\TrainingController@editTrainingTime')->middleware('staff')->name('waittime.edit');
 Route::group(['middleware' => 'instructor'], function () {
     Route::get('/dashboard/training/sessions', 'AtcTraining\TrainingController@instructingSessionsIndex')->name('training.instructingsessions.index');
     Route::get('/dashboard/training/sessions/{id}', 'AtcTraining\TrainingController@viewInstructingSession')->name('training.instructingsessions.viewsession');

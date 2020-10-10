@@ -15,6 +15,7 @@ use App\Mail\ApplicationStartedStaffEmail;
 use App\Mail\ApplicationStartedUserEmail;
 use App\Mail\ApplicationWithdrawnEmail;
 use App\Models\AtcTraining\RosterMember;
+use App\Models\AtcTraining\TrainingWaittime;
 use App\Models\AtcTraining\Student;
 use App\Models\AtcTraining\InstructorStudents;
 use App\Models\AtcTraining\StudentNote;
@@ -67,6 +68,25 @@ public function addNote(Request $request, $id)
   return redirect('/dashboard/training/students/'.$student->id.'')->withError('You do not have sufficient permissions to do this!');
 }
 
+}
+
+public function trainingTime() {
+  $training_time = TrainingWaittime::where('id', 1)->first();
+
+  return view('training', compact('training_time'));
+}
+
+public function editTrainingTime(Request $request) {
+  request()->validate([
+    'waitTime' => 'required',
+  ]);
+
+  $training_time = TrainingWaittime::where('id', 1)->first();
+  $training_time->wait_length = $request->waitTime;
+  $training_time->colour = $request->trainingTimeColour;
+  $training_time->save();
+  
+  return back()->withSuccess('Waittime updated successfully!');
 }
 
 public function instructorsIndex()

@@ -119,6 +119,7 @@
                             <a class="nav-link dropdown-toggle" style="cursor:pointer" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">ATC</a>
                             <div class="dropdown-menu" aria-labelledby="dropdown01">
                             <a class="dropdown-item" href="{{route('roster.public')}}">Roster</a>
+                            <a class="dropdown-item" href="{{route('training')}}">Training</a>
                             @if(!Auth::check() || Auth::user()->permissions == 0)
                                 <a class="dropdown-item {{ Request::is('join') ? 'active white-text' : '' }}" href="{{url ('/join')}}">How to Become a Winnipeg Controller</a>
                                 @auth
