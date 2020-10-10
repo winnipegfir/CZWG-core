@@ -13,8 +13,10 @@ class CreateTrianingWaitTimesTable extends Migration
      */
     public function up()
     {
-        Schema::create('trianing_wait_times', function (Blueprint $table) {
+        Schema::create('training_waittimes', function (Blueprint $table) {
             $table->bigIncrements('id');
+            $table->text('wait_length');
+            $table->text('colour');
             $table->timestamps();
         });
     }
@@ -26,6 +28,6 @@ class CreateTrianingWaitTimesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('trianing_wait_times');
+        Schema::dropIfExists('training_waittimes');
     }
 }
