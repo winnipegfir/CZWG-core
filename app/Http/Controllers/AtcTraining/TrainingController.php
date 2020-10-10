@@ -85,7 +85,7 @@ public function editTrainingTime(Request $request) {
   $training_time->wait_length = $request->waitTime;
   $training_time->colour = $request->trainingTimeColour;
   $training_time->save();
-  
+
   return back()->withSuccess('Waittime updated successfully!');
 }
 
@@ -109,6 +109,10 @@ public function addInstructor(Request $request)
 
 public function newStudent(Request $request)
 {
+  $instructor = null;
+  if ($request->input('instructor' != 'unassign')) {
+    $instructor = $request->input('instructor');
+  }
   $application = Application::create([
     'user_id' => $request->input('student_id'),
     'status' => '2',
@@ -119,8 +123,8 @@ public function newStudent(Request $request)
   ]);
   $student = Student::create([
     'user_id' => $request->input('student_id'),
-    'instructor_id' => $request->input('instructor_id'),
-    'status' => '1',
+    'instructor_id' => $instructor,
+    'status' => '0',
     'last_status_change' => Carbon::now()->toDateTimeString(),
     'created_at' => Carbon::now()->toDateTimeString(),
     'accepted_application' => $application->id,
@@ -151,7 +155,7 @@ public function newStudents()
   $potentialstudent = User::all();
   $instructors = Instructor::all();
 
-  return view('dashboard.training.students.current', compact('students', 'potentialstudent', 'instructors'));
+  return view('dashboard.training.students.waitlist', compact('students', 'potentialstudent', 'instructors'));
 }
 
 public function viewStudent($id)

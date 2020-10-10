@@ -21,7 +21,7 @@
                 <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 36px, 0px); top: 0px; left: 0px; will-change: transform;">
                 <a class="dropdown-item {{ Request::is('dashboard/training/students/current') ? 'active' : '' }}" href="{{route('training.students.current')}}">In Progress</a>
                 <a class="dropdown-item {{ Request::is('dashboard/training/students/completed') ? 'active' : '' }}" href="{{route('training.students.completed')}}">Completed</a>
-                <a class="dropdown-item {{ Request::is('dashboard/training/students/new') ? 'active' : '' }}" href="{{route('training.students.new')}}">New/Waiting</a>
+                <a class="dropdown-item {{ Request::is('dashboard/training/students/waitlist') ? 'active' : '' }}" href="{{route('training.students.waitlist')}}">Waitlist</a>
                 </div>
             </li>
 
