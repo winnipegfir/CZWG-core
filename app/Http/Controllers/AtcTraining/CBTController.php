@@ -139,6 +139,12 @@ public function examindex()
   return view('dashboard.training.CBT.exams.index', compact('exams', 'completedexams'));
 }
 
+public function examadminview()
+{
+  $exams = CbtExam::all();
+
+  return view('dashboard.training.CBT.exams.examadmin', compact('exams'));
+}
 public function startExam($id)
 {
   $subject = CbtExam::find($id);
@@ -149,23 +155,10 @@ public function startExam($id)
 public function exam($id)
 {
   $subject = CbtExam::find($id);
-  $questions = $subject->questions()->get();
-        //dd($questions);
-  $first_question_id = $subject->questions()->min('id');
-        //dd($first_question_id);
-  $last_question_id = $subject->questions()->max('id');
-      //  dd($last_question_id);
-    if(session('next_question_id')){
-      $current_question_id = session('next_question_id');
-      //dd(session('next_question_id'));
-        }
-    else{
-      $current_question_id = $first_question_id;
-        session(['next_question_id'=>$current_question_id]);
-        }
-        //dd($current_question_id);
-  return view('dashboard.training.CBT.exams.exam', compact('subject', 'questions', 'current_question_id', 'first_question_id', 'last_question_id'));
-  //return redirect()->back()->withError('This feature has not been implemented yet!');
+  $questions = CbtExamQuestion::orderByRaw('RAND()')->take(10)->get();
+
+  return view('dashboard.training.CBT.exams.exam', compact('subject', 'questions'));
+
 }
 
 public function saveAnswer(Request $req, $id)

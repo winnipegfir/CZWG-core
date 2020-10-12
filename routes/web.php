@@ -237,6 +237,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::group(['middleware' => 'instructor'], function () {
             Route::post('/exam/assign', 'AtcTraining\CBTController@examassign')->name('cbt.exam.assign');
             Route::post('/module/assign', 'AtcTraining\CBTController@moduleassign')->name('cbt.module.assign');
+            Route::get('/examadmin', 'AtcTraining\CBTController@examadminview')->name('cbt.exam.adminview');
 
         });
         //Staff/Admin
