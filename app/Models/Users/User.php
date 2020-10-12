@@ -3,17 +3,14 @@
 namespace App\Models\Users;
 
 use App\Http\Controllers\RosterController;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 use App\Models\AtcTraining;
 use App\Models\ControllerBookings;
 use App\Models\Events;
-use App\Models\Network;
+use App\Models\Network\SessionLog;
 use App\Models\News;
-use App\Models\Publications;
-use App\Models\Settings;
 use App\Models\Tickets;
 use Auth;
 use Exception;
@@ -63,6 +60,16 @@ class User extends Authenticatable
         return $this->hasMany(AtcTraining\Application::class);
     }
 
+    public function eventApplications()
+    {
+        return $this->hasMany(Events\ControllerApplication::class);
+    }
+
+    public function eventConfirms()
+    {
+        return $this->hasMany(Events\EventConfirm::class);
+    }
+
     public function instructorProfile()
     {
         return $this->hasOne(AtcTraining\Instructor::class);
@@ -91,30 +98,11 @@ class User extends Authenticatable
     public function rosterProfile()
     {
         return $this->hasOne(AtcTraining\RosterMember::class);
-
-
-    }
-
-    public function rosterVisitProfile()
-    {
-        return $this->hasOne(AtcTraining\VisitRosterMember::class);
-
-    }
-
-
-    public function notifications()
-    {
-        return $this->hasMany(UserNotification::class);
     }
 
     public function notes()
     {
         return $this->hasMany(UserNote::class);
-    }
-
-    public function bookingBanObj()
-    {
-        return $this->hasOne(ControllerBookings\ControllerBookingsBan::class);
     }
 
     public function userSinceInDays(){
