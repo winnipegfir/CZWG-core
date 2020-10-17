@@ -1,5 +1,6 @@
 @extends('layouts.master')
-@section('title', 'Join Winnipeg')
+@section('title', 'Join Winnipeg - Winnipeg FIR')
+@section('description', 'Join the controlling team at the Winnipeg FIR')
 
 @section('content')
 
@@ -33,8 +34,13 @@
 </ol>
 <hr>
     <h2><u>Already Have A Home FIR? Come Visit!</u></h2><br>
+        <div class="card">
+            <div class="card-body bg-warning">
+                NOTE: Winnipeg is currently pausing all training for visiting controllers as we are busy with home students. However, we are always accepting applications to visit! You can apply to visit Winnipeg <a href="{{route('application.start')}}">HERE.</a> One of our staff members will be in touch when we are able to accommodate your training. Thank you for your patience.
+            </div>
+        </div>
+        <br>
     <p>Winnipeg is always looking for controllers to visit our FIR. Whether it's for a change of scenery, to learn a new way of controlling, or just for fun, <a href="{{route('application.start')}}">come visit Winnipeg!</a>
-
 <p>Questions? <a href="{{route('staff')}}">Contact our Chief Instructor!</a>
     </p>
     <br>
