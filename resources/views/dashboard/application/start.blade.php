@@ -26,8 +26,9 @@
         }
     </script>
     @if ($allowed == 'true')
-        <div class="alert alert-success" role="alert">
+        <div class="alert alert-warning" role="alert">
             <h4 class="alert-heading">You are eligibile to apply!</h4>
+            <p class="font-weight-bold">Winnipeg is currently pausing all training for visiting controllers as we are busy with home students. However, we are always accepting applications to visit! One of our staff members will be in touch when we are able to accommodate your training. Thank you for your patience.</p>
             <p>Please note the following is also required to visit Winnipeg:</p>
             <ul>
                 <li>Approval by your home FIR/vACC/ARTCC Chief/ATM.</li>
@@ -48,7 +49,7 @@
             <li class="active">
                 <a href="">
                     <span class="circle">1</span>
-                    <span class="label">Why would you like to be a controller in Winnipeg?</span>
+                    <span class="label">Why would you like to control in Winnipeg?</span>
                 </a>
                 <div class="step-content w-75 grey lighten-3">
                     <p>Please type here (minimum 50 words):</p>
