@@ -64,5 +64,14 @@ class DatabaseSeeder extends Seeder
             'shortform' => 'firchief',
         ]);
 
+        DB::table('positions')->insert(
+            ['position' => 'Delivery'],
+            ['position' => 'Ground'],
+            ['position' => 'Tower'],
+            ['position' => 'Departure'],
+            ['position' => 'Arrival'],
+            ['position' => 'Centre'],
+            ['position' => 'Relief']
+        );
     }
 }
