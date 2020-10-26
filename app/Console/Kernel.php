@@ -172,7 +172,7 @@ class Kernel extends ConsoleKernel
 
                     // check it exists
                     if ($roster_member) {
-                        if ($roster_member->status == 'home' || $roster_member->status == 'instructor' || $roster_member->status == 'visit') {
+                        if ($roster_member->status == 'home' || $roster_member->status == 'instructor' || $roster_member->status == 'visit' || $roster_member->status == 'training') {
                             if ($roster_member->active) {
                                 // Add hours
                                 $roster_member->currency += $difference;
