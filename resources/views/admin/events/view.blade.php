@@ -88,24 +88,22 @@
             @else
                     <div class="card p-3">
                     @foreach($positions as $position)
-                    <h5>{{$position->position}}</h5>
-                    @foreach($eventroster as $roster)
-                    @if($roster->position == $position->position && $roster->position != "Relief")
-                    <form method="POST" action="{{route('event.deletecontroller', [$roster->user_id])}}">
-                        <text class="font-weight-bold">{{$roster->user->fullName('FLC')}}</text> is controlling {{$roster->airport}} {{$roster->position}} from {{$roster->start_timestamp}}z to {{$roster->end_timestamp}}z. <a role="button" type="submit" style="color: red">Delete.</a><br>
-                    <input type="hidden" name="id" value="{{$roster->event_id}}"></input>
-                    @csrf
-                    </form>
-                    @endif
-                    @if($roster->position == "Relief" && $position->position == "Relief")
-                    <form method="POST" action="{{route('event.deletecontroller', [$roster->user_id])}}">
-                    <text class="font-weight-bold">{{$roster->user->fullName('FLC')}}</text> is on Stand-by available from {{$roster->start_timestamp}}z to {{$roster->end_timestamp}}z. <a role="button" type="submit" style="color: red"> Delete.</a><br>
-                    <input type="hidden" name="id" value="{{$roster->event_id}}"></input>
-                    @csrf
-                    </form>
-                    @endif
-
-                    @endforeach
+                        <h5>{{$position->position}}</h5>
+                        @foreach($eventroster as $roster)
+                            @if($roster->position == $position->position && $roster->position != "Relief")
+                            <form method="POST" action="{{route('event.deletecontroller', [$roster->user_id])}}">
+                                <text class="font-weight-bold">{{$roster->user->fullName('FLC')}}</text> is controlling {{$roster->airport}} {{$roster->position}} from {{$roster->start_timestamp}}z to {{$roster->end_timestamp}}z. <a target="_parent"><button type="submit">Delete</button></a><br>
+                            <input type="hidden" name="id" value="{{$roster->event_id}}"></input>
+                            @csrf
+                            </form>
+                            @endif
+                            @if($roster->position == "Relief" && $position->position == "Relief")
+                            <form method="POST" action="{{route('event.deletecontroller', [$roster->user_id])}}">
+                                <text class="font-weight-bold">{{$roster->user->fullName('FLC')}}</text> is on Stand-by available from {{$roster->start_timestamp}}z to {{$roster->end_timestamp}}z. <input type="submit" value="Delete" style="color: red"><br>
+                                @csrf
+                            </form>
+                            @endif
+                        @endforeach
                     @endforeach
                   </div>
             @endif

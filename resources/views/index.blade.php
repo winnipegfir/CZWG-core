@@ -7,29 +7,27 @@
         .winnipeg-blue {
             background-color: #013162;
         }
-
         .card {
             background: #f5f5f5;
         }
-
         .card-body {
             background-color: #ffffff;
         }
-
         .corner {
             border-radius: 5px;
         }
-
         .VFR {
             background-color: green;
         }
-
         .IFR {
             background-color: red;
         }
-
         .SVFR {
             background-color: orange;
+        }
+
+        .MVFR {
+            background-color: lightskyblue;
         }
     </style>
 
@@ -131,23 +129,23 @@
                                 <h5 style="text-align: center;">No controllers online.</h5>
                             @endif
                             @foreach($finalPositions as $p)
-                            <h5>
-                                <div style="float: left;">
-                                    <a href="https://stats.vatsim.net/search_id.php?id={{$p['cid']}}" target="_blank" style="color: black;">
-                                        @if($p['realname'] == $p['cid'])
-                                            <i class="fas fa-user-circle"></i>&nbsp;{{$p['realname']}}
-                                        @else
-                                            <i class="fas fa-user-circle"></i>&nbsp;{{$p['realname']}} {{$p['cid']}}
-                                        @endif
-                                    </a>
-                                </div>
-                                <div style="float: right;">
+                                <h5>
+                                    <div style="float: left;">
+                                        <a href="https://stats.vatsim.net/search_id.php?id={{$p['cid']}}" target="_blank" style="color: black;">
+                                            @if($p['realname'] == $p['cid'])
+                                                <i class="fas fa-user-circle"></i>&nbsp;{{$p['realname']}}
+                                            @else
+                                                <i class="fas fa-user-circle"></i>&nbsp;{{$p['realname']}} {{$p['cid']}}
+                                            @endif
+                                        </a>
+                                    </div>
+                                    <div style="float: right;">
                                     <span class="badge winnipeg-blue">
                                         {{$p['callsign']}} on {{$p['frequency']}}
                                     </span>
-                                </div>
-                            </h5>
-                            <br>
+                                    </div>
+                                </h5>
+                                <br>
                             @endforeach
                         </div>
                         <div class="card-footer">
