@@ -2,8 +2,6 @@
 
 @section('title', $event->name.' - Winnipeg FIR')
 @section('description', 'View the upcoming event: '.$event->name)
-@if ($event->departure_icao && $event->arrival_icao) {{$event->departure_icao_data()['name']}} ({{$event->departure_icao}}) to {{$event->arrival_icao_data()['name']}} ({{$event->arrival_icao}}). @endif Starting {{$event->start_timestamp_pretty()}}
-@endsection
 @if($event->image_url)
 @section('image')
 {{$event->image_url}}
@@ -11,9 +9,7 @@
 @endif
 
 @section('content')
-
-
-      <div class="text-white text-left py-1 px-4" style="background-color:#013162">
+    <div class="text-white text-left py-1 px-4" style="background-color:#013162">
           <div class="container">
               <div align="center" class="py-5">
                   <h1 align="center" class="h1" style="font-size: 4em;">{{$event->name}}</h1>
