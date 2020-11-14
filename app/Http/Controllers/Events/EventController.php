@@ -51,7 +51,7 @@ class EventController extends Controller
     }
 
     public function viewControllers() {
-        $events = Event::all();
+        $events = Event::where('start_timestamp', '>', Carbon::now())->get();
         $positions = EventPosition::all();
 
         foreach($events as $e) {

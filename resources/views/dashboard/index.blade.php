@@ -208,7 +208,9 @@
                                 <p style="font-size: 12px;">
                                     <text class="font-weight-bold">Note:</text> If the event header is blank, you are not confirmed for the event.
                                 </p>
-                                <a href="{{url('/dashboard/events/view')}}" style="text-align: center">View Event Rosters</a>
+                                @if(count($confirmedevent) != 0)
+                                    <a href="{{url('/dashboard/events/view')}}" style="text-align: center">View Event Rosters</a>
+                                @endif
                             </div>
                         </div>
                     </div>
