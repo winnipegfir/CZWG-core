@@ -38,16 +38,18 @@
                 <div class="container" style="padding-bottom: 20em">
                     <div class="py-5">
                         <div>
-                            <div class="winnipeg-blue corner" style="width: max-content;">
-                                <h1 style="font-size: 6em; color: #fff; padding: 10px;">We Are Winnipeg.</h1>
-                            </div>
-                            <div class="winnipeg-blue corner" style="width: max-content;">
-                                <h6 style="font-size: 1.25em; color: #fff; padding: 5px;">Screenshot by {{$background->credit}}</h6>
-                            </div>
                             <br>
-                            <div class="winnipeg-blue corner" style="width: max-content;">
-                                <h4 style="font-size: 2em; color: #fff; padding: 5px;"><a href="#mid" id="discoverMore" class="white-text">Explore Central Canada Below</a>&nbsp;&nbsp;<i class="fas fa-arrow-down"></i></h4>
-                            </div>
+                            <h1 style="font-size: 6em; color: #fff">
+                                <span class="winnipeg-blue corner" style="padding: 5px">We Are Winnipeg.</span>
+                            </h1>
+                            <br>
+                            <h6 style="font-size: 1.25em; color: #fff;">
+                                <span class="winnipeg-blue corner" style="padding: 5px">Screenshot by {{$background->credit}}</span>
+                            </h6>
+                            <br>
+                            <h4 style="font-size: 2em; color: #fff;">
+                                <span class="winnipeg-blue corner" style="padding: 5px"><a href="#mid" id="discoverMore" class="white-text">Explore Central Canada Below&nbsp;&nbsp;<i class="fas fa-arrow-down"></i></a></span>
+                            </h4>
                         </div>
                     </div>
                 </div>
