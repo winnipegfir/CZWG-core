@@ -2,21 +2,25 @@
 
 namespace App\Models\Events;
 
-use App\Models\Users\User;
-use App\Models\AtcTraining\RosterMember;
-use App\Models\Events\Event;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use Parsedown;
-use Illuminate\Support\HtmlString;
 use Auth;
-use Exception;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
+use App\Models\Events\EventConfirm;
 
 class EventPosition extends Model
 {
     protected $fillable = [
         'id', 'position',
     ];
+
+    public function hasControllers($position, $event_id) {
+        $controllers = EventConfirm::where('event_id', $event_id)->get();
+
+        foreach($controllers as $c) {
+            if ($c->position == $position) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

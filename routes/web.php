@@ -107,6 +107,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     //User Event Applications
     Route::post('/dashboard/events/controllerapplications/ajax', 'Events\EventController@controllerApplicationAjaxSubmit')->name('events.controllerapplication.ajax');
+    Route::get('/dashboard/events/view', 'Events\EventController@viewControllers');
 
     //Staff Events
     Route::group(['prefix' => 'admin/events', 'middleware' => 'staff'], function () {
