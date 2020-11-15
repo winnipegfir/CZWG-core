@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddEntryTypeToStudentTable=students extends Migration
+class AddEntryTypeToStudents extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,11 @@ class AddEntryTypeToStudentTable=students extends Migration
      */
     public function up()
     {
-        $table->text('entry_type')->nullable()
+        Schema::table('students', function (Blueprint $table) {
+            $table->text('entry_type')
+                ->nullable()
+                ->after('status');
+        });
     }
 
     /**
@@ -23,6 +27,8 @@ class AddEntryTypeToStudentTable=students extends Migration
      */
     public function down()
     {
-        //
+        Schema::table('students', function (Blueprint $table) {
+            //
+        });
     }
 }
