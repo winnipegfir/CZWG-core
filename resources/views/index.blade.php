@@ -3,33 +3,7 @@
 
 
 @section('content')
-    <style>
-        .winnipeg-blue {
-            background-color: #013162;
-        }
-        .card {
-            background: #f5f5f5;
-        }
-        .card-body {
-            background-color: #ffffff;
-        }
-        .corner {
-            border-radius: 5px;
-        }
-        .VFR {
-            background-color: green;
-        }
-        .IFR {
-            background-color: red;
-        }
-        .SVFR {
-            background-color: orange;
-        }
-
-        .MVFR {
-            background-color: lightskyblue;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="{{ asset('/css/home.css') }}" />
 
     <div class="winnipeg-blue">
         <div data-jarallax data-speed="0.2" class="jarallax" style="height: calc(100vh - 59px)">
