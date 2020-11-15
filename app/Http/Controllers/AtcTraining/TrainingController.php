@@ -128,6 +128,7 @@ public function newStudent(Request $request)
     'last_status_change' => Carbon::now()->toDateTimeString(),
     'created_at' => Carbon::now()->toDateTimeString(),
     'accepted_application' => $application->id,
+    'entry_type' => $request->input('entry_type'),
   ]);
   return redirect('dashboard/training/students/'.$student->id.'')->withSuccess('Added New Student: '.$student->user->fullName('FLC'). '');
 }

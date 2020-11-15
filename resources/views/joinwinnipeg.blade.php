@@ -7,6 +7,24 @@
     <div class="container" style="margin-top: 20px;">
         <h1 class="blue-text font-weight-bold">Welcome to Winnipeg.</h1>
         <p>We're home to VATSIM's most modern training program, some of the best instructors around and an overall happy FIR. Come join the team!</p>
+        <div class="card">
+            <div class="card-body bg-warning">
+              @if (count($waitlist) < 1)
+                  <p>
+                      We have <b>no students</b> on our waitlist currently!
+                  </p>
+              @elseif (count($waitlist) > 1)
+                                  <p>We have <b>{{count($waitlist)}} student(s)</b> on our waitlist.</p>
+              @else
+                           <span class="red-text">
+
+
+                      There has been a server error grabbing waitlist students
+                  </span>
+              @endif
+            </div>
+        </div>
+        <br>
         <hr>
 
     <h2><u>Making Winnipeg Your Home FIR:</u></h2><br>
@@ -52,4 +70,3 @@
     <br>
     </div>
 @endsection
-

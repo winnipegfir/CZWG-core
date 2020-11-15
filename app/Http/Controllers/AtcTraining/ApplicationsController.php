@@ -15,6 +15,7 @@ use App\Mail\ApplicationWithdrawnEmail;
 use App\Models\Training\RosterMember;
 use App\Models\Users\User;
 use App\Models\Users\UserNotification;
+use App\Models\AtcTraining\Student;
 use Auth;
 use Flash;
 use Illuminate\Http\File as HttpFile;
@@ -143,6 +144,7 @@ class ApplicationsController extends Controller
     }
 
     public function joinWinnipeg() {
-        return view('joinwinnipeg');
+      $waitlist = Student::where('status', '0')->get();
+        return view('joinwinnipeg', compact('waitlist'));
     }
 }

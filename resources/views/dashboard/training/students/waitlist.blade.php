@@ -70,6 +70,12 @@
                             <option value="{{$u->id}}">{{$u->id}} - {{$u->fullName('FL')}}</option>
                             @endforeach
                             </select>
+                            <label class="form-control">Entry Type</label>
+                            <select name="entry_type" id="entry_type" class="form-control">
+                              <option value="New Student">New Student</option>
+                              <option value="New Visitor">New Visitor</option>
+                              <option value="New Transfer">New Transfer</option>
+                            </select>
                             <input type="hidden" name="instructor" id="instructor" value="unassign">
                             </select>
 
