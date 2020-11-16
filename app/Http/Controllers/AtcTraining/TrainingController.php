@@ -15,6 +15,7 @@ use App\Mail\ApplicationStartedStaffEmail;
 use App\Mail\ApplicationStartedUserEmail;
 use App\Mail\ApplicationWithdrawnEmail;
 use App\Models\AtcTraining\RosterMember;
+use App\Models\AtcTraining\TrainingWaittime;
 use App\Models\AtcTraining\Student;
 use App\Models\AtcTraining\InstructorStudents;
 use App\Models\AtcTraining\StudentNote;
@@ -69,6 +70,25 @@ public function addNote(Request $request, $id)
 
 }
 
+public function trainingTime() {
+  $training_time = TrainingWaittime::where('id', 1)->first();
+  $waitlist = Student::where('status', '0')->get();
+  return view('training', compact('training_time', 'waitlist'));
+}
+
+public function editTrainingTime(Request $request) {
+  request()->validate([
+    'waitTime' => 'required',
+  ]);
+
+  $training_time = TrainingWaittime::where('id', 1)->first();
+  $training_time->wait_length = $request->waitTime;
+  $training_time->colour = $request->trainingTimeColour;
+  $training_time->save();
+
+  return back()->withSuccess('Waittime updated successfully!');
+}
+
 public function instructorsIndex()
 {
   $instructors = Instructor::all();
@@ -89,6 +109,10 @@ public function addInstructor(Request $request)
 
 public function newStudent(Request $request)
 {
+  $instructor = null;
+  if ($request->input('instructor' != 'unassign')) {
+    $instructor = $request->input('instructor');
+  }
   $application = Application::create([
     'user_id' => $request->input('student_id'),
     'status' => '2',
@@ -99,11 +123,12 @@ public function newStudent(Request $request)
   ]);
   $student = Student::create([
     'user_id' => $request->input('student_id'),
-    'instructor_id' => $request->input('instructor_id'),
-    'status' => '1',
+    'instructor_id' => $instructor,
+    'status' => '0',
     'last_status_change' => Carbon::now()->toDateTimeString(),
     'created_at' => Carbon::now()->toDateTimeString(),
     'accepted_application' => $application->id,
+    'entry_type' => $request->input('entry_type'),
   ]);
   return redirect('dashboard/training/students/'.$student->id.'')->withSuccess('Added New Student: '.$student->user->fullName('FLC'). '');
 }
@@ -131,7 +156,7 @@ public function newStudents()
   $potentialstudent = User::all();
   $instructors = Instructor::all();
 
-  return view('dashboard.training.students.current', compact('students', 'potentialstudent', 'instructors'));
+  return view('dashboard.training.students.waitlist', compact('students', 'potentialstudent', 'instructors'));
 }
 
 public function viewStudent($id)

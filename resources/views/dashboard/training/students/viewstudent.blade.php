@@ -105,10 +105,10 @@
                         @if ($student->status == 0)
                         <span class="btn btn-sm btn-primary">
                             <h3 class="p-0 m-0">
-                                New/Waiting
+                                Waitlisted
                             </h3>
                         </span><br></br>
-                        The student's training is 'New/Waiting'. This means the student has an accepted application and has not begun training.
+                        The student's training is 'Waitlisted'. This means the student has an accepted application and has not begun training.
                         @elseif ($student->status == 1)
                         <span class="btn btn-sm btn-success">
                             <h3 class="p-0 m-0">
@@ -177,7 +177,7 @@
                                         <option selected="" value="" hidden>Please choose one..</option>
                                         <option value="1">In Progress</option>
                                         <option value="2">Completed</option>
-                                        <option value="0">New/Waiting</option>
+                                        <option value="0">Waitlist</option>
                                     </select>
                                 </div>
                                 <div class="col-sm-4">

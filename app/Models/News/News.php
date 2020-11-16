@@ -49,6 +49,12 @@ class News extends Model
         return $this->user->fullName('FLC');
     }
 
+    public function posted_on_pretty()
+    {
+        $t = Carbon::create($this->published);
+        return $t->diffForHumans();
+    }
+
     public function html()
     {
         return new HtmlString(app(Parsedown::class)->text($this->content));

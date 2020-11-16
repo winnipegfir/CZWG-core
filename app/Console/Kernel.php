@@ -172,7 +172,7 @@ class Kernel extends ConsoleKernel
 
                     // check it exists
                     if ($roster_member) {
-                        if ($roster_member->status == 'home' || $roster_member->status == 'instructor' || $roster_member->status == 'visit') {
+                        if ($roster_member->status == 'home' || $roster_member->status == 'instructor' || $roster_member->status == 'visit' || $roster_member->status == 'training') {
                             if ($roster_member->active) {
                                 // Add hours
                                 $roster_member->currency += $difference;
@@ -219,7 +219,7 @@ class Kernel extends ConsoleKernel
                 }
             }
             file_get_contents(config('cronurls.minute'));
-        })->everyMinute();
+        })->everyMinute()->evenInMaintenanceMode();
 
         //VATSIM Rating Update because Nate is making me
         $schedule->call(function () {
@@ -243,7 +243,7 @@ class Kernel extends ConsoleKernel
             // Check each user to see if their rating has changed
             foreach($users as $u) {
                 //Because of the vacant user ugh
-                if($u->id != 1) {
+                if($u->id != 1 | $u->id != 2) {
                     $rosterMember = RosterMember::where('cid', $u->id)->first();
                     $getRating = json_decode(file_get_contents('https://api.vatsim.net/api/ratings/' . $u->id . '/'));
                     $ratingID = $getRating->rating;

@@ -50,6 +50,17 @@ class EventController extends Controller
         return view('events.view', compact('event', 'updates', 'timeNow'));
     }
 
+    public function viewControllers() {
+        $events = Event::where('start_timestamp', '>', Carbon::now())->get();
+        $positions = EventPosition::all();
+
+        foreach($events as $e) {
+            $controllers = EventConfirm::where('event_id', $e->id)->get()->sortBy('start_timestamp');
+            $e->{'controllers'} = $controllers;
+        }
+
+        return view('events.controllers', compact('events', 'positions'));
+    }
 
     public function controllerApplicationAjaxSubmit(Request $request)
     {

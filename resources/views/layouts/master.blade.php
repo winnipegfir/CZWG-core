@@ -19,7 +19,7 @@
         <title>@yield('title', 'Winnipeg FIR')</title>
         <meta name="description" content="@yield('description', '')">
         <meta name="theme-color" content="#013162">
-        <meta name="og:title" content="@yield('title', '')Winnipeg FIR">
+        <meta name="og:title" content="@yield('title', 'Winnipeg FIR')">
         <meta name="og:description" content="@yield('description', '')">
         <meta name="og:image" content="@yield('image','https://i.imgur.com/7Rz1DOr.png')">
         <link rel="shortcut icon" href="{{ asset('winnipeg.ico') }}" type="image/x-icon">
@@ -97,7 +97,7 @@
     <header>
         <nav id="czwgHeader" class="navbar navbar-expand-lg navbar-dark p-0" style="min-height:59px; background-color:#013162">
             <div class="container">
-                <a class="navbar-brand" href="{{route('index')}}"><img style="height: 40px; width:auto;" id="czqoHeaderImg" src="https://i.imgur.com/c5dlKqc.png" alt=""></a>
+                <a class="navbar-brand" href="{{route('index')}}"><img style="height: 40px; width:auto;" src="https://i.imgur.com/c5dlKqc.png" alt=""></a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -122,9 +122,9 @@
                             @if(!Auth::check() || Auth::user()->permissions == 0)
                                 <a class="dropdown-item {{ Request::is('join') ? 'active white-text' : '' }}" href="{{url ('/join')}}">How to Become a Winnipeg Controller</a>
                                 @auth
-                                <a class="dropdown-item {{ Request::is('dashboard/application') ? 'active white-text' : '' }}" href="{{url ('/dashboard/application/')}}">Visit in Winnipeg!</a>
                                 <a class="dropdown-item {{ Request::is('dashboard/application/list') ? 'active white-text' : '' }}" href="{{url ('/dashboard/application/list')}}">Your Applications</a>
                                 @endauth
+                                <a class="dropdown-item" href="{{route('training')}}">Training</a>
                             @endif
                             </div>
                         </li>
@@ -247,32 +247,32 @@
     </div>
     <!-- Footer -->
     <!-- Footer -->
-    <footer class="page-footer text-dark font-small py-4 {{Request::is('/dashboard') ? 'mt-5' : ''}}" style="background-color:#013162">
+    <footer class="page-footer text-light font-small py-4 bg-dark {{Request::is('/dashboard') ? 'mt-5' : ''}}">
         <div class="container">
             <p style="color:white">For Flight Simulation Use Only - Not to be used for real-world navigation. By using this site, you agree to hold harmless and indemnify the owners and authors of these web pages, those listed on these pages, and all pages that this site that may be pointed to (i.e. external links).</p>
             <p style="color:white">Copyright © {{App\Models\Settings\CoreSettings::where('id', 1)->firstOrFail()->copyright_year}} Winnipeg FIR | All Rights Reserved.</p>
             <div class="flex-left mt-3">
-            <a href="{{route('about')}}" class="white-text">Github</a>
+            <a href="{{route('about')}}">Github</a>
                 &nbsp;
                 •
                 &nbsp;
-                <a href="{{route('feedback.create')}}" class="white-text">Feedback</a>
+                <a href="{{route('feedback.create')}}">Feedback</a>
                 &nbsp;
                 •
                 &nbsp;
-                <a href="{{route('privacy')}}" class="white-text">Privacy Policy</a>
+                <a href="{{route('privacy')}}">Privacy Policy</a>
                 &nbsp;
                 •
                 &nbsp;
-                <a href="{{route('branding')}}" class="white-text">Branding</a>
+                <a href="{{route('branding')}}">Branding</a>
                 &nbsp;
                 •
                 &nbsp;
-                <a href="https://www.vatcan.ca" class="white-text">VATCAN</a>
+                <a href="https://www.vatcan.ca">VATCAN</a>
                 &nbsp;
                 •
                 &nbsp;
-                <a href="https://www.vatsim.net" class="white-text">VATSIM</a>
+                <a href="https://www.vatsim.net">VATSIM</a>
             </div>
 
             <div class="mt-3">
@@ -316,7 +316,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Contact CZWG</b></h5>
+                    <h5 class="modal-title" id="exampleModalLongTitle">Contact CZWG</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>

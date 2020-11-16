@@ -15,6 +15,7 @@ use App\Mail\ApplicationWithdrawnEmail;
 use App\Models\Training\RosterMember;
 use App\Models\Users\User;
 use App\Models\Users\UserNotification;
+use App\Models\AtcTraining\Student;
 use Auth;
 use Flash;
 use Illuminate\Http\File as HttpFile;

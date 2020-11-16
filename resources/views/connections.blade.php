@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('title', $id.' Connections - Winnipeg FIR ')
-@section('description', $id.'\'s user connections.')
+@section('description', $id.'\'s connections on Winnipeg positions')
 
 @section('content')
     <div class="container py-4">

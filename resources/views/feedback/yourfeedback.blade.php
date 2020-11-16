@@ -1,5 +1,6 @@
 @extends('layouts.master')
-@section('title', 'Your Feedback')
+@section('title', 'Your Feedback - Winnipeg FIR')
+@section('description', 'View the feedback that the VATSIM community has submitted to us')
 @section('content')
 
 <div class="container py-4">

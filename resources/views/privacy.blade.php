@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title', 'Privacy Policy')
+@section('title', 'Privacy Policy - Winnipeg FIR')
 @section('navbarprim')
 
     @parent

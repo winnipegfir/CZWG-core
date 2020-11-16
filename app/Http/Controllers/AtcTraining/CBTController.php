@@ -44,15 +44,22 @@ public function moduleindex()
   if ($student != null) {
   $modules = CbtModuleAssign::where('student_id', $student->id)->get();
   if (count($modules) < 1) {
+    if ($student->instructor != null) {
     return redirect()->back()->withError('You do not have any assigned modules! Contact your Instructor at '.$student->instructor->email. '');
     }
-  }
-      //Allow Mentor->Admin view ALL modules
-  if (Auth::user()->permissions >= 3) {
-    $modules = CbtModule::all();
+      if ($student->instructor == null) {
+    return redirect()->back()->withError('You do not have any assigned modules or an assigned Instructor! Please contact the Chief Instructor for help!');
+      }
+    }
   }
 
   return view('dashboard.training.CBT.modules', compact('modules'));
+}
+
+public function moduleindexadmin()
+{
+  $modules = CbtModule::all();
+  return view('dashboard.training.CBT.modulesadmin', compact('modules'));
 }
 
 public function viewmodule($id, $progress)
@@ -132,6 +139,12 @@ public function examindex()
   return view('dashboard.training.CBT.exams.index', compact('exams', 'completedexams'));
 }
 
+public function examadminview()
+{
+  $exams = CbtExam::all();
+
+  return view('dashboard.training.CBT.exams.examadmin', compact('exams'));
+}
 public function startExam($id)
 {
   $subject = CbtExam::find($id);
@@ -142,23 +155,66 @@ public function startExam($id)
 public function exam($id)
 {
   $subject = CbtExam::find($id);
-  $questions = $subject->questions()->get();
-        //dd($questions);
-  $first_question_id = $subject->questions()->min('id');
-        //dd($first_question_id);
-  $last_question_id = $subject->questions()->max('id');
-      //  dd($last_question_id);
-    if(session('next_question_id')){
-      $current_question_id = session('next_question_id');
-      //dd(session('next_question_id'));
-        }
-    else{
-      $current_question_id = $first_question_id;
-        session(['next_question_id'=>$current_question_id]);
-        }
-        //dd($current_question_id);
-  return view('dashboard.training.CBT.exams.exam', compact('subject', 'questions', 'current_question_id', 'first_question_id', 'last_question_id'));
-  //return redirect()->back()->withError('This feature has not been implemented yet!');
+  $questions = CbtExamQuestion::orderByRaw('RAND()')->take(10)->get();
+
+  return view('dashboard.training.CBT.exams.exam', compact('subject', 'questions'));
+
+}
+
+public function gradeExam(Request $req, $id)
+{
+return redirect()->back()->withError('This feature has not been implemented yet!');
+}
+
+
+
+public function testgradeExam(Request $req, $id)
+{
+  $i = 1;
+  $grade = 0;
+
+$q1 = CbtExamQuestion::where('id', $req->input('1id'))->first();
+if ($q1->answer == $req->input('1')) {
+  $grade++;
+}
+$q2 = CbtExamQuestion::where('id', $req->input('2id'))->first();
+if ($q2->answer == $req->input('2')) {
+  $grade++;
+}
+$q3 = CbtExamQuestion::where('id', $req->input('3id'))->first();
+if ($q3->answer == $req->input('3')) {
+  $grade++;
+}
+$q4 = CbtExamQuestion::where('id', $req->input('4id'))->first();
+if ($q4->answer == $req->input('4')) {
+  $grade++;
+}
+$q5 = CbtExamQuestion::where('id', $req->input('5id'))->first();
+if ($q5->answer == $req->input('5')) {
+  $grade++;
+}
+$q6 = CbtExamQuestion::where('id', $req->input('6id'))->first();
+if ($q6->answer == $req->input('6')) {
+  $grade++;
+}
+$q7 = CbtExamQuestion::where('id', $req->input('7id'))->first();
+if ($q7->answer == $req->input('7')) {
+  $grade++;
+}
+$q8 = CbtExamQuestion::where('id', $req->input('8id'))->first();
+if ($q8->answer == $req->input('8')) {
+  $grade++;
+}
+$q9 = CbtExamQuestion::where('id', $req->input('9id'))->first();
+if ($q9->answer == $req->input('9')) {
+  $grade++;
+}
+$q10 = CbtExamQuestion::where('id', $req->input('10id'))->first();
+if ($q10->answer == $req->input('10')) {
+  $grade++;
+}
+$percentage = $grade/10*100;
+echo "Percentage is $percentage%";
 }
 
 public function saveAnswer(Request $req, $id)

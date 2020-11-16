@@ -1,5 +1,6 @@
 @extends('layouts.master')
 @section('title', 'Branding - Winnipeg FIR')
+@section('description', 'Winnipeg FIR Branding guidelines and logos')
 @section('content')
 <div class="container py-4">
     <h1 class="font-weight-bold blue-text">Branding</h1>

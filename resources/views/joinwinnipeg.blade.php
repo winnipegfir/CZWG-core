@@ -41,9 +41,17 @@
         </div>
         <br>
     <p>Winnipeg is always looking for controllers to visit our FIR. Whether it's for a change of scenery, to learn a new way of controlling, or just for fun, <a href="{{route('application.start')}}">come visit Winnipeg!</a>
+<<<<<<< HEAD
+=======
+<hr>
+	<h3>Curious how Winnipeg's training works?</h3>
+	<div class="row" style="padding-left:8px">
+		<a class="btn btn-primary" href="{{route('training')}}">Click HERE to learn more!</a>
+	</div>
+<hr>
+>>>>>>> d738abc0c2f05f1b24fd47004f27b2f096f4b3f9
 <p>Questions? <a href="{{route('staff')}}">Contact our Chief Instructor!</a>
     </p>
     <br>
     </div>
 @endsection
-
