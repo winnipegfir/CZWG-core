@@ -18,23 +18,42 @@
         <h3>Training Wait Time</h3>
         <div class="row" style="padding-left:8px">
             <h3 class="btn btn-{{$training_time->colour}}" style="color:white" data-toggle="modal" data-target="#waitTime"><b>Estimated Wait Time:</b> {{$training_time->wait_length}}</h3>
-            <div class="row" style="padding-left:8px">
-                <h3 class="btn btn-green" style="color:white" data-toggle="modal" data-target="#waitTime"><b>Students on waitlist:</b> {{count($waitlist)}}</h3>
-            @if(Auth::check() && Auth::user()->permissions >= 4)
-            <h3 class="btn btn-primary" data-toggle="modal" data-target="#waitEdit">Wait Editor</h3>
-            @endif
+                <div class="row" style="padding-left:8px">
+                    <h3 class="btn btn-primary" style="color:white" data-toggle="modal" data-target="#waitList"><b>Students On Waitlist:</b> {{count($waitlist)}}</h3>
+                    @if(Auth::check() && Auth::user()->permissions >= 4)
+                    <h3 class="btn btn-primary" data-toggle="modal" data-target="#waitEdit">Wait Time Editor</h3>
+                    @endif
+                </div>
         </div>
         <hr>
         <div>
             <h3>Sound Like a Deal?</h3>
-                <p>Come join the community of students, controllers and instructors in Winnipeg today by clicking <a href="{{url('/join')}}">HERE.</p>
+                <p>Come join the community of students, controllers and instructors in Winnipeg today by clicking <a href="{{url('/join')}}">HERE.</a></p>
         </div>
         <hr>
             <p>Questions? <a href="{{route('staff')}}">Contact our Chief Instructor!</a></p>
     </div>
 
+<!-- Start Waitlist modal -->
+    <div class="modal fade" id="waitList" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Our Waitlist</h5>
+                </div>
+                    <div class="modal-body">
+                    Our waitlist updates live whenever any students are added to our wait list. Check back here for updates on what our wait time, and our wait list is like!.
+                    </div>
+                <div class="modal-footer">
+                    <button class="btn btn-light" data-dismiss="modal">Dismiss</button>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- End Waitlist modal -->
+
 <!-- Start Wait Time modal -->
-    <div class="modal fade" id="waitTime" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="waitTime" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
