@@ -144,7 +144,6 @@ class ApplicationsController extends Controller
     }
 
     public function joinWinnipeg() {
-      $waitlist = Student::where('status', '0')->get();
-        return view('joinwinnipeg', compact('waitlist'));
+        return view('joinwinnipeg');
     }
 }

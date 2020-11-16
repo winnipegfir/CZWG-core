@@ -72,8 +72,8 @@ public function addNote(Request $request, $id)
 
 public function trainingTime() {
   $training_time = TrainingWaittime::where('id', 1)->first();
-
-  return view('training', compact('training_time'));
+  $waitlist = Student::where('status', '0')->get();
+  return view('training', compact('training_time', 'waitlist'));
 }
 
 public function editTrainingTime(Request $request) {
