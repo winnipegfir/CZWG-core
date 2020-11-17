@@ -107,7 +107,7 @@ class Event extends Model
                 if(isset($json['data'][0])) {
                     return $json['data'][0];
                 } else {
-                    return ["name" => "Error", "icao" => "ERROR"];
+                    return ["name" => "Error", "icao" => $this->departure_icao];
                 }
             }
         });
