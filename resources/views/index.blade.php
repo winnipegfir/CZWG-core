@@ -14,15 +14,14 @@
                         <div>
                             <br>
                             <h1 style="font-size: 6em; color: #fff">
-                                <span class="winnipeg-blue corner" style="padding: 5px">We Are Winnipeg.</span>
-                            </h1>
-                            <br>
+                                <span class="winnipeg-blue corner" style="padding: 1%">We Are Winnipeg.</span>
+                            </h1>           
                             <h6 style="font-size: 1.25em; color: #fff;">
-                                <span class="winnipeg-blue corner" style="padding: 5px">Screenshot by {{$background->credit}}</span>
+                                <span class="winnipeg-blue corner" style="padding: 0.5%">Screenshot by {{$background->credit}}</span>
                             </h6>
                             <br>
                             <h4 style="font-size: 2em; color: #fff;">
-                                <span class="winnipeg-blue corner" style="padding: 5px"><a href="#mid" id="discoverMore" class="white-text">Explore Central Canada Below&nbsp;&nbsp;<i class="fas fa-arrow-down"></i></a></span>
+                                <span class="white corner" style="padding: 0.5%"><a href="#mid" id="discoverMore" class="blue-text">Check out our new homepage below!&nbsp;&nbsp;<i class="fas fa-arrow-down"></i></a></span>
                             </h4>
                         </div>
                     </div>
@@ -34,7 +33,7 @@
                 <div class="col-md-6" style="padding-top: 20px">
                     <div class="card card-background" style="min-height: 100%">
                         <div class="card-header" style="color: #013162;">
-                            <h2 class="font-weight-bold" style="text-align: center"><i class="fas fa-newspaper"></i>&nbsp;&nbsp;Recent News</h2>
+                            <h2 class="font-weight-bold" style="text-align: center; padding-top:1%"><i class="fas fa-newspaper"></i>&nbsp;&nbsp;Recent News</h2>
                         </div>
                         <div class="card-body">
                             @foreach($news as $n)
@@ -50,7 +49,7 @@
                 <div class="col-md-6" style="padding-top: 20px">
                     <div class="card card-background" style="min-height: 100%">
                         <div class="card-header" style="color: #013162;">
-                            <h2 class="font-weight-bold" style="text-align: center"><i class="fas fa-calendar"></i>&nbsp;&nbsp;Upcoming Events</h2>
+                            <h2 class="font-weight-bold" style="text-align: center; padding-top:1%"><i class="fas fa-calendar"></i>&nbsp;&nbsp;Upcoming Events</h2>
                         </div>
                         <div class="card-body" style="background-color: #fff">
                             @if(count($nextEvents) == 0)
@@ -70,7 +69,7 @@
                 <div class="col-md-6" style="padding-top: 20px">
                     <div class="card card-background" style="min-height: 100%">
                         <div class="card-header" style="color: #013162;">
-                            <h2 class="font-weight-bold" style="text-align: center"><i class="fas fa-award"></i>&nbsp;&nbsp;Top Controllers this Month</h2>
+                            <h2 class="font-weight-bold" style="text-align: center; padding-top:1%"><i class="fas fa-award"></i>&nbsp;&nbsp;Top Controllers this Month</h2>
                         </div>
                         <div class="card-body">
                             @if(count($topControllersArray) == 0)
@@ -98,7 +97,7 @@
                 <div class="col-md-6" style="padding-top: 20px">
                     <div class="card card-background" style="min-height: 100%">
                         <div class="card-header" style="color: #013162;">
-                            <h2 class="font-weight-bold" style="text-align: center"><i class="fas fa-user"></i>&nbsp;&nbsp;Online Controllers</h2>
+                            <h2 class="font-weight-bold" style="text-align: center; padding-top:1%"><i class="fas fa-user"></i>&nbsp;&nbsp;Online Controllers</h2>
                         </div>
                         <div class="card-body">
                             @if(count($finalPositions) == 0)
@@ -134,7 +133,7 @@
                 <div class="col-md-12" style="padding-top: 20px">
                     <div class="card card-background" style="width: 100%">
                         <div class="card-header" style="color: #013162;">
-                            <h2 class="font-weight-bold" style="text-align: center"><i class="fas fa-sun"></i>&nbsp;&nbsp;Weather</h2>
+                            <h2 class="font-weight-bold" style="text-align: center; padding-top:1%"><i class="fas fa-sun"></i>&nbsp;&nbsp;Weather</h2>
                         </div>
                         <div class="card-body">
                             <div style="float: left;">

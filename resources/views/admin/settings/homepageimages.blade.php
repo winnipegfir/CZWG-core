@@ -28,7 +28,7 @@
             @endforeach
         </div>
         <hr>
-        <a href="#" data-toggle="modal" data-target="#uploadImageModal" role="button" class="btn btn-primary"><h2>Upload New Image</h2></a>
+        <a href="#" data-toggle="modal" data-target="#uploadImageModal" role="button" class="btn btn-primary" style="padding-bottom: .5%"><h5>Upload New Image</h5></a>
     </div>
 
     <!-- Start Upload Image Modal -->
