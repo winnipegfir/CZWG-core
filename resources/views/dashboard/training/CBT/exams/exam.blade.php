@@ -15,6 +15,7 @@
 @foreach($questions as $question)
   <h5>Question: {{$question->question}} </h5>
   <input type="hidden" name="question_{{$i}}" value="{{$question->id}}">
+  <input type="hidden" name="a_{{$i}}" value="{{$question->answer}}">
   <input type="radio" id="1" value="1" name="{{$i}}">{{$question->option1}}<br>
   <input type="radio" id="2" value="2" name="{{$i}}">{{$question->option2}}<br>
   <input type="radio" id="3" value="3" name="{{$i}}">{{$question->option3}}<br>

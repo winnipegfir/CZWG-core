@@ -163,7 +163,117 @@ public function exam($id)
 
 public function gradeExam(Request $req, $id)
 {
-return redirect()->back()->withError('This feature has not been implemented yet!');
+  $student = Student::where('user_id', Auth::user()->id)->first();
+  CbtExamAnswer::create([
+    'student_id' => $student->id,
+    'cbt_exam_question_id' => $req->input('question_1'),
+    'cbt_exam_id' => $id,
+    'question' => '1',
+    'user_answer' => $req->input('1'),
+    'right_answer' => $req->input('a_1'),
+    'created_at' => Carbon::now()->toDateTimeString(),
+  ]);
+  CbtExamAnswer::create([
+    'student_id' => $student->id,
+    'cbt_exam_question_id' => $req->input('question_2'),
+    'cbt_exam_id' => $id,
+    'question' => '1',
+    'user_answer' => $req->input('2'),
+    'right_answer' => $req->input('a_2'),
+    'created_at' => Carbon::now()->toDateTimeString(),
+  ]);
+  CbtExamAnswer::create([
+    'student_id' => $student->id,
+    'cbt_exam_question_id' => $req->input('question_3'),
+    'cbt_exam_id' => $id,
+    'question' => '1',
+    'user_answer' => $req->input('3'),
+    'right_answer' => $req->input('a_3'),
+    'created_at' => Carbon::now()->toDateTimeString(),
+  ]);
+  CbtExamAnswer::create([
+    'student_id' => $student->id,
+    'cbt_exam_question_id' => $req->input('question_4'),
+    'cbt_exam_id' => $id,
+    'question' => '1',
+    'user_answer' => $req->input('4'),
+    'right_answer' => $req->input('a_4'),
+    'created_at' => Carbon::now()->toDateTimeString(),
+  ]);
+  CbtExamAnswer::create([
+    'student_id' => $student->id,
+    'cbt_exam_question_id' => $req->input('question_5'),
+    'cbt_exam_id' => $id,
+    'question' => '1',
+    'user_answer' => $req->input('5'),
+    'right_answer' => $req->input('a_5'),
+    'created_at' => Carbon::now()->toDateTimeString(),
+  ]);
+  CbtExamAnswer::create([
+    'student_id' => $student->id,
+    'cbt_exam_question_id' => $req->input('question_6'),
+    'cbt_exam_id' => $id,
+    'question' => '1',
+    'user_answer' => $req->input('6'),
+    'right_answer' => $req->input('a_6'),
+    'created_at' => Carbon::now()->toDateTimeString(),
+  ]);
+  CbtExamAnswer::create([
+    'student_id' => $student->id,
+    'cbt_exam_question_id' => $req->input('question_7'),
+    'cbt_exam_id' => $id,
+    'question' => '1',
+    'user_answer' => $req->input('7'),
+    'right_answer' => $req->input('a_7'),
+    'created_at' => Carbon::now()->toDateTimeString(),
+  ]);
+  CbtExamAnswer::create([
+    'student_id' => $student->id,
+    'cbt_exam_question_id' => $req->input('question_8'),
+    'cbt_exam_id' => $id,
+    'question' => '1',
+    'user_answer' => $req->input('8'),
+    'right_answer' => $req->input('a_8'),
+    'created_at' => Carbon::now()->toDateTimeString(),
+  ]);
+  CbtExamAnswer::create([
+    'student_id' => $student->id,
+    'cbt_exam_question_id' => $req->input('question_9'),
+    'cbt_exam_id' => $id,
+    'question' => '1',
+    'user_answer' => $req->input('9'),
+    'right_answer' => $req->input('a_9'),
+    'created_at' => Carbon::now()->toDateTimeString(),
+  ]);
+  CbtExamAnswer::create([
+    'student_id' => $student->id,
+    'cbt_exam_question_id' => $req->input('question_10'),
+    'cbt_exam_id' => $id,
+    'question' => '1',
+    'user_answer' => $req->input('10'),
+    'right_answer' => $req->input('a_10'),
+    'created_at' => Carbon::now()->toDateTimeString(),
+  ]);
+  $score = '0';
+  $answers = CbtExamAnswer::where([
+    ['student_id', $student->id],
+    ['cbt_exam_id', $id],
+  ])->get();
+  foreach ($answers as $a) {
+    if ($a->user_answer == $a->right_answer) {
+      $score++;
+    }
+  }
+    $grade = $score/10*100;
+  CbtExamResult::create([
+    'student_id' => $student->id,
+    'cbt_exam_id' => $id,
+    'instructor_id' => $student->instructor->id,
+    'grade' => $grade,
+    'created_at' => Carbon::now()->toDateTimeString(),
+  ]);
+
+return redirect()->back()->withSuccess('All Questions recorded!');
 }
 
 

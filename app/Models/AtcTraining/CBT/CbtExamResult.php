@@ -11,7 +11,7 @@ class CbtExamResult extends Model
 {
     //
     protected $fillable = [
-        'student_id', 'instructor_id', 'exam_id', 'grade',
+        'student_id', 'instructor_id', 'exam_id', 'grade', 'cbt_exam_id',
     ];
 
     public function user()
