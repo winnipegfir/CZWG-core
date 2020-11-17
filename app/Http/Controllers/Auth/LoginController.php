@@ -129,6 +129,10 @@ class LoginController extends Controller
         return redirect(config('connect.url')."/oauth/authorize?".$query);
     }
 
+    /**
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
     public function validateConnectLogin(Request $request)
     {
         //Written by Harrison Scott
