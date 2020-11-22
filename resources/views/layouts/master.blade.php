@@ -288,6 +288,7 @@
             </div>
 
             <div class="mt-3">
+                <p>The Winnipeg FIR stands with the LGBTQIA+ community on VATSIM.</p>
                 <a href="{{route('about')}}"><small class="text-muted">{{App\Models\Settings\CoreSettings::where('id', 1)->firstOrFail()->sys_name}} {{App\Models\Settings\CoreSettings::where('id', 1)->firstOrFail()->release}} ({{App\Models\Settings\CoreSettings::where('id', 1)->firstOrFail()->sys_build}})</small></a> <small>- <a target="_blank" href="https://blog.winnipegfir.ca" class="text-muted">The Winnipeg FIR Blog</a></small>
             </div>
         </div>
