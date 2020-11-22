@@ -223,22 +223,6 @@ class Kernel extends ConsoleKernel
 
         //VATSIM Rating Update because Nate is making me
         $schedule->call(function () {
-            //Define our ratings, because how else are we supposed to?
-            $ratings = [
-                -1 => ["IACT", "Inactive"],
-                0 => ["SUSP", "Suspended"],
-                1 => ["OBS", "Pilot/Observer"],
-                2 => ["S1", "Tower Trainee"],
-                3 => ["S2", "Tower Controller"],
-                4 => ["S3", "TMA Controller"],
-                5 => ["C1", "Enroute Controller"],
-                7 => ["C3", "Senior Controller"],
-                8 => ["I1", "Instructor"],
-                10 => ["I3", "Senior Instructor"],
-                11 => ["SUP", "Supervisor"],
-                12 => ["ADM", "Administrator"]
-            ];
-
             $ratings = json_decode(file_get_contents('http://cluster.data.vatsim.net/v3/vatsim-data.json'))->ratings;
             $users = User::all();
 
