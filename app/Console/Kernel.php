@@ -238,21 +238,23 @@ class Kernel extends ConsoleKernel
                 11 => ["SUP", "Supervisor"],
                 12 => ["ADM", "Administrator"]
             ];
+
+            $ratings = json_decode(file_get_contents('http://cluster.data.vatsim.net/v3/vatsim-data.json'))->ratings;
             $users = User::all();
 
             // Check each user to see if their rating has changed
             foreach($users as $u) {
                 //Because of the vacant user ugh
-                if($u->id != 1 | $u->id != 2) {
+                if($u->id != 1 && $u->id != 2) {
                     $rosterMember = RosterMember::where('cid', $u->id)->first();
                     $getRating = json_decode(file_get_contents('https://api.vatsim.net/api/ratings/' . $u->id . '/'));
                     $ratingID = $getRating->rating;
                     if ($u->rating_id != $ratingID) {
                         //Log it for when it breaks
-                        Log::info('User: ' . $u->fname . ' ' . $u->lname . ' updated from ' . $u->rating_short . ' to ' . $ratings[$ratingID][0] . '.');
+                        Log::info('User: ' . $u->fname . ' ' . $u->lname . ' updated from ' . $u->rating_short . ' to ' . $ratings[$ratingID]['short'] . '.');
 
                         User::where('id', $u->id)
-                            ->update(['rating_id' => $ratingID, 'rating_short' => $ratings[$ratingID][0], 'rating_long' => $ratings[$ratingID][1], 'rating_GRP' => $ratings[$ratingID][1]]);
+                            ->update(['rating_id' => $ratingID, 'rating_short' => $ratings[$ratingID]['short'], 'rating_long' => $ratings[$ratingID]['long'], 'rating_GRP' => $ratings[$ratingID]['long']]);
 
                         if($rosterMember) {
                             Log::info("--> Setting rating hours to 0");
