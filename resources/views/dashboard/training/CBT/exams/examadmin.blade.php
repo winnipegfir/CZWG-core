@@ -51,9 +51,9 @@
                     {{$exam->created_by}}
                 </td>
                 <td>
-                  <a href="#">View</a>
+                  <a href="{{route('cbt.exam.questions', $exam->id)}}">Question Bank</a>
               @if (Auth::user()->permissions >=4)
-                <a href="#">| Edit</a> | <a href="#">Delete</a>
+                 | <a href="#">Delete</a>
               </td>
               @endif
 
@@ -67,12 +67,11 @@
           <!--TAB 3: Add Exam : Viewable by perm level 4 and up-->
      <div class="tab-pane fade" id="addmodule" role="tabpanel" aria-labelledby="addmodule-tab"><br>
         <!--Form for creating a new Exam-->
-        <form action="#" method="POST">
+        <form action="{{route('cbt.exam.add')}}" method="POST">
           <label class="form-group">Name of Exam</label><br>
-          <input class="form-group" type="text"><br>
-          <label class="form-group">Description of Exam</label><br>
-          <textarea class="form-group"></textarea><br>
+          <input name="name" id="name" class="form-group" type="text"><br>
           <input type="submit" value="Create Exam">
+          @csrf
         </form>
 
 

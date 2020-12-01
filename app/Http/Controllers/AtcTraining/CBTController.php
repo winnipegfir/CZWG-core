@@ -276,57 +276,6 @@ public function gradeExam(Request $req, $id)
 return redirect()->back()->withSuccess('All Questions recorded!');
 }
 
-
-
-public function testgradeExam(Request $req, $id)
-{
-  $i = 1;
-  $grade = 0;
-
-$q1 = CbtExamQuestion::where('id', $req->input('1id'))->first();
-if ($q1->answer == $req->input('1')) {
-  $grade++;
-}
-$q2 = CbtExamQuestion::where('id', $req->input('2id'))->first();
-if ($q2->answer == $req->input('2')) {
-  $grade++;
-}
-$q3 = CbtExamQuestion::where('id', $req->input('3id'))->first();
-if ($q3->answer == $req->input('3')) {
-  $grade++;
-}
-$q4 = CbtExamQuestion::where('id', $req->input('4id'))->first();
-if ($q4->answer == $req->input('4')) {
-  $grade++;
-}
-$q5 = CbtExamQuestion::where('id', $req->input('5id'))->first();
-if ($q5->answer == $req->input('5')) {
-  $grade++;
-}
-$q6 = CbtExamQuestion::where('id', $req->input('6id'))->first();
-if ($q6->answer == $req->input('6')) {
-  $grade++;
-}
-$q7 = CbtExamQuestion::where('id', $req->input('7id'))->first();
-if ($q7->answer == $req->input('7')) {
-  $grade++;
-}
-$q8 = CbtExamQuestion::where('id', $req->input('8id'))->first();
-if ($q8->answer == $req->input('8')) {
-  $grade++;
-}
-$q9 = CbtExamQuestion::where('id', $req->input('9id'))->first();
-if ($q9->answer == $req->input('9')) {
-  $grade++;
-}
-$q10 = CbtExamQuestion::where('id', $req->input('10id'))->first();
-if ($q10->answer == $req->input('10')) {
-  $grade++;
-}
-$percentage = $grade/10*100;
-echo "Percentage is $percentage%";
-}
-
 public function saveAnswer(Request $req, $id)
 {
   //save result
@@ -361,6 +310,17 @@ public function saveAnswer(Request $req, $id)
   return redirect()->route('gradeExam',[$id]);
 }
 
+public function addExam(Request $req)
+{
+  CbtExam::create([
+    'name' => $req->input('name'),
+    'created_by' => Auth::user()->id,
+    'updated_by' => Auth::user()->id,
+    'created_at' => Carbon::now()->toDateTimeString(),
+    ]);
+
+    return redirect()->back()->withSuccess('Added ' .$req->input('name'). ' Exam!');
+}
 
 public function modifyExam(Request $request, $id)
 {
@@ -378,6 +338,14 @@ public function getQuestions($id){
     $title_button = "Save question";
         //dd($questions);
   return view('subject.questions', compact('subject', 'title', 'answer', 'questions', 'title_button'));
+    }
+
+    public function viewQuestions($id)
+    {
+      $questions = CbtExamQuestion::where('cbt_exam_id', $id)->get();
+      $exam = CbtExam::whereId($id)->FirstorFail();
+
+      return view('dashboard.training.cbt.exams.viewexamadmin', compact('questions', 'exam'));
     }
 
 public function addQuestion($id)
