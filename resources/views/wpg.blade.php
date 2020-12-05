@@ -12,7 +12,7 @@
 <div class="container" style="margin-top: 1%;">
     <h1 class="blue-text font-weight-bold">Change is Coming.</h1>
 
-    @if (Auth::user()->permissions < 4)
+    @if (Auth::check() && Auth::user()->permissions < 4)
     <p>But... we can't tell you what those changes are yet. Check back soon!</p>
     <a href="{{route('index')}}" class="blue-text" style="font-size: 1.2em"> <i class="fas fa-arrow-left"></i> Back to Winnipeg FIR</a>
     <br></br>
