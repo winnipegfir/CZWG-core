@@ -33,6 +33,7 @@ Route::get('/news/{slug}', 'News\NewsController@viewArticlePublic')->name('news.
 Route::get('/news', 'News\NewsController@viewAllPublic')->name('news');
 Route::get('/training', 'AtcTraining\TrainingController@trainingTime')->name('training');
 Route::view('/bill', 'bill')->name('bill');
+Route::view('/wpg', 'wpg')->name('wpg');
 
 
 //Authentication
