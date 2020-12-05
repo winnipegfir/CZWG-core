@@ -33,6 +33,18 @@
                 <br/>
                 <a href="https://i.imgur.com/n4fiWZf.png">White Letterhead on Transparent</a>
             </div>
+
+            <div class="col-md-3 d-flex flex-column align-items-center justify-content-center" style="padding-top: 2%">
+                <img style="background-color: #ffffff" src="https://i.imgur.com/PgYWxtX.png" class="img-fluid" alt="">
+                <br/>
+                <a href="https://i.imgur.com/PgYWxtX.png">Grey Training Wordmark on Transparent</a>
+            </div>
+
+            <div class="col-md-3 d-flex flex-column align-items-center justify-content-center" style="padding-top: 2%">
+                <img style="background-color: #444444" src="https://i.imgur.com/ZxZjpmI.png" class="img-fluid" alt="">
+                <br/>
+                <a href="https://i.imgur.com/ZxZjpmI.png">White Training Wordmark on Transparent</a>
+            </div>
         </div>
     </div>
     <hr>
