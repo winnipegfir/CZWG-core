@@ -64,7 +64,7 @@ class DatabaseSeeder extends Seeder
             'shortform' => 'firchief',
         ]);
 
-        DB::table('positions')->insert(
+        DB::table('event_positions')->insert(
             ['position' => 'Delivery'],
             ['position' => 'Ground'],
             ['position' => 'Tower'],
@@ -73,5 +73,10 @@ class DatabaseSeeder extends Seeder
             ['position' => 'Centre'],
             ['position' => 'Relief']
         );
+
+        DB::table('homepage_images')->insert([
+            'url' => 'https://cdn.discordapp.com/attachments/598024548301930496/762594915552985108/unknown.png',
+            'credit' => 'Winnipeg FIR'
+        ]);
     }
 }
