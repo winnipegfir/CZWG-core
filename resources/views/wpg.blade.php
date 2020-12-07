@@ -10,14 +10,19 @@
 @section('content')
 
 <div class="container" style="margin-top: 1%;">
-    <h1 class="blue-text font-weight-bold">Change is Coming.</h1>
+    
 
     @if (Auth::check() && Auth::user()->permissions < 4)
+    <h1 class="blue-text font-weight-bold">Change is Coming.</h1>
     <p>But... we can't tell you what those changes are yet. Check back soon!</p>
-    <a href="{{route('index')}}" class="blue-text" style="font-size: 1.2em"> <i class="fas fa-arrow-left"></i> Back to Winnipeg FIR</a>
+    <a href="{{route('index')}}" class="blue-text" style="font-size: 1.2em"> <i class="fas fa-arrow-left"></i> Back to Home</a>
     <br></br>
     @else
-        <p>After years of being known on the VATSIM network as CZWG, we're finally changing things up. Starting in 2021 - <text class="font-weight-bold">We Are WPG.</text> Here's what that means for you.</p>
+    <a href="{{route('index')}}" class="blue-text" style="font-size: 1.2em"> <i class="fas fa-arrow-left"></i> Back to Home</a>
+        <img src="https://i.imgur.com/THmmkon.png" style="width: 100%">
+        <br><br>
+        <p>After years of being known on the VATSIM network as CZWG, we're finally changing things up. Starting in 2021 - <text class="font-weight-bold">we're changing our callsign from CZWG to WPG.</text> Here's what that means for you - whether you're a pilot, controller, or just an observer.</p>
+        <hr>
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item">
             <a class="nav-link active" id="pilots-tab" data-toggle="tab" href="#pilots" role="tab" aria-controls="pilots" aria-selected="true">For Pilots</a>
