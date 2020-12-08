@@ -15,8 +15,8 @@ class UpdateUsersTable extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->unsignedInteger('id')->unique()->change();
-            $table->string('fname')->nullable(false);
-            $table->string('lname')->nullable(false);
+            $table->string('fname')->nullable();
+            $table->string('lname')->nullable();
             $table->string('email')->change();
             $table->integer('rating_id')->default(null)->nullable();
             $table->string('rating_short')->default(null)->nullable();
@@ -45,6 +45,11 @@ class UpdateUsersTable extends Migration
             $table->tinyInteger('used_connect')->default(0);
             $table->integer('visitor')->default(0);
         });
+        
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('fname')->nullable(false)->change();
+            $table->string('lname')->nullable(false)->change();
+        }
     }
 
     /**
