@@ -15,8 +15,8 @@ class UpdateUsersTable extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->unsignedInteger('id')->unique()->change();
-            $table->string('fname');
-            $table->string('lname');
+            $table->string('fname')->nullable(false);
+            $table->string('lname')->nullable(false);
             $table->string('email')->change();
             $table->integer('rating_id')->default(null)->nullable();
             $table->string('rating_short')->default(null)->nullable();
