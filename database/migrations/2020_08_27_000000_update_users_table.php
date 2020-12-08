@@ -49,7 +49,7 @@ class UpdateUsersTable extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->string('fname')->nullable(false)->change();
             $table->string('lname')->nullable(false)->change();
-        }
+        });
     }
 
     /**
