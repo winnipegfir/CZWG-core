@@ -10,6 +10,7 @@ use App\Models\Network\MonitoredPosition;
 use App\Models\Network\SessionLog;
 use App\Models\Users\User;
 use Carbon\Carbon;
+use GuzzleHttp\Client;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Illuminate\Support\Facades\Log;
@@ -45,25 +46,22 @@ class Kernel extends ConsoleKernel
             // Because OOMs
             DB::connection()->disableQueryLog();
 
-            // Load VATSIM data
-            $vatsim = new \Vatsimphp\VatsimData();
-            $vatsim->setConfig('dataRefresh', 60);
-            $vatsim->loadData();
-
             // Active lists
             $onlineControllers = array();
 
             // Getters
             $positions = MonitoredPosition::all();
-            $controllers = $vatsim->getControllers();
 
+            $client = new Client();
+            $response = $client->request('GET', 'https://data.vatsim.net/v3/vatsim-data.json');
+            $controllers = json_decode($response->getBody()->getContents())->controllers;
 
             foreach ($controllers as $controller) {
                 //Set our flag
                 $identFound = false;
 
                 foreach ($positions as $position) {
-                    if (($controller['callsign'] == $position->identifier)) {
+                    if (($controller->callsign == $position->identifier)) {
                         $identFound = true; // set flag
                         array_push($onlineControllers, $controller); // Add if the callsign is the same as the position identifier
                     }
@@ -71,10 +69,13 @@ class Kernel extends ConsoleKernel
 
                 if (!$identFound) {
                     //Check to see if we need to make a new position, also check to make sure it isn't an ATIS, or an observer
-                    if (Str::contains($controller['callsign'], ['ZWG', 'CZWG', 'CYWG', 'CYAV', 'CYPG', 'CYQR', 'CYXE', 'CYQT', 'CYMJ']) && !Str::endsWith($controller['callsign'], 'ATIS') && !Str::endsWith($controller['callsign'], 'OBS') && $controller['facilitytype'] != 0) {
+                    if (Str::contains($controller->callsign, ['ZWG', 'CZWG', 'CYWG', 'CYAV', 'CYPG', 'CYQR', 'CYXE', 'CYQT', 'CYMJ']) &&
+                        !Str::endsWith($controller->callsign, 'ATIS') &&
+                        !Str::endsWith($controller->callsign, 'OBS') &&
+                        $controller->facility != 0) {
                         // Add position to table if so
                         $monPos = new MonitoredPosition();
-                        $monPos->identifier = $controller["callsign"];
+                        $monPos->identifier = $controller->callsign;
                         $monPos->save();
 
                         //They CLEARLY are on one of our positions, push them to the array please!
@@ -93,7 +94,7 @@ class Kernel extends ConsoleKernel
 
                 //Let's see if they have an open session
                 foreach($sessionLogs as $log) {
-                    if($log->cid == $oc['cid']) {
+                    if($log->cid == $oc->cid) {
                         $logFound = true;
                     }
                 }
@@ -101,29 +102,21 @@ class Kernel extends ConsoleKernel
                 if(!$logFound) {
                     //We have no log yet, let's create one!
 
-                    //Make a pretty time
-                    $ocLogon = substr($oc['time_logon'], 0, 4).'-'
-                        .substr($oc['time_logon'], 4, 2).'-'
-                        .substr($oc['time_logon'], 6, 2).' '
-                        .substr($oc['time_logon'], 8, 2).':'
-                        .substr($oc['time_logon'], 10, 2).':'
-                        .substr($oc['time_logon'], 12, 2);
-
-                    $roster = RosterMember::where('cid', $oc['cid'])->first();
+                    $roster = RosterMember::where('cid', $oc->cid)->first();
 
                     //Creation time!
                     $log = new SessionLog();
-                    $log->callsign = $oc['callsign'];
+                    $log->callsign = $oc->callsign;
                     if($roster) {
                         $log->roster_member_id = $roster->id;
                     }
-                    $log->cid = $oc['cid'];
-                    $log->session_start = $ocLogon;
-                    $log->monitored_position_id = MonitoredPosition::where('identifier', $oc['callsign'])->first()->id;
+                    $log->cid = $oc->cid;
+                    $log->session_start = Carbon::make($oc->logon_time);
+                    $log->monitored_position_id = MonitoredPosition::where('identifier', $oc->callsign)->first()->id;
                     $log->emails_sent = 0;
                     $log->save();
 
-                    Log::info('Session Log for ' . $oc['cid'] . ' on ' . $oc['callsign'] . ' has been created. Started at ' . $ocLogon);
+                    Log::info('Session Log for ' . $oc->cid . ' on ' . $oc->callsign . ' has been created. Started at ' . Carbon::now()->toDateTimeString());
                 }
             }
 
@@ -132,17 +125,10 @@ class Kernel extends ConsoleKernel
                 $stillOnline = false;
 
                 foreach ($onlineControllers as $oc) {
-                    $ocLogon = substr($oc['time_logon'], 0, 4).'-'
-                        .substr($oc['time_logon'], 4, 2).'-'
-                        .substr($oc['time_logon'], 6, 2).' '
-                        .substr($oc['time_logon'], 8, 2).':'
-                        .substr($oc['time_logon'], 10, 2).':'
-                        .substr($oc['time_logon'], 12, 2);
-
-                    if ($oc['cid'] == $log->cid) { // If CID matches
+                    if ($oc->cid == $log->cid) { // If CID matches
                         // If callsign matches
-                        if (MonitoredPosition::where('id', $log->monitored_position_id)->first()->identifier == $oc['callsign']) {
-                            if ($ocLogon == $log->session_start) {
+                        if (MonitoredPosition::where('id', $log->monitored_position_id)->first()->identifier == $oc->callsign) {
+                            if (Carbon::make($oc->logon_time) == $log->session_start) {
                                 $stillOnline = true;
                             }
                         }
