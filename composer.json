@@ -9,6 +9,7 @@
     "type": "project",
     "require": {
         "php": "^7.2",
+        "doctrine/dbal": "2.12.*",
         "fideloper/proxy": "^4.0",
         "guzzlehttp/guzzle": "^6.3.3",
         "intervention/image": "^2.5",
