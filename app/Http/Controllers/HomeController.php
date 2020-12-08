@@ -8,6 +8,7 @@ use App\Models\News\News;
 use App\Models\Settings\HomepageImages;
 use Auth;
 use Carbon\Carbon;
+use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
@@ -17,33 +18,25 @@ class HomeController extends Controller
     public function view()
     {
         //Winnipeg online controllers
-        $vatsim = new \Vatsimphp\VatsimData();
-        $vatsim->setConfig('cacheOnly', false);
-        $finalPositions = [];
-        if ($vatsim->loadData()) {
-            $prefixes = [
-                'ZWG_',
-                'CYWG_',
-                'CYPG_',
-                'CYAV_',
-                'CYXE_',
-                'CYQR_',
-                'CYQT_',
-                'CYMJ_',
-            ];
+        $client = new Client();
+        $response = $client->request('GET', 'https://data.vatsim.net/v3/vatsim-data.json');
+        $controllers = json_decode($response->getBody()->getContents())->controllers;
 
-            foreach($prefixes as $p) {
-                $onlineControllers[] = $vatsim->searchCallsign($p)->toArray();
-            }
+        $prefixes = [
+            'CZWG_',
+            'ZWG_',
+            'CYWG_',
+            'CYPG_',
+            'CYAV_',
+            'CYXE_',
+            'CYQR_',
+            'CYQT_',
+            'CYMJ_',
+        ];
 
-            foreach ($onlineControllers as $controller) {
-                foreach ($controller as $c) {
-                    if (Str::endsWith($c['callsign'], '_ATIS') || Str::endsWith($c['callsign'], '_OBS') || $c['facilitytype'] == 0) {
-                        continue;
-                    } else {
-                        $finalPositions[] = $c;
-                    }
-                }
+        foreach ($controllers as $c) {
+            if (Str::startsWith($c->callsign, $prefixes) && !Str::endsWith($c->callsign, ['ATIS', 'OBS']) && $c->facility != 0) {
+                $finalPositions[] = $c;
             }
         }
 

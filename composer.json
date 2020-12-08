@@ -22,7 +22,6 @@
         "parsedown/laravel": "^1.2",
         "restcord/restcord": "~0.3.2",
         "sendgrid/sendgrid": "~7",
-        "skymeyer/vatsimphp": "1.0.*",
         "socialiteproviders/discord": "^2.0",
         "spatie/laravel-google-calendar": "^2.6.2",
         "thujohn/twitter": "^2.2",

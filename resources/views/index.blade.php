@@ -15,7 +15,7 @@
                             <br>
                             <h1 style="font-size: 6em; color: #fff">
                                 <span class="winnipeg-blue corner" style="padding: 1%">We Are Winnipeg.</span>
-                            </h1>           
+                            </h1>
                             <h6 style="font-size: 1.25em; color: #fff;">
                                 <span class="winnipeg-blue corner" style="padding: 0.5%">Screenshot by {{$background->credit}}</span>
                             </h6>
@@ -106,17 +106,17 @@
                             @foreach($finalPositions as $p)
                                 <h5>
                                     <div style="float: left;">
-                                        <a href="https://stats.vatsim.net/search_id.php?id={{$p['cid']}}" target="_blank" style="color: black;">
-                                            @if($p['realname'] == $p['cid'])
-                                                <i class="fas fa-user-circle"></i>&nbsp;{{$p['realname']}}
+                                        <a href="https://stats.vatsim.net/search_id.php?id={{$p->cid}}" target="_blank" style="color: black;">
+                                            @if($p->name == $p->cid)
+                                                <i class="fas fa-user-circle"></i>&nbsp;{{$p->name}}
                                             @else
-                                                <i class="fas fa-user-circle"></i>&nbsp;{{$p['realname']}} {{$p['cid']}}
+                                                <i class="fas fa-user-circle"></i>&nbsp;{{$p->name}} {{$p->cid}}
                                             @endif
                                         </a>
                                     </div>
                                     <div style="float: right;">
                                     <span class="badge winnipeg-blue">
-                                        {{$p['callsign']}} on {{$p['frequency']}}
+                                        {{$p->callsign}} on {{$p->frequency}}
                                     </span>
                                     </div>
                                 </h5>
