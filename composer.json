@@ -15,7 +15,7 @@
         "intervention/image": "^2.5",
         "laravel-notification-channels/discord": "^1.1",
         "laravel/framework": "^6.0",
-        "laravel/tinker": "^1.0",
+        "laravel/tinker": "^2.5",
         "laravelcollective/html": "6.0.*",
         "lasserafn/php-initial-avatar-generator": "^4.0",
         "misterphilip/maintenance-mode": "~2.0",
