@@ -3834,21 +3834,22 @@
         },
         {
             "name": "socialiteproviders/discord",
-            "version": "v2.0.2",
+            "version": "4.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SocialiteProviders/Discord.git",
-                "reference": "e0cd8895f321943b36f533e7bf21ad29bcdece9a"
+                "reference": "34c62db509c9680e120982f9239db5ce905eb027"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SocialiteProviders/Discord/zipball/e0cd8895f321943b36f533e7bf21ad29bcdece9a",
-                "reference": "e0cd8895f321943b36f533e7bf21ad29bcdece9a",
+                "url": "https://api.github.com/repos/SocialiteProviders/Discord/zipball/34c62db509c9680e120982f9239db5ce905eb027",
+                "reference": "34c62db509c9680e120982f9239db5ce905eb027",
                 "shasum": ""
             },
             "require": {
-                "php": "^5.6 || ^7.0",
-                "socialiteproviders/manager": "~2.0 || ~3.0"
+                "ext-json": "*",
+                "php": "^7.2 || ^8.0",
+                "socialiteproviders/manager": "~4.0"
             },
             "type": "library",
             "autoload": {
@@ -3867,30 +3868,30 @@
                 }
             ],
             "description": "Discord OAuth2 Provider for Laravel Socialite",
-            "time": "2018-05-26T03:40:07+00:00"
+            "time": "2020-12-01T23:10:59+00:00"
         },
         {
             "name": "socialiteproviders/manager",
-            "version": "v3.6",
+            "version": "4.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SocialiteProviders/Manager.git",
-                "reference": "fc8dbcf0061f12bfe0cc347e9655af932860ad36"
+                "reference": "0f5e82af0404df0080bdc5c105cef936c1711524"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SocialiteProviders/Manager/zipball/fc8dbcf0061f12bfe0cc347e9655af932860ad36",
-                "reference": "fc8dbcf0061f12bfe0cc347e9655af932860ad36",
+                "url": "https://api.github.com/repos/SocialiteProviders/Manager/zipball/0f5e82af0404df0080bdc5c105cef936c1711524",
+                "reference": "0f5e82af0404df0080bdc5c105cef936c1711524",
                 "shasum": ""
             },
             "require": {
                 "illuminate/support": "^6.0|^7.0|^8.0",
                 "laravel/socialite": "~4.0|~5.0",
-                "php": "^7.2"
+                "php": "^7.2 || ^8.0"
             },
             "require-dev": {
                 "mockery/mockery": "^1.2",
-                "phpunit/phpunit": "^8.0"
+                "phpunit/phpunit": "^9.0"
             },
             "type": "library",
             "extra": {
@@ -3930,7 +3931,7 @@
             ],
             "description": "Easily add new or override built-in providers in Laravel Socialite.",
             "homepage": "https://socialiteproviders.com/",
-            "time": "2020-09-08T10:41:06+00:00"
+            "time": "2020-12-01T23:09:06+00:00"
         },
         {
             "name": "spatie/laravel-google-calendar",
