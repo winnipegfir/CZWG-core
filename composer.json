@@ -24,7 +24,7 @@
         "restcord/restcord": "~0.4.1",
         "sendgrid/sendgrid": "~7",
         "socialiteproviders/discord": "^4.1",
-        "spatie/laravel-google-calendar": "^2.6.2",
+        "spatie/laravel-google-calendar": "^3.2.1",
         "thujohn/twitter": "^2.2",
         "vatsim/sso": "3.*",
         "vemcogroup/laravel-sparkpost-driver": "^3.0",

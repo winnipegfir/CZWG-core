@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4c5e18bf7db46dae8592d9b7de968283",
+    "content-hash": "6fae7afc5fb03468f64abe1d3be0c292",
     "packages": [
         {
             "name": "atymic/tmhoauth",
@@ -3939,27 +3939,27 @@
         },
         {
             "name": "spatie/laravel-google-calendar",
-            "version": "2.6.2",
+            "version": "3.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-google-calendar.git",
-                "reference": "274a4c0eb4c8253a7d3d1996b4d7558a7bef9205"
+                "reference": "1e499555e85bfeeab92f1ecf2e9912404837e54b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-google-calendar/zipball/274a4c0eb4c8253a7d3d1996b4d7558a7bef9205",
-                "reference": "274a4c0eb4c8253a7d3d1996b4d7558a7bef9205",
+                "url": "https://api.github.com/repos/spatie/laravel-google-calendar/zipball/1e499555e85bfeeab92f1ecf2e9912404837e54b",
+                "reference": "1e499555e85bfeeab92f1ecf2e9912404837e54b",
                 "shasum": ""
             },
             "require": {
                 "google/apiclient": "^2.2",
-                "illuminate/support": "^6.0|^7.0",
+                "illuminate/support": "^6.0|^7.0|^8.0",
                 "nesbot/carbon": "^2.0",
-                "php": "^7.2"
+                "php": "^7.2|^8.0"
             },
             "require-dev": {
-                "mockery/mockery": "^1.3.0",
-                "orchestra/testbench": "^4.0|^5.0",
+                "mockery/mockery": "^1.4",
+                "orchestra/testbench": "^4.0|^5.0|^6.0",
                 "phpunit/phpunit": "^8.4|^9.0"
             },
             "type": "library",
@@ -4006,7 +4006,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2020-07-19T09:08:41+00:00"
+            "time": "2020-12-07T08:58:51+00:00"
         },
         {
             "name": "starkbank/ecdsa",
