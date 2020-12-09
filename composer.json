@@ -27,7 +27,7 @@
         "spatie/laravel-google-calendar": "^2.6.2",
         "thujohn/twitter": "^2.2",
         "vatsim/sso": "3.*",
-        "vemcogroup/laravel-sparkpost-driver": "^1.0",
+        "vemcogroup/laravel-sparkpost-driver": "^3.0",
         "wohali/oauth2-discord-new": "^1.0"
     },
     "require-dev": {

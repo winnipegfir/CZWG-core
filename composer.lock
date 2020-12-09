@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a1fee5689d5ad35a557b06df95bd2f0d",
+    "content-hash": "4c5e18bf7db46dae8592d9b7de968283",
     "packages": [
         {
             "name": "atymic/tmhoauth",
@@ -6346,21 +6346,21 @@
         },
         {
             "name": "vemcogroup/laravel-sparkpost-driver",
-            "version": "1.1.0",
+            "version": "3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vemcogroup/laravel-sparkpost-driver.git",
-                "reference": "84ced669cbc2e376713a4a7c6cd873dd931d036f"
+                "reference": "0b7b42473578c375923005283a2623feb780a1a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vemcogroup/laravel-sparkpost-driver/zipball/84ced669cbc2e376713a4a7c6cd873dd931d036f",
-                "reference": "84ced669cbc2e376713a4a7c6cd873dd931d036f",
+                "url": "https://api.github.com/repos/vemcogroup/laravel-sparkpost-driver/zipball/0b7b42473578c375923005283a2623feb780a1a2",
+                "reference": "0b7b42473578c375923005283a2623feb780a1a2",
                 "shasum": ""
             },
             "require": {
                 "guzzlehttp/guzzle": "^6.3",
-                "laravel/framework": "^6.0",
+                "laravel/framework": "^6.0|^7.0",
                 "php": "^7.2",
                 "swiftmailer/swiftmailer": "^6.0"
             },
@@ -6389,14 +6389,14 @@
                     "role": "Developer"
                 }
             ],
-            "description": "SparkPost driver to use with Laravel 6.x",
+            "description": "SparkPost driver to use with Laravel 6.x|7.x",
             "homepage": "https://github.com/vemcogroup/laravel-sparkpost-driver",
             "keywords": [
                 "laravel",
                 "mail",
                 "sparkpost"
             ],
-            "time": "2019-11-12T12:29:41+00:00"
+            "time": "2020-03-13T07:07:22+00:00"
         },
         {
             "name": "vlucas/phpdotenv",
