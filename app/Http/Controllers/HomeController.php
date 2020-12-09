@@ -22,6 +22,8 @@ class HomeController extends Controller
         $response = $client->request('GET', 'https://data.vatsim.net/v3/vatsim-data.json');
         $controllers = json_decode($response->getBody()->getContents())->controllers;
 
+        $finalPositions = array();
+
         $prefixes = [
             'CZWG_',
             'ZWG_',
