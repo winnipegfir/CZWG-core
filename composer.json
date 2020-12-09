@@ -16,7 +16,7 @@
         "laravel-notification-channels/discord": "^1.1",
         "laravel/framework": "^6.0",
         "laravel/tinker": "^2.5",
-        "laravelcollective/html": "6.0.*",
+        "laravelcollective/html": "6.2.*",
         "lasserafn/php-initial-avatar-generator": "^4.0",
         "misterphilip/maintenance-mode": "~2.0",
         "mofodojodino/profanity-filter": "^1.3",
