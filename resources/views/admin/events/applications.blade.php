@@ -14,46 +14,45 @@
 
         <div class="row mb-1 container py-1">
         @foreach($applications as $a)
-                <div class="mb-3" style="padding-right: 1%">
-                    <div class="card">
-                        <div style="position: sticky;">
-                            <div class="card-header">
-                            {{$a->user->fullName('FLC')}} ({{$a->user->rating_short}})
-                            </div>
-                                <div class="card-body">
-                                <b>Position Requested: </b>
-                                @if ($a->position == "Delivery")
-                                    Delivery
-                                @elseif ($a->position == "Ground")
-                                    Ground
-                                @elseif ($a->position == "Tower")
-                                    Tower
-                                @elseif ($a->position == "Departure")
-                                    Departure
-                                @elseif ($a->position == "Arrival")
-                                    Arrival
-                                @elseif ($a->position == "Centre")
-                                    Centre
-                                @endif <br>
-                                @if ($a->comments == true)
-                                    <b>Comments: </b>{{$a->comments}}<br>
-                                @else
-                                    <b>Comments: </b>None<br>
-                                @endif
-                                <b>Available: </b>
-                                {{$a->start_availability_timestamp}} to {{$a->end_availability_timestamp}}<br>
-                                <b>Email: </b>
-                                {{$a->user->email}}
-                                </div>
-                                <div class="card-footer">
-                                <a href="" data-toggle="modal" class="btn btn-sm btn-success"
-                                   data-target="#confirmApp{{$a->id}}">Confirm Controller</a>
-                                <a href="{{route('events.admin.controllerapps.delete', [$event->slug, $a->user_id])}}"
-                                   class="btn btn-sm btn-danger">Delete</a>
-                                </div>
-                        </div>
+            <div class="col-lg-4 mb-3" style="padding-right: 1%">
+                <div class="card" style="min-height: 100%">
+                    <div class="card-header">
+                        {{$a->user->fullName('FLC')}} ({{$a->user->rating_short}})
                     </div>
+                    <div class="card-body">
+                        <b>Position Requested: </b>
+                        @if ($a->position == "Delivery")
+                            Delivery
+                        @elseif ($a->position == "Ground")
+                            Ground
+                        @elseif ($a->position == "Tower")
+                            Tower
+                        @elseif ($a->position == "Departure")
+                            Departure
+                        @elseif ($a->position == "Arrival")
+                            Arrival
+                        @elseif ($a->position == "Centre")
+                            Centre
+                        @endif <br>
+                        <b>Available: </b>
+                        {{$a->start_availability_timestamp}} to {{$a->end_availability_timestamp}}<br>
+                        <b>Email: </b>
+                        {{$a->user->email}}
+                        <br>
+                        @if ($a->comments == true)
+                            <b>Comments: </b>{{$a->comments}}<br>
+                        @else
+                            <b>Comments: </b>None<br>
+                        @endif
+                    </div>
+                    <div class="card-footer">
+                        <a href="" data-toggle="modal" class="btn btn-sm btn-success"
+                            data-target="#confirmApp{{$a->id}}">Confirm Controller</a>
+                        <a href="{{route('events.admin.controllerapps.delete', [$event->slug, $a->user_id])}}"
+                            class="btn btn-sm btn-danger">Delete</a>
+                    </div>                       
                 </div>
+            </div>
 
 
     <!--Confirm Appliation modal-->

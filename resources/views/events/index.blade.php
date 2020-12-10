@@ -31,7 +31,6 @@
             </div>
             @endforeach
         </ul>
-        <br>
         <h5><a data-toggle="collapse" data-target="#pastEvents">Show Past Events <i class="fas fa-caret-down"></i></a></h5>
         <div class="collapse" id="pastEvents">
             <ul class="list-unstyled">
