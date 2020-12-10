@@ -29,10 +29,10 @@ class EventController extends Controller
     {
         $events = Event::cursor()->filter(function ($event) {
             return !$event->event_in_past();
-        })->sortByDesc('start_timestamp');
+        })->sortBy('start_timestamp');
         $pastEvents = Event::cursor()->filter(function ($event) {
             return $event->event_in_past();
-        })->sortByDesc('start_timestamp');
+        })->sortBy('start_timestamp');
         return view('events.index', compact('events', 'pastEvents'));
     }
 

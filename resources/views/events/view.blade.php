@@ -23,7 +23,7 @@
 
       <div class="container py-4">
         @if ($event->image_url != null)
-      <img src="{{$event->image_url}}" alt="" title="" width="100%" height="50%">
+      <img src="{{$event->image_url}}" alt="" title="" width="100%" height="50%" style="background-color: rgb(0, 0, 0, 0.5)">
 
       @else
       &nbsp
