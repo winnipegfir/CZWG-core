@@ -13,7 +13,7 @@
 
 <script>
 function clickBill() {
-  var txt;
+  let txt;
   if (confirm("Whonk!")) {
   }
   document.getElementById("bill").innerHTML = txt;
