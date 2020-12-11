@@ -40,7 +40,7 @@
                                 <h5><span class="badge winnipeg-blue">{{$n->posted_on_pretty()}}</span>&nbsp;&nbsp;<a href="{{url('/news').'/'.$n->slug}}" style="color: black;"><text class="align-middle">{{$n->title}}</text></h5></a>
                             @endforeach
                         </div>
-                        <div class="card-footer">
+                        <div class="card-footer pb-1">
                             <a href="{{url('/news')}}"><h6 style="text-align: center; color: #013162"><i class="fas fa-eye"></i>&nbsp;View all news</h6></a>
                         </div>
                     </div>
@@ -59,7 +59,7 @@
                                 <h5><a href="{{url('/events').'/'.$e->slug}}" style="color: black;"><text class="align-middle">{{$e->name}}</text></a>&nbsp;&nbsp;<span class="float-right badge winnipeg-blue">{{$e->start_timestamp_pretty()}}</span></h5>
                             @endforeach
                         </div>
-                        <div class="card-footer">
+                        <div class="card-footer pb-1">
                             <a href="{{url('/events')}}"><h6 style="text-align: center; color: #013162"><i class="fas fa-eye"></i>&nbsp;View all events</h6></a>
                         </div>
                     </div>
@@ -123,7 +123,7 @@
                                 <br>
                             @endforeach
                         </div>
-                        <div class="card-footer">
+                        <div class="card-footer pb-1">
                             <a href="https://map.vatsim.net" target="_blank"><h6 style="text-align: center; color: #013162"><i class="fas fa-map"></i>&nbsp;Live VATSIM Map</h6></a>
                         </div>
                     </div>
