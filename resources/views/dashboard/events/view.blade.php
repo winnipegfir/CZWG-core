@@ -103,8 +103,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <p>This will soft delete the event, so it still exists in the database but cannot be viewed. Have a funny GIF too.</p>
-                <img src="https://tenor.com/view/bartsimpson-boot-simpsons-thesimpsons-homer-gif-9148667.gif" alt="">
+                <p>This will only soft delete the event, so it still exists in the database but cannot be viewed.</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" data-dismiss="modal">Dismiss</button>
