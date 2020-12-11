@@ -25,6 +25,7 @@ class HomeController extends Controller
         $finalPositions = array();
 
         $prefixes = [
+            'WPG_',
             'CZWG_',
             'ZWG_',
             'CYWG_',
@@ -46,7 +47,7 @@ class HomeController extends Controller
         $news = News::where('visible', true)->get()->sortByDesc('published')->take(3);
 
         //Event
-        $nextEvents = Event::where('start_timestamp', '>', Carbon::now())->get()->sortByDesc('id')->take(3);
+        $nextEvents = Event::where('start_timestamp', '>', Carbon::now())->get()->sortBy('start_timestamp')->take(3);
 
         //Top Controllers
         $topControllersArray = [];
