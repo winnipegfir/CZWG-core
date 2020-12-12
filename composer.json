@@ -9,6 +9,7 @@
     "type": "project",
     "require": {
         "php": "^7.2",
+        "aws/aws-sdk-php": "^3.168",
         "fideloper/proxy": "^4.0",
         "guzzlehttp/guzzle": "^6.3.3",
         "intervention/image": "^2.5",
@@ -21,7 +22,6 @@
         "mofodojodino/profanity-filter": "^1.3",
         "parsedown/laravel": "^1.2",
         "restcord/restcord": "~0.3.2",
-        "sendgrid/sendgrid": "~7",
         "skymeyer/vatsimphp": "1.0.*",
         "socialiteproviders/discord": "^2.0",
         "spatie/laravel-google-calendar": "^2.6.2",
