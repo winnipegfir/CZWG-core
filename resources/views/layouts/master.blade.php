@@ -107,10 +107,16 @@
                         {{-- <li class="nav-item">
                             <a href="{{route('controllerbookings.public')}}" class="nav-link {{ Request::is('bookings/*') || Request::is('bookings') ? 'active' : '' }}">Bookings</a>
                         </li> --}}
-                        <li class="nav-item {{ Request::is('news') ? 'active white-text' : '' }} {{ Request::is('news/*') ? 'active white-text' : '' }}">
-                            <a class="nav-link" href="{{route('news')}}">
-                                News
-                            </a>
+                        <li class="nav-item {{ Request::is('news/*') || Request::is('news') ? 'active' : '' }}">
+                            @if(Auth::check() && Auth::user()->permissions >= 4)
+                            <li class="nav-item dropdown {{ Request::is('news') || Request::is('news/*') || Request::is('news') ? 'active' : '' }}">
+                            <a class="nav-link dropdown-toggle" style="cursor:pointer" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">News</a>
+                            <div class="dropdown-menu" aria-labelledby="dropdown01">
+                            <a class="dropdown-item" href="{{route('news')}}">News</a>
+                                <a class="dropdown-item {{ Request::is('news') ? 'active white-text' : '' }}" href="{{route('news.index')}}">Manage News</a>
+                            @else
+                                <a href="{{route('events.index')}}" class="nav-link">News</a>
+                            @endif          
                         </li>
                         <li class="nav-item {{ Request::is('events/*') || Request::is('events') ? 'active' : '' }}">
                             @if(Auth::check() && Auth::user()->permissions >= 4)

@@ -52,9 +52,8 @@
 
 
                     <!--WINNIPEG CONTROLLERS ROSTER-->
-                    <table id="rosterTable" class="table table-hover" style="position:relative; left:-70px; top:2px; width:116%;">
+                    <table id="rosterVisitTable" class="table table-hover">
                         <thead>
-
                         <tr>
                             <th style="text-align:center" scope="col"><b>CID</b></th>
                             <th style="text-align:center" scope="col">Controller Name</th>
