@@ -30,7 +30,7 @@
         </div>
         <div class="container" id="mid">
             <div class="row py-3" style="padding-bottom: 0px !important;">
-                <div class="col-md-6" style="padding-top: 20px">
+                <div class="col-md-6" style="padding-top: 2%">
                     <div class="card card-background" style="min-height: 100%">
                         <div class="card-header" style="color: #013162;">
                             <h2 class="font-weight-bold" style="text-align: center; padding-top:1%"><i class="fas fa-newspaper"></i>&nbsp;&nbsp;Recent News</h2>
@@ -46,7 +46,7 @@
                     </div>
                 </div>
                 <br>
-                <div class="col-md-6" style="padding-top: 20px">
+                <div class="col-md-6" style="padding-top: 2%">
                     <div class="card card-background" style="min-height: 100%">
                         <div class="card-header" style="color: #013162;">
                             <h2 class="font-weight-bold" style="text-align: center; padding-top:1%"><i class="fas fa-calendar"></i>&nbsp;&nbsp;Upcoming Events</h2>
@@ -66,7 +66,7 @@
                 </div>
             </div>
             <div class="row py-3" style="padding-bottom: 0px !important; min-height: 100%">
-                <div class="col-md-6" style="padding-top: 20px">
+                <div class="col-md-6" style="padding-top: 2%">
                     <div class="card card-background" style="min-height: 100%">
                         <div class="card-header" style="color: #013162;">
                             <h2 class="font-weight-bold" style="text-align: center; padding-top:1%"><i class="fas fa-award"></i>&nbsp;&nbsp;Top Controllers this Month</h2>
@@ -94,7 +94,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6" style="padding-top: 20px">
+                <div class="col-md-6" style="padding-top: 2%">
                     <div class="card card-background" style="min-height: 100%">
                         <div class="card-header" style="color: #013162;">
                             <h2 class="font-weight-bold" style="text-align: center; padding-top:1%"><i class="fas fa-user"></i>&nbsp;&nbsp;Online Controllers</h2>
@@ -130,7 +130,7 @@
                 </div>
             </div>
             <div class="row py-3">
-                <div class="col-md-12" style="padding-top: 20px">
+                <div class="col-md-12" style="padding-top: 2%">
                     <div class="card card-background" style="width: 100%">
                         <div class="card-header" style="color: #013162;">
                             <h2 class="font-weight-bold" style="text-align: center; padding-top:1%"><i class="fas fa-sun"></i>&nbsp;&nbsp;Weather</h2>
@@ -149,6 +149,16 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-md-12" style="padding-top: 2%">
+                    <div class="card">
+                        <div class="card-body" style="padding: 0%">
+                            <a href="https://www.designbyhumans.com/shop/WinnipegFIR/#" a target=”_blank”><img src="https://winnipegfir.ca/storage/files/uploads/1607879161.png" style="width:100%"></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                            
             <br>
         </div>
     </div>
