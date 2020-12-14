@@ -2,8 +2,8 @@
 
 namespace App\Models\Settings;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Models\Users\User;
+use Illuminate\Database\Eloquent\Model;
 
 class AuditLogEntry extends Model
 {

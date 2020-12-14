@@ -2,8 +2,8 @@
 
 namespace App\Models\AtcTraining;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Models\Users\User;
+use Illuminate\Database\Eloquent\Model;
 
 class Application extends Model
 {

@@ -2,10 +2,10 @@
 
 namespace App\Models\AtcTraining;
 
-use Illuminate\Database\Eloquent\Model;
-use App\Models\Users\User;
-use App\Models\AtcTraining\CBT\ExamAssign;
 use App\Models\AtcTraining\CBT\CbtModuleAssign;
+use App\Models\AtcTraining\CBT\ExamAssign;
+use App\Models\Users\User;
+use Illuminate\Database\Eloquent\Model;
 
 class Student extends Model
 {
@@ -35,15 +35,16 @@ class Student extends Model
 
     public function trainingNotes()
     {
-      return $this->hasMany(StudentNote::class);
-    }
-    public function exams()
-    {
-      return $this->HasMany(ExamAssign::class);
-    }
-    public function CbtModuleAssigns()
-    {
-      return $this->hasMany(CbtModuleAssign::class);
+        return $this->hasMany(StudentNote::class);
     }
 
+    public function exams()
+    {
+        return $this->HasMany(ExamAssign::class);
+    }
+
+    public function CbtModuleAssigns()
+    {
+        return $this->hasMany(CbtModuleAssign::class);
+    }
 }

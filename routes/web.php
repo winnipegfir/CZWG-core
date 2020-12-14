@@ -11,7 +11,6 @@
 |
 */
 
-
 //ALL Public Views
 Route::get('/', 'HomeController@view')->name('index');
 Route::view('/airports', 'airports')->name('airports');
@@ -35,7 +34,6 @@ Route::get('/training', 'AtcTraining\TrainingController@trainingTime')->name('tr
 Route::view('/bill', 'bill')->name('bill');
 Route::view('/wpg', 'wpg')->name('wpg');
 
-
 //Authentication
 
 Route::get('/sso/login', 'Auth\LoginController@ssoLogin')->middleware('guest')->name('auth.sso.login');
@@ -49,7 +47,6 @@ Route::group(['middleware' => 'auth'], function () {
     //Privacy accept
     Route::get('/privacyaccept', 'Users\UserController@privacyAccept');
     Route::get('/privacydeny', 'Users\UserController@privacyDeny');
-
 
     //Visiting/Join Applications
     Route::group(['middleware' => 'notcertified'], function () {
@@ -140,6 +137,7 @@ Route::group(['middleware' => 'auth'], function () {
             if ($user->isAvatarDefault()) {
                 return true;
             }
+
             return false;
         });
 
@@ -209,7 +207,6 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/{id}/email', 'Users\UserController@emailStore')->name('users.email.store');
     });
 
-
     //Feedback
     Route::get('/feedback', 'Feedback\FeedbackController@create')->name('feedback.create');
     Route::post('/feedback', 'Feedback\FeedbackController@createPost')->name('feedback.create.post');
@@ -233,8 +230,8 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/exam/{id}', 'AtcTraining\CBTController@exam')->name('cbt.exam.start');
         Route::post('exam/grade/{id}', 'AtcTraining\CBTController@gradeExam')->name('cbt.exam.grade');
         //Mentor
-          Route::group(['middleware' => 'mentor'], function () {
-              Route::get('/moduleadmin', 'AtcTraining\CBTController@moduleindexadmin')->name('cbt.module.admin');
+        Route::group(['middleware' => 'mentor'], function () {
+            Route::get('/moduleadmin', 'AtcTraining\CBTController@moduleindexadmin')->name('cbt.module.admin');
         });
         //Instructor
         Route::group(['middleware' => 'instructor'], function () {
@@ -243,11 +240,10 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/examadmin', 'AtcTraining\CBTController@examadminview')->name('cbt.exam.adminview');
             Route::post('/addexam', 'AtcTraining\CBTController@addExam')->name('cbt.exam.add');
             Route::get('/examadmin/view/{id}', 'AtcTraining\CBTController@viewQuestions')->name('cbt.exam.questions');
-
         });
         //Staff/Admin
         Route::group(['middleware' => 'staff'], function () {
-          Route::get('/module/admin/{id}', 'AtcTraining\CBTController@viewAdminModule')->name('cbt.module.view.admin');
+            Route::get('/module/admin/{id}', 'AtcTraining\CBTController@viewAdminModule')->name('cbt.module.view.admin');
             //  Route::get('/editmodules', 'AtcTraining\CBTController@adminModuleIndex')->name('cbt.admin.module');
             //  Route::get('/editexams', 'AtcTraining\CBTController@adminExamIndex')->name('cbt.admin.exam');
         });
@@ -290,11 +286,8 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/images/test/{id}', 'Settings\SettingsController@testImage')->name('settings.images.test');
             Route::get('/images/delete/{id}', 'Settings\SettingsController@deleteImage')->name('settings.images.delete');
         });
-
-
     });
 });
-
 
 //NOT BEING USED CURRENTLY
 //Bookings

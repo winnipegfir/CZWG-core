@@ -3,22 +3,16 @@
 namespace App\Http\Controllers\Tickets;
 
 use App\Http\Controllers\Controller;
-use App\Models\Settings\CoreSettings;
-use App\Mail\NewTicketMail;
-use App\Mail\NewTicketReplyMail;
 use App\Models\Tickets\Ticket;
 use App\Models\Tickets\TicketReply;
 use App\Models\Users\StaffGroup;
 use App\Models\Users\StaffMember;
 use App\Models\Users\User;
-use App\Models\Users\UserNotification;
 use App\Notifications\NewTicket;
 use App\Notifications\TicketReply as NotificationsTicketReply;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -40,7 +34,7 @@ class TicketsController extends Controller
         $openTickets = Ticket::where('status', 0)->get()->sortByDesc('id');
         $closedTickets = Ticket::where('status', 1)->get()->sortByDesc('id');
         $onHoldTickets = Ticket::where('status', 2)->get()->sortByDesc('id');
-      //  $staffTickets = Ticket::where('staff_member_id', StaffMember::where('id', Auth::user()->id))->where('status', 0)->get()->sortByDesc('id');
+        //  $staffTickets = Ticket::where('staff_member_id', StaffMember::where('id', Auth::user()->id))->where('status', 0)->get()->sortByDesc('id');
 
         return view('dashboard.tickets.staff', compact('openTickets', 'closedTickets', 'onHoldTickets'));
     }
@@ -65,13 +59,13 @@ class TicketsController extends Controller
             'title.max' => 'A ticket title may not be over 50 characters in length.',
             'message.required' => 'A message is required.',
             'message.min' => 'The message must be at least 25 characters long. You can see the length of your message below the Markdown editor.',
-            'staff_member.required' => 'You need to specify the recipient of the ticket.'
+            'staff_member.required' => 'You need to specify the recipient of the ticket.',
         ];
 
         $validator = Validator::make($request->all(), [
             'title' => 'required|max:50',
             'message' => 'required|min:25',
-            'staff_member' => 'required'
+            'staff_member' => 'required',
         ], $messages);
 
         if ($validator->fails()) {
@@ -121,6 +115,7 @@ class TicketsController extends Controller
             return redirect()->route('tickets.viewticket', $ticket->ticket_id)->with('error-modal', 'Ticket #'.$ticket->ticket_id.' is already open.');
         }
     }
+
     public function onholdTicket($id)
     {
         if (Auth::user()->permissions < 2) {
@@ -155,10 +150,9 @@ class TicketsController extends Controller
             $ticket = Ticket::where('ticket_id', $id)->firstOrFail();
         }
 
-
         if ($ticket->status != 1) {
-            if($request->get('message')) {
-                $message = " with comment: " . $request->get('message');
+            if ($request->get('message')) {
+                $message = ' with comment: '.$request->get('message');
             } else {
                 $message = null;
             }
@@ -166,7 +160,7 @@ class TicketsController extends Controller
             $ticketReply = new TicketReply([
                 'user_id' => Auth::user()->id,
                 'ticket_id' => $ticket->ticket_id,
-                'message' => 'Ticket closed by '.Auth::user()->fullName('FLC'). $message . '. Closed at '.Carbon::now()->toDayDateTimeString().' Zulu. If you require further assistance please open a new ticket.',
+                'message' => 'Ticket closed by '.Auth::user()->fullName('FLC').$message.'. Closed at '.Carbon::now()->toDayDateTimeString().' Zulu. If you require further assistance please open a new ticket.',
                 'submission_time' => date('Y-m-d H:i:s'),
             ]);
             $ticketReply->save();
@@ -182,7 +176,6 @@ class TicketsController extends Controller
 
     public function addReplyToTicket(Request $request, $ticket_id)
     {
-
         if (Auth::user()->permissions < 2) {
             $ticket = Ticket::where('ticket_id', $ticket_id)->where('user_id', Auth::user()->id)->firstOrFail();
         } else {

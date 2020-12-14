@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Users;
 use App\Http\Controllers\Controller;
 use App\Models\Users\UserNotification;
 use Auth;
-use Illuminate\Http\Request;
 
 class NotificationRedirectController extends Controller
 {

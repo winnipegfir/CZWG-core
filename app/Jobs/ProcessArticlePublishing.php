@@ -3,13 +3,13 @@
 namespace App\Jobs;
 
 use App\Models\AtcTraining\RosterMember;
+use App\Models\Users\User;
+use App\Notifications\News as NewsNotification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Models\Users\User;
-use App\Notifications\News as NewsNotification;
 use Illuminate\Support\Facades\Log;
 use RestCord\DiscordClient;
 
@@ -17,6 +17,7 @@ class ProcessArticlePublishing implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     protected $article;
+
     /**
      * Create a new job instance.
      *
@@ -39,19 +40,19 @@ class ProcessArticlePublishing implements ShouldQueue
             /*
              * The general "message" shown above your embeds
              */
-            "content" => null,
+            'content' => null,
             /*
              * The username shown in the message
              */
-            "username" => "Winnipeg FIR",
+            'username' => 'Winnipeg FIR',
             /*
              * The image location for the senders image
              */
-            "avatar_url" => "https://cdn.discordapp.com/attachments/695849973585149962/714264313388335196/W_okay1.png",
+            'avatar_url' => 'https://cdn.discordapp.com/attachments/695849973585149962/714264313388335196/W_okay1.png',
             /*
              * Whether or not to read the message in Text-to-speech
              */
-            "tts" => false,
+            'tts' => false,
             /*
              * File contents to send to upload a file
              */
@@ -59,45 +60,45 @@ class ProcessArticlePublishing implements ShouldQueue
             /*
              * An array of Embeds
              */
-            "embeds" => [
+            'embeds' => [
                 /*
                  * Our first embed
                  */
                 [
                     // Set the title for your embed
-                    "title" => $this->article->title,
+                    'title' => $this->article->title,
 
                     // The type of your embed, will ALWAYS be "rich"
-                    "type" => "rich",
+                    'type' => 'rich',
 
                     // A description for your embed
-                    "description" => $this->article->summary,
+                    'description' => $this->article->summary,
 
                     // The URL of where your title will be a link to
-                    "url" => route('news.articlepublic', $this->article->slug),
+                    'url' => route('news.articlepublic', $this->article->slug),
 
                     /* A timestamp to be displayed below the embed, IE for when an an article was posted
                      * This must be formatted as ISO8601
                      */
-                    "timestamp" => date('Y-m-d H:i:s'),
+                    'timestamp' => date('Y-m-d H:i:s'),
 
                     // The integer color to be used on the left side of the embed
-                    "color" => hexdec( "2196f3" ),
+                    'color' => hexdec('2196f3'),
 
-                    "image" => [
-                        "url" => $this->article->image ? config('app.url')."/".$this->article->image : null
+                    'image' => [
+                        'url' => $this->article->image ? config('app.url').'/'.$this->article->image : null,
                     ],
 
                     // Footer object
-                    "footer" => [
-                        "text" => "Winnipeg FIR",
-                        "icon_url" => asset('img/W_okay-300x203.png')
+                    'footer' => [
+                        'text' => 'Winnipeg FIR',
+                        'icon_url' => asset('img/W_okay-300x203.png'),
                     ],
 
-                ]
-            ]
+                ],
+            ],
 
-        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+        ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         Log::info($hook);
         $ch = curl_init();
         curl_setopt_array($ch, [
@@ -106,8 +107,8 @@ class ProcessArticlePublishing implements ShouldQueue
             CURLOPT_POSTFIELDS => $hook,
             CURLOPT_HTTPHEADER => [
                 'Length' => strlen($hook),
-                "Content-Type: application/json"
-            ]
+                'Content-Type: application/json',
+            ],
         ]);
         $response = curl_exec($ch);
         if (curl_errno($ch)) {
