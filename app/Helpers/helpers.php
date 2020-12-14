@@ -41,7 +41,12 @@ function checkAtis($icao) {
                 ]
             ]);
 
-            return json_decode($res->getBody()->getContents())->data[0];
+            $metar = json_decode($res->getBody()->getContents())->data;
+            
+            if(!$metar)
+                return "No ATIS/METAR available.";
+
+            return $metar[0];
         });
     }
 
