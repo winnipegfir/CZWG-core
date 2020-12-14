@@ -1,13 +1,11 @@
-php:
-  preset: laravel
-  disabled:
-    - unused_use
-  finder:
-    not-name:
-      - index.php
-      - server.php
-js:
-  finder:
-    not-name:
-      - webpack.mix.js
-css: true
+version: 7
+preset: laravel
+finder:
+  exclude:
+    - ".github"
+    - "public"
+    - "storage"
+    - "vendor"
+  name: "*.php"
+  not-name:
+    - "*.blade.php"
