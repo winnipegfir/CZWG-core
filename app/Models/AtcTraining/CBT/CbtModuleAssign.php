@@ -2,11 +2,11 @@
 
 namespace App\Models\AtcTraining\CBT;
 
-use Illuminate\Database\Eloquent\Model;
-use App\Models\Users\User;
-use App\Models\AtcTraining\Student;
-use App\Models\AtcTraining\CBT\CbtModule;
 use App\Models\AtcTraining\Instructor;
+use App\Models\AtcTraining\Student;
+use App\Models\Users\User;
+use Illuminate\Database\Eloquent\Model;
+
 class CbtModuleAssign extends Model
 {
     //
@@ -21,17 +21,16 @@ class CbtModuleAssign extends Model
 
     public function CbtModule()
     {
-      return $this->belongsTo(CbtModule::class);
+        return $this->belongsTo(CbtModule::class);
     }
 
     public function Student()
     {
-      return $this->belongsTo(Student::class);
+        return $this->belongsTo(Student::class);
     }
 
     public function Instructor()
     {
-      return $this->belongsTo(Instructor::class);
+        return $this->belongsTo(Instructor::class);
     }
-
 }

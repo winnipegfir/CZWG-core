@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class HomepageImages extends Model
 {
     protected $fillable = [
-        'url', 'credit'
+        'url', 'credit',
     ];
 }

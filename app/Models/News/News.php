@@ -2,16 +2,16 @@
 
 namespace App\Models\News;
 
+use App\Models\Users\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\HtmlString;
 use Parsedown;
-use App\Models\Users\User;
 
 class News extends Model
 {
     protected $fillable = [
-        'id', 'title', 'user_id', 'show_author', 'image', 'content', 'summary', 'published', 'edited', 'visible', 'email_level', 'certification', 'slug'
+        'id', 'title', 'user_id', 'show_author', 'image', 'content', 'summary', 'published', 'edited', 'visible', 'email_level', 'certification', 'slug',
     ];
 
     /*
@@ -27,22 +27,22 @@ class News extends Model
     public function published_pretty()
     {
         $t = Carbon::create($this->published);
-        return $t->day . ' ' . $t->monthName . ' ' . $t->year;
+
+        return $t->day.' '.$t->monthName.' '.$t->year;
     }
 
     public function edited_pretty()
     {
-        if (!$this->edited)
-        {
+        if (! $this->edited) {
             return null;
         }
+
         return Carbon::create($this->edited)->toDayDateTimeString();
     }
 
     public function author_pretty()
     {
-        if (!$this->show_author)
-        {
+        if (! $this->show_author) {
             return 'Winnipeg FIR Staff';
         }
 
@@ -52,6 +52,7 @@ class News extends Model
     public function posted_on_pretty()
     {
         $t = Carbon::create($this->published);
+
         return $t->diffForHumans();
     }
 

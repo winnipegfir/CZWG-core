@@ -12,7 +12,7 @@ class ControllerFeedback extends Model
     protected $hidden = ['id'];
 
     protected $fillable = [
-        'user_id', 'controller_cid', 'position', 'content'
+        'user_id', 'controller_cid', 'position', 'content',
     ];
 
     public function user()

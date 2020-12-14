@@ -3,35 +3,28 @@
 namespace App\Http\Controllers\Users;
 
 use App\Http\Controllers\Controller;
+use App\Models\AtcTraining\RosterMember;
+use App\Models\ControllerBookings\ControllerBookingsBan;
 use App\Models\Network\SessionLog;
 use App\Models\Settings\AuditLogEntry;
-use App\Models\ControllerBookings\ControllerBookingsBan;
-use App\Models\Users\UserPreferences;
-use App\Notifications\DiscordLinkCreated;
-use App\Notifications\DiscordWelcome;
-use App\Notifications\PermissionsChanged;
 use App\Models\Users\User;
 use App\Models\Users\UserNote;
 use App\Models\Users\UserNotification;
-use App\Models\AtcTraining\RosterMember;
+use App\Models\Users\UserPreferences;
+use App\Notifications\DiscordWelcome;
 use App\Notifications\WelcomeNewUser;
 use Auth;
 use Exception;
-use Flash;
-use RestCord\DiscordClient;
-use SocialiteProviders\Manager\Config;
-use function GuzzleHttp\Promise\all;
 use function GuzzleHttp\Psr7\str;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Mail;
-use mofodojodino\ProfanityFilter\Check;
-use RestCord\Interfaces\AuditLog;
 use Illuminate\Support\Facades\Log;
-use Laravel\Socialite\Facades\Socialite;
-use NotificationChannels\Discord\Discord;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-
+use Laravel\Socialite\Facades\Socialite;
+use mofodojodino\ProfanityFilter\Check;
+use NotificationChannels\Discord\Discord;
+use RestCord\DiscordClient;
+use SocialiteProviders\Manager\Config;
 
 class UserController extends Controller
 {
@@ -44,6 +37,7 @@ class UserController extends Controller
         $user->init = 1;
         $user->save();
         $user->notify(new WelcomeNewUser($user));
+
         return redirect('/dashboard')->with('success', 'Welcome to Winnipeg, '.$user->fname.'! We are glad to have you on board.');
     }
 
@@ -59,6 +53,7 @@ class UserController extends Controller
         AuditLogEntry::insert(User::find(1), 'User '.$user->fullName('FLC').' denied privacy policy - account deleted', User::find(1), 0);
         $preferences->delete();
         $user->delete();
+
         return redirect()->route('index')->with('info', 'Your account has been removed as you have not accepted the privacy policy.');
     }
 
@@ -69,11 +64,12 @@ class UserController extends Controller
         return view('admin.users.index', compact('users'));
     }
 
-    public function viewProfile($id) {
+    public function viewProfile($id)
+    {
         $user = User::where('id', $id)->firstOrFail();
 
         $rosterMember = RosterMember::where('user_id', $id)->first();
-        if($rosterMember) {
+        if ($rosterMember) {
             $logs = SessionLog::where('cid', $id)->get();
             $monthlyHours = decimal_to_hm(RosterMember::where('cid', $id)->firstOrFail()->currency);
 
@@ -84,22 +80,22 @@ class UserController extends Controller
                 'twr' => 0,
                 'dep' => 0,
                 'app' => 0,
-                'ctr' => 0
+                'ctr' => 0,
             ];
 
             //Get our times per position for this month
-            foreach($logs as $l) {
-                if(Str::endsWith($l->callsign, 'DEL')) {
+            foreach ($logs as $l) {
+                if (Str::endsWith($l->callsign, 'DEL')) {
                     $time['del'] += $l->duration;
-                } elseif(Str::endsWith($l->callsign, 'GND')) {
+                } elseif (Str::endsWith($l->callsign, 'GND')) {
                     $time['gnd'] += $l->duration;
-                } elseif(Str::endsWith($l->callsign, 'TWR')) {
+                } elseif (Str::endsWith($l->callsign, 'TWR')) {
                     $time['twr'] += $l->duration;
-                } elseif(Str::endsWith($l->callsign, 'DEP')) {
+                } elseif (Str::endsWith($l->callsign, 'DEP')) {
                     $time['dep'] += $l->duration;
-                } elseif(Str::endsWith($l->callsign, 'APP')) {
+                } elseif (Str::endsWith($l->callsign, 'APP')) {
                     $time['app'] += $l->duration;
-                } elseif(Str::endsWith($l->callsign, 'CTR')) {
+                } elseif (Str::endsWith($l->callsign, 'CTR')) {
                     $time['ctr'] += $l->duration;
                 }
             }
@@ -114,12 +110,11 @@ class UserController extends Controller
 
             $connections = SessionLog::where('cid', $id)->get()->sortByDesc('session_end');
 
-            foreach($connections as $c) {
+            foreach ($connections as $c) {
                 $c['duration'] = decimal_to_hm($c['duration']);
             }
-
         } else {
-            $monthlyHours = "N/A";
+            $monthlyHours = 'N/A';
             $rosterMember = null;
             $connections = [];
         }
@@ -127,17 +122,18 @@ class UserController extends Controller
         return view('profile', compact('id', 'user', 'monthlyHours', 'rosterMember', 'time', 'connections'));
     }
 
-    public function viewConnections($id) {
-        function clockalize($in){
-
+    public function viewConnections($id)
+    {
+        function clockalize($in)
+        {
             $h = intval($in);
             $m = round((((($in - $h) / 100.0) * 60.0) * 100), 0);
-            if ($m == 60)
-            {
+            if ($m == 60) {
                 $h++;
                 $m = 0;
             }
-            $retval = sprintf("%02d:%02d", $h, $m);
+            $retval = sprintf('%02d:%02d', $h, $m);
+
             return $retval;
         }
 
@@ -161,10 +157,9 @@ class UserController extends Controller
         $active = null;
         $potentialRosterMember = RosterMember::where('user_id', $user->id)->first();
         if ($potentialRosterMember !== null) {
-          $certification = $potentialRosterMember->status;
-          $active = $potentialRosterMember->active;
+            $certification = $potentialRosterMember->status;
+            $active = $potentialRosterMember->active;
         }
-
 
         $xml = [];
         $userNotes = UserNote::where('user_id', $user->id)->orderBy('timestamp', 'desc')->get();
@@ -174,17 +169,18 @@ class UserController extends Controller
         return view('admin.users.profile', compact('user', 'xml', 'certification', 'active', 'auditLog', 'userNotes'));
     }
 
-    public function editPermissions(Request $request,$id)
-{
-    $user = User::where('id', $id)->firstorFail();
-    $roster = RosterMember::where('cid', $id)->first();
-    $user->permissions = $request->input('permissions');
-    $user->save();
-    if($roster != null) {
-    $roster->status = $request->input('certification');
-    $roster->save();
-  }
-      return redirect()->back()->withSuccess('User Permissions Changed!');
+    public function editPermissions(Request $request, $id)
+    {
+        $user = User::where('id', $id)->firstorFail();
+        $roster = RosterMember::where('cid', $id)->first();
+        $user->permissions = $request->input('permissions');
+        $user->save();
+        if ($roster != null) {
+            $roster->status = $request->input('certification');
+            $roster->save();
+        }
+
+        return redirect()->back()->withSuccess('User Permissions Changed!');
     }
 
     public function deleteUser($id)
@@ -308,7 +304,6 @@ class UserController extends Controller
 
         //return redirect()->route('users.viewprofile', $user->id)->with('success', 'User edited!');
         abort(404, 'Not implemented');
-
     }
 
     public function emailCreate($id)
@@ -317,7 +312,6 @@ class UserController extends Controller
 
         //return view('dashboard.users.email', compact('user'));
         abort(404, 'Not implemented');
-
     }
 
     public function emailStore(Request $request)
@@ -397,6 +391,7 @@ class UserController extends Controller
         $user = Auth::user();
         $user->avatar_mode = 2;
         $user->save();
+
         return redirect()->route('dashboard.index')->with('success', 'Avatar changed!');
     }
 
@@ -506,13 +501,12 @@ class UserController extends Controller
     {
         //Validate and get user
         $this->validate($request, [
-           'reason' => 'required'
+            'reason' => 'required',
         ]);
         $user = User::whereId($id)->firstOrFail();
 
         //Is the user banned?
-        if ($user->bookingBan())
-        {
+        if ($user->bookingBan()) {
             abort(403, 'This user is already banned.');
         }
 
@@ -528,18 +522,19 @@ class UserController extends Controller
 
     public function removeBookingBan(Request $request, $id)
     {
-
     }
 
     public function linkDiscord()
     {
         Log::info('Linking Discord for '.Auth::id());
+
         return Socialite::with('discord')->setScopes(['identify'])->redirect();
     }
 
-    public function linkDiscordRedirect() {
+    public function linkDiscordRedirect()
+    {
         $discordUser = Socialite::driver('discord')->stateless()->user();
-        if (!$discordUser) {
+        if (! $discordUser) {
             abort(403, 'Discord OAuth failed.');
         }
         $user = Auth::user();
@@ -549,12 +544,14 @@ class UserController extends Controller
         $user->discord_user_id = $discordUser->id;
         $user->discord_dm_channel_id = app(Discord::class)->getPrivateChannel($discordUser->id);
         $user->save();
-        return redirect()->route('dashboard.index')->with('success', 'Linked with account '.$discordUser->nickname. '!');
+
+        return redirect()->route('dashboard.index')->with('success', 'Linked with account '.$discordUser->nickname.'!');
     }
 
     public function joinDiscordServerRedirect()
     {
         $config = new Config(config('services.discord.client_id'), config('services.discord.client_secret'), config('services.discord.redirect_join'));
+
         return Socialite::with('discord')->setConfig($config)->setScopes(['identify', 'guilds.join'])->redirect();
     }
 
@@ -563,29 +560,27 @@ class UserController extends Controller
         $discord = new DiscordClient(['token' => config('services.discord.token')]);
         $config = new Config(config('services.discord.client_id'), config('services.discord.client_secret'), config('services.discord.redirect_join'));
         $discordUser = Socialite::driver('discord')->setConfig($config)->user();
-        $args = array(
+        $args = [
             'guild.id' => 598023748741758976,
             'user.id' => intval($discordUser->id),
             'access_token' => $discordUser->token,
-             'nick' => Auth::user()->fullName('FL')
-        );
+            'nick' => Auth::user()->fullName('FL'),
+        ];
         if (Auth::user()->rosterProfile) {
             if (Auth::user()->rosterProfile->status == 'training') {
-                $args['roles'] = array(717155319981146182);
+                $args['roles'] = [717155319981146182];
+            } elseif (Auth::user()->rosterProfile->status == 'home') {
+                $args['roles'] = [713914598750683157];
+            } elseif (Auth::id() == '1427371') {
+                $args['roles'] = [673725707259609093];
             }
-            elseif (Auth::user()->rosterProfile->status == 'home') {
-                $args['roles'] = array(713914598750683157);
-            }
-            elseif (Auth::id() == '1427371') {
-                $args['roles'] = array(673725707259609093);
-            }
-        }
-        else {
-            $args['roles'] = array(482835389640343562);
+        } else {
+            $args['roles'] = [482835389640343562];
         }
         $discord->guild->addGuildMember($args);
         Auth::user()->notify(new DiscordWelcome());
         $discord->channel->createMessage(['channel.id' => 695849973585149962, 'content' => '<@'.$discordUser->id.'> ('.Auth::id().') has joined.']);
+
         return redirect()->route('dashboard.index')->with('success', 'You have joined the Winnipeg Discord server!');
     }
 
@@ -607,12 +602,14 @@ class UserController extends Controller
             $user->avatar_mode = 0;
         }
         $user->save();
+
         return redirect()->route('dashboard.index')->with('info', 'Account unlinked.');
     }
 
     public function preferences()
-{
+    {
         $preferences = Auth::user()->preferences;
+
         return view('dashboard.me.preferences', compact('preferences'));
     }
 }

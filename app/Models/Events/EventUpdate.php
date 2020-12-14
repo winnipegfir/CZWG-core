@@ -2,17 +2,17 @@
 
 namespace App\Models\Events;
 
+use App\Models\Users\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use Parsedown;
 use Illuminate\Support\HtmlString;
-use App\Models\Users\User;
+use Parsedown;
 
 class EventUpdate extends Model
 {
-  protected $fillable = [
-      'event_id', 'user_id', 'title', 'content', 'created_timestamp', 'slug'
-  ];
+    protected $fillable = [
+        'event_id', 'user_id', 'title', 'content', 'created_timestamp', 'slug',
+    ];
 
     public function event()
     {
@@ -32,7 +32,8 @@ class EventUpdate extends Model
     public function created_pretty()
     {
         $t = Carbon::create($this->created_timestamp);
-        return $t->day . ' ' . $t->monthName . ' ' . $t->year . ' ' . $t->format('H:i') . ' Zulu';
+
+        return $t->day.' '.$t->monthName.' '.$t->year.' '.$t->format('H:i').' Zulu';
     }
 
     public function author_pretty()

@@ -3,24 +3,14 @@
 namespace App\Http\Controllers\AtcTraining;
 
 use App\Http\Controllers\Controller;
-use App\Models\AtcTraining\Application;
-use App\Models\Settings\AuditLogEntry;
-use App\Models\Settings\CoreSettings;
-use App\Mail\ApplicationAcceptedStaffEmail;
-use App\Mail\ApplicationAcceptedUserEmail;
-use App\Mail\ApplicationDeniedUserEmail;
 use App\Mail\ApplicationStartedStaffEmail;
 use App\Mail\ApplicationStartedUserEmail;
 use App\Mail\ApplicationWithdrawnEmail;
-use App\Models\Training\RosterMember;
+use App\Models\AtcTraining\Application;
+use App\Models\Settings\CoreSettings;
 use App\Models\Users\User;
-use App\Models\Users\UserNotification;
-use App\Models\AtcTraining\Student;
 use Auth;
-use Flash;
-use Illuminate\Http\File as HttpFile;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Mail;
@@ -102,8 +92,6 @@ class ApplicationsController extends Controller
         $application->processed_by = Auth::id();
         $application->save();
 
-
-
         //Notify staff
         Mail::to(CoreSettings::where('id', 1)->firstOrFail()->emailfirchief)->cc(CoreSettings::where('id', 1)->first()->emaildepfirchief, CoreSettings::where('id', 1)->first()->emailcinstructor)->send(new ApplicationWithdrawnEmail($application));
 
@@ -136,14 +124,15 @@ class ApplicationsController extends Controller
 
     public function viewAllApplications()
     {
-      $pendingapplications = Application::where('status', '0')->get();
-      $acceptedapplications = Application::where('status', '2')->get();
-      $deniedapplications = Application::where('status', '1')->get();
+        $pendingapplications = Application::where('status', '0')->get();
+        $acceptedapplications = Application::where('status', '2')->get();
+        $deniedapplications = Application::where('status', '1')->get();
 
-      return view('dashboard.training.applications.viewall', compact('pendingapplications', 'acceptedapplications', 'deniedapplications'));
+        return view('dashboard.training.applications.viewall', compact('pendingapplications', 'acceptedapplications', 'deniedapplications'));
     }
 
-    public function joinWinnipeg() {
+    public function joinWinnipeg()
+    {
         return view('joinwinnipeg');
     }
 }
