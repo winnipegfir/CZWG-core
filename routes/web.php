@@ -34,6 +34,15 @@ Route::get('/training', 'AtcTraining\TrainingController@trainingTime')->name('tr
 Route::view('/bill', 'bill')->name('bill');
 Route::view('/wpg', 'wpg')->name('wpg');
 
+//Redirects
+Route::get('/merch', function () {
+    return redirect()->to('https://www.designbyhumans.com/shop/WinnipegFIR');
+});
+
+Route::get('/github', function () {
+    return redirect()->to('https://github.com/winnipegfir/CZWG-core');
+});
+
 //Authentication
 
 Route::get('/sso/login', 'Auth\LoginController@ssoLogin')->middleware('guest')->name('auth.sso.login');
