@@ -205,18 +205,24 @@ class TrainingController extends Controller
     public function assignExam(Request $request)
     {
         $student = Student::whereId($request->input('studentid'))->first();
-        $removeanswers = CbtExamAnswer::where([
-            'student_id' => $student->id,
-            'cbt_exam_id' => $request->input('examid'),
-        ])->get();
-        foreach ($removeanswers as $r) {
-            $r->delete();
-        };
-        $removeresult = CbtExamResult::where([
+        $check = CbtExamResult::where([
             'student_id' => $student->id,
             'cbt_exam_id' => $request->input('examid'),
         ])->first();
-        $removeresult->delete();
+        if ($check != null) {
+            $removeanswers = CbtExamAnswer::where([
+                'student_id' => $student->id,
+                'cbt_exam_id' => $request->input('examid'),
+            ])->get();
+            foreach ($removeanswers as $r) {
+                $r->delete();
+            };
+            $removeresult = CbtExamResult::where([
+                'student_id' => $student->id,
+                'cbt_exam_id' => $request->input('examid'),
+            ])->first();
+            $removeresult->delete();
+        }
     $assign = CbtExamAssign::create([
         'student_id' => $student->id,
         'instructor_id' => $student->instructor_id,

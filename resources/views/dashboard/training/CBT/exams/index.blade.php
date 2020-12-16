@@ -18,7 +18,7 @@
     You do not have any exams assigned to you!
     @else
     @foreach ($exams as $exams)
-  <li><a href="{{route('cbt.exam.begin', $exams->id)}}">{{$exams->cbtexam->name}}</a></li>
+  <li><a href="{{route('cbt.exam.begin', $exams->cbt_exam_id)}}">{{$exams->cbtexam->name}}</a></li>
     @endforeach
     @endif
 </p>

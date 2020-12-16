@@ -18,8 +18,14 @@
   <input type="hidden" name="a_{{$i}}" value="{{$question->answer}}">
   <input type="radio" id="1" value="1" name="{{$i}}">{{$question->option1}}<br>
   <input type="radio" id="2" value="2" name="{{$i}}">{{$question->option2}}<br>
+      @if ($question->option3 != null)
   <input type="radio" id="3" value="3" name="{{$i}}">{{$question->option3}}<br>
+          @endif
+      @if ($question->option4 != null)
   <input type="radio" id="4" value="4" name="{{$i}}">{{$question->option4}}<br><br>
+          @else
+          <br>
+          @endif
   <?php
   $i++
   ?>
