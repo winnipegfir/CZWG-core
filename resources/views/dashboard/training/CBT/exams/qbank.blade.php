@@ -82,7 +82,7 @@
                                 </div>
                                 <div class="modal-body">
 
-                                    <form method="POST" action="#">
+                                    <form method="POST" action="{{route('cbt.exam.question.update', $q->id)}}">
                                         <label>Question</label><br>
                                         <input name="question" type=""text" size="60" value="{{$q->question}}"></input><br>
                                         <label>Option 1</label><br>
@@ -95,12 +95,13 @@
                                         <input name="option4" type=""text" size="60" value="{{$q->option4}}"></input><br>
                                         <label>Correct Answer</label><br>
                                         <select name="answer">
-                                            <option value="1">Option 1</option>
-                                            <option value="2">Option 2</option>
-                                            <option value="3">Option 3</option>
-                                            <option value="4">Option 4</option>
+                                            <option value="1" {{ $q->answer == "1" ? "selected=selected" : ""}}>Option 1</option>
+                                            <option value="2" {{ $q->answer == "2" ? "selected=selected" : ""}}>Option 2</option>
+                                            <option value="3" {{ $q->answer == "3" ? "selected=selected" : ""}}>Option 3</option>
+                                            <option value="4" {{ $q->answer == "4" ? "selected=selected" : ""}}>Option 4</option>
                                         </select>
-                                    </form>
+                                        @csrf
+
 
                                 </div>
                                 <div class="modal-footer">
