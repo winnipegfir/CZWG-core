@@ -43,7 +43,7 @@
             <tbody>
             @foreach ($exams as $exam)
             <tr>
-                <th scope="row"><a href="#/{{$exam->id}}/intro">{{$exam->name}}</a></th>
+                <th scope="row">{{$exam->name}}</a></th>
                 <td>
                     {{$exam->created_at}}
                 </td>

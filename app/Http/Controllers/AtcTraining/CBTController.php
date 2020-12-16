@@ -264,7 +264,44 @@ class CBTController extends Controller
             'created_at' => Carbon::now()->toDateTimeString(),
         ]);
 
+        $removeexam = CbtExamAssign::where([
+            'student_id' => $student->id,
+            'cbt_exam_id' => $id,
+        ])->first();
+        $removeexam->delete();
+
         return redirect()->back()->withSuccess('All Questions recorded!');
+    }
+
+    public function questionBank($id)
+    {
+        $exam = CbtExam::whereId($id)->first();
+        $questions = CbtExamQuestion::where('cbt_exam_id', $id)->get();
+
+        return view('dashboard.training.CBT.exams.qbank', compact('exam', 'questions'));
+    }
+
+    public function addQuestion(Request $request, $id)
+    {
+        $question = CbtExamQuestion::create([
+            'cbt_exam_id' => $id,
+            'question' => $request->input('question'),
+            'option1' => $request->input('option1'),
+            'option2' => $request->input('option2'),
+            'option3' => $request->input('option3'),
+            'option4' => $request->input('option4'),
+            'answer' => $request->input('answer'),
+        ]);
+
+        return redirect()->back()->withSuccess('Added the question!');
+    }
+
+    public function deleteQuestion($id)
+    {
+        $question = CbtExamQuestion::whereId($id)->first();
+        $question->delete();
+
+        return redirect()->back()->withSuccess('Question has been deleted!');
     }
 
     public function saveAnswer(Request $req, $id)
@@ -335,19 +372,6 @@ class CBTController extends Controller
         $exam = CbtExam::whereId($id)->FirstorFail();
 
         return view('dashboard.training.cbt.exams.viewexamadmin', compact('questions', 'exam'));
-    }
-
-    public function addQuestion($id)
-    {
-    }
-
-    public function deleteQuestion($id)
-    {
-        $subj_id = Question::find($id)->subject->id;
-        Question::destroy($id);
-        session()->flash('flash_mess', 'Question #'.$id.' was deleted');
-
-        return redirect(action('SubjectController@getQuestions', $subj_id));
     }
 
     public function deleteExam($id)

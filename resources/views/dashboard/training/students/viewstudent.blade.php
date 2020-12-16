@@ -87,11 +87,35 @@
                 <div class="row">
                   <div class="col">
                     <h5>Modules</h5>
-                    Here, you will see what assigned modules are unstarted, in progress and finished.
+                    Here, you will see what assigned modules are unstarted, in progress and finished.<br>
+
                   </div>
                   <div class="col">
-                    <h5>Exams</h5>
-                    Here, you will see results to completed exams, or exams that a student has not begun yet.
+                    <h5>Exams <a href="#assignexam" data-toggle="modal" data-target="#assignExam" style="float: right;">Assign Exam</a></h5>
+                      @if (count($openexams) < 1 && count($completedexams) < 1)
+                          <text class="font-weight-bold">Student does not have any exam history!</text>
+                      @else
+                          @foreach ($openexams as $oe)
+                              <li>{{$oe->cbtexam->name}} -
+                              @if ($oe->started_at != null)
+                                  <text class="text-warning">In Progress</text>
+                                  @else
+                                  Not Started
+                                  @endif
+                              </li>
+
+                          @endforeach
+
+                          @foreach ($completedexams as $cexams)
+                              <li>{{$cexams->cbtexam->name}} -
+                                  @if ($cexams->grade >= 80)
+                                      <text class="text-success">{{$cexams->grade}}% (Pass)</text>
+                                  @else
+                                      <text class="text-danger">{{$cexams->grade}}% (Fail)</text>
+                                  @endif
+                              </li>
+                          @endforeach
+                      @endif
                   </div>
                 </div>
               </div>
@@ -215,6 +239,39 @@
       </div>
     </div>
   </div>
+    <div class="modal fade" id="assignExam" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div align="center" class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Assign an Exam</h5><br>
+                    <h5>Note: if re-assigning an exam, old answers and result will be deleted!</h5>
+
+
+                </div>
+                <div class="modal-body">
+
+                    <form method="POST" action="{{route('cbt.exam.assign')}}">
+                        <label>Student Name and CID</label><br>
+                        <input type="hidden" name="studentid" value="{{$student->id}}">
+                        {{$student->user->fullName('FLC')}}<br><br>
+                        <select name="examid">
+                            @foreach ($exams as $e)
+                                <option value="{{$e->id}}">{{$e->name}}</option>
+                            @endforeach
+                        </select>
+    @csrf
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success form-control" type="submit" href="#">Assign</button>
+                    <button class="btn btn-light" data-dismiss="modal" style="width:375px">Dismiss</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
 {{--
   <div class="modal fade" id="newNote" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
        aria-hidden="true">

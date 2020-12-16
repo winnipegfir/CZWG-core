@@ -10,6 +10,10 @@ use App\Models\AtcTraining\RosterMember;
 use App\Models\AtcTraining\Student;
 use App\Models\AtcTraining\StudentNote;
 use App\Models\AtcTraining\TrainingWaittime;
+use App\Models\AtcTraining\CBT\CbtExamResult;
+use App\Models\AtcTraining\CBT\CbtExam;
+use App\Models\AtcTraining\CBT\CbtExamAssign;
+use App\Models\AtcTraining\CBT\CbtExamAnswer;
 use App\Models\Users\User;
 use Auth;
 use Carbon\Carbon;
@@ -155,8 +159,11 @@ class TrainingController extends Controller
     {
         $student = Student::where('id', $id)->firstorFail();
         $instructors = Instructor::all();
+        $exams = CbtExam::all();
+        $openexams = CbtExamAssign::where('student_id', $student->id)->get();
+        $completedexams = CbtExamResult::where('student_id', $student->id)->get();
 
-        return view('dashboard.training.students.viewstudent', compact('student', 'instructors'));
+        return view('dashboard.training.students.viewstudent', compact('student', 'instructors', 'completedexams', 'exams', 'openexams'));
     }
 
     public function changeStudentStatus(Request $request, $id)
@@ -193,6 +200,29 @@ class TrainingController extends Controller
         if ($student == null) {
             return redirect()->back()->withError('Unable to find a student with CID '.$student->user->id.'');
         }
+    }
+
+    public function assignExam(Request $request)
+    {
+        $student = Student::whereId($request->input('studentid'))->first();
+        $removeanswers = CbtExamAnswer::where([
+            'student_id' => $student->id,
+            'cbt_exam_id' => $request->input('examid'),
+        ])->get();
+        foreach ($removeanswers as $r) {
+            $r->delete();
+        };
+        $removeresult = CbtExamResult::where([
+            'student_id' => $student->id,
+            'cbt_exam_id' => $request->input('examid'),
+        ])->first();
+        $removeresult->delete();
+    $assign = CbtExamAssign::create([
+        'student_id' => $student->id,
+        'instructor_id' => $student->instructor_id,
+        'cbt_exam_id' => $request->input('examid'),
+    ]);
+    return redirect()->back()->withSuccess('Assigned exam to student!');
     }
 
     public function viewNote($id)
