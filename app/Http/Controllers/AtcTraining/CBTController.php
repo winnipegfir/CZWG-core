@@ -295,6 +295,7 @@ class CBTController extends Controller
 
         return redirect()->back()->withSuccess('Added the question!');
     }
+
     public function updateQuestion(Request $request, $id)
     {
         $question = CbtExamQuestion::whereId($id)->first();
@@ -306,9 +307,9 @@ class CBTController extends Controller
             $question->option4 = $request->input('option4');
             $question->answer = $request->input('answer');
             $question->save();
+
             return redirect()->back()->withSuccess('Edited the question!');
-        }
-        else {
+        } else {
             return redirect()->back()->withError('A Server error has occured. Please contact Webmaster!');
         }
     }
