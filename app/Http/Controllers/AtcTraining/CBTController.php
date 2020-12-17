@@ -269,9 +269,30 @@ class CBTController extends Controller
             'cbt_exam_id' => $id,
         ])->first();
         $removeexam->delete();
+        $exam = CbtExam::whereId($id)->first();
+        $results = CbtExamAnswer::where([
+            'student_id' => $student->id,
+            'cbt_exam_id' => $id,
+        ])->get();
 
-        return redirect()->back()->withSuccess('All Questions recorded!');
+        return view('dashboard.training.CBT.exams.results', compact('exam', 'results', 'grade', 'score'));
     }
+
+    public function examResults($id, $sid)
+    {
+        $exam = CbtExam::whereId($id)->first();
+        $results = CbtExamAnswer::where([
+            'student_id' => $sid,
+            'cbt_exam_id' => $id,
+        ])->get();
+        $grade = CbtExamResult::where([
+            'student_id' => $sid,
+            'cbt_exam_id' => $id,
+        ])->first();
+
+        return view('dashboard.training.CBT.exams.results', compact('exam', 'results', 'grade'));
+    }
+
 
     public function questionBank($id)
     {

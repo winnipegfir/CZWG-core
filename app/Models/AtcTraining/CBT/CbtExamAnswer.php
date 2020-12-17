@@ -21,4 +21,9 @@ class CbtExamAnswer extends Model
     {
         return $this->belongsTo(CbtExam::class);
     }
+
+    public function CbtExamQuestion()
+    {
+        return $this->belongsTo(CbtExamQuestion::class);
+    }
 }
