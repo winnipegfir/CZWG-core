@@ -4,16 +4,16 @@ namespace App\Http\Controllers\AtcTraining;
 
 use App\Http\Controllers\Controller;
 use App\Models\AtcTraining\Application;
+use App\Models\AtcTraining\CBT\CbtExam;
+use App\Models\AtcTraining\CBT\CbtExamAnswer;
+use App\Models\AtcTraining\CBT\CbtExamAssign;
+use App\Models\AtcTraining\CBT\CbtExamResult;
 use App\Models\AtcTraining\Instructor;
 use App\Models\AtcTraining\InstructorStudents;
 use App\Models\AtcTraining\RosterMember;
 use App\Models\AtcTraining\Student;
 use App\Models\AtcTraining\StudentNote;
 use App\Models\AtcTraining\TrainingWaittime;
-use App\Models\AtcTraining\CBT\CbtExamResult;
-use App\Models\AtcTraining\CBT\CbtExam;
-use App\Models\AtcTraining\CBT\CbtExamAssign;
-use App\Models\AtcTraining\CBT\CbtExamAnswer;
 use App\Models\Users\User;
 use Auth;
 use Carbon\Carbon;
@@ -216,19 +216,20 @@ class TrainingController extends Controller
             ])->get();
             foreach ($removeanswers as $r) {
                 $r->delete();
-            };
+            }
             $removeresult = CbtExamResult::where([
                 'student_id' => $student->id,
                 'cbt_exam_id' => $request->input('examid'),
             ])->first();
             $removeresult->delete();
         }
-    $assign = CbtExamAssign::create([
-        'student_id' => $student->id,
-        'instructor_id' => $student->instructor_id,
-        'cbt_exam_id' => $request->input('examid'),
-    ]);
-    return redirect()->back()->withSuccess('Assigned exam to student!');
+        $assign = CbtExamAssign::create([
+            'student_id' => $student->id,
+            'instructor_id' => $student->instructor_id,
+            'cbt_exam_id' => $request->input('examid'),
+        ]);
+
+        return redirect()->back()->withSuccess('Assigned exam to student!');
     }
 
     public function viewNote($id)
