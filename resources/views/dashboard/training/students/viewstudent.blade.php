@@ -91,7 +91,7 @@
 
                   </div>
                   <div class="col">
-                    <h5>Exams <a href="#assignexam" data-toggle="modal" data-target="#assignExam" style="float: right;">Assign Exam</a></h5>
+                    <h5>Exams</h5>
                       @if (count($openexams) < 1 && count($completedexams) < 1)
                           <text class="font-weight-bold">Student does not have any exam history!</text>
                       @else
@@ -116,6 +116,8 @@
                               </li>
                           @endforeach
                       @endif
+                      <br>
+                      <a class="btn-sm btn-primary" href="#assignexam" data-toggle="modal" data-target="#assignExam" style="float: right;">Assign Exam</a>
                   </div>
                 </div>
               </div>

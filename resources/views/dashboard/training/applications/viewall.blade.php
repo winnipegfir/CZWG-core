@@ -9,8 +9,8 @@
 @section('content')
     @include('includes.trainingMenu')
     <div class="container" style="margin-top: 20px;">
-        <h2>View All Controller Applications</h2>
-        <br/>
+        <h2 class="font-weight-bold blue-text">All Controller Applications</h2>
+        <hr>
         @if ($pendingapplications)
             <ul class="nav nav-tabs" id="myTab" role="tablist">
                 <li class="nav-item">

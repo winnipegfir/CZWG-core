@@ -9,7 +9,7 @@
 @section('content')
     @include('includes.trainingMenu')
     <div class="container" style="margin-top: 20px;">
-        <h2>Instructor Portal</h2>
+        <h2 class="font-weight-bold blue-text">Instructor Portal</h2>
         <hr>
         <div class="row">
             <div class="col">

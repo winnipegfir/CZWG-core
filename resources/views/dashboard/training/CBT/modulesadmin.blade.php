@@ -10,7 +10,7 @@
   @include('includes.cbtMenu')
 
     <div class="container" style="margin-top: 20px;">
-      <h2>Modules Admin</h2>
+      <h2 class="font-weight-bold blue-text pb-2">Modules Admin</h2>
         <!--tabs: Modules, Student Progress, Add Module-->
         <ul class="nav nav-tabs" id="myTab" role="tablist">
           @if (Auth::user()->permissions >= 2)
@@ -76,9 +76,7 @@
           <!--TAB 3: Add Module : Viewable by perm level 4 and up-->
      <div class="tab-pane fade" id="addmodule" role="tabpanel" aria-labelledby="addmodule-tab"><br>
         <!--Form for creating a new module-->
-
-
-
-    </div>
-    <br><br><br><br>
-    @stop
+  </div>
+</div>
+<br>
+@stop

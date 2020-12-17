@@ -10,7 +10,7 @@
   @include('includes.cbtMenu')
 
     <div class="container" style="margin-top: 20px;">
-      <h2>Exam Centre Admin</h2>
+      <h2 class="font-weight-bold blue-text pb-2">Exam Centre Admin</h2>
         <!--tabs: Modules, Student Progress, Add Module-->
         <ul class="nav nav-tabs" id="myTab" role="tablist">
           @if (Auth::user()->permissions >= 3)
@@ -38,44 +38,45 @@
                 </tr>
             </thead>
             @if (count($exams) < 1)
-            <font class="font-weight-bold">** There are no exams!</b></font>
+            <font class="font-weight-bold" style="color:red">There are no exams!</b></font>
             @else
             <tbody>
             @foreach ($exams as $exam)
             <tr>
-                <th scope="row">{{$exam->name}}</a></th>
-                <td>
+                <th class="align-middle" scope="row">{{$exam->name}}</a></th>
+                <td class="align-middle">
                     {{$exam->created_at}}
                 </td>
-                <td>
+                <td class="align-middle">
                     {{$exam->created_by}}
                 </td>
-                <td>
-                  <a href="{{route('cbt.exam.questions', $exam->id)}}">Question Bank</a>
+              <td class="pt-3">
               @if (Auth::user()->permissions >=4)
-                 | <a href="#">Delete</a>
+              <div class="btn-toolbar" role="toolbar">
+                <div class="btn-group" role="group">
+                  <a type="button" class="btn btn-sm btn-primary" href="{{route('cbt.exam.questions', $exam->id)}}" ><i class="fa fa-question-circle"></i> Question Bank</a>
+                  <a type="button" class="btn btn-sm btn-primary" style="color: #ff6161" href="#"><i class="fa fa-times" href="#"></i> Delete</a>
+                </div>
+              </div>
+
               </td>
               @endif
-
             </tr>
             @endforeach
             @endif
         </table>
       </div>
 
-
-          <!--TAB 3: Add Exam : Viewable by perm level 4 and up-->
+        <!--TAB 3: Add Exam : Viewable by perm level 4 and up-->
      <div class="tab-pane fade" id="addmodule" role="tabpanel" aria-labelledby="addmodule-tab"><br>
         <!--Form for creating a new Exam-->
         <form action="{{route('cbt.exam.add')}}" method="POST">
           <label class="form-group">Name of Exam</label><br>
-          <input name="name" id="name" class="form-group" type="text"><br>
-          <input type="submit" value="Create Exam">
+          <input class="form-group form-control" name="name" id="name" type="text">
+          <input class="btn btn-success" type="submit" value="Create Exam">
           @csrf
         </form>
-
-
-
+      </div>
     </div>
-    <br><br><br><br>
+    <br>
     @stop

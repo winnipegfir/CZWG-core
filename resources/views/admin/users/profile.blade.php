@@ -191,7 +191,7 @@
                 <h2 class="font-weight-bold blue-text pb-2">Modify User</h2>
                 <div class="card p-3">
                   <div class="d-flex flex-row align-items-center">
-                      <ul class="list-unstyled" style="width:500px; height:80px">
+                      <ul class="list-unstyled" style="width:500px; heigh>
 
                     <li><h5>Current Permissions Level: {{$user->permissions()}} </h5></li>
                     @if ($user->id == Auth::user()->id)

@@ -9,7 +9,7 @@
 @section('content')
     @include('includes.trainingMenu')
     <div class="container" style="margin-top: 20px;">
-        <h1>Instructors</h1>
+        <h1 class="font-weight-bold blue-text">Instructors</h1>
         <hr>
         <div class="row">
             <div class="col">
@@ -68,7 +68,7 @@
                 <div class="card">
                     <div class="card-header">Actions</div>
                     <div class="card-body">
-                        <a href="#" data-toggle="modal" data-target="#addInstructorModal" class="card-link">Add Instructor</a>
+                        <a href="#" data-toggle="modal" data-target="#addInstructorModal" class="card-link">Add New Instructor</a>
                     </div>
                 </div>
             </div>
@@ -80,7 +80,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Add an instructor</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Add New Instructor</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -102,14 +102,14 @@
                         <input required type="text" name="qualification" id="searchBox" class="form-control" placeholder="e.g. Assessor">
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Email</label>
+                        <label class="form-label">Instructor Email</label>
                         <input required type="email" name="email" class="form-control">
-                        <small>This email will be publically available, so the instructor's CERT email remains hidden.</small>
+                        <small>NOTE: This email will be publically available - so the instructor's CERT email remains hidden.</small>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <input type="submit" class="btn btn-primary" value="Add">
-                    <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+                    <input type="submit" class="btn btn-success" value="Add">
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Dismiss</button>
                 </div>
                 </form>
             </div>
