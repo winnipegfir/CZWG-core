@@ -13,6 +13,7 @@ use App\Models\AtcTraining\InstructorStudents;
 use App\Models\AtcTraining\RosterMember;
 use App\Models\AtcTraining\Student;
 use App\Models\AtcTraining\StudentNote;
+use App\Models\AtcTraining\SoloRequest;
 use App\Models\AtcTraining\TrainingWaittime;
 use App\Models\Users\User;
 use Auth;
@@ -162,8 +163,14 @@ class TrainingController extends Controller
         $exams = CbtExam::all();
         $openexams = CbtExamAssign::where('student_id', $student->id)->get();
         $completedexams = CbtExamResult::where('student_id', $student->id)->get();
+        $solo = SoloRequest::where('student_id', $student->id)->get();
 
-        return view('dashboard.training.students.viewstudent', compact('student', 'instructors', 'completedexams', 'exams', 'openexams'));
+        return view('dashboard.training.students.viewstudent', compact('solo', 'student', 'instructors', 'completedexams', 'exams', 'openexams'));
+    }
+
+    public function soloRequest(Request $request)
+    {
+        return redirect()->back()->withError('This function has not been implemented yet!');
     }
 
     public function changeStudentStatus(Request $request, $id)

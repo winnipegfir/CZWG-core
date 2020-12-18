@@ -81,6 +81,26 @@
                   </div>
                 </div>
             <br>
+            <h3 class="font-weight-bold blue-text pb-2">Pending/Approved Requests</h3>
+                <div class="card">
+                    <div class="card-body">
+                        @if (count($solo) < 1)
+                            <text class="font-weight-bold">This student has no requests created</text>
+                        @else
+                            @foreach ($solo as $s)
+                                @if ($s->approved == 1)
+                                    <li>{{$s->position}} Solo -
+                                    <text class="text-success"> Approved</text></li>
+                                @else
+                                    <li>{{$s->position}} Solo -
+                                        <text class="text-danger"> Pending Approval</text></li>
+                            @endif
+                            @endforeach
+                            @endif
+                            <a class="btn-sm btn-primary" href="#solorequest" data-toggle="modal" data-target="#solorequest" style="float: right;">Solo Request</a>
+                    </div>
+                </div>
+                <br>
             <h3 class="font-weight-bold blue-text pb-2">CBT Progression</h3>
             <div class="card">
               <div class="card-body">
@@ -272,6 +292,52 @@
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-success form-control" type="submit" href="#">Assign</button>
+                    <button class="btn btn-light" data-dismiss="modal" style="width:375px">Dismiss</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+
+    <div class="modal fade" id="solorequest" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div align="center" class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Solo Request</h5><br>
+                    <h5>This will generate a request to the CI for a solo certification.</h5>
+
+
+                </div>
+                <div class="modal-body">
+
+                    <form method="POST" action="{{route('training.solo.request')}}">
+                        <label>Student Name and CID</label><br>
+                        <input type="hidden" name="studentid" value="{{$student->id}}">
+                        {{$student->user->fullName('FLC')}}<br><br>
+                        @if ($student->user->rating_short == 'C1')
+                            <text class="font-weight-bold">**There are no Solo Certs available for this student!</text>
+                        @else
+                            <select name="position">
+                            @if ($student->user->rating_short == 'S1')
+                                <option value="Delivery">Delivery Solo</option>
+                                <option value="Ground">Ground Solo</option>
+                                <option value="Tower">Tower Solo</option>
+                            @elseif ($student->user->rating_short == 'S2')
+                                <option value="Departure">Departure Solo</option>
+                                <option value="Arrival">Arrival Solo</option>
+                            @elseif ($student->user->rating_short == 'S3')
+                                <option value="Centre">Centre Solo</option>
+                            @endif
+                        </select>
+                            @endif
+                    @csrf
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success form-control" type="submit" href="#">Send Request</button>
                     <button class="btn btn-light" data-dismiss="modal" style="width:375px">Dismiss</button>
                     </form>
                 </div>
