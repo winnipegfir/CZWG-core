@@ -275,11 +275,12 @@ class CBTController extends Controller
             'cbt_exam_id' => $id,
         ])->get();
 
-        return view('dashboard.training.CBT.exams.results', compact('exam', 'results', 'grade', 'score'));
+        return redirect()->route('cbt.exam.results', [$id, $student->id]);
     }
 
     public function examResults($id, $sid)
     {
+        $student = Student::whereId($sid)->first();
         $exam = CbtExam::whereId($id)->first();
         $results = CbtExamAnswer::where([
             'student_id' => $sid,
@@ -290,7 +291,7 @@ class CBTController extends Controller
             'cbt_exam_id' => $id,
         ])->first();
 
-        return view('dashboard.training.CBT.exams.results', compact('exam', 'results', 'grade'));
+        return view('dashboard.training.CBT.exams.results', compact('exam', 'results', 'grade', 'student'));
     }
 
 

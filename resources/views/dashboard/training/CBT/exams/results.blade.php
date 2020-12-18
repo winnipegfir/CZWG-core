@@ -10,7 +10,9 @@
     @include('includes.cbtMenu')
 
     <div class="container" style="margin-top: 20px;">
-
+@if (Auth::user()->id != $student->user_id && Auth::user()->permissions < 3)
+            <h2><text class="text-danger">You are not Authorized to view this test result!</text></h2><br><br>
+@else
     <div class="panel panel-default">
         <!-- Default panel contents -->
         <div class="panel-heading"><span class="glyphicon glyphicon-cog"></span></div>
@@ -56,5 +58,6 @@
 
 </p>
         </div>
+        @endif
     </div>
 @stop
