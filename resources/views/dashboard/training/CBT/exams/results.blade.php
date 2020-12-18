@@ -8,7 +8,7 @@
 
 @section('content')
     @include('includes.cbtMenu')
-
+@if (Auth::check())
     <div class="container" style="margin-top: 20px;">
 @if (Auth::user()->id != $student->user_id && Auth::user()->permissions < 3)
             <h2><text class="text-danger">You are not Authorized to view this test result!</text></h2><br><br>
@@ -72,4 +72,5 @@
         </div>
         @endif
     </div>
+    @endif
 @stop

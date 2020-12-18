@@ -8,7 +8,7 @@
 
 @section('content')
     @include('includes.cbtMenu')
-
+@if(Auth::check())
     <div class="container" style="margin-top: 20px;">
         <h2 class="font-weight-bold blue-text">{{$exam->name}}: Question Bank <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#newQuestion" style="float: right;">Add Question</button></h2>
         <div align=""center">
@@ -46,7 +46,7 @@
                             @endif
                             {{$q->option2}}
                         </td>
-                        <td class="align-middle"> 
+                        <td class="align-middle">
                             @if ($q->answer == 3)
                                 <i class="fa fa-check"></i>
                             @else
@@ -61,7 +61,7 @@
                                 <i class="fa fa-times"></i>
                             @endif
                             {{$q->option4}}
-                        </td>                       
+                        </td>
                         <td>
                         @if (Auth::user()->permissions >=4)
                         <div class="btn-toolbar" role="toolbar">
@@ -71,7 +71,7 @@
                             </div>
                         </div>
                         @endif
-                        </td>                      
+                        </td>
                     </tr>
                     <div class="modal fade" id="editQ-{{$q->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
                          aria-hidden="true">
@@ -111,7 +111,7 @@
                                 <div class="form-group">
                                     <label>True/False?&nbsp;</label>
                                     <input id="tf" type="checkbox">
-                                </div>      
+                                </div>
                                 <div class="modal-footer">
                                     <button class="btn btn-success form-control" type="submit" href="#" tyle="width:60%">Save Changes</button>
                                     <button class="btn btn-light" data-dismiss="modal" style="width:40%">Dismiss</button>
@@ -136,7 +136,7 @@
                 <form method="POST" action="{{route('cbt.exam.question.add', $exam->id)}}">
                     @csrf
                     <div class="modal-body">
-                        <p class="font-weight-bold">Note: For True/False answers, leave Option 3 & 4 BLANK.</p>                       
+                        <p class="font-weight-bold">Note: For True/False answers, leave Option 3 & 4 BLANK.</p>
                         <div class="form-group">
                             <label>Question</label>
                             <input class="form-control" name="question"></input>
@@ -196,7 +196,7 @@
                             a4.hidden = true;
                             a4.disabled = true;
                         } else {
-                            o3.disabled = false; 
+                            o3.disabled = false;
                             o4.disabled = false;
                             g3.hidden = false;
                             g4.hidden = false;
@@ -209,4 +209,5 @@
                 </script>
             </div>
         </div>
+    @endif
 @stop

@@ -8,7 +8,7 @@
 
 @section('content')
   @include('includes.cbtMenu')
-
+@if (Auth::check())
     <div class="container" style="margin-top: 20px;">
       <h2 class="font-weight-bold blue-text pb-2">Exam Centre Admin</h2>
         <!--tabs: Modules, Student Progress, Add Module-->
@@ -79,4 +79,5 @@
       </div>
     </div>
     <br>
+    @endif
     @stop
