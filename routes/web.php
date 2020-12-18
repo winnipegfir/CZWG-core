@@ -33,6 +33,7 @@ Route::get('/news', 'News\NewsController@viewAllPublic')->name('news');
 Route::get('/training', 'AtcTraining\TrainingController@trainingTime')->name('training');
 Route::view('/bill', 'bill')->name('bill');
 Route::view('/wpg', 'wpg')->name('wpg');
+Route::view('/yearend', 'yearend')->name('yearend');
 
 //Redirects
 Route::get('/merch', function () {
