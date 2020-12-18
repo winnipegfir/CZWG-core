@@ -16,20 +16,31 @@
     <div class="panel panel-default">
         <!-- Default panel contents -->
         <div class="panel-heading"><span class="glyphicon glyphicon-cog"></span></div>
-        <div class="center">
-        <p>Exam: {{$exam->name}}</p>
-        <p>Score: {{$grade->grade}}%
+        <div align="center">
+            <h2>Student: {{$student->user->fullName('FLC')}}</h2>
+        <h2>Exam: {{$exam->name}}</h2>
+            <h2>Score:
+                @if ($grade->grade >= 80)
+                    <text class="text-success">
+                        {{$grade->grade}}% (Pass)
+                    </text>
+                @else
+                    <text class="text-danger">
+                        {{$grade->grade}}% (Fail)
+                    </text>
+                @endif
+            </h2>
+        </div>
 
-</p>
 <p>
   <div class="card p-3">
     @foreach ($results as $r)
         @if ($r->user_answer == $r->cbtexamquestion->answer)
-                        <i class="fa fa-check"> Question: {{$r->cbtexamquestion->question}}</i>
+                        <i class="fa fa-check"> Question: {{$r->cbtexamquestion->question}}</i> <text class="text-success">
         @else
-             <i class="fa fa-times"> Question: {{$r->cbtexamquestion->question}}</i>
+             <i class="fa fa-times"> Question: {{$r->cbtexamquestion->question}}</i> <text class="text-danger">
         @endif
-
+<br>
         User Answer:
         @if ($r->user_answer == 1)
                     {{$r->cbtexamquestion->option1}}
@@ -40,9 +51,9 @@
         @elseif ($r->user_answer ==4)
                     {{$r->cbtexamquestion->option4}}
         @endif
-
+        </text>
         @if ($r->user_answer != $r->cbtexamquestion->answer)
-        <br>Correct Answer:
+        <br>Correct Answer: <text class="text-success">
                         @if ($r->cbtexamquestion->answer == 1)
                             {{$r->cbtexamquestion->option1}}
                         @elseif ($r->cbtexamquestion->answer == 2)
@@ -52,6 +63,7 @@
                         @elseif ($r->cbtexamquestion->answer ==4)
                             {{$r->cbtexamquestion->option4}}
                         @endif
+                                </text>
         @endif
                 <hr>
     @endforeach

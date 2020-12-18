@@ -232,6 +232,14 @@ class TrainingController extends Controller
         return redirect()->back()->withSuccess('Assigned exam to student!');
     }
 
+    public function unassignExam($id)
+    {
+        $exam = CbtExamAssign::whereId($id)->first();
+        $exam->delete();
+
+        return redirect()->back()->withSuccess('Unassigned exam sucessfully!');
+    }
+
     public function viewNote($id)
     {
         $note = StudentNote::where('id', $id)->firstorFail();

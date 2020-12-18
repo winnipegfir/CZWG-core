@@ -101,17 +101,22 @@
                                   <text class="text-warning">In Progress</text>
                                   @else
                                   Not Started
+                                  <a href="{{route('cbt.exam.unassign', $oe->id)}}"> (Unassign)</a>
                                   @endif
                               </li>
 
                           @endforeach
 
                           @foreach ($completedexams as $cexams)
-                              <li>{{$cexams->cbtexam->name}} -
+                                  <li><a href="{{route('cbt.exam.results', [$cexams->cbtexam->id, $student->id])}}">{{$cexams->cbtexam->name}}</a> -
                                   @if ($cexams->grade >= 80)
-                                      <text class="text-success">{{$cexams->grade}}% (Pass)</text>
+                                      <text class="text-success">
+                                          {{$cexams->grade}}% (Pass)
+                                      </text>
                                   @else
-                                      <text class="text-danger">{{$cexams->grade}}% (Fail)</text>
+                                      <text class="text-danger">
+                                          {{$cexams->grade}}% (Fail)
+                                      </text>
                                   @endif
                               </li>
                           @endforeach
