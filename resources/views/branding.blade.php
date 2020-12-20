@@ -91,7 +91,7 @@
         <br>C 0%   M 0%   Y 0%   K 0%
     </a>
     <a class="btn btn-yellow" style="color: #013162">
-        <strong>Prarie Gold:</strong><br>
+        <strong>Prairie Gold:</strong><br>
         <br>Hex #f2d600
         <br>Pantone Type 3695 C
         <br>C 0%   M 12%   Y 100%   K 5%
