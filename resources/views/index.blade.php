@@ -35,7 +35,7 @@
                         <div class="card-header" style="color: #013162;">
                             <h2 class="font-weight-bold" style="text-align: center; padding-top:1%"><i class="fas fa-newspaper"></i>&nbsp;&nbsp;Recent News</h2>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body" style="padding-bottom:2%">
                             @foreach($news as $n)
                                 <h5><span class="badge winnipeg-blue">{{$n->posted_on_pretty()}}</span>&nbsp;&nbsp;<a href="{{url('/news').'/'.$n->slug}}" style="color: black;"><text class="align-middle">{{$n->title}}</text></h5></a>
                             @endforeach
@@ -51,7 +51,7 @@
                         <div class="card-header" style="color: #013162;">
                             <h2 class="font-weight-bold" style="text-align: center; padding-top:1%"><i class="fas fa-calendar"></i>&nbsp;&nbsp;Upcoming Events</h2>
                         </div>
-                        <div class="card-body" style="background-color: #fff">
+                        <div class="card-body" style="padding-bottom:2%">
                             @if(count($nextEvents) == 0)
                                 <h5 style="text-align: center;">Stay tuned here for upcoming events!</h5>
                             @endif
@@ -71,7 +71,7 @@
                         <div class="card-header" style="color: #013162;">
                             <h2 class="font-weight-bold" style="text-align: center; padding-top:1%"><i class="fas fa-award"></i>&nbsp;&nbsp;Top Controllers this Month</h2>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body" style="padding-bottom:2%">
                             @if(count($topControllersArray) == 0)
                                 <h5 style="text-align: center;">No data yet.</h5>
                             @endif
@@ -99,7 +99,7 @@
                         <div class="card-header" style="color: #013162;">
                             <h2 class="font-weight-bold" style="text-align: center; padding-top:1%"><i class="fas fa-user"></i>&nbsp;&nbsp;Online Controllers</h2>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body" style="padding-bottom:2%">
                             @if(count($finalPositions) == 0)
                                 <h5 style="text-align: center;">No controllers online.</h5>
                             @endif
@@ -135,7 +135,7 @@
                         <div class="card-header" style="color: #013162;">
                             <h2 class="font-weight-bold" style="text-align: center; padding-top:1%"><i class="fas fa-sun"></i>&nbsp;&nbsp;Weather</h2>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body" style="padding-bottom:0%">
                             <div style="float: left;">
                                 @foreach($weather as $w)
                                     <h5><text class="align-middle font-weight-bold">{{$w->icao}} - {{$w->station->name}}&nbsp;&nbsp;</text><span class="badge {{$w->flight_category}}">{{$w->flight_category}}</span></h5>
