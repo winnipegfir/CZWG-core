@@ -51,7 +51,7 @@
             <tbody>
             @foreach ($modules as $module)
             <tr>
-                <th scope="row"><a href="module/view/{{$module->id}}/intro">{{$module->name}}</a></th>
+                <th scope="row">{{$module->name}}</th>
                 <td>
                     {{$module->created_at}}
                 </td>
@@ -68,7 +68,7 @@
                 </td>
               @if (Auth::user()->permissions >=4)
               <td>
-                <a href="#">Edit</a> | <a href="#">Delete</a>
+                <a href="{{route('cbt.module.edit', $module->id)}}">Edit</a> | <a href="#">Delete</a>
               </td>
               @endif
 

@@ -253,6 +253,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/addexam', 'AtcTraining\CBTController@addExam')->name('cbt.exam.add');
             Route::get('/examadmin/view/{id}', 'AtcTraining\CBTController@questionBank')->name('cbt.exam.questions');
             Route::get('/examadmin/unassign/{id}', 'AtcTraining\TrainingController@unassignExam')->name('cbt.exam.unassign');
+            Route::get('/module/edit/{id}', 'AtcTraining\CBTController@editModule')->name('cbt.module.edit');
         });
         //Staff/Admin
         Route::group(['middleware' => 'staff'], function () {

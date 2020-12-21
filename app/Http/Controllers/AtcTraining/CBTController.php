@@ -52,6 +52,14 @@ class CBTController extends Controller
         return view('dashboard.training.CBT.modulesadmin', compact('modules'));
     }
 
+    public function editModule($id)
+    {
+        $module = CbtModule::whereId($id)->first();
+        $lessons = CbtModuleLesson::where('cbt_modules_id', $id)->get();
+
+        return view('dashboard.training.CBT.editmodule', compact('module', 'lessons'));
+    }
+
     public function viewmodule($id, $progress)
     {
         if (Auth::user()->permissions >= 3) {
