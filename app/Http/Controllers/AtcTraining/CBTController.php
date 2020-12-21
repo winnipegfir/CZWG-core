@@ -138,6 +138,12 @@ class CBTController extends Controller
     public function examindex()
     {
         $student = Student::where('user_id', Auth::user()->id)->first();
+        if ($student == NULL)
+        {
+            $exams = CbtExamAssign::where('student_id', '0')->get();
+            $completedexams = CbtExamResult::where('student_id', '0')->get();
+            return view('dashboard.training.CBT.exams.index', compact('exams', 'completedexams'));
+        }
         $exams = CbtExamAssign::where('student_id', $student->id)->get();
         $completedexams = CbtExamResult::where('student_id', $student->id)->get();
 
@@ -398,6 +404,7 @@ class CBTController extends Controller
             'created_by' => Auth::user()->id,
             'updated_by' => Auth::user()->id,
             'created_at' => Carbon::now()->toDateTimeString(),
+            'exam' => NULL,
         ]);
 
         return redirect()->back()->withSuccess('Added '.$req->input('name').' Exam!');

@@ -39,6 +39,7 @@
                     <th scope="col">Module</th>
                     <th scope="col">Created on</th>
                     <th scope="col">Created by</th>
+                    <th scope="col">Exam Assign</th>
                     @if (Auth::user()->permissions >=4)
                     <th scope="col">Actions</th>
                     @endif
@@ -56,6 +57,14 @@
                 </td>
                 <td>
                     {{$module->created_by}}
+                </td>
+                <td>
+                    @if ($module->cbt_exam_id == NULL)
+                        No Exam
+                    @else
+                        <!--Make relation to show exam name work--!>
+                    {{$module->cbt_exam_id}}
+                    @endif
                 </td>
               @if (Auth::user()->permissions >=4)
               <td>

@@ -9,7 +9,7 @@ class CbtExam extends Model
 {
     //
     protected $fillable = [
-        'name', 'created_by', 'updated_by',
+        'name', 'created_by', 'updated_by', 'exam',
     ];
 
     public function user()
@@ -30,5 +30,10 @@ class CbtExam extends Model
     public function Questions()
     {
         return $this->hasMany(CbtExamQuestion::class);
+    }
+
+    public function CbtModule()
+    {
+        return $this->hasMany(CbtModule::class);
     }
 }

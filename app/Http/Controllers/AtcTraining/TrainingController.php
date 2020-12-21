@@ -8,6 +8,7 @@ use App\Models\AtcTraining\CBT\CbtExam;
 use App\Models\AtcTraining\CBT\CbtExamAnswer;
 use App\Models\AtcTraining\CBT\CbtExamAssign;
 use App\Models\AtcTraining\CBT\CbtExamResult;
+use App\Models\AtcTraining\CBT\CbtExamQuestion;
 use App\Models\AtcTraining\Instructor;
 use App\Models\AtcTraining\InstructorStudents;
 use App\Models\AtcTraining\RosterMember;
@@ -230,6 +231,11 @@ class TrainingController extends Controller
             ])->first();
             $removeresult->delete();
         }
+        $questioncount = CbtExamQuestion::where('cbt_exam_id', $request->input('examid'))->get();
+        if (count($questioncount) < 10) {
+            return redirect()->back()->withError('This exam does not have the minimum 10 questions, so it cannot be assigned!');
+        }
+
         $assign = CbtExamAssign::create([
             'student_id' => $student->id,
             'instructor_id' => $student->instructor_id,

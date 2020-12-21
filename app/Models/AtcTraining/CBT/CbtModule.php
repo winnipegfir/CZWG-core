@@ -26,4 +26,9 @@ class CbtModule extends Model
     {
         return $this->hasMany(CbtModuleAssign::class);
     }
+
+    public function Cbtexam()
+    {
+        return $this->belongsTo(CbtExam::class);
+    }
 }
