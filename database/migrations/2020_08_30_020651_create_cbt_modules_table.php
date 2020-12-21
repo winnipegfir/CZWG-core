@@ -19,7 +19,7 @@ class CreateCbtModulesTable extends Migration
             $table->longText('description_html');
             $table->longText('content_html');
             $table->integer('cbt_exam_id')->unsigned()->nullable();
-            $table->foreign('cbt_exam_exam')->references('id')->on('cbt_exams');
+            $table->foreign('cbt_exam_id')->references('id')->on('cbt_exams');
             $table->integer('created_by')->unsigned();
             $table->foreign('created_by')->references('id')->on('users');
             $table->integer('updated_by')->unsigned();
