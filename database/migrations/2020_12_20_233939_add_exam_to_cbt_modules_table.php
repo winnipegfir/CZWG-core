@@ -9,10 +9,8 @@ class AddExamToCbtModulesTable extends Migration
 
     public function up()
     {
-        Schema::table('cbt_modules', function (Blueprint $table) {
-            $table->integer('cbt_exam_id')->unsigned()->nullable();
-            $table->foreign('cbt_exam_id')->references('id')->on('cbt_exams');
-        });
+        //
+        
     }
 
     /**
