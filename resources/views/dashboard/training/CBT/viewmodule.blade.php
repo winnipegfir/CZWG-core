@@ -17,7 +17,11 @@
 
     <div class="col-md-10">
       {{$currentlesson->name}}<br><br>
-      {{$currentlesson->content_html}}
+      {{$currentlesson->content_html}}<br><br>
+
+    @if($currentlesson->lesson == 'conclusion')
+            <a class="btn btn-primary" href="{{route('cbt.module.complete', $currentlesson->cbt_modules_id)}}">Click To Mark Module As Completed!</a>
+    @endif
 
 </div></div>
 <br><br><br><br>

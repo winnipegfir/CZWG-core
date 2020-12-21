@@ -9,7 +9,7 @@ class CbtModule extends Model
 {
     //
     protected $fillable = [
-        'name', 'description_html', 'created_by', 'updated_by', 'updated_at',
+        'name', 'description_html', 'created_by', 'updated_by', 'updated_at', 'cbt_exam_id',
     ];
 
     public function user()

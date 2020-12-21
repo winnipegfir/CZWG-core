@@ -53,7 +53,6 @@ class CBTController extends Controller
     }
 
     public function viewmodule($id, $progress)
-//TO DO: ADD VIEW CURRENT LESSON
     {
         if (Auth::user()->permissions >= 3) {
             $lessons = CbtModuleLesson::where('cbt_modules_id', $id)->get();
@@ -84,12 +83,28 @@ class CBTController extends Controller
             $update->{$progress} = 1;
             $update->save();
         }
-        if ($progress == 'conclusion') {
-            $update->completed_at = Carbon::now()->toDateTimeString();
-            $update->save();
-        }
 
         return view('dashboard.training.CBT.viewmodule', compact('lessons', 'currentlesson', 'update'));
+    }
+
+    public function completeModule($id)
+    {
+        $student = Student::where('user_id', Auth::user()->id)->first();
+        $module = CbtModuleAssign::where([
+            'cbt_module_id' => $id,
+            'student_id' => $student->id,
+        ])->first();
+        $module->completed_at = Carbon::now()->ToDateTimeString();
+        if ($module->cbtmodule->cbt_exam_id != null)
+        {
+            $exam = CbtExamAssign::create([
+                'student_id' => $student->id,
+                'instructor_id' => $student->instructor->id,
+                'cbt_exam_id' => $module->cbtmodule->cbt_exam_id,
+            ]);
+            return redirect()->route('cbt.exam')->withSuccess('You have been assigned the exam for the module!');
+        }
+        return view('dashboard.training.CBT.index')->withSuccess('You have completed the Module!');
     }
 
     public function viewAdminModule($id)

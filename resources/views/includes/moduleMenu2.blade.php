@@ -24,6 +24,7 @@
             @foreach ($lessons as $lessons)
             <div class="card">
               <a href="{{route('cbt.module.view', [$lessons->cbt_modules_id, $lessons->lesson])}}">
+                  {{$lessons->name}} </a>
             </div><br>
             @endforeach
                         <br><br>

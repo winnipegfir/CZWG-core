@@ -235,6 +235,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/', 'AtcTraining\CBTController@index')->name('cbt.index');
         Route::get('/module', 'AtcTraining\CBTController@moduleindex')->name('cbt.module');
         Route::get('/module/view/{id}/{progress}', 'AtcTraining\CBTController@viewmodule')->name('cbt.module.view');
+        Route::get('/module/finish/{id}', 'ATCTraining\CBTController@completeModule')->name('cbt.module.complete');
         Route::get('/exam', 'AtcTraining\CBTController@examindex')->name('cbt.exam');
         Route::get('/exam/start/{id}', 'AtcTraining\CBTController@startExam')->name('cbt.exam.begin');
         Route::get('/exam/{id}', 'AtcTraining\CBTController@exam')->name('cbt.exam.start');
