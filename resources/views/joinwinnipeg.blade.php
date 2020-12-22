@@ -18,8 +18,8 @@
 </ol><br>
 <h3>Step 2 – Join VATCAN &amp; Complete your S1 Exam</h3>
 <ol>
- 	<li>You will need to join the VATCAN region first if you have not or skipped some steps from Step 1, click the following link to set your region:<span> </span><a href="https://cert.vatsim.net/vatsimnet/regch.php">https://cert.vatsim.net/vatsimnet/regch.php</a>. You may proceed to step 5 if you are already a part of VATCAN.</li>
- 	<li>You will now get your choice to select a region and division to join. To join VATCAN select<span> </span><strong>North America</strong><span> </span>as your region.</li>
+ 	<li>You will need to join the VATCAN division. If you have not already joined, or skipped some steps from Step 1, click the following link to set your region:<span> </span><a href="https://cert.vatsim.net/vatsimnet/regch.php">https://cert.vatsim.net/vatsimnet/regch.php</a>. You may proceed to step 5 if you are already a part of VATCAN.</li>
+ 	<li>You will now get your choice to select a region and division to join. To join VATCAN select<span> </span><strong>Americas</strong><span> </span>as your region.</li>
  	<li>In the select a division drop down box, select<span> </span><strong>Canada</strong></li>
  	<li>Press<span> </span><strong>Continue</strong><span> </span>to set your selection</li>
  	<li>Follow the steps on <a href="https://vatcan.ca/How-to-Become-a-Controller" target="_blank" rel="noopener noreferrer">https://vatcan.ca/How-to-Become-a-Controller</a> (if you already have your S1 (or higher) rating, you may skip step 2 on this page)</li>
