@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 class AddExamToCbtModulesTable extends Migration
 {
-
     public function up()
     {
         Schema::table('cbt_modules', function (Blueprint $table) {
