@@ -2,8 +2,6 @@
 
 namespace App\Models\AtcTraining;
 
-use App\Models\AtcTraining\CBT\CbtModuleAssign;
-use App\Models\AtcTraining\CBT\ExamAssign;
 use App\Models\Users\User;
 use Illuminate\Database\Eloquent\Model;
 

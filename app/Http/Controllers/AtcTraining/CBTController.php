@@ -103,15 +103,16 @@ class CBTController extends Controller
             'student_id' => $student->id,
         ])->first();
         $module->completed_at = Carbon::now()->ToDateTimeString();
-        if ($module->cbtmodule->cbt_exam_id != null)
-        {
+        if ($module->cbtmodule->cbt_exam_id != null) {
             $exam = CbtExamAssign::create([
                 'student_id' => $student->id,
                 'instructor_id' => $student->instructor->id,
                 'cbt_exam_id' => $module->cbtmodule->cbt_exam_id,
             ]);
+
             return redirect()->route('cbt.exam')->withSuccess('You have been assigned the exam for the module!');
         }
+
         return view('dashboard.training.CBT.index')->withSuccess('You have completed the Module!');
     }
 
@@ -146,10 +147,10 @@ class CBTController extends Controller
     public function examindex()
     {
         $student = Student::where('user_id', Auth::user()->id)->first();
-        if ($student == NULL)
-        {
+        if ($student == null) {
             $exams = CbtExamAssign::where('student_id', '0')->get();
             $completedexams = CbtExamResult::where('student_id', '0')->get();
+
             return view('dashboard.training.CBT.exams.index', compact('exams', 'completedexams'));
         }
         $exams = CbtExamAssign::where('student_id', $student->id)->get();
@@ -323,7 +324,6 @@ class CBTController extends Controller
         return view('dashboard.training.CBT.exams.results', compact('exam', 'results', 'grade', 'student'));
     }
 
-
     public function questionBank($id)
     {
         $exam = CbtExam::whereId($id)->first();
@@ -412,7 +412,7 @@ class CBTController extends Controller
             'created_by' => Auth::user()->id,
             'updated_by' => Auth::user()->id,
             'created_at' => Carbon::now()->toDateTimeString(),
-            'exam' => NULL,
+            'exam' => null,
         ]);
 
         return redirect()->back()->withSuccess('Added '.$req->input('name').' Exam!');

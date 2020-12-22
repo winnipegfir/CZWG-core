@@ -22,6 +22,7 @@ class Student extends Model
     {
         return $this->belongsTo(Instructor::class);
     }
+
     public function solorequest()
     {
         return $this->hasMany(SoloRequest::class);
