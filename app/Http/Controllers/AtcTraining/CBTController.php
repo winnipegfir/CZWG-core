@@ -413,7 +413,6 @@ class CBTController extends Controller
             'created_by' => Auth::user()->id,
             'updated_by' => Auth::user()->id,
             'created_at' => Carbon::now()->toDateTimeString(),
-            'exam' => null,
         ]);
 
         return redirect()->back()->withSuccess('Added '.$req->input('name').' Exam!');
