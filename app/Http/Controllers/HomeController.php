@@ -58,7 +58,7 @@ class HomeController extends Controller
             4 => 'lightgray',
         ];
 
-        $topControllers = RosterMember::where('currency', '!=', 0)->get()->sortByDesc('currency');
+        $topControllers = RosterMember::where('currency', '!=', 0)->get()->take(5)->sortByDesc('currency');
 
         $n = -1;
         foreach ($topControllers as $top) {
