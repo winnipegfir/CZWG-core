@@ -38,4 +38,4 @@ jobs:
         vendor/bin/phpunit
     - name: Show Laravel Log
       if: ${{ failure() }}
-      run: cat storage/logs/laravel-${{ steps.date.outputs.date }}.log
+      run: cat storage/logs/laravel*.log
