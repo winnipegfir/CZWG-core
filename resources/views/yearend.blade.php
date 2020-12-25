@@ -3,11 +3,6 @@
 @section('content')
 
 <div class="container py-4">
-    @if (Auth::check() && Auth::user()->permissions < 4)
-    <h1 class="blue-text font-weight-bold">Letter to the FIR</h1>
-    <p>As the year comes to a close, please check back soon for FIR Chief Nate Power's letter to the FIR.</p>
-    <a href="{{route('index')}}" class="blue-text" style="font-size: 1.2em"> <i class="fas fa-arrow-left"></i> Winnipeg FIR</a>
-    @else
     <a href="{{route('index')}}" class="blue-text" style="font-size: 1.2em"> <i class="fas fa-arrow-left"></i> Winnipeg FIR</a>
     <h1 class="font-weight-bold blue-text">A Letter from Nate</h1>
     <br>
@@ -79,6 +74,4 @@
         <img src="https://i.imgur.com/7xuoHQ9.gif" style="width:10%">
     </div>
 </div>
-
-@endif
 @endsection
