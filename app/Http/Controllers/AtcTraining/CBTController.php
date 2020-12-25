@@ -169,9 +169,10 @@ class CBTController extends Controller
     public function startExam($id)
     {
         $subject = CbtExam::find($id);
+        $student = Student::where('user_id', Auth::user()->id)->first();
         session()->forget('next_question_id');
 
-        return view('dashboard.training.CBT.exams.startexam', compact('subject'));
+        return view('dashboard.training.CBT.exams.startexam', compact('subject', 'student'));
     }
 
     public function exam($id)
