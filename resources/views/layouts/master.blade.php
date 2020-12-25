@@ -115,7 +115,7 @@
                             <a class="dropdown-item" href="{{route('news')}}">News</a>
                                 <a class="dropdown-item {{ Request::is('news') ? 'active white-text' : '' }}" href="{{route('news.index')}}">Manage News</a>
                             @else
-                                <a href="{{route('events.index')}}" class="nav-link">News</a>
+                                <a href="{{route('news')}}" class="nav-link">News</a>
                             @endif          
                         </li>
                         <li class="nav-item {{ Request::is('events/*') || Request::is('events') ? 'active' : '' }}">
