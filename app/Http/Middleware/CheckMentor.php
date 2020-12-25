@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Auth;
+
 class CheckMentor
 {
     /**
@@ -13,14 +14,14 @@ class CheckMentor
      * @param  \Closure  $next
      * @return mixed
      */
-     public function handle($request, Closure $next)
-     {
-         if (Auth::check()) {
-             if (Auth::user()->permissions >= 2) {
-                 return $next($request);
-             }
-         }
+    public function handle($request, Closure $next)
+    {
+        if (Auth::check()) {
+            if (Auth::user()->permissions >= 2) {
+                return $next($request);
+            }
+        }
 
-         abort(403, 'Only Mentors have access to this resource!');
-     }
+        abort(403, 'Only Mentors have access to this resource!');
+    }
 }

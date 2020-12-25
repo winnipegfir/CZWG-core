@@ -56,13 +56,27 @@ class DatabaseSeeder extends Seeder
 
         DB::table('staff_member')->insert([
             'group' => 'exec',
-           'position' => 'FIR Chief',
-           'user_id' => 1,
-           'group_id' => 1,
-           'description' => 'Head of Winnipeg’s day-to-day operations, manages all staff in the FIR, and keeps VATCAN updated with Winnipeg. Also is currently the interim Events Coordinator.',
+            'position' => 'FIR Chief',
+            'user_id' => 1,
+            'group_id' => 1,
+            'description' => 'Head of Winnipeg’s day-to-day operations, manages all staff in the FIR, and keeps VATCAN updated with Winnipeg. Also is currently the interim Events Coordinator.',
             'email' => 'chief@info.com',
             'shortform' => 'firchief',
         ]);
 
+        DB::table('event_positions')->insert(
+            ['position' => 'Delivery'],
+            ['position' => 'Ground'],
+            ['position' => 'Tower'],
+            ['position' => 'Departure'],
+            ['position' => 'Arrival'],
+            ['position' => 'Centre'],
+            ['position' => 'Relief']
+        );
+
+        DB::table('homepage_images')->insert([
+            'url' => 'https://cdn.discordapp.com/attachments/598024548301930496/762594915552985108/unknown.png',
+            'credit' => 'Winnipeg FIR',
+        ]);
     }
 }

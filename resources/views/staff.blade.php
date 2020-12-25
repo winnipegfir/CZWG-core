@@ -7,6 +7,7 @@
 @stop
 
 @section('title', 'Winnipeg FIR Staff')
+@section('description', 'View the Winnipeg FIR Staff team')
 
 @section('content')
 <div class="container" style="margin-top: 20px;">

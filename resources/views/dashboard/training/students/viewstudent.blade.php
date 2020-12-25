@@ -81,17 +81,68 @@
                   </div>
                 </div>
             <br>
+            <h3 class="font-weight-bold blue-text pb-2">Pending/Approved Requests</h3>
+                <div class="card">
+                    <div class="card-body">
+                        @if (count($solo) < 1)
+                            <text class="font-weight-bold">This student has no requests created</text>
+                        @else
+                            @foreach ($solo as $s)
+                                @if ($s->approved == 1)
+                                    <li>{{$s->position}} Solo -
+                                    <text class="text-success"> Approved</text></li>
+                                @else
+                                    <li>{{$s->position}} Solo -
+                                        <text class="text-danger"> Pending Approval</text></li>
+                            @endif
+                            @endforeach
+                            @endif
+                            <a class="btn-sm btn-primary" href="#solorequest" data-toggle="modal" data-target="#solorequest" style="float: right;">Solo Request</a>
+                    </div>
+                </div>
+                <br>
             <h3 class="font-weight-bold blue-text pb-2">CBT Progression</h3>
             <div class="card">
               <div class="card-body">
                 <div class="row">
                   <div class="col">
                     <h5>Modules</h5>
-                    Here, you will see what assigned modules are unstarted, in progress and finished.
+                    Here, you will see what assigned modules are unstarted, in progress and finished.<br>
+
                   </div>
                   <div class="col">
                     <h5>Exams</h5>
-                    Here, you will see results to completed exams, or exams that a student has not begun yet.
+                      @if (count($openexams) < 1 && count($completedexams) < 1)
+                          <text class="font-weight-bold">Student does not have any exam history!</text>
+                      @else
+                          @foreach ($openexams as $oe)
+                              <li>{{$oe->cbtexam->name}} -
+                              @if ($oe->started_at != null)
+                                  <text class="text-warning">In Progress</text>
+                                  @else
+                                  Not Started
+                                  <a href="{{route('cbt.exam.unassign', $oe->id)}}"> (Unassign)</a>
+                                  @endif
+                              </li>
+
+                          @endforeach
+
+                          @foreach ($completedexams as $cexams)
+                                  <li><a href="{{route('cbt.exam.results', [$cexams->cbtexam->id, $student->id])}}">{{$cexams->cbtexam->name}}</a> -
+                                  @if ($cexams->grade >= 80)
+                                      <text class="text-success">
+                                          {{$cexams->grade}}% (Pass)
+                                      </text>
+                                  @else
+                                      <text class="text-danger">
+                                          {{$cexams->grade}}% (Fail)
+                                      </text>
+                                  @endif
+                              </li>
+                          @endforeach
+                      @endif
+                      <br>
+                      <a class="btn-sm btn-primary" href="#assignexam" data-toggle="modal" data-target="#assignExam" style="float: right;">Assign Exam</a>
                   </div>
                 </div>
               </div>
@@ -105,10 +156,10 @@
                         @if ($student->status == 0)
                         <span class="btn btn-sm btn-primary">
                             <h3 class="p-0 m-0">
-                                New/Waiting
+                                Waitlisted
                             </h3>
                         </span><br></br>
-                        The student's training is 'New/Waiting'. This means the student has an accepted application and has not begun training.
+                        The student's training is 'Waitlisted'. This means the student has an accepted application and has not begun training.
                         @elseif ($student->status == 1)
                         <span class="btn btn-sm btn-success">
                             <h3 class="p-0 m-0">
@@ -177,7 +228,7 @@
                                         <option selected="" value="" hidden>Please choose one..</option>
                                         <option value="1">In Progress</option>
                                         <option value="2">Completed</option>
-                                        <option value="0">New/Waiting</option>
+                                        <option value="0">Waitlist</option>
                                     </select>
                                 </div>
                                 <div class="col-sm-4">
@@ -215,6 +266,85 @@
       </div>
     </div>
   </div>
+    <div class="modal fade" id="assignExam" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div align="center" class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Assign an Exam</h5><br>
+                    <h5>Note: if re-assigning an exam, old answers and result will be deleted!</h5>
+
+
+                </div>
+                <div class="modal-body">
+
+                    <form method="POST" action="{{route('cbt.exam.assign')}}">
+                        <label>Student Name and CID</label><br>
+                        <input type="hidden" name="studentid" value="{{$student->id}}">
+                        {{$student->user->fullName('FLC')}}<br><br>
+                        <select name="examid">
+                            @foreach ($exams as $e)
+                                <option value="{{$e->id}}">{{$e->name}}</option>
+                            @endforeach
+                        </select>
+    @csrf
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success form-control" type="submit" href="#">Assign</button>
+                    <button class="btn btn-light" data-dismiss="modal" style="width:375px">Dismiss</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+
+    <div class="modal fade" id="solorequest" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div align="center" class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Solo Request</h5><br>
+                    <h5>This will generate a request to the CI for a solo certification.</h5>
+
+
+                </div>
+                <div class="modal-body">
+
+                    <form method="POST" action="{{route('training.solo.request')}}">
+                        <label>Student Name and CID</label><br>
+                        <input type="hidden" name="studentid" value="{{$student->id}}">
+                        {{$student->user->fullName('FLC')}}<br><br>
+                        @if ($student->user->rating_short == 'C1')
+                            <text class="font-weight-bold">**There are no Solo Certs available for this student!</text>
+                        @else
+                            <select name="position">
+                            @if ($student->user->rating_short == 'S1')
+                                <option value="Delivery">Delivery Solo</option>
+                                <option value="Ground">Ground Solo</option>
+                                <option value="Tower">Tower Solo</option>
+                            @elseif ($student->user->rating_short == 'S2')
+                                <option value="Departure">Departure Solo</option>
+                                <option value="Arrival">Arrival Solo</option>
+                            @elseif ($student->user->rating_short == 'S3')
+                                <option value="Centre">Centre Solo</option>
+                            @endif
+                        </select>
+                            @endif
+                    @csrf
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success form-control" type="submit" href="#">Send Request</button>
+                    <button class="btn btn-light" data-dismiss="modal" style="width:375px">Dismiss</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
 {{--
   <div class="modal fade" id="newNote" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
        aria-hidden="true">

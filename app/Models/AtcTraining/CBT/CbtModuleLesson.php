@@ -2,11 +2,9 @@
 
 namespace App\Models\AtcTraining\CBT;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Models\Users\User;
-use App\Models\AtcTraining\Student;
-use App\Models\AtcTraining\CBT\CbtModule;
-use App\Models\AtcTraining\CBT\CbtModuleAssign;
+use Illuminate\Database\Eloquent\Model;
+
 class CbtModuleLesson extends Model
 {
     //
@@ -21,7 +19,6 @@ class CbtModuleLesson extends Model
 
     public function CbtModule()
     {
-      return $this->hasMany(CbtModule::class);
+        return $this->hasMany(CbtModule::class);
     }
-
 }

@@ -2,21 +2,15 @@
 
 namespace App\Models\Users;
 
-use App\Http\Controllers\RosterController;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Carbon;
 use App\Models\AtcTraining;
 use App\Models\ControllerBookings;
 use App\Models\Events;
-use App\Models\Network;
 use App\Models\News;
-use App\Models\Publications;
-use App\Models\Settings;
 use App\Models\Tickets;
-use Auth;
 use Exception;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -36,7 +30,7 @@ class User extends Authenticatable
         'id', 'fname', 'lname', 'email', 'rating_id', 'rating_short', 'rating_long', 'rating_GRP',
         'reg_date', 'region_code', 'region_name', 'division_code', 'division_name',
         'subdivision_code', 'subdivision_name', 'permissions', 'init', 'gdpr_subscribed_emails', 'avatar', 'bio', 'display_cid_only', 'display_fname', 'display_last_name',
-        'discord_user_id', 'discord_dm_channel_id', 'avatar_mode', 'used_connect'
+        'discord_user_id', 'discord_dm_channel_id', 'avatar_mode', 'used_connect',
     ];
 
     /**
@@ -61,6 +55,16 @@ class User extends Authenticatable
     public function applications()
     {
         return $this->hasMany(AtcTraining\Application::class);
+    }
+
+    public function eventApplications()
+    {
+        return $this->hasMany(Events\ControllerApplication::class);
+    }
+
+    public function eventConfirms()
+    {
+        return $this->hasMany(Events\EventConfirm::class);
     }
 
     public function instructorProfile()
@@ -91,20 +95,6 @@ class User extends Authenticatable
     public function rosterProfile()
     {
         return $this->hasOne(AtcTraining\RosterMember::class);
-
-
-    }
-
-    public function rosterVisitProfile()
-    {
-        return $this->hasOne(AtcTraining\VisitRosterMember::class);
-
-    }
-
-
-    public function notifications()
-    {
-        return $this->hasMany(UserNotification::class);
     }
 
     public function notes()
@@ -112,12 +102,8 @@ class User extends Authenticatable
         return $this->hasMany(UserNote::class);
     }
 
-    public function bookingBanObj()
+    public function userSinceInDays()
     {
-        return $this->hasOne(ControllerBookings\ControllerBookingsBan::class);
-    }
-
-    public function userSinceInDays(){
         $created = $this->created_at;
         $now = Carbon::now();
         $difference = $created->diff($now)->days;
@@ -129,22 +115,22 @@ class User extends Authenticatable
     {
         switch ($this->permissions) {
             case 0:
-                return "Guest";
+                return 'Guest';
             break;
             case 1:
-                return "Controller/Trainee";
+                return 'Controller/Trainee';
             break;
             case 2:
-                return "Mentor";
+                return 'Mentor';
             break;
             case 3:
-                return "Instructor";
+                return 'Instructor';
             case 4:
-                return "Staff Member";
+                return 'Staff Member';
             case 5:
-                return "Administrator";
+                return 'Administrator';
             default:
-                return "Unknown";
+                return 'Unknown';
         }
     }
 
@@ -185,7 +171,7 @@ class User extends Authenticatable
 
     public function certified()
     {
-        if (!$this->rosterProfile()) {
+        if (! $this->rosterProfile()) {
             return false;
         }
 
@@ -194,7 +180,7 @@ class User extends Authenticatable
 
     public function bookingBanned()
     {
-        if (!ControllerBookings\ControllerBookingsBan::where('user_id', $this->id)->first()) {
+        if (! ControllerBookings\ControllerBookingsBan::where('user_id', $this->id)->first()) {
             return false;
         }
 
@@ -208,7 +194,10 @@ class User extends Authenticatable
 
     public function hasDiscord()
     {
-        if (!$this->discord_user_id) { return false; }
+        if (! $this->discord_user_id) {
+            return false;
+        }
+
         return true;
     }
 
@@ -218,6 +207,7 @@ class User extends Authenticatable
             $discord = new DiscordClient(['token' => config('services.discord.token')]);
 
             $user = $discord->user->getUser(['user.id' => $this->discord_user_id]);
+
             return $user;
         });
     }
@@ -230,6 +220,7 @@ class User extends Authenticatable
             $user = $discord->user->getUser(['user.id' => $this->discord_user_id]);
             $url = 'https://cdn.discordapp.com/avatars/'.$user->id.'/'.$user->avatar.'.png';
             Log::info($url);
+
             return $url;
         });
     }
@@ -241,16 +232,16 @@ class User extends Authenticatable
             if ($discord->guild->getGuildMember(['guild.id' => 598023748741758976, 'user.id' => $this->discord_user_id])) {
                 return true;
             }
-        }
-        catch (Exception $ex) {
+        } catch (Exception $ex) {
             return false;
         }
+
         return false;
     }
 
     public function currentDiscordBan()
     {
-        $ban = DiscordBan::whereDate('ban_end_timestamp','>',Carbon::now())->where('user_id', $this->id)->first();
+        $ban = DiscordBan::whereDate('ban_end_timestamp', '>', Carbon::now())->where('user_id', $this->id)->first();
         if ($ban) {
             return $ban;
         } else {
@@ -275,6 +266,7 @@ class User extends Authenticatable
                     ->color('#2196f3')
                     ->generate();
                 Storage::put('public/files/avatars/'.$this->id.'/initials.png', (string) $image->encode('png'));
+
                 return Storage::url('public/files/avatars/'.$this->id.'/initials.png');
                 imagedestroy($image);
             });

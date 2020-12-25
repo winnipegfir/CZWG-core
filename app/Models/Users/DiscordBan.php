@@ -10,7 +10,7 @@ use Parsedown;
 class DiscordBan extends Model
 {
     protected $fillable = [
-        'user_id', 'reason', 'ban_start_timestamp', 'ban_end_timestamp'
+        'user_id', 'reason', 'ban_start_timestamp', 'ban_end_timestamp',
     ];
 
     public function user()
@@ -20,7 +20,10 @@ class DiscordBan extends Model
 
     public function isPermanent()
     {
-        if (!$this->ban_end_timestamp) return true;
+        if (! $this->ban_end_timestamp) {
+            return true;
+        }
+
         return false;
     }
 
@@ -31,13 +34,19 @@ class DiscordBan extends Model
 
     public function banEndPretty()
     {
-        if($this->isPermanment) return null;
+        if ($this->isPermanment) {
+            return null;
+        }
+
         return Carbon::create($this->ban_end_timestamp)->toDayDateTimeString().' Zulu';
     }
 
     public function isCurrent()
     {
-        if (Carbon::create($this->ban_end_timestamp) > Carbon::now()) return true;
+        if (Carbon::create($this->ban_end_timestamp) > Carbon::now()) {
+            return true;
+        }
+
         return false;
     }
 

@@ -3,20 +3,10 @@
 namespace App\Http\Controllers\AtcTraining;
 
 use App\Http\Controllers\Controller;
-use App\Models\Publications\Policy;
-use App\Models\Settings\AuditLogEntry;
-use App\Models\AtcTraining\LegacyUser;
-use App\Mail\RosterStatusMail;
 use App\Models\AtcTraining\RosterMember;
 use App\Models\Network\SessionLog;
-use App\Models\AtcTraining\VisitRosterMember;
 use App\Models\Users\User;
-use App\Models\Users\UserNotification;
-use DB;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Mail;
-
 
 class RosterController extends Controller
 {
@@ -25,17 +15,14 @@ class RosterController extends Controller
         $roster = RosterMember::where('visit', '0')->get()->sortBy('cid');
         $visitroster = RosterMember::where('visit', '1')->get()->sortBy('cid');
 
-
         return view('roster', compact('roster', 'visitroster'));
     }
-
 
     public function index()
     {
         $roster = RosterMember::where('visit', '0')->get()->sortBy('cid');
         $visitroster2 = RosterMember::where('visit', '1')->get()->sortBy('cid');
         $users = User::all();
-
 
         return view('dashboard.roster.index', compact('roster', 'visitroster2', 'users'));
     }
@@ -67,15 +54,14 @@ class RosterController extends Controller
                 'visit' => '0',
             ]);
         } else {
-            return redirect()->back()->withErrors('Member: ' . $users->fullName('FL') . ' CID: ' . $users->id . ' is already on the roster!');
+            return redirect()->back()->withErrors('Member: '.$users->fullName('FL').' CID: '.$users->id.' is already on the roster!');
         }
 
-        return redirect('/dashboard/roster')->withSuccess('Successfully added ' . $users->fullName('FL') . ' CID: ' . $users->id . ' to roster!');
+        return redirect('/dashboard/roster')->withSuccess('Successfully added '.$users->fullName('FL').' CID: '.$users->id.' to roster!');
     }
 
     public function addVisitController(Request $request)
     {
-
 
         //here we are getting the data from the table
         $users = User::findOrFail($request->input('newcontroller'));
@@ -89,23 +75,21 @@ class RosterController extends Controller
                 'visit' => 1,
             ]);
         } else {
-            return redirect()->back()->withErrors('Member: ' . $users->fullName('FL') . ' CID: ' . $users->id . ' is already on the roster!');
+            return redirect()->back()->withErrors('Member: '.$users->fullName('FL').' CID: '.$users->id.' is already on the roster!');
         }
 
-        return redirect('/dashboard/roster')->withSuccess('Successfully added ' . $users->fullName('FL') . ' CID: ' . $users->id . ' to roster!');
+        return redirect('/dashboard/roster')->withSuccess('Successfully added '.$users->fullName('FL').' CID: '.$users->id.' to roster!');
     }
 
     public function editControllerForm($cid)
     {
         $roster = RosterMember::where('cid', $cid)->first();
 
-
         return view('dashboard.roster.edituser', compact('roster'))->with('cid', $cid);
     }
 
     public function editController(Request $request, $cid)
     {
-
         $roster = RosterMember::where('cid', $cid)->first();
         if ($roster != null) {
             $roster->del = $request->input('del');
@@ -115,16 +99,13 @@ class RosterController extends Controller
             $roster->app = $request->input('app');
             $roster->ctr = $request->input('ctr');
             $roster->remarks = $request->input('remarks');
-            if ($request->input('rating_hours') == "true") {
+            if ($request->input('rating_hours') == 'true') {
                 $roster->rating_hours = 0;
             }
             $roster->active = $request->input('active');
             $roster->save();
         }
 
-
         return redirect('/dashboard/roster')->withSuccess('Successfully edited!');
     }
-
-
 }

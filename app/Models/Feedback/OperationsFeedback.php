@@ -10,7 +10,7 @@ class OperationsFeedback extends Model
     protected $hidden = ['id'];
 
     protected $fillable = [
-        'user_id', 'subject', 'content'
+        'user_id', 'subject', 'content',
     ];
 
     public function user()

@@ -4,7 +4,7 @@
 @section('content')
     <div class="container py-4">
         <div class="d-flex flex-row justify-content-between align-items-center mb-1">
-            <h1 class="blue-text font-weight-bold">Events</h1>
+            <h1 class="blue-text font-weight-bold">Upcoming Events</h1>
             <a href="#" class="btn btn-link float-right mx-0 px-0" data-toggle="modal" data-target="#requestModal">Need ATC Coverage? Click Here!</a>
         </div>
         <hr>
@@ -13,35 +13,24 @@
             <li>No Events... Stay tuned!</li>
             @endif
             @foreach($events as $e)
-            <div class="card my-2" style="height:150px;">
-                <div class="d-flex flex-row justify-content-between">
+            <div class="card my-2" style="@if($e->image_url) background-image:url({{$e->image_url}}); background-size: cover; background-position: center; color: white; @endif">
+                <div class="card" style="@if($e->image_url) background-color: rgb(0, 0, 0, 0.6) @endif">
                     <div class="p-3">
                         <a href="{{route('events.view', $e->slug)}}">
-                            <h3>{{$e->name}}</h3>
+                            <h3 style="@if($e->image_url) color: white @else color: #013162 @endif">{{$e->name}}</h3>
                         </a>
                         <h5>{{$e->start_timestamp_pretty()}} to {{$e->end_timestamp_pretty()}}</h5>
                         @if ($e->departure_icao && $e->arrival_icao)
                             <h5 class="font-weight-bold">{{$e->departure_icao_data()['name']}} ({{$e->departure_icao_data()['icao']}})&nbsp;&nbsp;<i class="fas fa-plane"></i>&nbsp;&nbsp;{{$e->arrival_icao_data()['name']}} ({{$e->arrival_icao_data()['icao']}})</h5>
                         @endif
                         @if (!$e->event_in_past())
-                        <p>Starts {{$e->starts_in_pretty()}}</p>
+                        Starts {{$e->starts_in_pretty()}}
                         @endif
                     </div>
-                    @if ($e->image_url)
-                    <a href="{{route('events.view', $e->slug)}}" style="width: 53%; height: 150px;">
-                        <img class="w-100" src="{{$e->image_url}}">
-                    </a>
-                    @else
-                    <a href="{{route('events.view', $e->slug)}}" style="width: 50%; height 150px;">
-                        <div style="width: 100%; height: 150px;" class="grey waves-effect">
-                        </div>
-                    </a>
-                    @endif
                 </div>
             </div>
             @endforeach
         </ul>
-        <br>
         <h5><a data-toggle="collapse" data-target="#pastEvents">Show Past Events <i class="fas fa-caret-down"></i></a></h5>
         <div class="collapse" id="pastEvents">
             <ul class="list-unstyled">
@@ -49,29 +38,17 @@
                 <li>No past events.</li>
                 @endif
                 @foreach($pastEvents as $e)
-                <div class="card my-2" style="height:150px;">
+                <div class="card my-2">
                     <div class="d-flex flex-row justify-content-between">
                         <div class="p-3">
                             <a href="{{route('events.view', $e->slug)}}">
-                                <h3>{{$e->name}}</h3>
+                                <h3 style="color: #013162">{{$e->name}}</h3>
                             </a>
-                            <h5>{{$e->start_timestamp_pretty()}} to {{$e->end_timestamp_pretty()}}</h5>
-                            <br>
+                            <h5>{{$e->start_timestamp_pretty()}} to {{$e->end_timestamp_pretty()}}</h5>                       
                             @if ($e->departure_icao && $e->arrival_icao)
                                 <h5 class="font-weight-bold">{{$e->departure_icao_data()['name']}} ({{$e->departure_icao_data()['icao']}})&nbsp;&nbsp;<i class="fas fa-plane"></i>&nbsp;&nbsp;{{$e->arrival_icao_data()['name']}} ({{$e->arrival_icao_data()['icao']}})</h5>
                             @endif
                         </div>
-                        @if ($e->image_url)
-                        <a href="{{route('events.view', $e->slug)}}" style="width: 35%; height: 150px;">
-                            <div style="width: 100%; height: 150px; background-image:url({{$e->image_url}}); background-position: center;" class="waves-effect">
-                            </div>
-                        </a>
-                        @else
-                        <a href="{{route('events.view', $e->slug)}}" style="width: 35%; height 150px;">
-                            <div style="width: 100%; height: 150px;" class="grey waves-effect">
-                            </div>
-                        </a>
-                        @endif
                     </div>
                 </div>
                 @endforeach

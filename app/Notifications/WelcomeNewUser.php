@@ -3,7 +3,6 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
@@ -42,7 +41,7 @@ class WelcomeNewUser extends Notification
     {
         return (new MailMessage)->view(
             'emails.welcomenewuser', ['user' => $this->user]
-        )->subject('Welcome to Winnipeg, ' . $this->user->fullName('F') . '!')->from('no-reply@winnipegfir.ca', 'Nate Power');
+        )->subject('Welcome to Winnipeg, '.$this->user->fullName('F').'!')->from('no-reply@winnipegfir.ca', 'Nate Power');
     }
 
     /**

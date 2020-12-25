@@ -13,6 +13,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '7.4'
     - name: Copy .env
       run: |
         php -r "file_exists('.env') || copy('.env.example', '.env');"
@@ -32,8 +36,8 @@ jobs:
         DB_CONNECTION: sqlite
         DB_DATABASE: database/database.sqlite
       run: |
-        php artisan migrate
+        php artisan migrate --seed
         vendor/bin/phpunit
     - name: Show Laravel Log
       if: ${{ failure() }}
-      run: cat storage/logs/laravel.log
+      run: cat storage/logs/laravel*.log

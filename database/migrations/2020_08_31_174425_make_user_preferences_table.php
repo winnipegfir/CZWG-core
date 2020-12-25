@@ -14,14 +14,14 @@ class MakeUserPreferencesTable extends Migration
     public function up()
     {
         Schema::create('user_preferences', function (Blueprint $table) {
-		$table->increments('id');
-		$table->integer('user_id')->unsigned();
-		$table->foreign('user_id')->references('id')->on('users');
-		$table->tinyInteger('enable_beta_components')->default(0);
-		$table->string('ui_mode')->default('default');
-		$table->tinyInteger('enable_discord_notifications')->default(0);
-		$table->timestamps();
-	});
+            $table->increments('id');
+            $table->integer('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->tinyInteger('enable_beta_components')->default(0);
+            $table->string('ui_mode')->default('default');
+            $table->tinyInteger('enable_discord_notifications')->default(0);
+            $table->timestamps();
+        });
     }
 
     /**

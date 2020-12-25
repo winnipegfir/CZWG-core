@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title', 'About WPGCore')
+@section('title', 'About the website - Winnipeg FIR')
 @section('content')
 <div class="container d-flex py-5 flex-column align-items-center justify-content-center">
 <img src="https://i.imgur.com/tF4WbZu.png" class="img-fluid" style="width: 125px;" alt="">

@@ -4,7 +4,6 @@ namespace App\Jobs;
 
 use App\Models\Users\User;
 use App\Notifications\DataExportRequest;
-use App\Notifications\WelcomeNewUser;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -17,6 +16,7 @@ class ProcessDataExport implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $user;
+
     /**
      * Create a new job instance.
      *
@@ -34,7 +34,7 @@ class ProcessDataExport implements ShouldQueue
      */
     public function handle()
     {
-        $user = User::whereId($this->user->id)->with(['notes', 'applications', 'instructorProfile', 'studentProfile', 'staffProfile', 'rosterProfile', 'discordBans', 'tickets', 'ticketReplies'])->firstOrFail();
+        $user = User::whereId($this->user->id)->with(['notes', 'applications', 'instructorProfile', 'studentProfile', 'staffProfile', 'rosterProfile', 'eventApplications', 'eventConfirms', 'discordBans', 'tickets', 'ticketReplies'])->firstOrFail();
         Log::info('Processing GDPR Export All for '.$this->user->id);
         $userArray = $user->toArray();
         $discord = null;

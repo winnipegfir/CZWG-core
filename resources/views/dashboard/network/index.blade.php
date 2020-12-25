@@ -12,12 +12,12 @@
         </div>
         <div class="card p-4 orange white-text">
             <h3>Controller Activity</h3>
-            <p>View controller activity statistics against policy requirements</p>
+            <p>View controller activity statistics against policy requirements (Coming Soon)</p>
             <a class="white-text font-weight-bold" href="#">Go <i class="fas fa-arrow-right"></i></a>
         </div>
         <div class="card p-4 purple white-text">
             <h3>Overall Statistics</h3>
-            <p>View total statistics for Gander positions</p>
+            <p>View total statistics for Winnipeg positions (Coming Soon)</p>
             <a class="white-text font-weight-bold" href="#">Go <i class="fas fa-arrow-right"></i></a>
         </div>
     </div>

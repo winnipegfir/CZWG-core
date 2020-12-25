@@ -160,23 +160,22 @@
                                 @else
 
                                     @foreach ($confirmedevent as $cevent)
-                                        <br>
-                                        <h5><b>{{$cevent->name}}</b> on {{$cevent->start_timestamp_pretty()}}</h5>
+                                        <h5><u><b>{{$cevent->name}}</b> on {{$cevent->start_timestamp_pretty()}}</h5></u>
                                         @foreach ($confirmedapp as $capp)
                                             @if ($cevent->id == $capp->event->id)
                                                 <li>
-                                                    <b> Position:</b> {{$capp->airport}}
+                                                    <b>Slot:</b> {{$capp->airport}}
                                                     @if($capp->position != "Relief"){{$capp->position}} from @endif
                                                     @if($capp->position == "Relief")
-                                                        <text class="text-danger">{{$capp->position}}</text> avaliable
+                                                        <text class="text-danger">{{$capp->position}}</text>
                                                         from @endif
                                                     {{$capp->start_timestamp}}z - {{$capp->end_timestamp}}z
                                                 </li>
+                                                <br>
                                             @endif
                                         @endforeach
                                     @endforeach
                                 @endif
-
                                 @if (count($unconfirmedapp) < 1)
                                     <p>
                                         You have
@@ -189,7 +188,7 @@
                                                 <span class="blue-text">
                                                     <i class="fas fa-chevron-right"></i>
                                                 </span>
-                                        <span style="color: #444444">
+                                        <span style="color: #013162">
                                                     You have <text
                                                 class="text-success"><b>{{count($unconfirmedapp)}}</b></text> active event application
                                                 </span>
@@ -200,19 +199,17 @@
                                              <span class="blue-text">
                                                  <i class="fas fa-chevron-right"></i>
                                              </span>
-                                        <span style="color: #444444">You have <text
+                                        <span style="color: #013162">You have <text
                                                 class="text-success"><b>{{count($unconfirmedapp)}}</b></text> active event applications</span>
                                     </a>
                                 @endif
-                                <br>
-                                <p style="font-size: 12px;">
-                                    <text class="font-weight-bold">Note:</text>
-                                    If the event header is blank, you are not confirmed for the event.
-                                </p>
+
+                                @if(count($confirmedevent) != 0)
+                                    <a href="{{url('/dashboard/events/view')}}" style="text-align: center">View Event Rosters</a>
+                                @endif
                             </div>
                         </div>
                     </div>
-                    <br/>
                 @endif
                 {{--
                 @if(Auth::user()->permissions >= 3)
@@ -274,6 +271,15 @@
                         <div class="card-body">
                             <h3 class="font-weight-bold blue-text pb-2">Certification and Training</h3>
 
+                            @if (Auth::user()->permissions >= 3)
+                            <ul class="list-unstyled mt-2 mb-0">
+                                <li class="mb-2">
+                                    <a href="{{route('training.index')}}" style="text-decoration:none;"><span
+                                            class="blue-text"><i class="fas fa-chevron-right"></i></span> &nbsp; <span
+                                            class="black-text">Instructor Training System</span></a>
+                                </li>
+                            </ul>
+                            @endif
                             <h5 class="card-title">Status</h5>
                             <div class="card-text">
                                 <div class="d-flex flex-row justify-content-left">
@@ -593,7 +599,7 @@
                                         <a href="{{route('training.index')}}" style="text-decoration:none;"><span
                                                 class="blue-text"><i class="fas fa-chevron-right"></i></span> &nbsp;
                                             <span
-                                                class="black-text">Controller Training (WIP)</span></a>
+                                                class="black-text">1Winnipeg Training System (WIP)</span></a>
                                     </li>
                                     <li class="mb-2">
                                         <a href="{{route('roster.index')}}" style="text-decoration:none;"><span
@@ -614,21 +620,19 @@
                                                 class="black-text">Manage News</span></a>
                                     </li>
                                     <li class="mb-2">
+                                        <a href="{{route('staff.feedback.index')}}" style="text-decoration:none;"><span
+                                                class="blue-text"><i class="fas fa-chevron-right"></i></span> &nbsp;
+                                            <span
+                                                class="black-text">Manage Feedback</span></a>
+                                    </li>
+                                    <li class="mb-2">
                                         <a href="{{(route('users.viewall'))}}" style="text-decoration:none;">
                                     <span class="blue-text">
                                         <i class="fas fa-chevron-right"></i>
                                     </span>
                                             &nbsp;
-                                            <span class="black-text">
-                                        View & Edit Users
-                                    </span>
+                                            <span class="black-text">Manage Users</span>
                                         </a>
-                                    </li>
-                                    <li class="mb-2">
-                                        <a href="{{route('staff.feedback.index')}}" style="text-decoration:none;"><span
-                                                class="blue-text"><i class="fas fa-chevron-right"></i></span> &nbsp;
-                                            <span
-                                                class="black-text">View Feedback</span></a>
                                     </li>
                                     <li class="mb-2">
                                         <a href="{{(route('dashboard.upload'))}}" style="text-decoration:none;">
@@ -636,9 +640,7 @@
                                         <i class="fas fa-chevron-right"></i>
                                     </span>
                                             &nbsp;
-                                            <span class="black-text">
-                                        Upload Files
-                                    </span>
+                                            <span class="black-text">File Uploader</span>
                                         </a>
                                     </li>
                                 </ul>

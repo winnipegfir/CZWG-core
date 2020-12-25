@@ -3,22 +3,22 @@
 namespace App\Http\Controllers\Events;
 
 use App\Http\Controllers\Controller;
+use App\Models\AtcTraining\RosterMember;
 use App\Models\Events\ControllerApplication;
-use App\Models\Users\User;
 use App\Models\Events\Event;
 use App\Models\Events\EventConfirm;
-use App\Models\Events\EventUpdate;
 use App\Models\Events\EventPosition;
-use App\Models\AtcTraining\RosterMember;
+use App\Models\Events\EventUpdate;
 use App\Models\Publications\UploadedImage;
 use App\Models\Settings\AuditLogEntry;
-use Illuminate\Http\Request;
+use App\Models\Users\User;
+use App\Notifications\events\EventSignup;
 use Auth;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-use App\Notifications\events\EventSignup;
 
 class EventController extends Controller
 {
@@ -28,11 +28,12 @@ class EventController extends Controller
     public function index()
     {
         $events = Event::cursor()->filter(function ($event) {
-            return !$event->event_in_past();
-        })->sortByDesc('start_timestamp');
+            return ! $event->event_in_past();
+        })->sortBy('start_timestamp');
         $pastEvents = Event::cursor()->filter(function ($event) {
             return $event->event_in_past();
-        })->sortByDesc('start_timestamp');
+        })->sortBy('start_timestamp');
+
         return view('events.index', compact('events', 'pastEvents'));
     }
 
@@ -43,19 +44,31 @@ class EventController extends Controller
         $updates = $event->updates;
         if (Auth::check() && ControllerApplication::where('user_id', Auth::id())->where('event_id', $event->id)) {
             $app = ControllerApplication::where('user_id', Auth::id())->where('event_id', $event->id)->first();
+
             return view('events.view', compact('event', 'updates', 'app', 'timeNow'));
         }
-
 
         return view('events.view', compact('event', 'updates', 'timeNow'));
     }
 
+    public function viewControllers()
+    {
+        $events = Event::where('start_timestamp', '>', Carbon::now())->get();
+        $positions = EventPosition::all();
+
+        foreach ($events as $e) {
+            $controllers = EventConfirm::where('event_id', $e->id)->get()->sortBy('start_timestamp');
+            $e->{'controllers'} = $controllers;
+        }
+
+        return view('events.controllers', compact('events', 'positions'));
+    }
 
     public function controllerApplicationAjaxSubmit(Request $request)
     {
         $this->validate($request, [
             'availability_start' => 'required',
-            'availability_end' => 'required'
+            'availability_end' => 'required',
         ]);
         $application = new ControllerApplication([
             'user_id' => Auth::id(),
@@ -68,86 +81,87 @@ class EventController extends Controller
         ]);
         $application->save();
         $webhook = $application->discord_webhook();
-        if (!$webhook) {
+        if (! $webhook) {
             AuditLogEntry::insert(Auth::user(), 'Webhook failed', Auth::user(), 0);
         }
 
         if (Auth::user()->gdpr_subscribed_emails == 1) {
             $application->user->notify(new EventSignup($application, $event_id = $request->get('event_id')));
         }
+
         return redirect()->back()->with('success', 'Thanks for applying! If you need to make any adjustments to your application, please <a href='.config('app.url').'/staff>contact the Events Coordinator.');
     }
 
     public function viewApplications($id)
     {
+        $event = Event::where('id', $id)->firstOrFail();
+        $applications = $event->controllerApplications;
 
-      $event = Event::where('id', $id)->firstOrFail();
-      $applications = $event->controllerApplications;
-
-      return view('admin.events.applications', compact('applications', 'event'));
+        return view('admin.events.applications', compact('applications', 'event'));
     }
 
     public function confirmController(Request $request, $id)
     {
-      $this->validate($request, [
-          'start_timestamp' => 'required',
-          'end_timestamp' => 'required',
-          'position' => 'required'
-      ]);
+        $this->validate($request, [
+            'start_timestamp' => 'required',
+            'end_timestamp' => 'required',
+            'position' => 'required',
+        ]);
 
-      $event = Event::where('id', $id)->firstorFail();
-      $controllerconfirm = EventConfirm::create([
-          'event_id' => $event->id,
-          'user_id' => $request->input('user_cid'),
-          'start_timestamp' => $request->input('start_timestamp'),
-          'end_timestamp' => $request->input('end_timestamp'),
-          'airport' => $request->input('airport'),
-          'position' => $request->input('position'),
-      ]);
-      $applications = ControllerApplication::where('user_id', $request->input('user_cid'))->firstorFail();
-      $applications->delete();
+        $event = Event::where('id', $id)->firstorFail();
+        $controllerconfirm = EventConfirm::create([
+            'event_id' => $event->id,
+            'user_id' => $request->input('user_cid'),
+            'start_timestamp' => $request->input('start_timestamp'),
+            'end_timestamp' => $request->input('end_timestamp'),
+            'airport' => $request->input('airport'),
+            'position' => $request->input('position'),
+        ]);
+        $applications = ControllerApplication::where('user_id', $request->input('user_cid'))->firstorFail();
+        $applications->delete();
 
-      return redirect()->route('events.admin.view', $event->slug)->with('success', 'Controller Confirmed for Event!');
+        return redirect()->route('events.admin.view', $event->slug)->with('success', 'Controller Confirmed for Event!');
     }
 
     public function addController(Request $request, $id)
     {
-      $this->validate($request, [
-          'start_timestamp' => 'required',
-          'end_timestamp' => 'required',
-          'position' => 'required'
-      ]);
-      $event = Event::where('id', $id)->firstorFail();
-      $user = User::where('id', $request->input('newcontroller'))->first();
-      $controllerconfirm = EventConfirm::create([
-          'event_id' => $event->id,
-          'user_id' => $request->input('user_cid'),
-          'start_timestamp' => $request->input('start_timestamp'),
-          'end_timestamp' => $request->input('end_timestamp'),
-          'airport' => $request->input('airport'),
-          'position' => $request->input('position'),
-      ]);
+        $this->validate($request, [
+            'start_timestamp' => 'required',
+            'end_timestamp' => 'required',
+            'position' => 'required',
+        ]);
+        $event = Event::where('id', $id)->firstorFail();
+        $user = User::where('id', $request->input('newcontroller'))->first();
+        $controllerconfirm = EventConfirm::create([
+            'event_id' => $event->id,
+            'user_id' => $request->input('user_cid'),
+            'start_timestamp' => $request->input('start_timestamp'),
+            'end_timestamp' => $request->input('end_timestamp'),
+            'airport' => $request->input('airport'),
+            'position' => $request->input('position'),
+        ]);
 
-      return redirect()->route('events.admin.view', $event->slug)->with('success', 'Controller Confirmed for Event!');
+        return redirect()->route('events.admin.view', $event->slug)->with('success', 'Controller Confirmed for Event!');
     }
 
     public function deleteController(Request $request, $cid)
     {
+        $controller = EventConfirm::where([
+            ['user_id', $cid],
+            ['event_id', $request->input('id')],
+        ])->firstorFail();
+        $controller->delete();
 
-      $controller = EventConfirm::where([
-        ['user_id', $cid],
-        ['event_id', $request->input('id')]
-      ])->firstorFail();
-      $controller->delete();
-
-      return redirect()->back()->with('success', 'Controller has been removed from the event!');
-}
+        return redirect()->back()->with('success', 'Controller has been removed from the event!');
+    }
 
     public function adminIndex()
     {
         $events = Event::all()->sortByDesc('created_at');
+
         return view('admin.events.index', compact('events'));
     }
+
     public function adminViewEvent($slug)
     {
         $event = Event::where('slug', $slug)->firstOrFail();
@@ -160,10 +174,12 @@ class EventController extends Controller
 
         return view('admin.events.view', compact('event', 'applications', 'updates', 'eventroster', 'rosterMembers', 'users', 'positions'));
     }
+
     public function adminCreateEvent()
     {
         return view('admin.events.create');
     }
+
     public function adminCreateEventPost(Request $request)
     {
         //Define validator messages
@@ -179,7 +195,7 @@ class EventController extends Controller
             'image' => 'mimes:jpeg,jpg,png,gif',
             'description' => 'required',
             'start' => 'required',
-            'end' => 'required'
+            'end' => 'required',
 
         ], $messages);
         //Redirect if fails
@@ -199,7 +215,7 @@ class EventController extends Controller
         $event->user_id = Auth::id();
         //Upload image if it exists
         if ($request->file('image')) {
-            $basePath = 'public/files/'.Carbon::now()->toDateString().'/'.rand(1000,2000);
+            $basePath = 'public/files/'.Carbon::now()->toDateString().'/'.rand(1000, 2000);
             $path = $request->file('image')->store($basePath);
             $event->image_url = Storage::url($path);
         }
@@ -219,6 +235,7 @@ class EventController extends Controller
         //Redirect
         return redirect()->route('events.admin.view', $event->slug)->with('success', 'Event created!');
     }
+
     public function adminDeleteEvent($slug)
     {
         $event = Event::where('slug', $slug)->firstOrFail();
@@ -229,6 +246,7 @@ class EventController extends Controller
         $confirmed_controllers->delete();
         $updates->delete();
         $event->delete();
+
         return redirect()->route('events.admin.index')->with('info', 'Event deleted.');
     }
 
@@ -248,7 +266,7 @@ class EventController extends Controller
             'image' => 'mimes:jpeg,jpg,png,gif',
             'description' => 'required',
             'start' => 'required',
-            'end' => 'required'
+            'end' => 'required',
         ], $messages);
 
         //Redirect if fails
@@ -271,7 +289,7 @@ class EventController extends Controller
 
         //Upload image if it exists
         if ($request->file('image')) {
-            $basePath = 'public/files/'.Carbon::now()->toDateString().'/'.rand(1000,2000);
+            $basePath = 'public/files/'.Carbon::now()->toDateString().'/'.rand(1000, 2000);
             $path = $request->file('image')->store($basePath);
             $event->image_url = Storage::url($path);
         }
@@ -316,7 +334,7 @@ class EventController extends Controller
         //Validate
         $validator = Validator::make($request->all(), [
             'updateTitle' => 'required|max:100',
-            'updateContent' => 'required'
+            'updateContent' => 'required',
         ], $messages);
 
         //Redirect if fails
@@ -350,7 +368,7 @@ class EventController extends Controller
         $app->delete();
 
         //Redirect
-        return redirect()->route('event.viewapplications', Event::where('slug', $event_slug)->firstOrFail()->id)->with('info', 'Controller application '. User::where('id', $app->user_id)->first()->fullName('FLC'). ' has been deleted!');
+        return redirect()->route('event.viewapplications', Event::where('slug', $event_slug)->firstOrFail()->id)->with('info', 'Controller application '.User::where('id', $app->user_id)->first()->fullName('FLC').' has been deleted!');
     }
 
     public function adminDeleteUpdate($event_slug, $update_id)
@@ -362,6 +380,6 @@ class EventController extends Controller
         $update->delete();
 
         //Redirect
-        return redirect()->route('events.admin.view', $event_slug)->with('info', 'Update \''.$update->title. '\' has been deleted!');
+        return redirect()->route('events.admin.view', $event_slug)->with('info', 'Update \''.$update->title.'\' has been deleted!');
     }
 }

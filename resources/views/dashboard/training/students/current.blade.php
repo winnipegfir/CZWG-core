@@ -9,7 +9,7 @@
 @section('content')
     @include('includes.trainingMenu')
     <div class="container" style="margin-top: 20px;">
-        <h1>Students <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#newStudent" style="float: right;">Add New Student</button></h1>
+        <h1 class="font-weight-bold blue-text">Students <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#newStudent" style="float: right;">Add New Student</button></h1>
 
         <hr>
         <table id="dataTable" class="table table-hover">

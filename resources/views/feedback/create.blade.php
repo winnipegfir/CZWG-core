@@ -1,4 +1,6 @@
 @extends('layouts.master')
+@section('title', 'Submit Feedback - Winnipeg FIR')
+@section('description', 'Submit feedback for our controllers')
 
 @section('content')
     <div class="container py-4">

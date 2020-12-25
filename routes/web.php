@@ -11,10 +11,9 @@
 |
 */
 
-
 //ALL Public Views
 Route::get('/', 'HomeController@view')->name('index');
-Route::get('/airports', 'HomeController@airports')->name('airports');
+Route::view('/airports', 'airports')->name('airports');
 Route::get('/nate', 'HomeController@nate')->name('nate');
 Route::get('/roster', 'AtcTraining\RosterController@showPublic')->name('roster.public');
 Route::get('/roster/{id}', 'Users\UserController@viewProfile');
@@ -23,18 +22,27 @@ Route::get('/join', 'AtcTraining\ApplicationsController@joinWinnipeg')->name('jo
 Route::get('/staff', 'Users\StaffListController@index')->name('staff');
 Route::get('/policies', 'Publications\PoliciesController@index')->name('policies');
 Route::get('/meetingminutes', 'News\NewsController@minutesIndex')->name('meetingminutes');
-Route::get('/bookings', 'ControllerBookings\ControllerBookingsController@indexPublic')->name('controllerbookings.public');
 Route::view('/privacy', 'privacy')->name('privacy');
 Route::get('/yourfeedback', 'Feedback\FeedbackController@yourFeedback')->name('yourfeedback');
-Route::view('/changelog', 'changelog')->name('changelog');
 Route::get('/events', 'Events\EventController@index')->name('events.index');
 Route::get('/events/{slug}', 'Events\EventController@viewEvent')->name('events.view');
 Route::view('/about', 'about')->name('about');
 Route::view('/branding', 'branding')->name('branding');
-Route::get('/news/{id}', 'News\NewsController@viewArticlePublic')->name('news.articlepublic')->where('id', '[0-9]+');
 Route::get('/news/{slug}', 'News\NewsController@viewArticlePublic')->name('news.articlepublic');
 Route::get('/news', 'News\NewsController@viewAllPublic')->name('news');
+Route::get('/training', 'AtcTraining\TrainingController@trainingTime')->name('training');
+Route::view('/bill', 'bill')->name('bill');
+Route::view('/wpg', 'wpg')->name('wpg');
+Route::view('/yearend', 'yearend')->name('yearend');
 
+//Redirects
+Route::get('/merch', function () {
+    return redirect()->to('https://www.designbyhumans.com/shop/WinnipegFIR');
+});
+
+Route::get('/github', function () {
+    return redirect()->to('https://github.com/winnipegfir/CZWG-core');
+});
 
 //Authentication
 
@@ -49,7 +57,6 @@ Route::group(['middleware' => 'auth'], function () {
     //Privacy accept
     Route::get('/privacyaccept', 'Users\UserController@privacyAccept');
     Route::get('/privacydeny', 'Users\UserController@privacyDeny');
-
 
     //Visiting/Join Applications
     Route::group(['middleware' => 'notcertified'], function () {
@@ -71,6 +78,7 @@ Route::group(['middleware' => 'auth'], function () {
             //View Feedback
             Route::get('/feedback', 'Feedback\FeedbackController@index')->name('staff.feedback.index');
             Route::get('/feedback/controller/{id}', 'Feedback\FeedbackController@viewControllerFeedback')->name('staff.feedback.controller');
+            Route::post('/feedback/controller/{id}', 'Feedback\FeedbackController@editControllerFeedback')->name('staff.feedback.controller.edit');
             Route::get('/feedback/controller/{id}/approve', 'Feedback\FeedbackController@approveControllerFeedback');
             Route::get('/feedback/controller/{id}/deny', 'Feedback\FeedbackController@denyControllerFeedback');
             Route::get('/feedback/controller/{id}/delete', 'Feedback\FeedbackController@deleteControllerFeedback');
@@ -108,6 +116,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     //User Event Applications
     Route::post('/dashboard/events/controllerapplications/ajax', 'Events\EventController@controllerApplicationAjaxSubmit')->name('events.controllerapplication.ajax');
+    Route::get('/dashboard/events/view', 'Events\EventController@viewControllers');
 
     //Staff Events
     Route::group(['prefix' => 'admin/events', 'middleware' => 'staff'], function () {
@@ -138,6 +147,7 @@ Route::group(['middleware' => 'auth'], function () {
             if ($user->isAvatarDefault()) {
                 return true;
             }
+
             return false;
         });
 
@@ -207,7 +217,6 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/{id}/email', 'Users\UserController@emailStore')->name('users.email.store');
     });
 
-
     //Feedback
     Route::get('/feedback', 'Feedback\FeedbackController@create')->name('feedback.create');
     Route::post('/feedback', 'Feedback\FeedbackController@createPost')->name('feedback.create.post');
@@ -226,19 +235,32 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/', 'AtcTraining\CBTController@index')->name('cbt.index');
         Route::get('/module', 'AtcTraining\CBTController@moduleindex')->name('cbt.module');
         Route::get('/module/view/{id}/{progress}', 'AtcTraining\CBTController@viewmodule')->name('cbt.module.view');
+        Route::get('/module/finish/{id}', 'ATCTraining\CBTController@completeModule')->name('cbt.module.complete');
         Route::get('/exam', 'AtcTraining\CBTController@examindex')->name('cbt.exam');
         Route::get('/exam/start/{id}', 'AtcTraining\CBTController@startExam')->name('cbt.exam.begin');
         Route::get('/exam/{id}', 'AtcTraining\CBTController@exam')->name('cbt.exam.start');
-        Route::post('exam/save/{id}', 'AtcTraining\CBTController@saveAnswer')->name('cbt.exam.answer');
+        Route::post('exam/grade/{id}', 'AtcTraining\CBTController@gradeExam')->name('cbt.exam.grade');
+        Route::get('exam/results/{id}/{sid}', 'AtcTraining\CBTController@examResults')->name('cbt.exam.results');
+        //Mentor
+        Route::group(['middleware' => 'mentor'], function () {
+            Route::get('/moduleadmin', 'AtcTraining\CBTController@moduleindexadmin')->name('cbt.module.admin');
+        });
         //Instructor
         Route::group(['middleware' => 'instructor'], function () {
-            Route::post('/exam/assign', 'AtcTraining\CBTController@examassign')->name('cbt.exam.assign');
+            Route::post('/exam/assign', 'AtcTraining\TrainingController@assignExam')->name('cbt.exam.assign');
             Route::post('/module/assign', 'AtcTraining\CBTController@moduleassign')->name('cbt.module.assign');
-
+            Route::get('/examadmin', 'AtcTraining\CBTController@examadminview')->name('cbt.exam.adminview');
+            Route::post('/addexam', 'AtcTraining\CBTController@addExam')->name('cbt.exam.add');
+            Route::get('/examadmin/view/{id}', 'AtcTraining\CBTController@questionBank')->name('cbt.exam.questions');
+            Route::get('/examadmin/unassign/{id}', 'AtcTraining\TrainingController@unassignExam')->name('cbt.exam.unassign');
+            Route::get('/module/edit/{id}', 'AtcTraining\CBTController@editModule')->name('cbt.module.edit');
         });
         //Staff/Admin
         Route::group(['middleware' => 'staff'], function () {
-          Route::get('/module/admin/{id}', 'AtcTraining\CBTController@viewAdminModule')->name('cbt.module.view.admin');
+            Route::get('/module/admin/{id}', 'AtcTraining\CBTController@viewAdminModule')->name('cbt.module.view.admin');
+            Route::post('/examadmin/add/{id}', 'AtcTraining\CBTController@addQuestion')->name('cbt.exam.question.add');
+            Route::post('/examadmin/update/{id}', 'AtcTraining\CBTController@updateQuestion')->name('cbt.exam.question.update');
+            Route::get('/examadmin/delete/{id}', 'AtcTraining\CBTController@deleteQuestion')->name('cbt.exam.question.delete');
             //  Route::get('/editmodules', 'AtcTraining\CBTController@adminModuleIndex')->name('cbt.admin.module');
             //  Route::get('/editexams', 'AtcTraining\CBTController@adminExamIndex')->name('cbt.admin.exam');
         });
@@ -275,13 +297,14 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/staff/{id}/delete', 'Users\StaffListController@deleteStaffMember')->name('settings.staff.deletemember');
             Route::get('/banner', 'Settings\SettingsController@banner')->name('settings.banner');
             Route::post('/banner', 'Settings\SettingsController@bannerEdit')->name('settings.banner.edit');
-
+            Route::get('/images', 'Settings\SettingsController@imagesIndex')->name('settings.images');
+            Route::post('images', 'Settings\SettingsController@uploadImage')->name('settings.images.upload');
+            Route::post('/images/edit/{id}', 'Settings\SettingsController@editImage')->name('settings.images.edit');
+            Route::get('/images/test/{id}', 'Settings\SettingsController@testImage')->name('settings.images.test');
+            Route::get('/images/delete/{id}', 'Settings\SettingsController@deleteImage')->name('settings.images.delete');
         });
-
-
     });
 });
-
 
 //NOT BEING USED CURRENTLY
 //Bookings
@@ -293,6 +316,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 //AtcTraining
 Route::get('/dashboard/training', 'AtcTraining\TrainingController@index')->name('training.index');
+Route::post('/training', 'AtcTraining\TrainingController@editTrainingTime')->middleware('staff')->name('waittime.edit');
 Route::group(['middleware' => 'instructor'], function () {
     Route::get('/dashboard/training/sessions', 'AtcTraining\TrainingController@instructingSessionsIndex')->name('training.instructingsessions.index');
     Route::get('/dashboard/training/sessions/{id}', 'AtcTraining\TrainingController@viewInstructingSession')->name('training.instructingsessions.viewsession');
@@ -302,6 +326,7 @@ Route::group(['middleware' => 'instructor'], function () {
     Route::get('/dashboard/training/students/current', 'AtcTraining\TrainingController@currentStudents')->name('training.students.current');
     Route::get('/dashboard/training/students/new', 'AtcTraining\TrainingController@newStudents')->name('training.students.new');
     Route::get('/dashboard/training/students/completed', 'AtcTraining\TrainingController@completedStudents')->name('training.students.completed');
+    Route::get('/dashboard/training/students/waitlist', 'AtcTraining\TrainingController@newStudents')->name('training.students.waitlist');
     Route::get('/dashboard/training/students/{id}', 'AtcTraining\TrainingController@viewStudent')->name('training.students.view');
     Route::post('/dashboard/training/students/{id}/assigninstructor', 'AtcTraining\TrainingController@assignInstructorToStudent')->name('training.students.assigninstructor');
     Route::post('/dashboard/training/students/{id}/setstatus', 'AtcTraining\TrainingController@changeStudentStatus')->name('training.students.setstatus');
@@ -309,6 +334,7 @@ Route::group(['middleware' => 'instructor'], function () {
     //  Route::get('/dashboard/trainingnotes/{id}/delete', 'AtcTraining\TrainingNotesController@delete')->name('trainingnotes.delete');
     Route::post('/dashboard/trainingnotes/add/{id}', 'AtcTraining\TrainingController@addNote')->name('add.trainingnote');
     Route::get('/dashboard/trainingnotes/create/{id}', 'AtcTraining\TrainingController@newNoteView')->name('view.add.note');
+    Route::post('/training/solorequest', 'AtcTraining\TrainingController@soloRequest')->name('training.solo.request');
 
     //AtcTraining
     Route::post('/dashboard/training/instructors', 'AtcTraining\TrainingController@addInstructor')->name('training.instructors.add');

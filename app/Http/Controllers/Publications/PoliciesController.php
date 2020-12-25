@@ -3,14 +3,13 @@
 namespace App\Http\Controllers\Publications;
 
 use App\Http\Controllers\Controller;
-use App\Models\Settings\AuditLogEntry;
 use App\Mail\EmailAnnouncementEmail;
 use App\Models\News\News;
 use App\Models\Publications\Policy;
 use App\Models\Publications\PolicySection;
+use App\Models\Settings\AuditLogEntry;
 use App\Models\Users\User;
 use Auth;
-use function GuzzleHttp\Promise\queue;
 use Illuminate\Http\Request;
 use Mail;
 
@@ -51,7 +50,7 @@ class PoliciesController extends Controller
             return back()->with('error', 'You need to select a section!');
         }
 
-        if($request->get('date')) {
+        if ($request->get('date')) {
             $date = $request->get('date');
         } else {
             $date = date('Y-m-d');
@@ -123,7 +122,7 @@ class PoliciesController extends Controller
                 'published' => date('Y-m-d'),
                 'type' => 'NoEmail',
                 'user_id' => Auth::user()->id,
-                'slug' =>$slug
+                'slug' =>$slug,
             ]);
             $news->save();
         }
@@ -154,7 +153,7 @@ class PoliciesController extends Controller
             return back()->with('error', 'You need to select a section!');
         }
 
-        if($request->get('date')) {
+        if ($request->get('date')) {
             $date = $request->get('date');
         } else {
             $date = date('Y-m-d');
@@ -191,7 +190,6 @@ class PoliciesController extends Controller
         return redirect()->route('policies')->with('success', 'Policy deleted.');
     }
 
-
     public function addPolicySection(Request $request)
     {
         $this->validate($request, [
@@ -206,7 +204,7 @@ class PoliciesController extends Controller
 
         return redirect()
             ->route('policies')
-            ->with('success', 'New policy section: ' . $request->get('name') . ' created!');
+            ->with('success', 'New policy section: '.$request->get('name').' created!');
     }
 
     public function deletePolicySection($id)
@@ -214,8 +212,8 @@ class PoliciesController extends Controller
         $section = PolicySection::where('id', $id)->firstOrFail();
         $policies = Policy::all();
 
-        foreach($policies as $p) {
-            if($p->section_id == $id) {
+        foreach ($policies as $p) {
+            if ($p->section_id == $id) {
                 Policy::where('id', $p->id)
                     ->update(['section_id' => null, 'staff_only' => 1]);
             }
@@ -224,13 +222,13 @@ class PoliciesController extends Controller
         $entry = new AuditLogEntry([
             'user_id' => Auth::user()->id,
             'affected_id' => 1,
-            'action' => 'DELETE POLICY SECTION ' .$section->section_name . '('.$section->id.')',
+            'action' => 'DELETE POLICY SECTION '.$section->section_name.'('.$section->id.')',
             'time' => date('Y-m-d H:i:s'),
             'private' => 0,
         ]);
         $entry->save();
         $section->delete();
 
-        return redirect()->route('policies')->with('success', 'Policy section ' . $section->section_name . ' deleted.');
+        return redirect()->route('policies')->with('success', 'Policy section '.$section->section_name.' deleted.');
     }
 }

@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('title', $id.' - Winnipeg FIR ')
-@section('description', $id.'\'s user profile.')
+@section('description', $id.'\'s user profile')
 
 <style>
     .flex-container {

@@ -3,12 +3,10 @@
 namespace App\Http\Controllers\Users;
 
 use App\Http\Controllers\Controller;
-use App\Models\Settings\AuditLogEntry;
 use App\Models\AtcTraining\Instructor;
 use App\Models\Users\StaffGroup;
 use App\Models\Users\StaffMember;
 use App\Models\Users\User;
-use Auth;
 use Illuminate\Http\Request;
 
 class StaffListController extends Controller
@@ -19,18 +17,18 @@ class StaffListController extends Controller
 
         // Instructor list
         $instructors_temp = Instructor::all(); // Temp
-        $instructors = array(); // Actual
+        $instructors = []; // Actual
 
         // Sort assessors to top of array
         foreach ($instructors_temp as $instructor) {
-            if ($instructor->qualification == "Assessor") {
+            if ($instructor->qualification == 'Assessor') {
                 array_push($instructors, $instructor);
             }
         }
 
         // Sort the instructors at the bottom of the array
         foreach ($instructors_temp as $instructor) {
-            if ($instructor->qualification == "Instructor") {
+            if ($instructor->qualification == 'Instructor') {
                 array_push($instructors, $instructor);
             }
         }
@@ -51,22 +49,23 @@ class StaffListController extends Controller
 
     public function addStaffMember(Request $request)
     {
-      $this->validate($request, [
-          'position' => 'required',
-          'shortform' => 'required',
-          'group' => 'required'
-      ]);
-      $user = User::whereId($request->get('newstaff'))->first();
-      $addstaff = StaffMember::create([
-          'user_id' => $request->input('newstaff'),
-          'position' => $request->input('position'),
-          'shortform' => $request->input('shortform'),
-          'group_id' => $request->input('group'),
-          'group' => 'Staff',
-          'description' => 'Create Description',
-          'email' => 'user@user.com',
-      ]);
-      return redirect()->back()->with('success', 'Staff member '.$addstaff->shortform.' created!');
+        $this->validate($request, [
+            'position' => 'required',
+            'shortform' => 'required',
+            'group' => 'required',
+        ]);
+        $user = User::whereId($request->get('newstaff'))->first();
+        $addstaff = StaffMember::create([
+            'user_id' => $request->input('newstaff'),
+            'position' => $request->input('position'),
+            'shortform' => $request->input('shortform'),
+            'group_id' => $request->input('group'),
+            'group' => 'Staff',
+            'description' => 'Create Description',
+            'email' => 'user@user.com',
+        ]);
+
+        return redirect()->back()->with('success', 'Staff member '.$addstaff->shortform.' created!');
     }
 
     public function editStaffMember(Request $request, $id)
