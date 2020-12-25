@@ -82,26 +82,30 @@ class HomeController extends Controller
 
             curl_close($ch);
 
-            foreach ($resp->data as $w) {
-                switch ($w->icao) {
-                    case 'CYWG':
-                        $weatherArray[0] = $w;
-                        break;
-                    case 'CYXE':
-                        $weatherArray[1] = $w;
-                        break;
-                    case 'CYQT':
-                        $weatherArray[2] = $w;
-                        break;
-                    case 'CYQR':
-                        $weatherArray[3] = $w;
-                        break;
-                    case 'CYMJ':
-                        $weatherArray[4] = $w;
-                        break;
-                    case 'CYPG':
-                        $weatherArray[5] = $w;
-                        break;
+            $weatherArray = [];
+
+            if ($resp) {
+                foreach ($resp->data as $w) {
+                    switch ($w->icao) {
+                        case 'CYWG':
+                            $weatherArray[0] = $w;
+                            break;
+                        case 'CYXE':
+                            $weatherArray[1] = $w;
+                            break;
+                        case 'CYQT':
+                            $weatherArray[2] = $w;
+                            break;
+                        case 'CYQR':
+                            $weatherArray[3] = $w;
+                            break;
+                        case 'CYMJ':
+                            $weatherArray[4] = $w;
+                            break;
+                        case 'CYPG':
+                            $weatherArray[5] = $w;
+                            break;
+                    }
                 }
             }
 
