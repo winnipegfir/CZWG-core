@@ -38,7 +38,7 @@
             <p>When I took the role of Winnipeg Chief over a year ago, I had no idea how to even begin staffing up. We were surrounded by neighbouring 
             FIRs and ARTCCs with far more traffic, bigger airpots and more staff than we had - and what does a small FIR in the middle of Canada have 
             to offer compared to that?</p>
-            <p>Turns out, we have a lot to offer - and you all have let me to realize that over the past year. From that one span of a few weeks in early
+            <p>Turns out, we have a lot to offer - and you all have led me to realize that over the past year. From that one span of a few weeks in early
             2020, just before lockdowns across the world kept us all at home, Winnipeg went for the Iron Mic award - given to the FIR/ARTCC/vACC with the 
             most hours online every week - and despite our small roster, we had a week where we came in the top 15 in EVERY position on the network, and
             2nd place on Centre across VATSIM. It's amazing what can happen when you work as a team - and that Iron Mic run was just the start.</p>
