@@ -23,7 +23,7 @@
                 </tr>
             </thead>
             @if (count($students) < 1)
-            <font class="font-weight-bold">** There are no students in the waitlist!</b></font>
+            <font class="font-weight-bold">There are no students in the waitlist!</b></font>
             @else
             <tbody>
             @foreach ($students as $student)

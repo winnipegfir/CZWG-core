@@ -115,7 +115,7 @@
                             <a class="dropdown-item" href="{{route('news')}}">News</a>
                                 <a class="dropdown-item {{ Request::is('news') ? 'active white-text' : '' }}" href="{{route('news.index')}}">Manage News</a>
                             @else
-                                <a href="{{route('events.index')}}" class="nav-link">News</a>
+                                <a href="{{route('news')}}" class="nav-link">News</a>
                             @endif          
                         </li>
                         <li class="nav-item {{ Request::is('events/*') || Request::is('events') ? 'active' : '' }}">
@@ -191,8 +191,13 @@
 
                             <div class="dropdown-menu dropdown-menu-right dropdown-default py-0" aria-labelledby="navbarDropdownMenuLink-333">
                                 <a class="dropdown-item {{ Request::is('dashboard') || Request::is('dashboard/*') ? 'active white-text' : '' }}" href="{{route('dashboard.index')}}">
-                                    <i class="fa fa-tachometer-alt mr-2"></i>&nbsp;Dashboard
+                                    <i class="fa fa-tachometer-alt mr-2"></i>Dashboard
                                 </a>
+                                @if(!Auth::check() || Auth::user()->permissions >= 4)
+                                <a class="dropdown-item" href="{{route('training.index')}}">
+                                    <i class="fa fa-graduation-cap mr-2" style="margin-left: -1px"></i>1Winnipeg
+                                </a>
+                                @endif
                                 <a class="dropdown-item red-text" href="{{route('auth.logout')}}">
                                     <i class="fa fa-sign-out-alt mr-2"></i>&nbsp;Logout
                                 </a>

@@ -3,11 +3,6 @@
 @section('content')
 
 <div class="container py-4">
-    @if (Auth::check() && Auth::user()->permissions < 4)
-    <h1 class="blue-text font-weight-bold">Letter to the FIR</h1>
-    <p>As the year comes to a close, please check back soon for FIR Chief Nate Power's letter to the FIR.</p>
-    <a href="{{route('index')}}" class="blue-text" style="font-size: 1.2em"> <i class="fas fa-arrow-left"></i> Winnipeg FIR</a>
-    @else
     <a href="{{route('index')}}" class="blue-text" style="font-size: 1.2em"> <i class="fas fa-arrow-left"></i> Winnipeg FIR</a>
     <h1 class="font-weight-bold blue-text">A Letter from Nate</h1>
     <br>
@@ -38,7 +33,7 @@
             <p>When I took the role of Winnipeg Chief over a year ago, I had no idea how to even begin staffing up. We were surrounded by neighbouring 
             FIRs and ARTCCs with far more traffic, bigger airpots and more staff than we had - and what does a small FIR in the middle of Canada have 
             to offer compared to that?</p>
-            <p>Turns out, we have a lot to offer - and you all have let me to realize that over the past year. From that one span of a few weeks in early
+            <p>Turns out, we have a lot to offer - and you all have led me to realize that over the past year. From that one span of a few weeks in early
             2020, just before lockdowns across the world kept us all at home, Winnipeg went for the Iron Mic award - given to the FIR/ARTCC/vACC with the 
             most hours online every week - and despite our small roster, we had a week where we came in the top 15 in EVERY position on the network, and
             2nd place on Centre across VATSIM. It's amazing what can happen when you work as a team - and that Iron Mic run was just the start.</p>
@@ -79,6 +74,4 @@
         <img src="https://i.imgur.com/7xuoHQ9.gif" style="width:10%">
     </div>
 </div>
-
-@endif
 @endsection
