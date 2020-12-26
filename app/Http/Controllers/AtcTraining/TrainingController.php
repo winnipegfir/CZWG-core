@@ -213,7 +213,8 @@ class TrainingController extends Controller
     public function assignExam(Request $request)
     {
         $student = Student::whereId($request->input('studentid'))->first();
-        @if ($student->instructor == NULL) {
+        
+        if ($student->instructor == NULL) {
             return redirect()->back()->withError('This student needs an instructor for an exam to be assigned!');
         }
         $check = CbtExamResult::where([
