@@ -47,7 +47,7 @@
         <hr>
         <h5 class="blue-text font-weight-bold">To the VATCAN Staff,</h5>
         <br>
-            <p>It wasn't even a year ago that I was in charge of this entire division - and being VATCAN1 really showed me the power this country has on
+            <p>It was just under two years ago that I was in charge of this entire division - and being VATCAN1 really showed me the power this country has on
             the VATSIM network - we may not be nearly as busy as our friends south of the border in VATUSA, but Canada has always had strong numbers
             on this network.</p>
             <p>Since leaving my position as a Division Staff member for the role I've had ever since, Winnipeg and I been lucky enough to have the continued
