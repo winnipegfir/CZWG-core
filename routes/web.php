@@ -334,7 +334,8 @@ Route::group(['middleware' => 'instructor'], function () {
     //  Route::get('/dashboard/trainingnotes/{id}/delete', 'AtcTraining\TrainingNotesController@delete')->name('trainingnotes.delete');
     Route::post('/dashboard/trainingnotes/add/{id}', 'AtcTraining\TrainingController@addNote')->name('add.trainingnote');
     Route::get('/dashboard/trainingnotes/create/{id}', 'AtcTraining\TrainingController@newNoteView')->name('view.add.note');
-    Route::post('/training/solorequest', 'AtcTraining\TrainingController@soloRequest')->name('training.solo.request');
+    Route::post('/training/solorequest/{id}', 'AtcTraining\TrainingController@soloRequest')->name('training.solo.request');
+    Route::post('/training/soloprocess/{id}', 'AtcTraining\TrainingController@processSolo')->name('training.solo.process');
 
     //AtcTraining
     Route::post('/dashboard/training/instructors', 'AtcTraining\TrainingController@addInstructor')->name('training.instructors.add');

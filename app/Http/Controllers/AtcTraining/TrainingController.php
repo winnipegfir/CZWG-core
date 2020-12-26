@@ -9,6 +9,7 @@ use App\Models\AtcTraining\CBT\CbtExamAnswer;
 use App\Models\AtcTraining\CBT\CbtExamAssign;
 use App\Models\AtcTraining\CBT\CbtExamQuestion;
 use App\Models\AtcTraining\CBT\CbtExamResult;
+use App\Models\AtcTraining\Roster;
 use App\Models\AtcTraining\Instructor;
 use App\Models\AtcTraining\InstructorStudents;
 use App\Models\AtcTraining\RosterMember;
@@ -32,8 +33,9 @@ class TrainingController extends Controller
         if ($instructor) {
             $yourStudents = Student::where('instructor_id', $instructor->id)->get();
         }
+        $soloreq = SoloRequest::where('approved', '0')->get();
 
-        return view('dashboard.training.indexinstructor', compact('yourStudents'));
+        return view('dashboard.training.indexinstructor', compact('yourStudents', 'soloreq'));
     }
 
     public function newNoteView($id)
@@ -169,10 +171,64 @@ class TrainingController extends Controller
         return view('dashboard.training.students.viewstudent', compact('solo', 'student', 'instructors', 'completedexams', 'exams', 'openexams'));
     }
 
-    public function soloRequest(Request $request)
+    public function soloRequest(Request $req, $id)
     {
-        return redirect()->back()->withError('This function has not been implemented yet!');
+        $student = Student::whereId($id)->first();
+        SoloRequest::create([
+            'student_id' => $id,
+            'instructor_id' => $student->instructor->id,
+            'position' => $req->input('position'),
+            'approved' => '0',
+        ]);
+
+        return redirect()->back()->withSuccess('Solo request has been sent to CI!');
     }
+
+    public function processSolo(Request $req, $id)
+    {
+        $student = Student::whereId($id)->first();
+        $soloreq = SoloRequest::where([
+            'student_id' => $id,
+            'approved' => '0',
+        ])->first();
+
+        if ($req->input('approve') == '1') {
+            $soloreq->approved = '2';
+            $soloreq->save();
+            $roster = RosterMember::where('cid', $student->user->id)->first();
+            if ($req->input('position') == 'Delivery') {
+                $roster->del = '3';
+                $roster->save();
+            }
+            if ($req->input('position') == 'Ground') {
+                $roster->gnd = '3';
+                $roster->save();
+            }
+            if ($req->input('position') == 'Tower') {
+                $roster->twr = '3';
+                $roster->save();
+            }
+            if ($req->input('position') == 'Departure') {
+                $roster->dep = '3';
+                $roster->save();
+            }
+            if ($req->input('position') == 'Arrival') {
+                $roster->app = '3';
+                $roster->save();
+            }
+            if ($req->input('position') == 'Centre') {
+                $roster->ctr = '3';
+                $roster->save();
+            }
+            return redirect()->back()->withSuccess('Approved ' . $student->user->fullName('FLC') . ' for solo on ' . $req->input('position') . '!');
+        }
+        if ($req->input('approve') == '0') {
+            $soloreq->approved = '1';
+            $soloreq->save();
+            return redirect()->back()->withError('Solo denied for ' . $student->user->fullName('FLC') . '!');
+        }
+    }
+
 
     public function changeStudentStatus(Request $request, $id)
     {

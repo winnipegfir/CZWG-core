@@ -48,6 +48,43 @@
                 </div>
             </div>
             <div class="col">
+                @if (Auth::check())
+                    @if (Auth::user()->permissions >= 4)
+                <div class="card">
+                    <div class="card-header">
+                        Pending Solo Requests
+                    </div>
+
+                    <div class="card-body">
+                        @if (count($soloreq) < 1)
+                            There are no Solo Requests at this time! Check back later.
+                        @else
+
+                        @foreach ($soloreq as $solo)
+
+                               <div align="center">
+                              Student: {{$solo->student->user->fullName('FLC')}}<br>
+                              Position: {{$solo->position}}<br>
+                              Instructor: {{$solo->instructor->user->fullName('FL')}}<br>
+                                   <form action="{{route('training.solo.process', $solo->student->id)}}" method="POST" class="form-control">
+                                       <input type="hidden" name="position" value="{{$solo->position}}">
+                                       <select name="approve" class="custom-select form-group">
+                                           <option value="1">Approve</option>
+                                           <option value="0">Deny</option>
+                                       </select>
+                                       <button type="submit" class="form-control btn btn-primary">Submit</button>
+                                       @csrf
+                                   </form>
+                           </div>
+<br><br><br><br><br>
+                            <hr>
+                        @endforeach
+
+                        @endif
+                    </div>
+                </div>
+                    @endif
+                    @endif
             </div>
         </div>
         <br/>
