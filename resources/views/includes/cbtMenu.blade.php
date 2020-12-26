@@ -41,6 +41,11 @@
                   <a class="dropdown-item" href="{{route('cbt.exam')}}">Your Exams</a>
                   <a class="dropdown-item" href="{{route('cbt.exam.adminview')}}">Exam Admin</a>
               </li>
+              @if (Auth::user()->permissions >= 4)
+              <li class="nav-item">
+                <a class="nav-link {{ Request::is('training.index') ? 'active' : '' }}" href="{{route('training.index')}}">Instructor Dashboard</a>
+              </li>
+              @endif
           </ul>
       </div>
   </nav><br/>

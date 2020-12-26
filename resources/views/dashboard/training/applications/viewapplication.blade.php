@@ -99,7 +99,7 @@
                     Deny
                 </a>
             @endif
-            <a href="https://stats.vatsim.net/search_id.php?id={{$application->user->id}}" target="_blank" class="btn btn-info">View VATSIM Stats</a>
+            <a href="https://stats.vatsim.net/search_id.php?id={{$application->user->id}}" target="_blank" class="btn btn-primary">View VATSIM Stats</a>
         </div>
         <br/>
     </div>

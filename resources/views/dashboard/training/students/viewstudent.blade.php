@@ -256,12 +256,7 @@
                             </div>
                         </form>
                     </div>
-                </div><br>
-
-
-
-
-
+                </div>
 <br><br>
       </div>
     </div>
@@ -271,24 +266,17 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div align="center" class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Assign an Exam</h5><br>
-                    <h5>Note: if re-assigning an exam, old answers and result will be deleted!</h5>
-
-
+                    <h5 class="modal-title" id="exampleModalLongTitle">Assign an Exam</h5>
                 </div>
                 <div class="modal-body">
-
+                <p><i>Note: if re-assigning an exam, old answers and result will be deleted!</i></p>
                     <form method="POST" action="{{route('cbt.exam.assign')}}">
-                        <label>Student Name and CID</label><br>
-                        <input type="hidden" name="studentid" value="{{$student->id}}">
-                        {{$student->user->fullName('FLC')}}<br><br>
-                        <select name="examid">
+                        <select name="examid" class="custom-select">
                             @foreach ($exams as $e)
                                 <option value="{{$e->id}}">{{$e->name}}</option>
                             @endforeach
                         </select>
     @csrf
-
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-success form-control" type="submit" href="#">Assign</button>
@@ -306,19 +294,14 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div align="center" class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Solo Request</h5><br>
-                    <h5>This will generate a request to the CI for a solo certification.</h5>
-
-
-                </div>
+                    <h5 class="modal-title" id="exampleModalLongTitle">Solo Request</h5>
+                    </div>
+                    
                 <div class="modal-body">
-
+                <p>This will generate a request to the CI for a solo certification.</p>
                     <form method="POST" action="{{route('training.solo.request')}}">
-                        <label>Student Name and CID</label><br>
-                        <input type="hidden" name="studentid" value="{{$student->id}}">
-                        {{$student->user->fullName('FLC')}}<br><br>
                         @if ($student->user->rating_short == 'C1')
-                            <text class="font-weight-bold">**There are no Solo Certs available for this student!</text>
+                            <text class="font-weight-bold">There are no Solo Certs available for this student!</text>
                         @else
                             <select name="position">
                             @if ($student->user->rating_short == 'S1')

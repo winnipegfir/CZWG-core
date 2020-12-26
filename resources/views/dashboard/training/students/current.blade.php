@@ -21,7 +21,7 @@
                 </tr>
             </thead>
             @if (count($students) < 1)
-            <font class="font-weight-bold">** There are no students in this category!</b></font>
+            <font class="font-weight-bold">There are no students in this category!</b></font>
             @else
             <tbody>
             @foreach ($students as $student)
