@@ -31,7 +31,7 @@
         <h5 class="blue-text font-weight-bold">To the Winnipeg Controllers,</h5>
         <br>
             <p>When I took the role of Winnipeg Chief over a year ago, I had no idea how to even begin staffing up. We were surrounded by neighbouring 
-            FIRs and ARTCCs with far more traffic, bigger airpots and more staff than we had - and what does a small FIR in the middle of Canada have 
+            FIRs and ARTCCs with far more traffic, bigger airports and more staff than we had - and what does a small FIR in the middle of Canada have 
             to offer compared to that?</p>
             <p>Turns out, we have a lot to offer - and you all have led me to realize that over the past year. From that one span of a few weeks in early
             2020, just before lockdowns across the world kept us all at home, Winnipeg went for the Iron Mic award - given to the FIR/ARTCC/vACC with the 
