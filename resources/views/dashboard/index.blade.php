@@ -270,16 +270,6 @@
                          data-intro="Here you can view your certification status within CZWG.">
                         <div class="card-body">
                             <h3 class="font-weight-bold blue-text pb-2">Certification and Training</h3>
-
-                            @if (Auth::user()->permissions >= 3)
-                            <ul class="list-unstyled mt-2 mb-0">
-                                <li class="mb-2">
-                                    <a href="{{route('training.index')}}" style="text-decoration:none;"><span
-                                            class="blue-text"><i class="fas fa-chevron-right"></i></span> &nbsp; <span
-                                            class="black-text">Instructor Training System</span></a>
-                                </li>
-                            </ul>
-                            @endif
                             <h5 class="card-title">Status</h5>
                             <div class="card-text">
                                 <div class="d-flex flex-row justify-content-left">
@@ -599,7 +589,7 @@
                                         <a href="{{route('training.index')}}" style="text-decoration:none;"><span
                                                 class="blue-text"><i class="fas fa-chevron-right"></i></span> &nbsp;
                                             <span
-                                                class="black-text">1Winnipeg Training System (WIP)</span></a>
+                                                class="black-text">1Winnipeg Training System</span></a>
                                     </li>
                                     <li class="mb-2">
                                         <a href="{{route('roster.index')}}" style="text-decoration:none;"><span

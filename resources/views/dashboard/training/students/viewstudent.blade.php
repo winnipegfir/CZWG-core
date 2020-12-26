@@ -298,30 +298,29 @@
                     </div>
                     
                 <div class="modal-body">
-                <p>This will generate a request to the CI for a solo certification.</p>
                     <form method="POST" action="{{route('training.solo.request')}}">
-                        @if ($student->user->rating_short == 'C1')
-                            <text class="font-weight-bold">There are no Solo Certs available for this student!</text>
-                        @else
-                            <select name="position">
-                            @if ($student->user->rating_short == 'S1')
+                        <p>This will generate a request to the CI for a solo certification.</p>
+                            <select class="custom-select" name="position">
+                            @if ($student->user->rating_short >= '1')
                                 <option value="Delivery">Delivery Solo</option>
                                 <option value="Ground">Ground Solo</option>
                                 <option value="Tower">Tower Solo</option>
-                            @elseif ($student->user->rating_short == 'S2')
+                            @endif
+                            @if ($student->user->rating_short  >= '5')
                                 <option value="Departure">Departure Solo</option>
                                 <option value="Arrival">Arrival Solo</option>
-                            @elseif ($student->user->rating_short == 'S3')
+                            @endif
+                            @if ($student->user->rating_short  >= '6')
                                 <option value="Centre">Centre Solo</option>
                             @endif
                         </select>
-                            @endif
+                    </form>
                     @csrf
-
                 </div>
+
                 <div class="modal-footer">
                     <button class="btn btn-success form-control" type="submit" href="#">Send Request</button>
-                    <button class="btn btn-light" data-dismiss="modal" style="width:375px">Dismiss</button>
+                    <button class="btn btn-light" data-dismiss="modal" style="width: 40%">Dismiss</button>
                     </form>
                 </div>
             </div>
