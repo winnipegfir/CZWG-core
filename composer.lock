@@ -1559,16 +1559,16 @@
         },
         {
             "name": "laravel-notification-channels/discord",
-            "version": "v1.2.0",
+            "version": "1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel-notification-channels/discord.git",
-                "reference": "7e4e28fea51101f7bd9c805c6b21f5bce965edec"
+                "reference": "7e88654a40aac1ce164194153b336c3f21c23636"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel-notification-channels/discord/zipball/7e4e28fea51101f7bd9c805c6b21f5bce965edec",
-                "reference": "7e4e28fea51101f7bd9c805c6b21f5bce965edec",
+                "url": "https://api.github.com/repos/laravel-notification-channels/discord/zipball/7e88654a40aac1ce164194153b336c3f21c23636",
+                "reference": "7e88654a40aac1ce164194153b336c3f21c23636",
                 "shasum": ""
             },
             "require": {
@@ -1578,11 +1578,11 @@
                 "illuminate/notifications": "^6.0 || ^7.0 || ^8.0",
                 "illuminate/queue": "^6.0 || ^7.0 || ^8.0",
                 "illuminate/support": "^6.0 || ^7.0 || ^8.0",
-                "php": "^7.2",
+                "php": "^7.2|^8.0",
                 "textalk/websocket": "^1.2"
             },
             "require-dev": {
-                "mockery/mockery": "^1.3",
+                "mockery/mockery": "^1.3.3",
                 "orchestra/testbench": "^5.0 || ^6.0",
                 "phpunit/phpunit": "^8.5 || ^9.0"
             },
@@ -1621,9 +1621,9 @@
             ],
             "support": {
                 "issues": "https://github.com/laravel-notification-channels/discord/issues",
-                "source": "https://github.com/laravel-notification-channels/discord/tree/v1.2.0"
+                "source": "https://github.com/laravel-notification-channels/discord/tree/1.3.0"
             },
-            "time": "2020-11-02T22:25:23+00:00"
+            "time": "2020-12-26T22:05:21+00:00"
         },
         {
             "name": "laravel/framework",
