@@ -109,6 +109,7 @@ class TrainingController extends Controller
         if ($check != null) {
             return redirect()->back()->withError('This student already exists in the system!');
         }
+        
         $instructor = null;
         if ($request->input('instructor' != 'unassign')) {
             $instructor = $request->input('instructor');
