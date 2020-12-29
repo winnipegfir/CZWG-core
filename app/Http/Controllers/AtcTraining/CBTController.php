@@ -179,7 +179,7 @@ class CBTController extends Controller
     {
         $subject = CbtExam::find($id);
         $questions = CbtExamQuestion::where('cbt_exam_id', $id)->orderByRaw('RAND()')->take(10)->get();
-        
+
         return view('dashboard.training.CBT.exams.exam', compact('subject', 'questions'));
     }
 
