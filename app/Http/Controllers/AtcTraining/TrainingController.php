@@ -105,15 +105,16 @@ class TrainingController extends Controller
 
     public function newStudent(Request $request)
     {
-        $check = Student::where('user_id', $request->input('student_id'));
+        $check = Student::where('user_id', $request->input('student_id'))->first();
         if ($check != null) {
             return redirect()->back()->withError('This student already exists in the system!');
         }
-        
+
         $instructor = null;
-        if ($request->input('instructor' != 'unassign')) {
+        if ($request->input('instructor') != 'unassign') {
             $instructor = $request->input('instructor');
         }
+
         $application = Application::create([
             'user_id' => $request->input('student_id'),
             'status' => '2',

@@ -65,7 +65,7 @@
                             @endforeach
                             </select>
                             <label class="form-control">Choose an Instructor</label>
-                            <select name="instructor_id" id="instructor_id" class="form-control">
+                            <select name="instructor" id="instructor" class="form-control">
                                 @foreach ($instructors as $i)
                                     <option value="{{$i->id}}">{{$i->user->id}} - {{$i->user->fullName('FL')}}</option>
                                 @endforeach
