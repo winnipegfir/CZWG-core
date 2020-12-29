@@ -18,11 +18,6 @@
                 <a class="nav-link active" id="home-tab" data-toggle="tab" href="#modules" role="tab" aria-controls="modules" aria-selected="true">Modules</a>
             </li>
             @endif
-            @if (Auth::user()->permissions >= 3)
-            <li class="nav-item">
-                <a class="nav-link" id="sprogress-tab" data-toggle="tab" href="#sprogress" role="tab" aria-controls="sprogress" aria-selected="false">Student Progress</a>
-            </li>
-            @endif
             @if (Auth::check() && Auth::user()->permissions >= 4)
             <li class="nav-item">
                 <a class="nav-link" id="addmodule-tab" data-toggle="tab" href="#addmodule" role="tab" aria-controls="addmodule" aria-selected="false">Add Module</a>
@@ -66,9 +61,11 @@
                     {{$module->cbt_exam_id}}
                     @endif
                 </td>
-              @if (Auth::user()->permissions >=4)
+              @if (Auth::user()->permissions >=3)
               <td>
-                <a href="{{route('cbt.module.edit', $module->id)}}">Edit</a> | <a href="#">Delete</a>
+                <a href="{{route('cbt.module.edit', $module->id)}}">View/Edit</a> @endif |
+                  @if (Auth::user()->permissions >= 4)
+                  <a href="#">Delete</a>
               </td>
               @endif
 
@@ -78,10 +75,6 @@
         </table>
       </div>
 
-          <!--TAB 2: Student Progress : Viewable by perm level 3 and up-->
-      <div class="tab-pane fade" id="sprogress" role="tabpanel" aria-labelledby="sprogress-tab"><br>
-        <!--List of students with active/completed modules, show overview of which ones and progress. Assign/Unassign modules-->
-      </div>
           <!--TAB 3: Add Module : Viewable by perm level 4 and up-->
      <div class="tab-pane fade" id="addmodule" role="tabpanel" aria-labelledby="addmodule-tab"><br>
         <!--Form for creating a new module-->

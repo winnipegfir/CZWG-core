@@ -258,11 +258,12 @@ Route::group(['middleware' => 'auth'], function () {
         //Staff/Admin
         Route::group(['middleware' => 'staff'], function () {
             Route::get('/module/admin/{id}', 'AtcTraining\CBTController@viewAdminModule')->name('cbt.module.view.admin');
+            Route::post('/lesson/add/{id}', 'AtcTraining\CbtController@addLesson')->name('cbt.lesson.add');
+            Route::get('/lesson/e/{id}', 'AtcTraining\CbtController@editLesson')->name('cbt.lesson.edit');
+            Route::post('/lesson/edit/{id}', 'AtcTraining\CbtController@processEditLesson')->name('cbt.lesson.submit');
             Route::post('/examadmin/add/{id}', 'AtcTraining\CBTController@addQuestion')->name('cbt.exam.question.add');
             Route::post('/examadmin/update/{id}', 'AtcTraining\CBTController@updateQuestion')->name('cbt.exam.question.update');
             Route::get('/examadmin/delete/{id}', 'AtcTraining\CBTController@deleteQuestion')->name('cbt.exam.question.delete');
-            //  Route::get('/editmodules', 'AtcTraining\CBTController@adminModuleIndex')->name('cbt.admin.module');
-            //  Route::get('/editexams', 'AtcTraining\CBTController@adminExamIndex')->name('cbt.admin.exam');
         });
     });
 

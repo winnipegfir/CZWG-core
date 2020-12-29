@@ -60,6 +60,36 @@ class CBTController extends Controller
         return view('dashboard.training.CBT.editmodule', compact('module', 'lessons'));
     }
 
+    public function addLesson(Request $req, $id)
+    {
+        $lesson = CbtModuleLesson::create([
+            'cbt_modules_id' => $id,
+            'lesson' => $req->input('lesson'),
+            'name' => 'Name your lesson',
+            'content_html' => 'Give your lesson some content! You can use HTML',
+            'created_by' => Auth::user()->id,
+            'updated_by' => Auth::user()->id,
+        ]);
+        return redirect()->route('cbt.lesson.edit', $lesson->id);
+    }
+
+    public function editLesson($id)
+    {
+        $lesson = CbtModuleLesson::whereId($id)->first();
+
+        return view('dashboard.training.CBT.editmodule2', compact('lesson'));
+    }
+
+    public function processEditLesson(Request $req, $id)
+    {
+        $lesson = CbtModuleLesson::whereId($id)->first();
+        $lesson->name = $req->input('name');
+        $lesson->content_html = $req->input('content');
+        $lesson->updated_by = Auth::user()->id;
+        $lesson->save();
+            return redirect()->route('cbt.module.edit', $lesson->cbt_modules_id)->withSuccess('Edited Lesson!');
+    }
+
     public function viewmodule($id, $progress)
     {
         if (Auth::user()->permissions >= 3) {
