@@ -105,11 +105,11 @@ class TrainingController extends Controller
 
     public function newStudent(Request $request)
     {
-         $check = Student::where('user_id', $request->input('student_id'));
+        $check = Student::where('user_id', $request->input('student_id'));
         if ($check != null) {
             return redirect()->back()->withError('This student already exists in the system!');
         }
-        
+
         $instructor = null;
         if ($request->input('instructor' != 'unassign')) {
             $instructor = $request->input('instructor');
@@ -218,8 +218,8 @@ class TrainingController extends Controller
     public function assignExam(Request $request)
     {
         $student = Student::whereId($request->input('studentid'))->first();
-        
-        if ($student->instructor == NULL) {
+
+        if ($student->instructor == null) {
             return redirect()->back()->withError('This student needs an instructor for an exam to be assigned!');
         }
         $check = CbtExamResult::where([
