@@ -4,10 +4,8 @@ namespace App\Models\AtcTraining\CBT;
 
 use App\Models\Users\User;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\HtmlString;
 use Parsedown;
-
 
 class CbtModuleLesson extends Model
 {

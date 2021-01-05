@@ -87,7 +87,8 @@ class CBTController extends Controller
         $lesson->content_html = $req->input('content');
         $lesson->updated_by = Auth::user()->id;
         $lesson->save();
-            return redirect()->route('cbt.module.edit', $lesson->cbt_modules_id)->withSuccess('Edited Lesson!');
+            
+        return redirect()->route('cbt.module.edit', $lesson->cbt_modules_id)->withSuccess('Edited Lesson!');
     }
 
     public function viewmodule($id, $progress)
