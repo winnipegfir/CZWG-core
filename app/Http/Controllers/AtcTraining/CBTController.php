@@ -455,6 +455,17 @@ class CBTController extends Controller
         return redirect()->back()->withError('This feature has not been implemented yet!');
     }
 
+    public function deleteExam($id)
+    {
+        CbtExamResult::where('cbt_exam_id', $id)->delete();
+        CbtExamAnswer::where('cbt_exam_id', $id)->delete();
+        CbtExamQuestion::where('cbt_exam_id', $id)->delete();
+        CbtExamAssign::where('cbt_exam_id', $id)->delete();
+        CbtExam::findOrFail($id)->delete();
+        
+        return redirect()->back()->withSuccess('Exam deleted!');
+    }
+
     public function getQuestions($id)
     {
         $subject = Subject::findOrFail($id);
@@ -473,10 +484,6 @@ class CBTController extends Controller
         $exam = CbtExam::whereId($id)->FirstorFail();
 
         return view('dashboard.training.cbt.exams.viewexamadmin', compact('questions', 'exam'));
-    }
-
-    public function deleteExam($id)
-    {
     }
 
     public function assignExam(Request $request, $id)

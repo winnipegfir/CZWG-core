@@ -55,10 +55,9 @@
               <div class="btn-toolbar" role="toolbar">
                 <div class="btn-group" role="group">
                   <a type="button" class="btn btn-sm btn-primary" href="{{route('cbt.exam.questions', $exam->id)}}" ><i class="fa fa-question-circle"></i> Question Bank</a>
-                  <a type="button" class="btn btn-sm btn-primary" style="color: #ff6161" href="#"><i class="fa fa-times" href="#"></i> Delete</a>
+                  <a type="button" class="btn btn-sm btn-primary" style="color: #ff6161" href="{{route('cbt.exam.delete', $exam->id)}}"><i class="fa fa-times"></i> Delete</a>
                 </div>
               </div>
-
               </td>
               @endif
             </tr>

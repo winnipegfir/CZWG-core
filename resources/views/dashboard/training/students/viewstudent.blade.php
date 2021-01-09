@@ -278,6 +278,7 @@
                         </select>
     @csrf
                 </div>
+                <input type="hidden" value="{{$student->id}}" name="studentid">
                 <div class="modal-footer">
                     <button class="btn btn-success form-control" type="submit" href="#">Assign</button>
                     <button class="btn btn-light" data-dismiss="modal" style="width:375px">Dismiss</button>
