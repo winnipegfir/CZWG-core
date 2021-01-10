@@ -248,7 +248,8 @@ Route::group(['middleware' => 'auth'], function () {
         //Instructor
         Route::group(['middleware' => 'instructor'], function () {
             Route::post('/exam/assign', 'AtcTraining\TrainingController@assignExam')->name('cbt.exam.assign');
-            Route::post('/module/assign', 'AtcTraining\CBTController@moduleassign')->name('cbt.module.assign');
+            Route::post('/module/assign', 'AtcTraining\TrainingController@assignModule')->name('cbt.module.assign');
+            Route::get('/module/unassign/{id}', 'AtcTraining\TrainingController@ModuleUnassign')->name('cbt.module.unassign');
             Route::get('/examadmin', 'AtcTraining\CBTController@examadminview')->name('cbt.exam.adminview');
             Route::post('/addexam', 'AtcTraining\CBTController@addExam')->name('cbt.exam.add');
             Route::get('/deleteexam/{id}', 'AtcTraining\CBTController@deleteExam')->name('cbt.exam.delete');
@@ -258,7 +259,12 @@ Route::group(['middleware' => 'auth'], function () {
         });
         //Staff/Admin
         Route::group(['middleware' => 'staff'], function () {
+            Route::post('/module/add', 'AtcTraining\CBTController@addModule')->name('cbt.module.add');
+            Route::post('/module/editdetails/{id}', 'AtcTraining\CBTController@editModuleDetails')->name('cbt.edit.moduledetails');
+            Route::get('/module/assignall/{id}', 'AtcTraining\CBTController@assignModuleAll')->name('cbt.module.assignall');
+            Route::get('/module/unassignall/{id}', 'AtcTraining\CBTController@moduleUnassignall')->name('cbt.module.unassignall');
             Route::get('/module/admin/{id}', 'AtcTraining\CBTController@viewAdminModule')->name('cbt.module.view.admin');
+            Route::get('/module/delete/{id}', 'AtcTraining\CBTController@deleteModule')->name('cbt.module.delete');
             Route::post('/lesson/add/{id}', 'AtcTraining\CbtController@addLesson')->name('cbt.lesson.add');
             Route::get('/lesson/e/{id}', 'AtcTraining\CbtController@editLesson')->name('cbt.lesson.edit');
             Route::post('/lesson/edit/{id}', 'AtcTraining\CbtController@processEditLesson')->name('cbt.lesson.submit');

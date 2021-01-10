@@ -107,8 +107,15 @@
                 <div class="row">
                   <div class="col">
                     <h5>Modules</h5>
-                    Here, you will see what assigned modules are unstarted, in progress and finished.<br>
-
+                    @if (count($modules) < 1)
+                        Student does not have any module history!
+                      @else
+                        @foreach ($modules as $module)
+                              <li>{{$module->cbtmodule->name}} <a href="{{route('cbt.module.unassign', $module->id)}}"> (Unassign)</a></li>
+                          @endforeach
+                      @endif
+                      <br>
+                      <a class="btn-sm btn-primary" href="#assignModule" data-toggle="modal" data-target="#assignModule" style="float: left;">Assign Module</a>
                   </div>
                   <div class="col">
                     <h5>Exams</h5>
@@ -124,6 +131,7 @@
                                   <a href="{{route('cbt.exam.unassign', $oe->id)}}"> (Unassign)</a>
                                   @endif
                               </li>
+
 
                           @endforeach
 
@@ -289,6 +297,34 @@
     </div>
     </div>
 
+    <div class="modal fade" id="assignModule" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div align="center" class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Assign a Module</h5>
+                </div>
+                <div class="modal-body">
+
+                    <form method="POST" action="{{route('cbt.module.assign')}}">
+                        <select name="moduleid" class="custom-select">
+                            @foreach ($modules2 as $m)
+                                <option value="{{$m->id}}">{{$m->name}}</option>
+                            @endforeach
+                        </select>
+                    @csrf
+                </div>
+                <input type="hidden" value="{{$student->id}}" name="studentid">
+                <div class="modal-footer">
+                    <button class="btn btn-success form-control" type="submit" href="#">Assign</button>
+                    <button class="btn btn-light" data-dismiss="modal" style="width:375px">Dismiss</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
 
     <div class="modal fade" id="solorequest" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
          aria-hidden="true">
@@ -297,7 +333,7 @@
                 <div align="center" class="modal-header">
                     <h5 class="modal-title" id="exampleModalLongTitle">Solo Request</h5>
                     </div>
-                    
+
                 <div class="modal-body">
                     <form method="POST" action="{{route('training.solo.request')}}">
                         <p>This will generate a request to the CI for a solo certification.</p>

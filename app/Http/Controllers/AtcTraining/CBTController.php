@@ -48,16 +48,142 @@ class CBTController extends Controller
     public function moduleindexadmin()
     {
         $modules = CbtModule::all();
+        $exam = CbtExam::all();
 
-        return view('dashboard.training.CBT.modulesadmin', compact('modules'));
+        return view('dashboard.training.CBT.modulesadmin', compact('modules', 'exam'));
+    }
+
+    public function addModule(Request $request)
+    {
+        if ($request->input('exam') == 0)
+        {
+            $exam = NULL;
+        }
+        else
+        {
+            $exam = $request->input('exam');
+        }
+        $module = CbtModule::create([
+            'name' => $request->input('name'),
+            'user_id' => Auth::user()->id,
+            'exam' => $exam
+        ]);
+        CbtModuleLesson::create([
+            'cbt_modules_id' => $module->id,
+            'lesson' => 'intro',
+            'name' => 'Introduction',
+            'content_html' => 'Create some content!',
+            'created_by' => Auth::user()->id,
+            'updated_by' => Auth::user()->id,
+            'updated_at' => Carbon::now()->toDateTimeString(),
+        ]);
+        CbtModuleLesson::create([
+            'cbt_modules_id' => $module->id,
+            'lesson' => 'conclusion',
+            'name' => 'Conclusion',
+            'content_html' => 'Create some content!',
+            'created_by' => Auth::user()->id,
+            'updated_by' => Auth::user()->id,
+            'updated_at' => Carbon::now()->toDateTimeString(),
+        ]);
+        return redirect()->route('cbt.module.edit', $module->id);
+    }
+
+    public function deleteModule($id)
+    {
+        $assign = CbtModuleAssign::where('cbt_module_id', $id)->get();
+            foreach ($assign as $a)
+            {
+                $a->delete();
+            }
+        $lessons = CbtModuleLesson::where('cbt_modules_id', $id)->get();
+            foreach ($lessons as $l)
+            {
+                $l->delete();
+            }
+        $module = CbtModule::whereId($id)->first();
+            $module->delete();
+
+            return redirect()->back()->withSuccess('Deleted the Module!');
+    }
+
+    public function editModuleDetails(Request $request, $id)
+    {
+        if ($request->input('exam') == 0)
+        {
+            $exam = NULL;
+        }
+        else
+        {
+            $exam = $request->input('exam');
+        }
+        $module = CbtModule::whereId($id)->first();
+        $module->name = $request->input('name');
+        $module->cbt_exam_id = $exam;
+        $module->save();
+
+        return redirect()->back()->withSuccess('Changed module details!');
+    }
+
+    public function assignModuleAll($id)
+    {
+        $module = CbtModule::whereId($id)->first();
+        $module->assignall = '1';
+        $module->save();
+        $students = Student::all();
+        foreach ($students as $s)
+        {
+            $check = CbtModuleAssign::where([
+                ['cbt_module_id', $id],
+                ['student_id', $s->id],
+            ])->first();
+            if ($check == NULL) {
+                CbtModuleAssign::create([
+                    'cbt_module_id' => $id,
+                    'student_id' => $s->id,
+                    'instructor_id' => $s->instructor->id,
+                    'intro' => '1',
+                    'created_at' => Carbon::now()->toDateTimeString(),
+                ]);
+            }
+        }
+        return redirect()->back()->withSuccess('Assigned module to all students!');
+    }
+
+    public function moduleUnassignall($id)
+    {
+        $students = Student::all();
+        foreach ($students as $s)
+        {
+            $assign = CbtModuleAssign::where([
+                ['cbt_module_id', $id],
+                ['student_id', $s->id],
+            ])->first();
+            if ($assign != null) {
+                $assign->delete();
+            }
+        }
+        return redirect()->back()->withSuccess('Unassigned all students from this module!');
     }
 
     public function editModule($id)
     {
+        $exam = CbtExam::all();
         $module = CbtModule::whereId($id)->first();
-        $lessons = CbtModuleLesson::where('cbt_modules_id', $id)->get();
+        $intro = CbtModuleLesson::where([
+            ['cbt_modules_id', $id],
+            ['lesson', 'intro'],
+        ])->first();
+        $lessons = CbtModuleLesson::where([
+            ['cbt_modules_id', $id],
+            ['lesson', 'LIKE', '%'.'lesson'.'%'],
+        ])->get();
+        $conclusion = CbtModuleLesson::where([
+            ['cbt_modules_id', $id],
+            ['lesson', 'conclusion'],
+        ])->first();
 
-        return view('dashboard.training.CBT.editmodule', compact('module', 'lessons'));
+        return view('dashboard.training.CBT.editmodule', compact('exam', 'module', 'lessons', 'intro', 'conclusion'));
     }
 
     public function addLesson(Request $req, $id)
@@ -67,8 +193,8 @@ class CBTController extends Controller
             'lesson' => $req->input('lesson'),
             'name' => 'Name your lesson',
             'content_html' => 'Give your lesson some content! You can use HTML',
-            'created_by' => Auth::user()->id,
             'updated_by' => Auth::user()->id,
+            'created_by' => Auth::user()->id,
         ]);
         return redirect()->route('cbt.lesson.edit', $lesson->id);
     }
@@ -87,23 +213,45 @@ class CBTController extends Controller
         $lesson->content_html = $req->input('content');
         $lesson->updated_by = Auth::user()->id;
         $lesson->save();
-            
+
         return redirect()->route('cbt.module.edit', $lesson->cbt_modules_id)->withSuccess('Edited Lesson!');
     }
 
     public function viewmodule($id, $progress)
     {
         if (Auth::user()->permissions >= 3) {
-            $lessons = CbtModuleLesson::where('cbt_modules_id', $id)->get();
+            $intro = CbtModuleLesson::where([
+                ['cbt_modules_id', $id],
+                ['lesson', 'intro'],
+            ])->first();
+            $lessons = CbtModuleLesson::where([
+                ['cbt_modules_id', $id],
+                ['lesson', 'LIKE', '%'.'lesson'.'%'],
+            ])->get();
+            $conclusion = CbtModuleLesson::where([
+                ['cbt_modules_id', $id],
+                ['lesson', 'conclusion'],
+            ])->first();
             $currentlesson = CbtModuleLesson::where([
                 ['cbt_modules_id', $id],
                 ['lesson', $progress],
             ])->first();
 
-            return view('dashboard.training.CBT.viewmodule', compact('lessons', 'currentlesson'));
+            return view('dashboard.training.CBT.viewmodule', compact('lessons', 'currentlesson', 'intro', 'conclusion'));
         }
         $student = Student::where('user_id', Auth::user()->id)->first();
-        $lessons = CbtModuleLesson::where('cbt_modules_id', $id)->get();
+        $intro = CbtModuleLesson::where([
+            ['cbt_modules_id', $id],
+            ['lesson', 'intro'],
+        ])->first();
+        $lessons = CbtModuleLesson::where([
+            ['cbt_modules_id', $id],
+            ['lesson', 'LIKE', '%'.'lesson'.'%'],
+        ])->get();
+        $conclusion = CbtModuleLesson::where([
+            ['cbt_modules_id', $id],
+            ['lesson', 'conclusion'],
+        ])->first();
         $currentlesson = CbtModuleLesson::where([
             ['cbt_modules_id', $id],
             ['lesson', $progress],
@@ -123,7 +271,7 @@ class CBTController extends Controller
             $update->save();
         }
 
-        return view('dashboard.training.CBT.viewmodule', compact('lessons', 'currentlesson', 'update'));
+        return view('dashboard.training.CBT.viewmodule', compact('lessons', 'currentlesson', 'update', 'intro', 'conclusion'));
     }
 
     public function completeModule($id)
@@ -145,29 +293,6 @@ class CBTController extends Controller
         }
 
         return view('dashboard.training.CBT.index')->withSuccess('You have completed the Module!');
-    }
-
-    public function viewAdminModule($id)
-    {
-        if (Auth::user()->permissions >= 4) {
-            $module = CbtModule::whereId($id)->first();
-            $modules = CbtModule::all();
-            $assignedstudents = CbtModuleAssign::where([
-                ['cbt_module_id', $id],
-                ['conclusion', '0'],
-            ])->get();
-            $completedstudents = CbtModuleAssign::where([
-                ['cbt_module_id', $id],
-                ['conclusion', '1'],
-            ])->get();
-
-            return view('dashboard.training.CBT.viewmoduleadmin', compact('module', 'modules', 'assignedstudents', 'completedstudents'));
-        }
-    }
-
-    public function modifyModule(Request $request, $id)
-    {
-        return redirect()->back()->withError('This feature has not been implemented yet!');
     }
 
     public function assignModule(Request $request, $id)
@@ -462,7 +587,7 @@ class CBTController extends Controller
         CbtExamQuestion::where('cbt_exam_id', $id)->delete();
         CbtExamAssign::where('cbt_exam_id', $id)->delete();
         CbtExam::findOrFail($id)->delete();
-        
+
         return redirect()->back()->withSuccess('Exam deleted!');
     }
 

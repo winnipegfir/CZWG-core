@@ -4,6 +4,8 @@ namespace App\Http\Controllers\AtcTraining;
 
 use App\Http\Controllers\Controller;
 use App\Models\AtcTraining\Application;
+use App\Models\AtcTraining\CBT\CbtModule;
+use App\Models\AtcTraining\CBT\CbtModuleAssign;
 use App\Models\AtcTraining\CBT\CbtExam;
 use App\Models\AtcTraining\CBT\CbtExamAnswer;
 use App\Models\AtcTraining\CBT\CbtExamAssign;
@@ -132,6 +134,22 @@ class TrainingController extends Controller
             'accepted_application' => $application->id,
             'entry_type' => $request->input('entry_type'),
         ]);
+        if ($instructor != NULL)
+        {
+        $modules = CbtModule::all();
+        foreach ($modules as $module)
+        {
+            if ($module->assignall == '1') {
+                CbtModuleAssign::create([
+                    'cbt_module_id' => $module->id,
+                    'student_id' => $student->id,
+                    'instructor_id' => $student->instructor->id,
+                    'intro' => '1',
+                    'created_at' => Carbon::now()->toDateTimeString(),
+                ]);
+            }
+            }
+        }
 
         return redirect('dashboard/training/students/'.$student->id.'')->withSuccess('Added New Student: '.$student->user->fullName('FLC').'');
     }
@@ -167,12 +185,14 @@ class TrainingController extends Controller
     {
         $student = Student::where('id', $id)->firstorFail();
         $instructors = Instructor::all();
+        $modules2 = CbtModule::all();
+        $modules = CbtModuleAssign::where('student_id', $student->id)->get();
         $exams = CbtExam::all();
         $openexams = CbtExamAssign::where('student_id', $student->id)->get();
         $completedexams = CbtExamResult::where('student_id', $student->id)->get();
         $solo = SoloRequest::where('student_id', $student->id)->get();
 
-        return view('dashboard.training.students.viewstudent', compact('solo', 'student', 'instructors', 'completedexams', 'exams', 'openexams'));
+        return view('dashboard.training.students.viewstudent', compact('modules2', 'solo', 'student', 'instructors', 'completedexams', 'exams', 'openexams', 'modules'));
     }
 
     public function soloRequest(Request $request)
@@ -186,6 +206,27 @@ class TrainingController extends Controller
         if ($student != null) {
             $student->status = $request->input('status');
             $student->save();
+        }
+        if ($student->status == '1') {
+            $modules = CbtModule::all();
+            foreach ($modules as $module) {
+                if ($module->assignall == '1') {
+
+                    $check = CbtModuleAssign::where([
+                        ['cbt_module_id', $module->id],
+                        ['student_id', $student->id],
+                    ])->first();
+                    if ($check == NULL) {
+                        CbtModuleAssign::create([
+                            'cbt_module_id' => $module->id,
+                            'student_id' => $student->id,
+                            'instructor_id' => $student->instructor->id,
+                            'intro' => '1',
+                            'created_at' => Carbon::now()->toDateTimeString(),
+                        ]);
+                    }
+                }
+            }
         }
 
         return redirect()->back()->withSuccess('Sucessfully Changed The Status Of '.$student->user->fullName('FLC').'');
@@ -259,6 +300,38 @@ class TrainingController extends Controller
         $exam->delete();
 
         return redirect()->back()->withSuccess('Unassigned exam sucessfully!');
+    }
+
+    public function assignModule(Request $request)
+    {
+        $student = Student::whereId($request->input('studentid'))->first();
+        $check = CbtModuleAssign::where([
+            ['cbt_module_id', $request->input('moduleid')],
+            ['student_id', $student->id],
+        ])->first();
+        if ($check != NULL)
+        {
+            return redirect()->back()->withError('Student Already has this Module Assigned!');
+        }
+        if ($check == NULL)
+        {
+            CbtModuleAssign::create([
+                'cbt_module_id' => $request->input('moduleid'),
+                'student_id' => $student->id,
+                'instructor_id' => $student->instructor->id,
+                'intro' => '1',
+                'created_at' => Carbon::now()->toDateTimeString(),
+            ]);
+        }
+        return redirect()->back()->withSuccess('Module assigned to student!');
+    }
+
+    public function ModuleUnassign($id)
+    {
+        $module = CbtModuleAssign::whereId($id)->first();
+        $module->delete();
+
+        return redirect()->back()->withSuccess('Unassigned module sucessfully!');
     }
 
     public function viewNote($id)

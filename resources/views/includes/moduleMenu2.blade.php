@@ -21,12 +21,21 @@
         <div class="sidebar-header">
       <h3>Sections</h3></div>
 <br>
+          <div class="card">
+              <a href="{{route('cbt.module.view', [$intro->cbt_modules_id, $intro->lesson])}}">
+                  {{$intro->name}} </a>
+          </div><br>
+
             @foreach ($lessons as $lessons)
             <div class="card">
               <a href="{{route('cbt.module.view', [$lessons->cbt_modules_id, $lessons->lesson])}}">
                   {{$lessons->name}} </a>
             </div><br>
             @endforeach
+          <div class="card">
+              <a href="{{route('cbt.module.view', [$conclusion->cbt_modules_id, $conclusion->lesson])}}">
+                  {{$conclusion->name}} </a>
+          </div>
                         <br><br>
 <br><br>    </div></div></div>
 </nav>

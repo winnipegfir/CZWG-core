@@ -33,7 +33,7 @@
                 <tr>
                     <th scope="col">Module</th>
                     <th scope="col">Created on</th>
-                    <th scope="col">Created by</th>
+                    <th scope="col">Last Update By</th>
                     <th scope="col">Exam Assign</th>
                     @if (Auth::user()->permissions >=4)
                     <th scope="col">Actions</th>
@@ -51,21 +51,21 @@
                     {{$module->created_at}}
                 </td>
                 <td>
-                    {{$module->created_by}}
+                    {{$module->user->fullName('FL')}}
                 </td>
                 <td>
                     @if ($module->cbt_exam_id == NULL)
                         No Exam
                     @else
                         <!--Make relation to show exam name work--!>
-                    {{$module->cbt_exam_id}}
+                    {{$module->cbtexam->name}}
                     @endif
                 </td>
               @if (Auth::user()->permissions >=3)
               <td>
                 <a href="{{route('cbt.module.edit', $module->id)}}">View/Edit</a> @endif |
                   @if (Auth::user()->permissions >= 4)
-                  <a href="#">Delete</a>
+                  <a href="{{route('cbt.module.delete', $module->id)}}">Delete</a>
               </td>
               @endif
 
@@ -77,7 +77,19 @@
 
           <!--TAB 3: Add Module : Viewable by perm level 4 and up-->
      <div class="tab-pane fade" id="addmodule" role="tabpanel" aria-labelledby="addmodule-tab"><br>
-        <!--Form for creating a new module-->
+        <form action="{{route('cbt.module.add')}}" method="POST" class="form-group">
+         @csrf
+         <label class="form-control">Name of Module</label>
+         <input type="text" class="form-control" name="name">
+         <label class="form-control">Exam to follow module</label>
+         <select class="form-control" name="exam">
+             <option value="0">No Exam</option>
+             @foreach ($exam as $exam)
+                 <option value="{{$exam->id}}">{{$exam->name}}</option>
+             @endforeach
+         </select>
+         <input class="btn btn-success" type="submit" value="Create Module">
+         </form>
   </div>
 </div>
 <br>
