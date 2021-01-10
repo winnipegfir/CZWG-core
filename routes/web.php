@@ -265,7 +265,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/module/unassignall/{id}', 'AtcTraining\CBTController@moduleUnassignall')->name('cbt.module.unassignall');
             Route::get('/module/admin/{id}', 'AtcTraining\CBTController@viewAdminModule')->name('cbt.module.view.admin');
             Route::get('/module/delete/{id}', 'AtcTraining\CBTController@deleteModule')->name('cbt.module.delete');
-            Route::post('/lesson/add/{id}', 'AtcTraining\CbtController@addLesson')->name('cbt.lesson.add');
+            Route::post('/lesson/add/{id}', 'AtcTraining\CBTController@addLesson')->name('cbt.lesson.add');
             Route::get('/lesson/e/{id}', 'AtcTraining\CbtController@editLesson')->name('cbt.lesson.edit');
             Route::post('/lesson/edit/{id}', 'AtcTraining\CbtController@processEditLesson')->name('cbt.lesson.submit');
             Route::post('/examadmin/add/{id}', 'AtcTraining\CBTController@addQuestion')->name('cbt.exam.question.add');
