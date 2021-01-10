@@ -14,7 +14,7 @@ class AddAssignallToCbtModulesTable extends Migration
     public function up()
     {
         Schema::table('cbt_modules', function (Blueprint $table) {
-                $table->int('assignall')
+                $table->integer('assignall')
                     ->after('cbt_exam_id')
                     ->default('0');
         });
