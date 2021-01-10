@@ -1,6 +1,7 @@
 @extends('layouts.master')
 
 @section('navbarprim')
+@section('title', 'Exam Admin')
 
     @parent
 
