@@ -235,7 +235,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/', 'AtcTraining\CBTController@index')->name('cbt.index');
         Route::get('/module', 'AtcTraining\CBTController@moduleindex')->name('cbt.module');
         Route::get('/module/view/{id}/{progress}', 'AtcTraining\CBTController@viewmodule')->name('cbt.module.view');
-        Route::get('/module/finish/{id}', 'ATCTraining\CBTController@completeModule')->name('cbt.module.complete');
+        Route::get('/module/finish/{id}', 'AtcTraining\CBTController@completeModule')->name('cbt.module.complete');
         Route::get('/exam', 'AtcTraining\CBTController@examindex')->name('cbt.exam');
         Route::get('/exam/start/{id}', 'AtcTraining\CBTController@startExam')->name('cbt.exam.begin');
         Route::get('/exam/{id}', 'AtcTraining\CBTController@exam')->name('cbt.exam.start');
@@ -268,6 +268,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/lesson/add/{id}', 'AtcTraining\CBTController@addLesson')->name('cbt.lesson.add');
             Route::get('/lesson/e/{id}', 'AtcTraining\CBTController@editLesson')->name('cbt.lesson.edit');
             Route::post('/lesson/edit/{id}', 'AtcTraining\CBTController@processEditLesson')->name('cbt.lesson.submit');
+            Route::get('/lesson/delete/{id}', 'AtcTraining\CBTController@deleteLesson')->name('cbt.lesson.delete');
             Route::post('/examadmin/add/{id}', 'AtcTraining\CBTController@addQuestion')->name('cbt.exam.question.add');
             Route::post('/examadmin/update/{id}', 'AtcTraining\CBTController@updateQuestion')->name('cbt.exam.question.update');
             Route::get('/examadmin/delete/{id}', 'AtcTraining\CBTController@deleteQuestion')->name('cbt.exam.question.delete');

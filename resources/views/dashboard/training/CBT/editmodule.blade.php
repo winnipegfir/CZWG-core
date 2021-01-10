@@ -22,7 +22,6 @@
                 @endif
             <br>
             <div align="center">
-                <h4><text class="font-weight-bold">It is very important that you delete the lesson that is before the conclusion ONLY. If not, server errors will occur when viewing the module!</text></h4>
 
                     <div class="card p-3">
                         <h4>Introduction - {{$intro->name}}</h4><p>{{$intro->html()}}</p>
@@ -37,7 +36,7 @@
                             <p>{{$l->html()}}</p>
                             @if (Auth::user()->permissions >= 4)
                                 <a href="{{route('cbt.lesson.edit', $l->id)}}" class="btn btn-primary btn-sm" style="float: right;">Edit</a>
-                                <a href="#" class="btn btn-danger btn-sm" style="float: right;">Delete</a>
+                                <a href="{{route('cbt.lesson.delete', $l->id)}}" class="btn btn-danger btn-sm" style="float: right;">Delete</a>
                             @endif
                             <?php
                             $i++

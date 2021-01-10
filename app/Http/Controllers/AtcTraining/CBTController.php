@@ -133,6 +133,8 @@ class CBTController extends Controller
         $students = Student::all();
         foreach ($students as $s)
         {
+            if ($student->instructor != null)
+            {
             $check = CbtModuleAssign::where([
                 ['cbt_module_id', $id],
                 ['student_id', $s->id],
@@ -145,6 +147,7 @@ class CBTController extends Controller
                     'intro' => '1',
                     'created_at' => Carbon::now()->toDateTimeString(),
                 ]);
+             }
             }
         }
         return redirect()->back()->withSuccess('Assigned module to all students!');
@@ -153,6 +156,9 @@ class CBTController extends Controller
     public function moduleUnassignall($id)
     {
         $students = Student::all();
+        $module = CbtModule::whereId($id)->first();
+        $module->assignall = '0';
+        $module->save();
         foreach ($students as $s)
         {
             $assign = CbtModuleAssign::where([
@@ -217,6 +223,13 @@ class CBTController extends Controller
         return redirect()->route('cbt.module.edit', $lesson->cbt_modules_id)->withSuccess('Edited Lesson!');
     }
 
+    public function deleteLesson($id)
+    {
+        $lesson = CbtModuleLesson::whereId($id);
+        $lesson->delete();
+
+        return redirect()->back()->withSuccess('Deleted the lesson!');
+    }
     public function viewmodule($id, $progress)
     {
         if (Auth::user()->permissions >= 3) {
@@ -283,6 +296,22 @@ class CBTController extends Controller
         ])->first();
         $module->completed_at = Carbon::now()->ToDateTimeString();
         if ($module->cbtmodule->cbt_exam_id != null) {
+            $check = CbtExamAssign::where([
+                ['student_id', $student->id],
+                ['cbt_exam_id', $module->cbtmodule->cbt_exam_id],
+            ])->first();
+            if ($check != null)
+            {
+                return redirect()->back()->withSuccess('The exam is available under the Exams Section!');
+            }
+            $check2 = CbtExamResult::where([
+                ['cbt_exam_id', $module->cbtmodule->cbt_exam_id],
+                ['student_id', $student->id],
+            ])->first();
+            if ($check2 != null)
+            {
+                return redirect()->back()->withSuccess('You have already completed the exam for this module!');
+            }
             $exam = CbtExamAssign::create([
                 'student_id' => $student->id,
                 'instructor_id' => $student->instructor->id,
