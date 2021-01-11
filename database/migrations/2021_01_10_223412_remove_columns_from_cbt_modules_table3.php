@@ -14,8 +14,7 @@ class RemoveColumnsFromCbtModulesTable3 extends Migration
     public function up()
     {
         Schema::table('cbt_modules', function (Blueprint $table) {
-            $table->dropColumn('description_html');
-            $table->dropColumn('content_html');
+            $table->dropColumn('description_html', 'content_html');
         });
     }
 
