@@ -19,7 +19,7 @@ class CreateCbtModuleAssignsTable extends Migration
             $table->foreign('cbt_module_id')->references('id')->on('cbt_modules');
             $table->integer('student_id')->unsigned();
             $table->foreign('student_id')->references('id')->on('students');
-            $table->integer('instructor_id')->unsigned();
+            $table->integer('instructor_id')->nullable()->unsigned();
             $table->foreign('instructor_id')->references('id')->on('instructors');
             $table->integer('intro')->default(1);
             $table->integer('lesson1')->default(0);
