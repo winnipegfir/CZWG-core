@@ -111,7 +111,15 @@
                         Student does not have any module history!
                       @else
                         @foreach ($modules as $module)
-                              <li>{{$module->cbtmodule->name}} <a href="{{route('cbt.module.unassign', $module->id)}}"> (Unassign)</a></li>
+                              <li>{{$module->cbtmodule->name}}  -
+                              @if ($module->started_at == null)
+                                   <text class="text-danger">Not Started</text>
+                              @elseif ($module->completed_at == null)
+                                   <text class="text-primary">In Progress</text>
+                              @elseif ($module->completed_at != null)
+                                   <text class="text-success">Completed</text>
+                              @endif
+                                  <a href="{{route('cbt.module.unassign', $module->id)}}">(Unassign)</a></li>
                           @endforeach
                       @endif
                       <br>

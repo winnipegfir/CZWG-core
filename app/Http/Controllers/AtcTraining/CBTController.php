@@ -131,8 +131,14 @@ class CBTController extends Controller
         $students = Student::all();
         foreach ($students as $s)
         {
-            if ($student->instructor != null)
+            if ($s->instructor != null)
             {
+                $instructor = $s->instructor->id;
+            }
+            if ($s->instructor == null)
+            {
+                $instructor = null;
+            }
             $check = CbtModuleAssign::where([
                 ['cbt_module_id', $id],
                 ['student_id', $s->id],
@@ -141,11 +147,11 @@ class CBTController extends Controller
                 CbtModuleAssign::create([
                     'cbt_module_id' => $id,
                     'student_id' => $s->id,
-                    'instructor_id' => $s->instructor->id,
+                    'instructor_id' => $instructor,
                     'intro' => '1',
                     'created_at' => Carbon::now()->toDateTimeString(),
                 ]);
-             }
+
             }
         }
         return redirect()->back()->withSuccess('Assigned module to all students!');
@@ -230,26 +236,7 @@ class CBTController extends Controller
     }
     public function viewmodule($id, $progress)
     {
-        if (Auth::user()->permissions >= 3) {
-            $intro = CbtModuleLesson::where([
-                ['cbt_modules_id', $id],
-                ['lesson', 'intro'],
-            ])->first();
-            $lessons = CbtModuleLesson::where([
-                ['cbt_modules_id', $id],
-                ['lesson', 'LIKE', '%'.'lesson'.'%'],
-            ])->get();
-            $conclusion = CbtModuleLesson::where([
-                ['cbt_modules_id', $id],
-                ['lesson', 'conclusion'],
-            ])->first();
-            $currentlesson = CbtModuleLesson::where([
-                ['cbt_modules_id', $id],
-                ['lesson', $progress],
-            ])->first();
 
-            return view('dashboard.training.CBT.viewmodule', compact('lessons', 'currentlesson', 'intro', 'conclusion'));
-        }
         $student = Student::where('user_id', Auth::user()->id)->first();
         $intro = CbtModuleLesson::where([
             ['cbt_modules_id', $id],
@@ -293,6 +280,7 @@ class CBTController extends Controller
             'student_id' => $student->id,
         ])->first();
         $module->completed_at = Carbon::now()->ToDateTimeString();
+        $module->save();
         if ($module->cbtmodule->cbt_exam_id != null) {
             $check = CbtExamAssign::where([
                 ['student_id', $student->id],
