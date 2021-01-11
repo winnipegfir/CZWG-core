@@ -1,5 +1,5 @@
 @extends('layouts.master')
-
+@section('title', 'Modules Admin')
 @section('navbarprim')
 
     @parent
@@ -29,6 +29,9 @@
               <div class="tab-pane fade show active" id="modules" role="tabpanel" aria-labelledby="home-tab"><br>
         <!--List of modules in table format (click to view the module), include name, # of lessons, created by who. Edit and Delete buttons for Staff/Admin-->
         <table id="dataTable" class="table table-hover">
+        @if (count($modules) < 1)
+            <text class="font-weight-bold" color="red">There are no modules!</b></text>
+            @else
             <thead>
                 <tr>
                     <th scope="col">Module</th>
@@ -40,9 +43,6 @@
                     @endif
                 </tr>
             </thead>
-            @if (count($modules) < 1)
-            <font class="font-weight-bold">** There are no modules!</b></font>
-            @else
             <tbody>
             @foreach ($modules as $module)
             <tr>
@@ -57,18 +57,20 @@
                     @if ($module->cbt_exam_id == NULL)
                         No Exam
                     @else
-                        <!--Make relation to show exam name work--!>
+                        <!--Make relation to show exam name work-->
                     {{$module->cbtexam->name}}
                     @endif
                 </td>
+                <td class="py-3">
               @if (Auth::user()->permissions >=3)
-              <td>
-                <a href="{{route('cbt.module.edit', $module->id)}}">View/Edit</a> @endif |
-                  @if (Auth::user()->permissions >= 4)
-                  <a href="{{route('cbt.module.delete', $module->id)}}">Delete</a>
+              <div class="btn-toolbar" role="toolbar">
+                <div class="btn-group" role="group">
+                  <a type="button" class="btn btn-sm btn-primary" href="{{route('cbt.module.edit', $module->id)}}" ><i class="fa fa-question-circle"></i> Module Editor</a>
+                  <a type="button" class="btn btn-sm btn-primary" style="color: #ff6161" href="{{route('cbt.module.delete', $module->id)}}"><i class="fa fa-times"></i> Delete</a>
+                </div>
+              </div>
               </td>
               @endif
-
             </tr>
             @endforeach
             @endif

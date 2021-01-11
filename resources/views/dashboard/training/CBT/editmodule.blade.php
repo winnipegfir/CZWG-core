@@ -13,61 +13,58 @@
     @include('includes.cbtMenu')
     @if(Auth::check())
         <div class="container" style="margin-top: 20px;">
-            <h2 class="font-weight-bold blue-text">{{$module->name}} Administration
+            <h2 class="font-weight-bold blue-text">Editing {{$module->name}}:
                 @if (Auth::user()->permissions >= 4)
-                    <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#moduleDetails" style="float: right;">Edit Module Details</button>
-                    <a href="{{route('cbt.module.assignall', $module->id)}}" class="btn btn-primary btn-sm" style="float: right;">Assign to ALL Students</a>
+                    <button type="button" class="btn btn-sm btn-grey" data-toggle="modal" data-target="#moduleDetails" style="float: right;">Edit Module Details</button>
+                    <a href="{{route('cbt.module.assignall', $module->id)}}" class="btn btn-success btn-sm" style="float: right;">Assign to ALL Students</a>
                     <a href="{{route('cbt.module.unassignall', $module->id)}}" class="btn btn-danger btn-sm" style="float: right;">Unassign ALL Students</a>
             </h2>
                 @endif
             <br>
             <div align="center">
-
                     <div class="card p-3">
-                        <h4>Introduction - {{$intro->name}}</h4><p>{{$intro->html()}}</p>
+                        <h4 style="margin-bottom:0%" class="font-weight-bold">Introduction - {{$intro->name}}</h4><p>{{$intro->html()}}</p>
                             @if (Auth::user()->permissions >= 4)
-                                <a href="{{route('cbt.lesson.edit', $intro->id)}}" class="btn btn-primary btn-sm" style="float: right;">Edit</a>
+                            <div class="col" style="padding-bottom: 3.5%">
+                                <a href="{{route('cbt.lesson.edit', $intro->id)}}" class="btn btn-primary btn-sm" style="width: 75px;">Edit</a>
+                            </div>
                             @endif
                     </div>
-                <hr>
+                <br><hr><br>
                         @foreach ($lessons as $l)
                     <div class="card p-3">
-                            <h4>Lesson {{$i}} - {{$l->name}}</h4>
+                        <h4 style="margin-bottom:0%" class="font-weight-bold">Lesson {{$i}} - {{$l->name}}</h4>
                             <p>{{$l->html()}}</p>
                             @if (Auth::user()->permissions >= 4)
-                                <a href="{{route('cbt.lesson.edit', $l->id)}}" class="btn btn-primary btn-sm" style="float: right;">Edit</a>
-                                <a href="{{route('cbt.lesson.delete', $l->id)}}" class="btn btn-danger btn-sm" style="float: right;">Delete</a>
+                            <div class="col" style="padding-bottom: 3.5%">
+                                <a href="{{route('cbt.lesson.edit', $l->id)}}" class="btn btn-primary btn-sm" style="width: 75px;">Edit</a>
+                                <a href="{{route('cbt.lesson.delete', $l->id)}}" class="btn btn-danger btn-sm" style="width: 100px;">Delete</a>
+                            </div>
                             @endif
-                            <?php
-                            $i++
-                            ?>
+                        <?php
+                        $i++
+                        ?>
                     </div>
-                            <hr>
-                        @endforeach
+                <br><br>
+                    @endforeach
                 <form action="{{route('cbt.lesson.add', $module->id)}}" method="POST">
                     <input type="hidden" name="lesson" value="lesson{{$i}}">
-                    <button type="submit" class="btn btn-primary" style="float: center;">Add a Lesson {{$i}}</button>
+                    <button type="submit" class="btn btn-success" style="float: center;">Add Lesson #{{$i}}</button>
                     @csrf
                 </form>
-                <hr>
+                <br><hr><br>
                 <div class="card p-3">
-                        <h4>Conclusion - {{$conclusion->name}}</h4><p>{{$conclusion->html()}}</p>
-                            @if (Auth::user()->permissions >= 4)
-                                <a href="{{route('cbt.lesson.edit', $conclusion->id)}}" class="btn btn-primary btn-sm" style="float: right;">Edit</a>
-                            @endif
-                </div>
-
+                    <h4 style="margin-bottom:0%" class="font-weight-bold">Conclusion - {{$conclusion->name}}</h4><p>{{$conclusion->html()}}</p>
+                        @if (Auth::user()->permissions >= 4)
+                        <div class="col" style="padding-bottom: 3.5%">
+                            <a href="{{route('cbt.lesson.edit', $conclusion->id)}}" class="btn btn-primary btn-sm" style="width: 75px;">Edit</a>
+                        </div>
                         @endif
-                    </div><hr>
-
-
-
-
-                <br>
-
-
+                </div>
+                @endif
+            </div>
+        <br>
         </div>
-            <br><br>
                     {{$i}}
         <div class="modal fade" id="moduleDetails" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
              aria-hidden="true">

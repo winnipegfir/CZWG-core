@@ -30,6 +30,9 @@
               <div class="tab-pane fade show active" id="modules" role="tabpanel" aria-labelledby="home-tab"><br>
         <!--List of exams in table format (click to view the module), include name, # of lessons, created by who. Edit and Delete buttons for Staff/Admin-->
         <table id="dataTable" class="table table-hover">
+            @if (count($exams) < 1)
+            <text class="font-weight-bold" style="color:red">There are no exams!</b></text>
+            @else
             <thead>
                 <tr>
                     <th scope="col">Exam</th>
@@ -38,9 +41,6 @@
                     <th scope="col">Actions</th>
                 </tr>
             </thead>
-            @if (count($exams) < 1)
-            <font class="font-weight-bold" style="color:red">There are no exams!</b></font>
-            @else
             <tbody>
             @foreach ($exams as $exam)
             <tr>

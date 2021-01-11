@@ -19,11 +19,11 @@
                 <label class="form-control">Content - HTML Accepted!</label>
                 <textarea name="content" class="form-control">{{$lesson->content_html}}</textarea>
                 <br>
-                <button type="submit" class="btn-success form-control">Save Changes</button>
+                <button type="submit" class="btn btn-success">Save Changes</button>
                 @csrf
             </form>
             </div>
         </div>
-        <br><br><br><br>
+    <br>
     @endif
-        @stop
+@stop
