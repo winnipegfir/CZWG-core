@@ -313,16 +313,21 @@ class TrainingController extends Controller
         {
             return redirect()->back()->withError('Student Already has this Module Assigned!');
         }
-        if ($check == NULL)
+        if ($student->instructor == null)
         {
+            $instructor = null;
+        }
+        if ($student->instructor != null) {
+            $instructor = $student->instructor->id;
+        }
             CbtModuleAssign::create([
                 'cbt_module_id' => $request->input('moduleid'),
                 'student_id' => $student->id,
-                'instructor_id' => $student->instructor->id,
+                'instructor_id' => $instructor,
                 'intro' => '1',
                 'created_at' => Carbon::now()->toDateTimeString(),
             ]);
-        }
+
         return redirect()->back()->withSuccess('Module assigned to student!');
     }
 
