@@ -15,9 +15,10 @@
         <div class="container" style="margin-top: 20px;">
             <h2 class="font-weight-bold blue-text">Editing {{$module->name}}:
                 @if (Auth::user()->permissions >= 4)
+                <hr>
                     <button type="button" class="btn btn-sm btn-grey" data-toggle="modal" data-target="#moduleDetails" style="float: right;">Edit Module Details</button>
                     <a href="{{route('cbt.module.assignall', $module->id)}}" class="btn btn-success btn-sm" style="float: right;">Assign to ALL Students</a>
-                    <a href="{{route('cbt.module.unassignall', $module->id)}}" class="btn btn-danger btn-sm" style="float: right;">Unassign ALL Students</a>
+                    <a href="{{route('cbt.module.unassignall', $module->id)}}" class="btn btn-danger btn-sm" style="float: right;">Unassign ALL Students</a><br>
             </h2>
                 @endif
             <br>
