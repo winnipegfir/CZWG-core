@@ -22,13 +22,14 @@
   <input type="radio" id="2" value="2" name="{{$i}}">{{$question->option2}}<br>
       @if ($question->option3 != null)
   <input type="radio" id="3" value="3" name="{{$i}}">{{$question->option3}}<br>
-          <hr>
+
           @endif
       @if ($question->option4 != null)
   <input type="radio" id="4" value="4" name="{{$i}}">{{$question->option4}}<br><br>
           @else
-          <hr>
+
           @endif
+      <hr>
   <?php
   $i++
   ?>
