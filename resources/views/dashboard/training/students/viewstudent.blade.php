@@ -88,9 +88,12 @@
                             <text class="font-weight-bold">This student has no requests created</text>
                         @else
                             @foreach ($solo as $s)
-                                @if ($s->approved == 1)
+                                @if ($s->approved == '1')
                                     <li>{{$s->position}} Solo -
                                     <text class="text-success"> Approved</text></li>
+                                @elseif ($s->approved == '2')
+                                    <li>{{$s->position}} Solo -
+                                    <text class="text-danger"> Denied</text></li>
                                 @else
                                     <li>{{$s->position}} Solo -
                                         <text class="text-danger"> Pending Approval</text></li>
@@ -343,7 +346,7 @@
                     </div>
 
                 <div class="modal-body">
-                    <form method="POST" action="{{route('training.solo.request')}}">
+                    <form method="POST" action="{{route('training.solo.request', $student->id)}}">
                         <p>This will generate a request to the CI for a solo certification.</p>
                             <select class="custom-select" name="position">
                             @if ($student->user->rating_short >= '1')
@@ -359,7 +362,6 @@
                                 <option value="Centre">Centre Solo</option>
                             @endif
                         </select>
-                    </form>
                     @csrf
                 </div>
 

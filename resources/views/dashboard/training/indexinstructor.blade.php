@@ -48,6 +48,29 @@
                 </div>
             </div>
             <div class="col">
+                @if (Auth::user()->permissions >= 4)
+                <div class="card">
+                    <div class="card-header">
+                        Student Solo Requests
+                    </div>
+
+                    <div class="card-body">
+                    @if (count($soloreq) < 1)
+                        There are currently no requests!
+                    @else
+                        @foreach ($soloreq as $s)
+                        <text class="font-weight-bold">Student: </text> {{$s->student->user->fullName('FLC')}}<br>
+                        <text class="font-weight-bold">Instructor: </text> {{$s->instructor->user->fullName('FLC')}}<br>
+                        <text class="font-weight-bold">Solo Position: </text> {{$s->position}}<br>
+                        <a href="{{route('training.solo.approve', $s->id)}}" class="btn btn-success btn-sm" style="float: center;">Approve</a>
+                        <a href="{{route('training.solo.deny', $s->id)}}" class="btn btn-danger btn-sm" style="float: center;">Deny</a>
+                        <hr>
+                        @endforeach
+                    @endif
+                    </div>
+
+            </div>
+                @endif
             </div>
         </div>
         <br/>

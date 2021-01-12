@@ -59,6 +59,10 @@ class CBTController extends Controller
         }
         else
         {
+            $questioncount = CbtExamQuestion::where('cbt_exam_id', $request->input('exam'))->get();
+            if (count($questioncount) < 10) {
+                return redirect()->back()->withError('This exam does not have the minimum 10 questions, so it cannot be assigned!');
+            }
             $exam = $request->input('exam');
         }
         $module = CbtModule::create([
@@ -113,6 +117,10 @@ class CBTController extends Controller
         }
         else
         {
+            $questioncount = CbtExamQuestion::where('cbt_exam_id', $request->input('exam'))->get();
+            if (count($questioncount) < 10) {
+                return redirect()->back()->withError('This exam does not have the minimum 10 questions, so it cannot be assigned!');
+            }
             $exam = $request->input('exam');
         }
         $module = CbtModule::whereId($id)->first();

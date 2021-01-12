@@ -29,13 +29,14 @@ class TrainingController extends Controller
     public function index()
     {
         $user = Auth::user();
+        $soloreq = SoloRequest::where('approved', '0')->get();
         $instructor = Instructor::where('user_id', $user->id)->first();
         $yourStudents = null;
         if ($instructor) {
             $yourStudents = Student::where('instructor_id', $instructor->id)->get();
         }
 
-        return view('dashboard.training.indexinstructor', compact('yourStudents'));
+        return view('dashboard.training.indexinstructor', compact('yourStudents', 'soloreq'));
     }
 
     public function newNoteView($id)
@@ -195,10 +196,69 @@ class TrainingController extends Controller
         return view('dashboard.training.students.viewstudent', compact('modules2', 'solo', 'student', 'instructors', 'completedexams', 'exams', 'openexams', 'modules'));
     }
 
-    public function soloRequest(Request $request)
+    public function soloRequest(Request $request, $id)
     {
-        return redirect()->back()->withError('This function has not been implemented yet!');
+        $student = Student::whereId($id)->first();
+
+        SoloRequest::create([
+            'student_id' => $student->id,
+            'instructor_id' => $student->instructor->id,
+            'position' => $request->input('position'),
+            'approved' => '0',
+            'created_at' => Carbon::now()->toDateTimeString(),
+        ]);
+
+        return redirect()->back()->withSuccess('Solo request has been made!');
     }
+
+    public function approveSoloRequest($id)
+{
+    $solorequest = SoloRequest::whereId($id)->first();
+    $solorequest->approved = '1';
+    $solorequest->save();
+    $rosterupdate = RosterMember::where('user_id', $solorequest->student->user->id)->first();
+    if ($solorequest->position == 'Delivery')
+    {
+        $rosterupdate->del = '3';
+        $rosterupdate->save();
+    }
+    elseif ($solorequest->position == "Ground")
+    {
+        $rosterupdate->gnd = '3';
+        $rosterupdate->save();
+    }
+    elseif ($solorequest->position == "Tower")
+    {
+        $rosterupdate->twr = '3';
+        $rosterupdate->save();
+    }
+    elseif ($solorequest->position == "Departure")
+    {
+        $rosterupdate->dep = '3';
+        $rosterupdate->save();
+    }
+    elseif ($solorequest->position == "Arrival")
+    {
+        $rosterupdate->app = '3';
+        $rosterupdate->save();
+    }
+    elseif ($solorequest->position == "Centre")
+    {
+        $rosterupdate->ctr = '3';
+        $rosterupdate->save();
+    }
+
+    return redirect()->back()->withSuccess('Approved the solo request for ' .$solorequest->student->user->fullName('FLC'). '!' );
+}
+
+public function denySoloRequest($id)
+{
+    $solorequest = SoloRequest::whereId($id)->first();
+    $solorequest->approved = '2';
+    $solorequest->save();
+
+    return redirect()->back()->withError('You have denied the solo request for ' .$solorequest->student->user->fullName('FLC'). '!' );
+}
 
     public function changeStudentStatus(Request $request, $id)
     {
