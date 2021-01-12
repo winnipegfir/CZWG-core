@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\AtcTraining;
 
+use App\Notifications\SoloApproval;
 use App\Http\Controllers\Controller;
 use App\Models\AtcTraining\Application;
 use App\Models\AtcTraining\CBT\CbtModule;
@@ -22,6 +23,7 @@ use App\Models\Users\User;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 
 class TrainingController extends Controller
@@ -247,6 +249,8 @@ class TrainingController extends Controller
         $rosterupdate->ctr = '3';
         $rosterupdate->save();
     }
+    $positions = $solorequest->position;
+    $solorequest->student->user->notify(new SoloApproval($positions));
 
     return redirect()->back()->withSuccess('Approved the solo request for ' .$solorequest->student->user->fullName('FLC'). '!' );
 }
