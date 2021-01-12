@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\AtcTraining;
 
 use App\Http\Controllers\Controller;
+use App\Models\AtcTraining\CBT\CbtNotification;
 use App\Models\AtcTraining\CBT\CbtExam;
 use App\Models\AtcTraining\CBT\CbtExamAnswer;
 use App\Models\AtcTraining\CBT\CbtExamAssign;
@@ -158,6 +159,11 @@ class CBTController extends Controller
                     'instructor_id' => $instructor,
                     'intro' => '1',
                     'created_at' => Carbon::now()->toDateTimeString(),
+                ]);
+                CbtNotification::create([
+                    'student_id' => $s->id,
+                    'message' => 'You have been assigned the ' .$module->name. ' Module!',
+                    'dismissed' => '0',
                 ]);
 
             }

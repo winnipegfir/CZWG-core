@@ -138,6 +138,7 @@ Route::group(['middleware' => 'auth'], function () {
     //Dashboard
     Route::prefix('dashboard')->group(function () {
         Route::get('/', 'DashboardController@index')->name('dashboard.index');
+        Route::get('/cbtdismiss/{id}', 'DashboardController@dismissCbtNotification')->name('cbt.notification.dismiss');
         Route::post('/users/changeavatar', 'Users\UserController@changeAvatar')->name('users.changeavatar');
         Route::get('/users/changeavatar/discord', 'Users\UserController@changeAvatarDiscord')->name('users.changeavatar.discord');
         Route::get('/users/resetavatar', 'Users\UserController@resetAvatar')->name('users.resetavatar');

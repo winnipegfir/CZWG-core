@@ -5,6 +5,7 @@ namespace App\Http\Controllers\AtcTraining;
 use App\Notifications\SoloApproval;
 use App\Http\Controllers\Controller;
 use App\Models\AtcTraining\Application;
+use App\Models\AtcTraining\CBT\CbtNotification;
 use App\Models\AtcTraining\CBT\CbtModule;
 use App\Models\AtcTraining\CBT\CbtModuleAssign;
 use App\Models\AtcTraining\CBT\CbtExam;
@@ -249,6 +250,11 @@ class TrainingController extends Controller
         $rosterupdate->ctr = '3';
         $rosterupdate->save();
     }
+    CbtNotification::create([
+        'student_id' => $solorequest->student_id,
+        'message' => 'You have been issued a Solo Certificate for ' .$solorequest->position. '!',
+        'dismissed' => '0',
+    ]);
     $positions = $solorequest->position;
     $solorequest->student->user->notify(new SoloApproval($positions));
 
@@ -354,6 +360,11 @@ public function denySoloRequest($id)
             'instructor_id' => $student->instructor_id,
             'cbt_exam_id' => $request->input('examid'),
         ]);
+        CbtNotification::create([
+            'student_id' => $student->id,
+            'message' => 'You have been assigned the ' .$assign->cbtexam->name. '',
+            'dismissed' => '0',
+        ]);
 
         return redirect()->back()->withSuccess('Assigned exam to student!');
     }
@@ -384,13 +395,18 @@ public function denySoloRequest($id)
         if ($student->instructor != null) {
             $instructor = $student->instructor->id;
         }
-            CbtModuleAssign::create([
+           $module = CbtModuleAssign::create([
                 'cbt_module_id' => $request->input('moduleid'),
                 'student_id' => $student->id,
                 'instructor_id' => $instructor,
                 'intro' => '1',
                 'created_at' => Carbon::now()->toDateTimeString(),
             ]);
+        CbtNotification::create([
+            'student_id' => $student->id,
+            'message' => 'You have been assigned the ' .$module->cbtmodule->name. ' Module!',
+            'dismissed' => '0',
+        ]);
 
         return redirect()->back()->withSuccess('Module assigned to student!');
     }

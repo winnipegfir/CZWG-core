@@ -491,6 +491,29 @@
                         </div>
                     </div>
                     <br/>
+                    <div class="card" data-step="7"
+                         data-intro="Here you can view your certification status within CZWG.">
+                        <div class="card-body">
+                            <h3 class="font-weight-bold blue-text pb-2">1Winnipeg CBT</h3>
+                            <h5 class="font-weight-bold blue-text pb-2">Notifications</h5>
+                            @if (count($cbtnotifications) < 1)
+                                There are no notifications to show!
+                            @else
+                                @foreach ($cbtnotifications as $cn)
+                                    <li>{{$cn->message}} <a href="{{route('cbt.notification.dismiss', $cn->id)}}">(Dismiss)</a></li>
+                                @endforeach
+                            @endif
+                            <br>
+                            <ul class="list-unstyled mt-2 mb-0">
+                                <li class="mb-2">
+                                    <a href="{{route('cbt.index')}}" style="text-decoration:none;"><span
+                                            class="blue-text"><i class="fas fa-chevron-right"></i></span> &nbsp; <span
+                                            class="black-text">CBT System</span></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                <br/>
                     <div data-step="10"
                          data-intro="If you have any enquires or issues for the staff, feel free to make a ticket via the ticketing system."
                          class="card">
