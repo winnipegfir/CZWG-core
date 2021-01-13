@@ -14,6 +14,7 @@ use App\Models\AtcTraining\CBT\CbtModuleAssign;
 use App\Models\AtcTraining\CBT\CbtModuleLesson;
 use App\Models\AtcTraining\Student;
 use App\Models\Users\User;
+use App\Notifications\SoloApproval;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -497,6 +498,7 @@ class CBTController extends Controller
             'student_id' => $student->id,
             'cbt_exam_id' => $id,
         ])->get();
+        $student->instructo->user->notify(new ExamCompeltion($grade, $student, $exam));
 
         return redirect()->route('cbt.exam.results', [$id, $student->id]);
     }
