@@ -371,6 +371,13 @@ class CBTController extends Controller
     public function gradeExam(Request $req, $id)
     {
         $student = Student::where('user_id', Auth::user()->id)->first();
+        $examcheck = CbtExamResult::where([
+            ['student_id', $student->id],
+            ['cbt_exam_id', $id],
+        ])->first();
+        if ($examcheck != null) {
+            return redirect()->route('cbt.exam')->withError('You have already completed this exam!');
+        }
         CbtExamAnswer::create([
             'student_id' => $student->id,
             'cbt_exam_question_id' => $req->input('question_1'),
