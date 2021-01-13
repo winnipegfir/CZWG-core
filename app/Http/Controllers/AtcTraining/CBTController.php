@@ -498,7 +498,7 @@ class CBTController extends Controller
             'student_id' => $student->id,
             'cbt_exam_id' => $id,
         ])->get();
-        $student->instructo->user->notify(new ExamCompeltion($grade, $student, $exam));
+        $student->instructor->user->notify(new ExamCompeltion($grade, $student, $exam));
 
         return redirect()->route('cbt.exam.results', [$id, $student->id]);
     }
