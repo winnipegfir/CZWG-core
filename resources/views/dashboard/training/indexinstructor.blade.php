@@ -76,5 +76,8 @@
         <br/>
         <h5>Training Calendar</h5>
         <br>
+       @if(Auth()->check() && Auth::user()->hasRole('webmaster'))
+        ONLY WEBMASTER ROLE CAN SEE THIS
+        @endif
     </div>
 @stop
