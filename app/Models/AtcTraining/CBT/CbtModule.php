@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Models\AtcTraining\CBT;
+
 use App\Models\Users\User;
-use App\Models\AtcTraining\CBT\CbtExam;
 use Illuminate\Database\Eloquent\Model;
 
 class CbtModule extends Model

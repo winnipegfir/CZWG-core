@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers\AtcTraining;
 
-use App\Notifications\SoloApproval;
 use App\Http\Controllers\Controller;
 use App\Models\AtcTraining\Application;
-use App\Models\AtcTraining\CBT\CbtNotification;
-use App\Models\AtcTraining\CBT\CbtModule;
-use App\Models\AtcTraining\CBT\CbtModuleAssign;
 use App\Models\AtcTraining\CBT\CbtExam;
 use App\Models\AtcTraining\CBT\CbtExamAnswer;
 use App\Models\AtcTraining\CBT\CbtExamAssign;
 use App\Models\AtcTraining\CBT\CbtExamQuestion;
 use App\Models\AtcTraining\CBT\CbtExamResult;
+use App\Models\AtcTraining\CBT\CbtModule;
+use App\Models\AtcTraining\CBT\CbtModuleAssign;
+use App\Models\AtcTraining\CBT\CbtNotification;
 use App\Models\AtcTraining\Instructor;
 use App\Models\AtcTraining\InstructorStudents;
 use App\Models\AtcTraining\RosterMember;
@@ -21,10 +20,10 @@ use App\Models\AtcTraining\Student;
 use App\Models\AtcTraining\StudentNote;
 use App\Models\AtcTraining\TrainingWaittime;
 use App\Models\Users\User;
+use App\Notifications\SoloApproval;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Str;
 
 class TrainingController extends Controller
@@ -138,20 +137,18 @@ class TrainingController extends Controller
             'accepted_application' => $application->id,
             'entry_type' => $request->input('entry_type'),
         ]);
-        if ($instructor != NULL)
-        {
-        $modules = CbtModule::all();
-        foreach ($modules as $module)
-        {
-            if ($module->assignall == '1') {
-                CbtModuleAssign::create([
-                    'cbt_module_id' => $module->id,
-                    'student_id' => $student->id,
-                    'instructor_id' => $student->instructor->id,
-                    'intro' => '1',
-                    'created_at' => Carbon::now()->toDateTimeString(),
-                ]);
-            }
+        if ($instructor != null) {
+            $modules = CbtModule::all();
+            foreach ($modules as $module) {
+                if ($module->assignall == '1') {
+                    CbtModuleAssign::create([
+                        'cbt_module_id' => $module->id,
+                        'student_id' => $student->id,
+                        'instructor_id' => $student->instructor->id,
+                        'intro' => '1',
+                        'created_at' => Carbon::now()->toDateTimeString(),
+                    ]);
+                }
             }
         }
 
@@ -215,60 +212,49 @@ class TrainingController extends Controller
     }
 
     public function approveSoloRequest($id)
-{
-    $solorequest = SoloRequest::whereId($id)->first();
-    $solorequest->approved = '1';
-    $solorequest->save();
-    $rosterupdate = RosterMember::where('user_id', $solorequest->student->user->id)->first();
-    if ($solorequest->position == 'Delivery')
     {
-        $rosterupdate->del = '3';
-        $rosterupdate->save();
-    }
-    elseif ($solorequest->position == "Ground")
-    {
-        $rosterupdate->gnd = '3';
-        $rosterupdate->save();
-    }
-    elseif ($solorequest->position == "Tower")
-    {
-        $rosterupdate->twr = '3';
-        $rosterupdate->save();
-    }
-    elseif ($solorequest->position == "Departure")
-    {
-        $rosterupdate->dep = '3';
-        $rosterupdate->save();
-    }
-    elseif ($solorequest->position == "Arrival")
-    {
-        $rosterupdate->app = '3';
-        $rosterupdate->save();
-    }
-    elseif ($solorequest->position == "Centre")
-    {
-        $rosterupdate->ctr = '3';
-        $rosterupdate->save();
-    }
-    CbtNotification::create([
-        'student_id' => $solorequest->student_id,
-        'message' => 'You have been issued a Solo Certificate for ' .$solorequest->position. '!',
-        'dismissed' => '0',
-    ]);
-    $positions = $solorequest->position;
-    $solorequest->student->user->notify(new SoloApproval($positions));
+        $solorequest = SoloRequest::whereId($id)->first();
+        $solorequest->approved = '1';
+        $solorequest->save();
+        $rosterupdate = RosterMember::where('user_id', $solorequest->student->user->id)->first();
+        if ($solorequest->position == 'Delivery') {
+            $rosterupdate->del = '3';
+            $rosterupdate->save();
+        } elseif ($solorequest->position == 'Ground') {
+            $rosterupdate->gnd = '3';
+            $rosterupdate->save();
+        } elseif ($solorequest->position == 'Tower') {
+            $rosterupdate->twr = '3';
+            $rosterupdate->save();
+        } elseif ($solorequest->position == 'Departure') {
+            $rosterupdate->dep = '3';
+            $rosterupdate->save();
+        } elseif ($solorequest->position == 'Arrival') {
+            $rosterupdate->app = '3';
+            $rosterupdate->save();
+        } elseif ($solorequest->position == 'Centre') {
+            $rosterupdate->ctr = '3';
+            $rosterupdate->save();
+        }
+        CbtNotification::create([
+            'student_id' => $solorequest->student_id,
+            'message' => 'You have been issued a Solo Certificate for '.$solorequest->position.'!',
+            'dismissed' => '0',
+        ]);
+        $positions = $solorequest->position;
+        $solorequest->student->user->notify(new SoloApproval($positions));
 
-    return redirect()->back()->withSuccess('Approved the solo request for ' .$solorequest->student->user->fullName('FLC'). '!' );
-}
+        return redirect()->back()->withSuccess('Approved the solo request for '.$solorequest->student->user->fullName('FLC').'!');
+    }
 
-public function denySoloRequest($id)
-{
-    $solorequest = SoloRequest::whereId($id)->first();
-    $solorequest->approved = '2';
-    $solorequest->save();
+    public function denySoloRequest($id)
+    {
+        $solorequest = SoloRequest::whereId($id)->first();
+        $solorequest->approved = '2';
+        $solorequest->save();
 
-    return redirect()->back()->withError('You have denied the solo request for ' .$solorequest->student->user->fullName('FLC'). '!' );
-}
+        return redirect()->back()->withError('You have denied the solo request for '.$solorequest->student->user->fullName('FLC').'!');
+    }
 
     public function changeStudentStatus(Request $request, $id)
     {
@@ -281,12 +267,11 @@ public function denySoloRequest($id)
             $modules = CbtModule::all();
             foreach ($modules as $module) {
                 if ($module->assignall == '1') {
-
                     $check = CbtModuleAssign::where([
                         ['cbt_module_id', $module->id],
                         ['student_id', $student->id],
                     ])->first();
-                    if ($check == NULL) {
+                    if ($check == null) {
                         CbtModuleAssign::create([
                             'cbt_module_id' => $module->id,
                             'student_id' => $student->id,
@@ -330,8 +315,9 @@ public function denySoloRequest($id)
     public function assignExam(Request $request)
     {
         $student = Student::find($request->input('studentid'));
-        if (!$student)
+        if (! $student) {
             return redirect()->back()->withError('Student cannot be found!');
+        }
         $check = CbtExamResult::where([
             'student_id' => $request->input('studentid'),
             'cbt_exam_id' => $request->input('examid'),
@@ -362,7 +348,7 @@ public function denySoloRequest($id)
         ]);
         CbtNotification::create([
             'student_id' => $student->id,
-            'message' => 'You have been assigned the ' .$assign->cbtexam->name. '',
+            'message' => 'You have been assigned the '.$assign->cbtexam->name.'',
             'dismissed' => '0',
         ]);
 
@@ -384,27 +370,25 @@ public function denySoloRequest($id)
             ['cbt_module_id', $request->input('moduleid')],
             ['student_id', $student->id],
         ])->first();
-        if ($check != NULL)
-        {
+        if ($check != null) {
             return redirect()->back()->withError('Student Already has this Module Assigned!');
         }
-        if ($student->instructor == null)
-        {
+        if ($student->instructor == null) {
             $instructor = null;
         }
         if ($student->instructor != null) {
             $instructor = $student->instructor->id;
         }
-           $module = CbtModuleAssign::create([
-                'cbt_module_id' => $request->input('moduleid'),
-                'student_id' => $student->id,
-                'instructor_id' => $instructor,
-                'intro' => '1',
-                'created_at' => Carbon::now()->toDateTimeString(),
-            ]);
+        $module = CbtModuleAssign::create([
+            'cbt_module_id' => $request->input('moduleid'),
+            'student_id' => $student->id,
+            'instructor_id' => $instructor,
+            'intro' => '1',
+            'created_at' => Carbon::now()->toDateTimeString(),
+        ]);
         CbtNotification::create([
             'student_id' => $student->id,
-            'message' => 'You have been assigned the ' .$module->cbtmodule->name. ' Module!',
+            'message' => 'You have been assigned the '.$module->cbtmodule->name.' Module!',
             'dismissed' => '0',
         ]);
 

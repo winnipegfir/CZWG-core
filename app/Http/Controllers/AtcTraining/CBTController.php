@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\AtcTraining;
 
 use App\Http\Controllers\Controller;
-use App\Models\AtcTraining\CBT\CbtNotification;
 use App\Models\AtcTraining\CBT\CbtExam;
 use App\Models\AtcTraining\CBT\CbtExamAnswer;
 use App\Models\AtcTraining\CBT\CbtExamAssign;
@@ -12,9 +11,9 @@ use App\Models\AtcTraining\CBT\CbtExamResult;
 use App\Models\AtcTraining\CBT\CbtModule;
 use App\Models\AtcTraining\CBT\CbtModuleAssign;
 use App\Models\AtcTraining\CBT\CbtModuleLesson;
+use App\Models\AtcTraining\CBT\CbtNotification;
 use App\Models\AtcTraining\Student;
 use App\Models\Users\User;
-use App\Notifications\SoloApproval;
 use App\Notifications\ExamCompletion;
 use Auth;
 use Carbon\Carbon;
@@ -39,7 +38,7 @@ class CBTController extends Controller
         if ($student != null) {
             $modules = CbtModuleAssign::where('student_id', $student->id)->get();
             if (count($modules) < 1) {
-                    return redirect()->back()->withError('You do not have any assigned modules! Contact your Instructor at '.$student->instructor->email.'');
+                return redirect()->back()->withError('You do not have any assigned modules! Contact your Instructor at '.$student->instructor->email.'');
             }
         }
 
@@ -56,12 +55,9 @@ class CBTController extends Controller
 
     public function addModule(Request $request)
     {
-        if ($request->input('exam') == 0)
-        {
-            $exam = NULL;
-        }
-        else
-        {
+        if ($request->input('exam') == 0) {
+            $exam = null;
+        } else {
             $questioncount = CbtExamQuestion::where('cbt_exam_id', $request->input('exam'))->get();
             if (count($questioncount) < 10) {
                 return redirect()->back()->withError('This exam does not have the minimum 10 questions, so it cannot be assigned!');
@@ -71,7 +67,7 @@ class CBTController extends Controller
         $module = CbtModule::create([
             'name' => $request->input('name'),
             'user_id' => Auth::user()->id,
-            'exam' => $exam
+            'exam' => $exam,
         ]);
         CbtModuleLesson::create([
             'cbt_modules_id' => $module->id,
@@ -91,35 +87,31 @@ class CBTController extends Controller
             'updated_by' => Auth::user()->id,
             'updated_at' => Carbon::now()->toDateTimeString(),
         ]);
+
         return redirect()->route('cbt.module.edit', $module->id);
     }
 
     public function deleteModule($id)
     {
         $assign = CbtModuleAssign::where('cbt_module_id', $id)->get();
-            foreach ($assign as $a)
-            {
-                $a->delete();
-            }
+        foreach ($assign as $a) {
+            $a->delete();
+        }
         $lessons = CbtModuleLesson::where('cbt_modules_id', $id)->get();
-            foreach ($lessons as $l)
-            {
-                $l->delete();
-            }
+        foreach ($lessons as $l) {
+            $l->delete();
+        }
         $module = CbtModule::whereId($id)->first();
-            $module->delete();
+        $module->delete();
 
-            return redirect()->back()->withSuccess('Deleted the Module!');
+        return redirect()->back()->withSuccess('Deleted the Module!');
     }
 
     public function editModuleDetails(Request $request, $id)
     {
-        if ($request->input('exam') == 0)
-        {
-            $exam = NULL;
-        }
-        else
-        {
+        if ($request->input('exam') == 0) {
+            $exam = null;
+        } else {
             $questioncount = CbtExamQuestion::where('cbt_exam_id', $request->input('exam'))->get();
             if (count($questioncount) < 10) {
                 return redirect()->back()->withError('This exam does not have the minimum 10 questions, so it cannot be assigned!');
@@ -140,21 +132,18 @@ class CBTController extends Controller
         $module->assignall = '1';
         $module->save();
         $students = Student::all();
-        foreach ($students as $s)
-        {
-            if ($s->instructor != null)
-            {
+        foreach ($students as $s) {
+            if ($s->instructor != null) {
                 $instructor = $s->instructor->id;
             }
-            if ($s->instructor == null)
-            {
+            if ($s->instructor == null) {
                 $instructor = null;
             }
             $check = CbtModuleAssign::where([
                 ['cbt_module_id', $id],
                 ['student_id', $s->id],
             ])->first();
-            if ($check == NULL) {
+            if ($check == null) {
                 CbtModuleAssign::create([
                     'cbt_module_id' => $id,
                     'student_id' => $s->id,
@@ -164,12 +153,12 @@ class CBTController extends Controller
                 ]);
                 CbtNotification::create([
                     'student_id' => $s->id,
-                    'message' => 'You have been assigned the ' .$module->name. ' Module!',
+                    'message' => 'You have been assigned the '.$module->name.' Module!',
                     'dismissed' => '0',
                 ]);
-
             }
         }
+
         return redirect()->back()->withSuccess('Assigned module to all students!');
     }
 
@@ -179,8 +168,7 @@ class CBTController extends Controller
         $module = CbtModule::whereId($id)->first();
         $module->assignall = '0';
         $module->save();
-        foreach ($students as $s)
-        {
+        foreach ($students as $s) {
             $assign = CbtModuleAssign::where([
                 ['cbt_module_id', $id],
                 ['student_id', $s->id],
@@ -189,6 +177,7 @@ class CBTController extends Controller
                 $assign->delete();
             }
         }
+
         return redirect()->back()->withSuccess('Unassigned all students from this module!');
     }
 
@@ -222,6 +211,7 @@ class CBTController extends Controller
             'updated_by' => Auth::user()->id,
             'created_by' => Auth::user()->id,
         ]);
+
         return redirect()->route('cbt.lesson.edit', $lesson->id);
     }
 
@@ -250,9 +240,9 @@ class CBTController extends Controller
 
         return redirect()->back()->withSuccess('Deleted the lesson!');
     }
+
     public function viewmodule($id, $progress)
     {
-
         $student = Student::where('user_id', Auth::user()->id)->first();
         $intro = CbtModuleLesson::where([
             ['cbt_modules_id', $id],
@@ -302,16 +292,14 @@ class CBTController extends Controller
                 ['student_id', $student->id],
                 ['cbt_exam_id', $module->cbtmodule->cbt_exam_id],
             ])->first();
-            if ($check != null)
-            {
+            if ($check != null) {
                 return redirect()->back()->withSuccess('The exam is available under the Exams Section!');
             }
             $check2 = CbtExamResult::where([
                 ['cbt_exam_id', $module->cbtmodule->cbt_exam_id],
                 ['student_id', $student->id],
             ])->first();
-            if ($check2 != null)
-            {
+            if ($check2 != null) {
                 return redirect()->back()->withSuccess('You have already completed the exam for this module!');
             }
             $exam = CbtExamAssign::create([
