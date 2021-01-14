@@ -10,7 +10,6 @@
     @include('includes.trainingMenu')
     <head>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css"; rel="stylesheet" />
-
         <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js";></script>
     </head>
     <div class="container" style="margin-top: 20px;">
@@ -57,25 +56,24 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Assign Student to Instructor</h5><br>
-                    <h4>Note: This will create an Application and approve it for this student using your CID.</h4>
+                    <h5 class="modal-title" id="exampleModalLongTitle">Assign Student to Instructor</h5>       
                 </div>
                 <div class="modal-body">
+                    <p><i>Note: This will create an Application and approve it for this student using your CID.</i></p>
                     <form method="POST" action="{{route('instructor.student.add.new')}}" class="form-group">
                         @csrf
-                        <label class="form-control">Choose a Student</label>
-                        <select name="student_id" id-"student_id" class="js-example-basic-single form-control" style="width:470px;">
+                        <label class="form-control font-weight-bold">Choose a Student</label>
+                        <select name="student_id" id="student_id" class="js-example-basic-single form-control" style="width:100%;">
                         @foreach ($potentialstudent as $u)
                             <option value="{{$u->id}}">{{$u->id}} - {{$u->fullName('FL')}}</option>
                             @endforeach
                             </select>
-                            <label class="form-control">Choose an Instructor</label>
-                            <select name="instructor" id="instructor" class="form-control">
+                            <label class="form-control font-weight-bold">Choose an Instructor</label>
+                            <select name="instructor" id="instructor" class="js-example-basic-single form-control" style="width:100%;">
                                 @foreach ($instructors as $i)
                                     <option value="{{$i->id}}">{{$i->user->id}} - {{$i->user->fullName('FL')}}</option>
                                 @endforeach
                             </select>
-
 
                 </div>
                 <div class="modal-footer">

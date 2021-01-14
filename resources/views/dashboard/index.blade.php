@@ -494,8 +494,8 @@
                     <div class="card" data-step="7"
                          data-intro="Here you can view your certification status within CZWG.">
                         <div class="card-body">
-                            <h3 class="font-weight-bold blue-text pb-2">1Winnipeg CBT</h3>
-                            <h5 class="font-weight-bold blue-text pb-2">Notifications</h5>
+                            <h3 class="font-weight-bold blue-text pb-2">1Winnipeg Training</h3>
+                            <h5 class="font-weight-bold blue-text">Notifications</h5>
                             @if (count($cbtnotifications) < 1)
                                 There are no notifications to show!
                             @else
@@ -508,7 +508,7 @@
                                 <li class="mb-2">
                                     <a href="{{route('cbt.index')}}" style="text-decoration:none;"><span
                                             class="blue-text"><i class="fas fa-chevron-right"></i></span> &nbsp; <span
-                                            class="black-text">CBT System</span></a>
+                                            class="black-text">Training Centre</span></a>
                                 </li>
                             </ul>
                         </div>
@@ -519,7 +519,7 @@
                          class="card">
                         <div class="card-body">
                             <h3 class="font-weight-bold blue-text pb-2">Support</h3>
-                            <h5 class="font-weight-bold blue-text pb-2">Tickets</h5>
+                            <h5 class="font-weight-bold blue-text">Tickets</h5>
                             @if (count($openTickets) < 1)
                                 You have no open support tickets
                                 <br>
@@ -545,7 +545,7 @@
                             @endif
                             @if(Auth::user()->permissions >= 4)
                                 <br>
-                                <h5 class="font-weight-bold blue-text pb-2">Staff Tickets</h5>
+                                <h5 class="font-weight-bold blue-text">Staff Tickets</h5>
 
                                 @if (count($staffTickets) < 1)
                                     You have no open <b>staff</b> tickets
