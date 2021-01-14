@@ -17,12 +17,12 @@ class CreateUsersPermissionsTable extends Migration
             $table->unsignedInteger('user_id');
             $table->unsignedInteger('permission_id');
 
-//FOREIGN KEY CONSTRAINTS
+            //FOREIGN KEY CONSTRAINTS
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('permission_id')->references('id')->on('permissions')->onDelete('cascade');
 
-//SETTING THE PRIMARY KEYS
-            $table->primary(['user_id','permission_id']);
+            //SETTING THE PRIMARY KEYS
+            $table->primary(['user_id', 'permission_id']);
         });
     }
 
