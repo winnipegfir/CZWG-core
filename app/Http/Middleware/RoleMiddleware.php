@@ -6,21 +6,16 @@ use Closure;
 
 class RoleMiddleware
 {
+    public function handle($request, Closure $next, $role, $permission = null)
+    {
+        if (! $request->user()->hasRole($role)) {
+            abort(404);
+        }
 
-public function handle($request, Closure $next, $role, $permission = null)
-{
-if(!$request->user()->hasRole($role)) {
+        if ($permission !== null && ! $request->user()->can($permission)) {
+            abort(404);
+        }
 
-abort(404);
-
-}
-
-if($permission !== null && !$request->user()->can($permission)) {
-
-abort(404);
-}
-
-return $next($request);
-
-}
+        return $next($request);
+    }
 }

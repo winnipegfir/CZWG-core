@@ -9,7 +9,6 @@ use Illuminate\Support\ServiceProvider;
 
 class PermissionsServiceProvider extends ServiceProvider
 {
-
     public function register()
     {
 //
@@ -25,17 +24,17 @@ class PermissionsServiceProvider extends ServiceProvider
             });
         } catch (\Exception $e) {
             report($e);
+
             return false;
         }
 
-//Blade directives
+        //Blade directives
         Blade::directive('role', function ($role) {
             return "if(Auth::user()->check() && Auth::user()->hasRole({$role})) :"; //return this if statement inside php tag
         });
 
         Blade::directive('endrole', function ($role) {
-            return "endif;"; //return this endif statement inside php tag
+            return 'endif;'; //return this endif statement inside php tag
         });
-
     }
 }
