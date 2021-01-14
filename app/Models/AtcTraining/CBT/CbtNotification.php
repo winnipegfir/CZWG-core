@@ -2,8 +2,8 @@
 
 namespace App\Models\AtcTraining\CBT;
 
-use App\Models\Users\User;
 use App\Models\AtcTraining\Student;
+use App\Models\Users\User;
 use Illuminate\Database\Eloquent\Model;
 
 class CbtNotification extends Model
@@ -22,5 +22,4 @@ class CbtNotification extends Model
     {
         return $this->hasMany(Student::class);
     }
-
 }

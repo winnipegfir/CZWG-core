@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AtcTraining\CBT\CbtNotification;
 use App\Models\AtcTraining\RosterMember;
 use App\Models\AtcTraining\Student;
-use App\Models\AtcTraining\CBT\CbtNotification;
 use App\Models\Events\ControllerApplication;
 use App\Models\Events\Event;
 use App\Models\Events\EventConfirm;
@@ -65,13 +65,12 @@ class DashboardController extends Controller
     {
         $note = CbtNotification::whereId($id)->first();
         $student = Student::where('user_id', Auth::user()->id)->first();
-        if ($student->id != $note->student_id)
-        {
+        if ($student->id != $note->student_id) {
             return redirect()->back()->withError('This is not a notification you can dismiss!');
         }
         $note->delete();
 
-            return redirect()->back();
+        return redirect()->back();
     }
 
     public function postTweet()
