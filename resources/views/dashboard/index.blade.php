@@ -500,15 +500,16 @@
                                 There are no notifications to show!
                             @else
                                 @foreach ($cbtnotifications as $cn)
-                                    <li>{{$cn->message}} <a href="{{route('cbt.notification.dismiss', $cn->id)}}">(Dismiss)</a></li>
+                                    <li>{{$cn->message}} <a href="{{route('cbt.notification.dismiss', $cn->id)}}"><i style="color: red" class="fas fa-times"></i></a></li>
                                 @endforeach
                             @endif
                             <br>
                             <ul class="list-unstyled mt-2 mb-0">
                                 <li class="mb-2">
-                                    <a href="{{route('cbt.index')}}" style="text-decoration:none;"><span
-                                            class="blue-text"><i class="fas fa-chevron-right"></i></span> &nbsp; <span
-                                            class="black-text">Training Centre</span></a>
+                                    <a href="{{route('cbt.index')}}" style="text-decoration:none;">
+                                        <span class="blue-text"><i class="fas fa-chevron-right"></i></span> 
+                                        &nbsp; 
+                                        <span class="black-text">Training Centre</span></a>
                                 </li>
                             </ul>
                         </div>
