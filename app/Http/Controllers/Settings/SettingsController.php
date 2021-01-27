@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Settings\AuditLogEntry;
 use App\Models\Settings\CoreSettings;
 use App\Models\Settings\HomepageImages;
+use App\Models\Roles\Role;
 use Illuminate\Http\Request;
 
 class SettingsController extends Controller
@@ -182,5 +183,26 @@ class SettingsController extends Controller
         $image->delete();
 
         return back()->withSuccess('Image deleted successfully!');
+    }
+
+    public function viewRoles()
+    {
+        $roles = Role::all();
+
+        return view('admin.settings.roles', compact('roles'));
+    }
+
+    public function addRole(Request $request)
+    {
+        $check = Role::where('slug', $request->input('slug'))->first();
+        if ($check != null) {
+            return back()->withError('This slug already exists!');
+        }
+        Role::create([
+            'name' => $request->input('name'),
+            'slug' => $request->input('slug'),
+        ]);
+
+        return back()->withSuccess('Added the role!');
     }
 }
