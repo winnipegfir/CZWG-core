@@ -198,11 +198,21 @@ class SettingsController extends Controller
         if ($check != null) {
             return back()->withError('This slug already exists!');
         }
-        Role::create([
-            'name' => $request->input('name'),
-            'slug' => $request->input('slug'),
-        ]);
+        $role = new Role();
+        $role->slug = $request->input('slug');
+        $role->name = $request->input('name');
+        $role->save();
+
 
         return back()->withSuccess('Added the role!');
+    }
+
+    public function deleteRole($id)
+    {
+        $role = Role::whereId($id)->first();
+        $message = $role->name;
+        $role->delete();
+
+        return back()->withSuccess('Deleted the '.$message. ' Role!');
     }
 }

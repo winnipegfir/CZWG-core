@@ -24,7 +24,7 @@
                             {{$role->slug}}
                         </td>
                         <td>
-                            Remove
+                            <a type="button" class="btn btn-sm btn-primary" style="color: #ff6161" href="{{route('roles.delete', $role->id)}}"><i class="fa fa-times"></i> Delete</a>
                         </td>
                     </tr>
                 @endforeach

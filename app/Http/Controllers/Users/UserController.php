@@ -25,6 +25,9 @@ use mofodojodino\ProfanityFilter\Check;
 use NotificationChannels\Discord\Discord;
 use RestCord\DiscordClient;
 use SocialiteProviders\Manager\Config;
+use App\Models\Roles\Role;
+use App\Models\Roles\UsersRole;
+use Carbon\Carbon;
 
 class UserController extends Controller
 {
@@ -67,7 +70,6 @@ class UserController extends Controller
     public function viewProfile($id)
     {
         $user = User::where('id', $id)->firstOrFail();
-
         $rosterMember = RosterMember::where('user_id', $id)->first();
         if ($rosterMember) {
             $logs = SessionLog::where('cid', $id)->get();
@@ -165,8 +167,38 @@ class UserController extends Controller
         $userNotes = UserNote::where('user_id', $user->id)->orderBy('timestamp', 'desc')->get();
         //$xml['return'] = file_get_contents('https://cert.vatsim.net/cert/vatsimnet/idstatus.php?cid=' . $user->id);
         $auditLog = AuditLogEntry::where('affected_id', $id)->get();
+        $allroles = Role::all();
+        $roles = UsersRole::where('user_id', $user->id)->get();
 
-        return view('admin.users.profile', compact('user', 'xml', 'certification', 'active', 'auditLog', 'userNotes'));
+        return view('admin.users.profile', compact('user', 'xml', 'certification', 'active', 'auditLog', 'userNotes', 'roles', 'allroles'));
+    }
+
+    public function addRole(Request $request)
+    {
+    $u = User::whereId($request->input('id'))->first();
+    $role = Role::whereId($request->input('role'))->first();
+    if ($u->hasRole($role->slug)) {
+        return back()->withError('This user is already assigned the ' .$role->name. ' role!');
+    }
+    $u->roles()->attach($role);
+    $audit = new AuditLogEntry();
+    $audit->user_id = Auth::user()->id;
+    $audit->action = 'Added the ' .$role->name. ' Role.';
+    $audit->affected_id = $u->id;
+    $audit->time = Carbon::now()->toDateTimeString();
+    $audit->private = '0';
+    $audit->save();
+
+    return back()->withSuccess('Added the ' .$role->name. ' role!');
+    }
+
+    public function deleteRole($id, $user)
+    {
+        $role = Role::where('slug', $id)->first();
+        $u = User::whereId($user)->first();
+        $u->roles()->detach($role);
+
+        return back()->withSuccess('Deleted the role!');
     }
 
     public function editPermissions(Request $request, $id)
