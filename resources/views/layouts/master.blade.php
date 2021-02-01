@@ -97,7 +97,7 @@
     <header>
         <nav id="czwgHeader" class="navbar navbar-expand-lg navbar-dark p-0" style="min-height:59px; background-color:#013162">
             <div class="container">
-                <a class="navbar-brand" href="{{route('index')}}"><img style="height: 40px; width:auto;" src="https://i.imgur.com/c5dlKqc.png" alt=""></a>
+                <a class="navbar-brand" href="{{route('index')}}"><img style="height: 32px; width:auto;" src="https://i.imgur.com/n4fiWZf.png" alt=""></a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
