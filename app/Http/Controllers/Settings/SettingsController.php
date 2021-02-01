@@ -204,7 +204,6 @@ class SettingsController extends Controller
         $role->secure = $request->input('secure');
         $role->save();
 
-
         return back()->withSuccess('Added the role!');
     }
 

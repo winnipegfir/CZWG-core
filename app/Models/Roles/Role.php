@@ -23,4 +23,5 @@ class Role extends Model
     {
         return $this->hasMany(UsersRole::class);
     }
+
 }
