@@ -299,14 +299,8 @@
                         <li class="mb-2">
                     @foreach ($roles as $r)
                                 <i class="fas fa-chevron-right"></i> {{$r->role->name}}
-                            @if ($r->role->secure == '1')
-                                @role('admin')
                                 <a type="button" class="btn btn-sm btn-primary" style="color: #ff6161" href="{{route('user.role.delete', [$r->role->slug, $user->id])}}"><i class="fa fa-times"></i></a><br>
-                                @endrole
-                            @else
-                                    <a type="button" class="btn btn-sm btn-primary" style="color: #ff6161" href="{{route('user.role.delete', [$r->role->slug, $user->id])}}"><i class="fa fa-times"></i></a><br>
-                            @endif
-                            @endforeach
+                        @endforeach
                             @endif
                         </li></ul><br>
 
@@ -472,7 +466,7 @@
                        <select class="form-control" name="role">
                            @foreach ($allroles as $r)
 
-                            @if($r->secure == '1')
+                            @if($r->slug == 'admin' || $r->slug == 'ec' || $r->slug == 'chief-instructor')
                                 @role('admin')
                                <option value="{{$r->id}}">{{$r->name}}</option>
                             @endrole
