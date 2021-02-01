@@ -299,13 +299,19 @@
                         <li class="mb-2">
                     @foreach ($roles as $r)
                                 <i class="fas fa-chevron-right"></i> {{$r->role->name}}
+                            @if ($r->role->secure == '1')
+                                @role('admin')
                                 <a type="button" class="btn btn-sm btn-primary" style="color: #ff6161" href="{{route('user.role.delete', [$r->role->slug, $user->id])}}"><i class="fa fa-times"></i></a><br>
-                        @endforeach
+                                @endrole
+                            @else
+                                    <a type="button" class="btn btn-sm btn-primary" style="color: #ff6161" href="{{route('user.role.delete', [$r->role->slug, $user->id])}}"><i class="fa fa-times"></i></a><br>
+                            @endif
+                            @endforeach
                             @endif
                         </li></ul><br>
-                        @role('admin')
+
                         <a href="#" data-toggle="modal" data-target="#addRole" class="btn btn-sm bg-czqo-blue-light">Attach a Role</a>
-                        @endrole
+
                 </div><br>
                 <h2 class="font-weight-bold blue-text pb-2">User Notes</h2>
                 <div class="card p-3">
@@ -465,7 +471,14 @@
                    <form action="{{route('user.role.add')}}" method="POST" class="form-group">
                        <select class="form-control" name="role">
                            @foreach ($allroles as $r)
+
+                            @if($r->secure == '1')
+                                @role('admin')
                                <option value="{{$r->id}}">{{$r->name}}</option>
+                            @endrole
+                               @else
+                                   <option value="{{$r->id}}">{{$r->name}}</option>
+                               @endif
                        @endforeach
                        </select>
                        <input type="hidden" name="id" value="{{$user->id}}">

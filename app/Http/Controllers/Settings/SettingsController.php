@@ -201,6 +201,7 @@ class SettingsController extends Controller
         $role = new Role();
         $role->slug = $request->input('slug');
         $role->name = $request->input('name');
+        $role->secure = $request->input('secure');
         $role->save();
 
 

@@ -56,6 +56,11 @@
                             <label>Role Slug</label>
                             <input class="form-control" name="slug"></input>
                         </div>
+                        <label class=""form-group">Only Allow Admins to Attach/Detach this role?</label><br>
+                        <input type="radio" id="yes" name="secure" value="1" class="form-group">
+                        <label for="male" class="form-group">Yes</label><br>
+                        <input type="radio" id="no" name="secure" value="0" class="form-group">
+                        <label for="female" class="form-group">No</label><br>
 
                 </div>
                 <div class="modal-footer">
