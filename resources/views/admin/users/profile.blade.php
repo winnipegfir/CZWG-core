@@ -303,9 +303,9 @@
                         @endforeach
                             @endif
                         </li></ul><br>
-                        @role('admin')
+
                         <a href="#" data-toggle="modal" data-target="#addRole" class="btn btn-sm bg-czqo-blue-light">Attach a Role</a>
-                        @endrole
+
                 </div><br>
                 <h2 class="font-weight-bold blue-text pb-2">User Notes</h2>
                 <div class="card p-3">
@@ -465,7 +465,14 @@
                    <form action="{{route('user.role.add')}}" method="POST" class="form-group">
                        <select class="form-control" name="role">
                            @foreach ($allroles as $r)
+
+                            @if($r->slug == 'admin' || $r->slug == 'ec' || $r->slug == 'chief-instructor')
+                                @role('admin')
                                <option value="{{$r->id}}">{{$r->name}}</option>
+                            @endrole
+                               @else
+                                   <option value="{{$r->id}}">{{$r->name}}</option>
+                               @endif
                        @endforeach
                        </select>
                        <input type="hidden" name="id" value="{{$user->id}}">
