@@ -298,12 +298,15 @@
                     <ul class="list-unstyled mt-2 mb-0">
                         <li class="mb-2">
                     @foreach ($roles as $r)
-                                <i class="fas fa-chevron-right"></i> {{$r->role->name}}
+
                             @if ($r->role->secure == "1")
+                                    <i class="fas fa-chevron-right"></i>{{$r->role->name}}
                                 @role('admin')
                                 <a type="button" class="btn btn-sm btn-primary" style="color: #ff6161" href="{{route('user.role.delete', [$r->role->slug, $user->id])}}"><i class="fa fa-times"></i></a><br>
                                 @endrole
                                 @else
+                                <br>
+                                    <i class="fas fa-chevron-right"></i>{{$r->role->name}}
                                     <a type="button" class="btn btn-sm btn-primary" style="color: #ff6161" href="{{route('user.role.delete', [$r->role->slug, $user->id])}}"><i class="fa fa-times"></i></a><br>
                                 @endif
                                     @endforeach
