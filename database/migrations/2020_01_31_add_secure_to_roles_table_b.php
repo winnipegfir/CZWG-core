@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class SecureToRolesTableB extends Migration
+class AddSecureToRolesTable extends Migration
 {
 /**
 * Run the migrations.
@@ -13,9 +13,7 @@ class SecureToRolesTableB extends Migration
 */
 public function up()
 {
-    Schema::table('roles', function (Blueprint $table) {
-$table->integer('secure');
-});
+//
 }
 
 /**
