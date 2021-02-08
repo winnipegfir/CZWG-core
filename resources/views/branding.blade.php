@@ -78,19 +78,19 @@
     </div>
     <hr>
     <h3>Official FIR Colours</h3>
-    <a class="btn btn-primary" style="color: white">
+    <button class="btn btn-primary">
         <strong>Winnipeg Blue:</strong><br>
         <br>Hex #013162
         <br>Pantone Type 648C
         <br>C 38%   M 19%   Y 0%   K 62%
-    </a>
-    <a class="btn btn-grey" style="color: white">
+    </button>
+    <a class="btn" style="color: black; background-color: #fff; border: 1px solid black">
         <strong>Plain White:</strong><br>
         <br>Hex #ffffff
         <br>Pantone Type 115-1 U
         <br>C 0%   M 0%   Y 0%   K 0%
     </a>
-    <a class="btn btn-yellow" style="color: #013162">
+    <a class="btn" style="color: black; background-color: #f2d600">
         <strong>Prairie Gold:</strong><br>
         <br>Hex #f2d600
         <br>Pantone Type 3695 C
