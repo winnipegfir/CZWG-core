@@ -85,7 +85,7 @@
         <br>C 38%   M 19%   Y 0%   K 62%
     </button>
     <a class="btn" style="color: black; background-color: #fff; border: 1px solid black">
-        <strong>Plain White:</strong><br>
+        <strong>Ice White:</strong><br>
         <br>Hex #ffffff
         <br>Pantone Type 115-1 U
         <br>C 0%   M 0%   Y 0%   K 0%
