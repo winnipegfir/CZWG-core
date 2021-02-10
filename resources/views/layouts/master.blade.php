@@ -98,7 +98,7 @@
     <header>
         <nav id="czwgHeader" class="navbar navbar-expand-lg navbar-dark p-0" style="min-height:59px; background-color:#013162">
             <div class="container">
-                <a class="navbar-brand" href="{{route('index')}}"><img style="height: 32px; width:auto;" src="https://i.imgur.com/n4fiWZf.png" alt=""></a>
+                <a class="navbar-brand" href="{{route('index')}}"><img style="height: 40px; width:auto;" src="https://winnipegfir.ca/storage/files/uploads/1612557788.png" alt=""></a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -191,11 +191,11 @@
                             </a>
 
                             <div class="dropdown-menu dropdown-menu-right dropdown-default py-0" aria-labelledby="navbarDropdownMenuLink-333">
-                                <a class="dropdown-item {{ Request::is('dashboard') || Request::is('dashboard/*') ? 'active white-text' : '' }}" href="{{route('dashboard.index')}}">
+                                <a class="dropdown-item {{ Request::is('dashboard') || Request::is('dashboard/*')}}" href="{{route('dashboard.index')}}">
                                     <i class="fa fa-tachometer-alt mr-2"></i>Dashboard
                                 </a>
-                                @if(!Auth::check() || Auth::user()->permissions >= 4)
-                                <a class="dropdown-item" href="{{route('training.index')}}">
+                                @if(!Auth::check() || Auth::user()->permissions >= 2)
+                                <a class="dropdown-item {{ Request::is('training.index') || Request::is('training.index/*')}}" "dropdown-item" href="{{route('training.index')}}">
                                     <i class="fa fa-graduation-cap mr-2" style="margin-left: -1px"></i>1Winnipeg
                                 </a>
                                 @endif

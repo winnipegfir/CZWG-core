@@ -32,7 +32,7 @@ class CBTController extends Controller
     {
         $student = Student::where('user_id', Auth::user()->id)->first();
         if ($student == null) {
-            return redirect()->back()->withError('You are not a student in the system, contact the Chief Instructor!');
+            return redirect()->back()->withError('You are not a student in the system! Please contact the Chief Instructor.');
         }
         //Student Assigned Modules
         if ($student != null) {
