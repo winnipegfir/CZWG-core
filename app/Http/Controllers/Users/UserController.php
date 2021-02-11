@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\AtcTraining\RosterMember;
 use App\Models\ControllerBookings\ControllerBookingsBan;
 use App\Models\Network\SessionLog;
+use App\Models\Roles\Role;
+use App\Models\Roles\UsersRole;
 use App\Models\Settings\AuditLogEntry;
 use App\Models\Users\User;
 use App\Models\Users\UserNote;
@@ -14,6 +16,7 @@ use App\Models\Users\UserPreferences;
 use App\Notifications\DiscordWelcome;
 use App\Notifications\WelcomeNewUser;
 use Auth;
+use Carbon\Carbon;
 use Exception;
 use function GuzzleHttp\Psr7\str;
 use Illuminate\Http\Request;
@@ -25,9 +28,6 @@ use mofodojodino\ProfanityFilter\Check;
 use NotificationChannels\Discord\Discord;
 use RestCord\DiscordClient;
 use SocialiteProviders\Manager\Config;
-use App\Models\Roles\Role;
-use App\Models\Roles\UsersRole;
-use Carbon\Carbon;
 
 class UserController extends Controller
 {
@@ -175,21 +175,21 @@ class UserController extends Controller
 
     public function addRole(Request $request)
     {
-    $u = User::whereId($request->input('id'))->first();
-    $role = Role::whereId($request->input('role'))->first();
-    if ($u->hasRole($role->slug)) {
-        return back()->withError('This user is already assigned the ' .$role->name. ' role!');
-    }
-    $u->roles()->attach($role);
-    $audit = new AuditLogEntry();
-    $audit->user_id = Auth::user()->id;
-    $audit->action = 'Added the ' .$role->name. ' Role.';
-    $audit->affected_id = $u->id;
-    $audit->time = Carbon::now()->toDateTimeString();
-    $audit->private = '0';
-    $audit->save();
+        $u = User::whereId($request->input('id'))->first();
+        $role = Role::whereId($request->input('role'))->first();
+        if ($u->hasRole($role->slug)) {
+            return back()->withError('This user is already assigned the '.$role->name.' role!');
+        }
+        $u->roles()->attach($role);
+        $audit = new AuditLogEntry();
+        $audit->user_id = Auth::user()->id;
+        $audit->action = 'Added the '.$role->name.' Role.';
+        $audit->affected_id = $u->id;
+        $audit->time = Carbon::now()->toDateTimeString();
+        $audit->private = '0';
+        $audit->save();
 
-    return back()->withSuccess('Added the ' .$role->name. ' role!');
+        return back()->withSuccess('Added the '.$role->name.' role!');
     }
 
     public function deleteRole($id, $user)
