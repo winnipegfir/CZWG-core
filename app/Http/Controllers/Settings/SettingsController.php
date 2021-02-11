@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
+use App\Models\Roles\Role;
 use App\Models\Settings\AuditLogEntry;
 use App\Models\Settings\CoreSettings;
 use App\Models\Settings\HomepageImages;
-use App\Models\Roles\Role;
 use Illuminate\Http\Request;
 
 class SettingsController extends Controller
@@ -213,6 +213,6 @@ class SettingsController extends Controller
         $message = $role->name;
         $role->delete();
 
-        return back()->withSuccess('Deleted the '.$message. ' Role!');
+        return back()->withSuccess('Deleted the '.$message.' Role!');
     }
 }
