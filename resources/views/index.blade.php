@@ -13,7 +13,7 @@
                     <div class="py-5">
                         <div>
                             <br>
-                            <h1 style="font-size: 6em; color: #fff">
+                            <h1 style="font-size: 7em; color: #fff">
                                 <span class="winnipeg-blue corner" style="padding: 1%">We Are Winnipeg.</span>
                             </h1>
                             <h6 style="font-size: 1.25em; color: #fff;">
@@ -21,7 +21,7 @@
                             </h6>
                             <br>
                             <h4 style="font-size: 2em; color: #fff;">
-                                <span class="white corner" style="padding: 0.5%"><a href="#mid" id="discoverMore" class="blue-text">Check out our new homepage below!&nbsp;&nbsp;<i class="fas fa-arrow-down"></i></a></span>
+                                <span class="white corner" style="padding: 0.5%"><a href="#mid" id="discoverMore" class="blue-text">Come explore the heart of Canada.&nbsp;&nbsp;<i class="fas fa-arrow-down"></i></a></span>
                             </h4>
                         </div>
                     </div>
