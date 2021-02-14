@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -35,13 +36,14 @@ class Kernel extends ConsoleKernel
             $schedule->command('RatingUpdate');
 
             file_get_contents(config('cronurls.daily'));
-        })->everyMinute();
+        })->weekly();
 
         $schedule->call(function () use ($schedule) {
+            $schedule->command('CheckVisitHours');
             $schedule->command('CurrencyCheck');
 
             file_get_contents(config('cronurls.monthly'));
-        })->everyMinute();
+        })->monthly();
     }
 
     /**

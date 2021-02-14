@@ -55,7 +55,7 @@ class CurrencyCheck extends Command
                 'name' => $memberName,
                 'email' => $memberEmail,
                 'activity' => decimal_to_hm($memberActivity),
-                'requirement' => decimal_to_hm(config('currency.' . $rosterMember->status))
+                'requirement' => decimal_to_hm(config(sprintf('currency.%s', $rosterMember->status)))
             ]);
         }
 
