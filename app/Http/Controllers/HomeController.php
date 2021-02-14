@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Classes\VatsimHelper;
 use App\Models\AtcTraining\RosterMember;
 use App\Models\Events\Event;
 use App\Models\News\News;
@@ -17,7 +18,7 @@ class HomeController extends Controller
     {
         //Winnipeg online controllers
         $client = new Client();
-        $response = $client->request('GET', 'https://data.vatsim.net/v3/vatsim-data.json');
+        $response = $client->request('GET', VatsimHelper::getDatafeedUrl());
         $controllers = json_decode($response->getBody()->getContents())->controllers;
 
         $finalPositions = [];
