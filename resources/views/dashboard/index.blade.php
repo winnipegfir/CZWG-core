@@ -58,34 +58,28 @@
                                         You do not have an Instructor yet!
                                     @endif
                                 @endif
-                                <br/>
-                                <div data-step="4"
-                                     data-intro="Here you can link your Discord account to receive reminders for training sessions, and gain access to the CZWG Discord.">
-                                    <h5 class="mt-2">Discord</h5>
+                                <br>
+                                <div data-step="4" data-intro="Here you can link your Discord account to receive reminders for training sessions, and gain access to the CZWG Discord.">
+                                    <h5 class="mt-2 font-weight-bold blue-text">Discord</h5>
                                     @if (!Auth::user()->hasDiscord())
-                                        <p class="mt-1">You don't have a linked Discord account.</p>
-                                        <a href="#" data-toggle="modal" data-target="#discordModal" class="mt-1">Link a
-                                            Discord account</a>
+                                        <p class="mt-1"><i class="fa fa-times-circle" style="color:red"></i> You don't have a linked Discord account.</p>
+                                        <a href="#" data-toggle="modal" data-target="#discordModal" class="mt-1">Link Discord account</a>
                                     @else
-                                        <p class="mt-1"><img style="border-radius:50%; height: 30px;" class="img-fluid"
-                                                             src="{{Auth::user()->getDiscordAvatar()}}" alt="">&nbsp;&nbsp;{{Auth::user()->getDiscordUser()->username}}
-                                            <span
-                                                style="color: #d1d1d1;">#{{Auth::user()->getDiscordUser()->discriminator}}</span>
+                                        <p class="mt-1"><i class="fa fa-check-circle" style="color:green"> </i> <img style="border-radius:50%; height: 30px;" class="img-fluid"
+                                            src="{{Auth::user()->getDiscordAvatar()}}" alt="">&nbsp;&nbsp;{{Auth::user()->getDiscordUser()->username}}
+                                            <span style="color: #d1d1d1;">#{{Auth::user()->getDiscordUser()->discriminator}}</span>
                                         </p>
                                         @if(!Auth::user()->memberOfCZWGGuild())
-                                            <a href="#" data-toggle="modal" data-target="#joinDiscordServerModal"
-                                               class="mt-1">Join The CZWG Discord</a><br/>
+                                            <a href="#" data-toggle="modal" data-target="#joinDiscordServerModal" class="mt-1">Join The CZWG Discord</a><br/>
                                         @endif
-                                        <a href="#" data-toggle="modal" data-target="#discordModal"
-                                           class="mt-1">Unlink</a>
+                                        <a href="#" data-toggle="modal" data-target="#discordModal" class="mt-1">Unlink</a>
                                     @endif
                                 </div>
 
                             </div>
-                            <div data-step="5"
-                                 data-intro="You can change your avatar here. Your avatar is available when people view your account. This will likely only be staff members, unless you sign up for an event or similar activity."
+                            <div data-step="5" data-intro="You can change your avatar here. Your avatar is available when people view your account. This will likely only be staff members, unless you sign up for an event or similar activity."
                                  class="col">
-                                <h4 class="card-title; text-center">Avatar</h5><br>
+                                <h4 class="blue-text font-weight-bold card-title; text-center" style="padding-bottom: 2%">Avatar</h5>
                                     <div class="text-center">
                                         <img src="{{Auth::user()->avatar()}}"
                                              style="width: 125px; height: 125px; margin-bottom: 10px; border-radius: 50%;">
