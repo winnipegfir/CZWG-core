@@ -90,7 +90,7 @@
                     <p>SimAddons truly is a legend in creating scenery for Canadian airports, and the Winnipeg FIR has quite a lot of scenery from the team across the pond. Their scenery for Winnipeg isn't brand new, but is still the best available for P3D and MSFS as of late 2020.</p>
                     <a style="margin-left: -0.1%" target="_blank" href="http://www.simaddons.com/pages/simaddons_purchase1.htm"class="btn btn-primary">View More</a>
                 <br></br>
-                <h4>Orbx - for FDX & P3D</h4>
+                <h4>Orbx - for FSX & P3D</h4>
                     <h5>Freeware</h5>
                     <p>ORBX is some of the best in the business at creating scenery, and Winnipeg is one of those airports available in their freeware pack. Get it now for your sim and upgrade Winnipeg for no cost.</p>
                     <a style="margin-left: -0.1%" target="_blank" href="https://orbxdirect.com/product/ftx-global-airport-pack"class="btn btn-primary">View More</a>
@@ -136,7 +136,7 @@
             <li>Tower open Mon - Fri from 1400Z - 2300Z, excluding holidays.</li>
             <hr>
             <h2 class="font-weight-bold blue-text">Scenery</h2>
-                <h4>Orbx - for FDX & P3D</h4>
+                <h4>Orbx - for FSX & P3D</h4>
                     <h5>Freeware</h5>
                     <p>ORBX is some of the best in the business at creating scenery, and CYPG is one of many airports included in their free Global Airport Pack. Snag it now and get an enhanced experience at Southport.</p>
                     <a style="margin-left: -0.1%" target="_blank" href="https://orbxdirect.com/product/ftx-global-airport-pack"class="btn btn-primary">View More</a>
@@ -194,7 +194,7 @@
                     <p>With their unique terminal shape and classic General Aviation ramp, Saskatoon is welcoming to both major airlines and small private pilots. FSXCenery brings the airport to life with their scenery.</p>
                     <a style="margin-left: -0.1%" target="_blank" href="https://secure.simmarket.com/fsxcenery-cyxe-saskatoon-john-g.-diefenbaker-international-airport-fsx-p3dv5.phtml"class="btn btn-primary">View More</a>
                     <br></br>
-                <h4>Orbx - for FDX & P3D</h4>
+                <h4>Orbx - for FSX & P3D</h4>
                     <h5>Freeware</h5>
                     <p>ORBX is some of the best in the business at creating scenery. Like most airports, CYXE is covered in their freeware pack. Pick it up for zero dollars and upgrade your sim.</p>
                     <a style="margin-left: -0.1%" target="_blank" href="https://orbxdirect.com/product/ftx-global-airport-pack"class="btn btn-primary">View More</a>
@@ -260,7 +260,7 @@
                     <p>SimAddons is here with Thunder Bay too, of course - they've had this out for some time, but the scenery still matches with the current setup in CYQT.</p>
                     <a style="margin-left: -0.1%" data-target="_blank" href="http://www.simaddons.com/pages/simaddons_purchase1.htm"class="btn btn-primary">View More</a>
                     <br></br>
-                <h4>Orbx - for FDX & P3D</h4>
+                <h4>Orbx - for FSX & P3D</h4>
                     <h5>Freeware</h5>
                     <p>ORBX is some of the best in the business at creating scenery. Thunder Bay is just another one on their list for the team - and at no cost, it's worth grabbing if you want to up your game.</p>
                     <a style="margin-left: -0.1%" target="_blank" href="https://orbxdirect.com/product/ftx-global-airport-pack"class="btn btn-primary">View More</a>
@@ -318,7 +318,7 @@
                     <p>FSXCenery has Regina on lock for FSX and P3D - their scenery just released for the simulators models the airport great - and is a fantastic addition to any simulator for central Canada flying.</p>
                     <a style="margin-left: -0.1%" target="_blank" href="https://secure.simmarket.com/fsxcenery-cyqr-regina-international-airport-fsx-p3d.phtml"class="btn btn-primary">View More</a>
                     <br></br>
-                <h4>Orbx - for FDX & P3D</h4>
+                <h4>Orbx - for FSX & P3D</h4>
                     <h5>Freeware</h5>
                     <p>ORBX is some of the best in the business at creating scenery. You shouldn't be shocked that CYQR is covered in their freeware pack - it's free, it's a nice upgrade. Go get it today.</p>
                     <a style="margin-left: -0.1%" target="_blank" href="https://orbxdirect.com/product/ftx-global-airport-pack"class="btn btn-primary">View More</a>
@@ -366,7 +366,7 @@
             <li>Tower/Terminal also frequenty closed on weekends.</li>
             <hr>
             <h2 class="font-weight-bold blue-text">Scenery</h2>
-                <h4>Orbx - for FDX & P3D</h4>
+                <h4>Orbx - for FSX & P3D</h4>
                     <h5>Freeware</h5>
                     <p>ORBX is some of the best in the business at creating scenery. Moose Jaw is limited for scenery - but they've got ORBX on their side with their freeware pack - and it's a worthwile download.</p>
                     <a style="margin-left: -0.1%" target="_blank" href="https://orbxdirect.com/product/ftx-global-airport-pack"class="btn btn-primary">View More</a>
