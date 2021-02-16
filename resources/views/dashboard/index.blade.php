@@ -1,9 +1,11 @@
-@extends('layouts.master')
+@extends('layouts.dashboard')
 @section('content')
+
+<div style="background-color: #013162">
     <div class="container py-4">
         <h1 data-step="1"
             data-intro="Welcome to the CZWG Dashboard! This is your central hub for all things Winnipeg. Here you can interact with our FIR, and manage your account."
-            class="blue-text font-weight-bold">Dashboard</h1>
+            class="font-weight-bold white-text">Dashboard</h1>
         <br class="my-2">
         <div class="row">
             <div class="col">
@@ -32,7 +34,7 @@
                 <br>
                 <div data-step="2" data-intro="Here is where you manage and view the data we store on you and your CZWG profile." class="card ">
                     <div class="card-body">
-                        <h3 class="font-weight-bold blue-text pb-2">Your Account</h3>
+                            <h3 class="font-weight-bold blue-text pb-2">Profile</h3>
                         <div class="row">
                             <div class="col" data-step="3" data-intro="Here is an overview of your profile, including your CZWG roles. You can change the way your name is displayed by clicking on the 'Change display name' button. (CoC A4(b))">
                                 <h5 class="card-title">
@@ -509,7 +511,7 @@
                         </div>
                     </div>
                 <br/>
-                    <div data-step="10"
+                    <div data-step="8"
                          data-intro="If you have any enquires or issues for the staff, feel free to make a ticket via the ticketing system."
                          class="card">
                         <div class="card-body">
@@ -685,8 +687,7 @@
                 </div>
         </div>
         <br/>
-        <a href="javascript:void(0);" onclick="javascript:introJs().setOption('showProgress', true).start();">View the
-            tutorial</a>
+        <a style="color: white" href="javascript:void(0);" onclick="javascript:introJs().setOption('showProgress', true).start();">Dashboard Tutorial</a>
     </div>
 
     <!--Change avatar modal-->
@@ -781,7 +782,6 @@
         </div>
     </div>
     <!-- End Rating Change modal -->
-
     <!--Change display name modal-->
     <div class="modal fade" id="changeDisplayNameModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
