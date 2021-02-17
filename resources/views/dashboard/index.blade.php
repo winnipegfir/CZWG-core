@@ -37,7 +37,7 @@
                             <h3 class="font-weight-bold blue-text pb-2">Profile</h3>
                         <div class="row">
                             <div class="col" data-step="3" data-intro="Here is an overview of your profile, including your CZWG roles. You can change the way your name is displayed by clicking on the 'Change display name' button. (CoC A4(b))">
-                                <h5 class="card-title">
+                                <h5 class="font-weight-bold card-title">
                                     {{ Auth::user()->fullName('FLC') }}
                                 </h5>
                                 <h6 class="card-subtitle mb-2 text-muted">
@@ -47,36 +47,36 @@
                                 Role: {{Auth::user()->permissions()}}<br/>
                                 @if(Auth::user()->staffProfile)
                                     Staff Role: {{Auth::user()->staffProfile->position}}
-                                @endif <br/>
+                                @endif 
+                                <hr>
                                 @if($yourinstructor != null && $yourinstructor->instructor != null)
-                                    <br>
-                                    <h6><b>Your Instructor is:</b> {{$yourinstructor->instructor->user->fullName('FL')}}
+                                    <p><b>Your Instructor is:</b> {{$yourinstructor->instructor->user->fullName('FL')}}
                                         <br>
                                         <b>Email:</b> <a
                                             href="mailto:{{$yourinstructor->instructor_email}}">{{$yourinstructor->instructor->email}}</a>
-                                    </h6>
+                                    </p>
                                 @else
                                     @if ($certification == "training")
                                         You do not have an Instructor yet!
                                     @endif
                                 @endif
-                                <br>
+                                <hr>
                                 <div data-step="4" data-intro="Here you can link your Discord account to receive reminders for training sessions, and gain access to the CZWG Discord.">
                                     <h5 class="mt-2 font-weight-bold blue-text">Discord</h5>
                                     @if (!Auth::user()->hasDiscord())
                                         <p class="mt-1"><i class="fa fa-times-circle" style="color:red"></i> You don't have a linked Discord account.</p>
-                                        <a href="#" data-toggle="modal" data-target="#discordModal" class="mt-1">Link Discord account</a>
+                                        <a href="#" class="btn-sm btn-primary m-0" data-toggle="modal" data-target="#discordModal" class="mt-1">Link Discord account</a>
                                         <hr>
                                     @else
                                         <p class="mt-1"><i class="fa fa-check-circle" style="color:green"> </i> <img style="border-radius:50%; height: 30px;" class="img-fluid"
                                             src="{{Auth::user()->getDiscordAvatar()}}" alt="">&nbsp;&nbsp;{{Auth::user()->getDiscordUser()->username}}
                                             <span style="color: #d1d1d1;">#{{Auth::user()->getDiscordUser()->discriminator}}</span>
                                         </p>
-                                        <hr>
                                         @if(!Auth::user()->memberOfCZWGGuild())
-                                            <a href="#" data-toggle="modal" data-target="#joinDiscordServerModal" class="mt-1">Join The CZWG Discord</a><br/>
+                                        <a href="#" class="btn-sm btn-primary m-0" data-toggle="modal" data-target="#joinDiscordServerModal" class="mt-1">Join The CZWG Discord</a><br/>
                                         @endif
-                                        <a href="#" data-toggle="modal" data-target="#discordModal" class="mt-1">Unlink</a>
+                                        <a href="#" class="btn-sm btn-danger m-0" data-toggle="modal" data-target="#discordModal" class="mt-1">Unlink</a>
+                                        <hr>
                                     @endif
                                 </div>
 
@@ -343,7 +343,7 @@
                                     @endif
                                     @if ($active == 0)
                                         <h5>You are currently inactive, please contact the FIR Chief</h5>
-                                        <h5>You cannot control on the network while inactive!</h5>
+                                        <h5>You should not control on the network while inactive.</h5>
                                     @endif
                                   </span>
                             </div>
@@ -687,7 +687,7 @@
                         </div>
                     @endif
                 </div>
-        </div>
+            </div>
         <br/>
         <a style="color: white" href="javascript:void(0);" onclick="javascript:introJs().setOption('showProgress', true).start();">Dashboard Tutorial</a>
     </div>
@@ -766,16 +766,16 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Why is my rating wrong?</h5>
+                    <h5 class="modal-title">How We Update VATSIM Ratings</h5>
                 </div>
                 <div class="modal-body">
                     <h5>Our website updates your VATSIM rating 2 ways:</h5>
                     The first way is on login. Everytime you login to the website, we get your rating from VATSIM connect.
                     <br><br>
-                    The second way is everyday, at 12am Eastern, we go through our list of users and compare your rating on our website with the VATSIM API.
+                    The second way is everyday, at 00:00 Eastern, we go through our list of users and compare your rating on our website with the VATSIM API.
                     <hr>
                     <h5>How can I fix my rating?</h5>
-                    <p>If you would like to fix your rating on our website, you may <a href="/logout">logout</a> and log back in, or wait until our check happens at 12am Eastern.</p>
+                    <p>If you would like to fix your rating on our website, you may <a href="/logout">logout</a> and log back in, or wait until our check happens at 00:00 Eastern Time.</p>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-sm btn-light" data-dismiss="modal">Dismiss</button>

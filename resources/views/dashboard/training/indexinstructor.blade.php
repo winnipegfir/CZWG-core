@@ -15,7 +15,7 @@
             <div class="col">
                 <div class="card">
                     <div class="card-header">
-                        Your Students
+                        <text class="font-weight-bold">Your Students</text>
                         </div>
 
                     <div class="card-body">
@@ -51,7 +51,7 @@
                 @if (Auth::user()->permissions >= 4)
                 <div class="card">
                     <div class="card-header">
-                        Student Solo Requests
+                        <text class="font-weight-bold">Student Solo Requests</text>
                     </div>
 
                     <div class="card-body">
@@ -62,8 +62,8 @@
                         <text class="font-weight-bold">Student: </text> {{$s->student->user->fullName('FLC')}}<br>
                         <text class="font-weight-bold">Instructor: </text> {{$s->instructor->user->fullName('FLC')}}<br>
                         <text class="font-weight-bold">Solo Position: </text> {{$s->position}}<br>
-                        <a href="{{route('training.solo.approve', $s->id)}}" class="btn btn-success btn-sm" style="float: center;">Approve</a>
-                        <a href="{{route('training.solo.deny', $s->id)}}" class="btn btn-danger btn-sm" style="float: center;">Deny</a>
+                        <a href="{{route('training.solo.approve', $s->id)}}" class="ml-0 btn btn-success btn-sm" style="float: center;">Approve</a>
+                        <a href="{{route('training.solo.deny', $s->id)}}" class="btn btn-danger btn-sm" style="float: center;">Deny</a>    
                         <hr>
                         @endforeach
                     @endif
@@ -73,8 +73,8 @@
                 @endif
             </div>
         </div>
-        <br/>
-        <h5>Training Calendar</h5>
+        <br>
+        <h3 class="font-weight-bold blue-text">Training Calendar</h3>
         <br>
        @role('chief-instructor' || 'webmaster')
         ONLY WEBMASTER ROLE CAN SEE THIS
