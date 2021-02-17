@@ -66,11 +66,13 @@
                                     @if (!Auth::user()->hasDiscord())
                                         <p class="mt-1"><i class="fa fa-times-circle" style="color:red"></i> You don't have a linked Discord account.</p>
                                         <a href="#" data-toggle="modal" data-target="#discordModal" class="mt-1">Link Discord account</a>
+                                        <hr>
                                     @else
                                         <p class="mt-1"><i class="fa fa-check-circle" style="color:green"> </i> <img style="border-radius:50%; height: 30px;" class="img-fluid"
                                             src="{{Auth::user()->getDiscordAvatar()}}" alt="">&nbsp;&nbsp;{{Auth::user()->getDiscordUser()->username}}
                                             <span style="color: #d1d1d1;">#{{Auth::user()->getDiscordUser()->discriminator}}</span>
                                         </p>
+                                        <hr>
                                         @if(!Auth::user()->memberOfCZWGGuild())
                                             <a href="#" data-toggle="modal" data-target="#joinDiscordServerModal" class="mt-1">Join The CZWG Discord</a><br/>
                                         @endif
