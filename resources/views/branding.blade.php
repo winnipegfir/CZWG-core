@@ -55,7 +55,7 @@
             <div class="col-md-3 d-flex flex-column align-items-center justify-content-center" style="padding-top: 2%">
                 <img style="background-color: #444444" src="https://winnipegfir.ca/storage/files/uploads/1612961940.png" class="img-fluid" alt="">
                 <br/>
-                <a href=https://winnipegfir.ca/storage/files/uploads/1612961940.png">White Shop Logo</a>
+                <a href="https://winnipegfir.ca/storage/files/uploads/1612961940.png">White Shop Logo</a>
             </div>
 
         </div>
