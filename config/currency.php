@@ -4,5 +4,5 @@
 return [
     'visit' => 1,
     'home' => 2,
-    'instructor' => 3
+    'instructor' => 3,
 ];

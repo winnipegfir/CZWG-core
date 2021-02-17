@@ -45,8 +45,9 @@ class CurrencyCheck extends Command
     {
         $badMembers = [];
         foreach (RosterMember::all()->sortBy('currency') as $rosterMember) {
-            if ($rosterMember->currency > config(sprintf('currency.%s', $rosterMember->status)))
+            if ($rosterMember->currency > config(sprintf('currency.%s', $rosterMember->status))) {
                 continue;
+            }
 
             $memberName = $rosterMember->full_name.' '.$rosterMember->cid;
             $memberEmail = $rosterMember->user()->first()->email;
@@ -55,7 +56,7 @@ class CurrencyCheck extends Command
                 'name' => $memberName,
                 'email' => $memberEmail,
                 'activity' => decimal_to_hm($memberActivity),
-                'requirement' => decimal_to_hm(config(sprintf('currency.%s', $rosterMember->status)))
+                'requirement' => decimal_to_hm(config(sprintf('currency.%s', $rosterMember->status))),
             ]);
         }
 
@@ -63,7 +64,7 @@ class CurrencyCheck extends Command
         Notification::route('mail', [
             $settings->emailfirchief,
             $settings->emaildepfirchief,
-            $settings->emailcinstructor
+            $settings->emailcinstructor,
         ])->notify(new MonthlyInactivity($badMembers));
 
         // Reset the hours for every member

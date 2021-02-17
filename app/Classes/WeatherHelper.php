@@ -6,13 +6,15 @@ use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
-class WeatherHelper {
+class WeatherHelper
+{
     /**
-     * Gets ATIS Letter for Winnipeg Airports Page
+     * Gets ATIS Letter for Winnipeg Airports Page.
      * @param $icao
      * @return string|null
      */
-    public static function getAtisLetter($icao) {
+    public static function getAtisLetter($icao)
+    {
         $atis_letter = null;
 
         $client = new Client();
@@ -29,11 +31,12 @@ class WeatherHelper {
     }
 
     /**
-     * Gets ATIS Letter for Winnipeg Airports Page
+     * Gets ATIS Letter for Winnipeg Airports Page.
      * @param $icao
      * @return string
      */
-    public static function getAtis($icao) {
+    public static function getAtis($icao)
+    {
         $text_atis = '';
 
         $client = new Client();

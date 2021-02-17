@@ -3,7 +3,6 @@
 namespace App\Console\Commands;
 
 use App\Classes\VatsimHelper;
-use App\Models\AtcTraining\RosterMember;
 use App\Models\Users\User;
 use GuzzleHttp\Client;
 use Illuminate\Console\Command;
@@ -51,7 +50,7 @@ class RatingUpdate extends Command
         foreach ($vatsimRatings as $r) {
             $ratings[$r->id] = [
                 'short' => $r->short,
-                'long' => $r->long
+                'long' => $r->long,
             ];
         }
 

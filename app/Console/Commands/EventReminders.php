@@ -49,8 +49,9 @@ class EventReminders extends Command
             $confirms = EventConfirm::where('event_id', $e->id)->get();
 
             foreach ($confirms as $c) {
-                if ($c->email_sent != 0 && $c->user()->gdpr_subscribed_emails != 1)
+                if ($c->email_sent != 0 && $c->user()->gdpr_subscribed_emails != 1) {
                     return;
+                }
 
                 $positions = EventConfirm::where(['user_id' => $c->user_id, 'event_id' => $e->id])->update('email_sent', 1)->get();
 
