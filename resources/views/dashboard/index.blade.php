@@ -4,7 +4,7 @@
 <div style="background-color: #013162">
     <div class="container py-4">
         <h1 data-step="1"
-            data-intro="Welcome to the CZWG Dashboard! This is your central hub for all things Winnipeg. Here you can interact with our FIR, and manage your account."
+            data-intro="Welcome to your Dashboard! This is your central hub for all things Winnipeg. Here you can interact with our FIR, and manage your account."
             class="font-weight-bold white-text">Dashboard</h1>
         <br class="my-2">
         <div class="row">
@@ -32,7 +32,7 @@
                     </div>
                 @endif
                 <br>
-                <div data-step="2" data-intro="Here is where you manage and view the data we store on you and your CZWG profile." class="card ">
+                <div data-step="2" data-intro="Here is where you manage and view the data we store on you and your Winnipeg FIR Profile." class="card ">
                     <div class="card-body">
                             <h3 class="font-weight-bold blue-text pb-2">Profile</h3>
                         <div class="row">
@@ -264,7 +264,7 @@
             </div>
             @if(Auth::user()->permissions >= 1)
                 <div class="col">
-                    <div class="card" data-step="7"
+                    <div class="card" data-step="6"
                          data-intro="Here you can view your certification status within CZWG.">
                         <div class="card-body">
                             <h3 class="font-weight-bold blue-text pb-2">Certification and Training</h3>
@@ -490,7 +490,7 @@
                     </div>
                     <br/>
                     <div class="card" data-step="7"
-                         data-intro="Here you can view your certification status within CZWG.">
+                         data-intro="This is where you'll see any training-related notifications - exams, modules and more will appear here!">
                         <div class="card-body">
                             <h3 class="font-weight-bold blue-text pb-2">1Winnipeg Training</h3>
                             <h5 class="font-weight-bold blue-text">Notifications</h5>
