@@ -4,8 +4,10 @@ namespace App\Classes;
 
 use GuzzleHttp\Client;
 
-class VatsimHelper {
-    public static function getDatafeedUrl() {
+class VatsimHelper
+{
+    public static function getDatafeedUrl()
+    {
         $client = new Client();
         $request = $client->request('GET', 'https://status.vatsim.net/status.json');
 

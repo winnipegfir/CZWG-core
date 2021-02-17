@@ -611,13 +611,13 @@ class UserController extends Controller
             $args['roles'] = [482835389640343562];
         }
         $discord->guild->addGuildMember($args);
-        
+
         try {
             Auth::user()->notify(new DiscordWelcome());
         } catch (CouldNotSendNotification $e) {
             // do nothing
         }
-        
+
         $discord->channel->createMessage(['channel.id' => 695849973585149962, 'content' => '<@'.$discordUser->id.'> ('.Auth::id().') has joined.']);
 
         return redirect()->route('dashboard.index')->with('success', 'You have joined the Winnipeg Discord server!');

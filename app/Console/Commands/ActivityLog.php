@@ -70,10 +70,10 @@ class ActivityLog extends Command
                 }
             }
 
-            if (!$identFound) {
+            if (! $identFound) {
                 //Check to see if we need to make a new position, also check to make sure it isn't an ATIS, or an observer
                 if (Str::contains($controller->callsign, ['ZWG', 'CZWG', 'CYWG', 'CYAV', 'CYPG', 'CYQR', 'CYXE', 'CYQT', 'CYMJ']) &&
-                    !Str::endsWith($controller->callsign, ['ATIS', 'OBS']) &&
+                    ! Str::endsWith($controller->callsign, ['ATIS', 'OBS']) &&
                     $controller->facility != 0) {
                     // Add position to table if so
                     $monPos = new MonitoredPosition();
@@ -100,7 +100,7 @@ class ActivityLog extends Command
                 }
             }
 
-            if (!$logFound) {
+            if (! $logFound) {
                 //We have no log yet, let's create one!
                 $roster = RosterMember::where('cid', $oc->cid)->first();
 
@@ -132,7 +132,7 @@ class ActivityLog extends Command
                 }
             }
 
-            if (!$stillOnline) {
+            if (! $stillOnline) {
                 // Start and end values parsed so Carbon can understand them
                 $start = Carbon::create($log->session_start);
                 $end = Carbon::now();

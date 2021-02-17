@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use App\Models\AtcTraining\RosterMember;
 use App\Models\Settings\CoreSettings;
 use App\Notifications\network\CheckVisitHours as Email;
-use App\Notifications\Network\MonthlyInactivity;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Console\Command;
@@ -46,7 +45,8 @@ class CheckVisitHours extends Command
     {
         $members = [];
 
-        function getUrl($cid, $pageNum, $date) {
+        function getUrl($cid, $pageNum, $date)
+        {
             return sprintf('https://api.vatsim.net/api/ratings/%s/atcsessions/?page=%s&start=%s', $cid, $pageNum, $date);
         }
 
@@ -78,11 +78,11 @@ class CheckVisitHours extends Command
 
             // Winnipeg Hours / VATSIM Total is less than 50%
             if ($quotient < 0.5) {
-                $name = $r->full_name. ' ' .$r->cid;
+                $name = $r->full_name.' '.$r->cid;
 
                 $members[] = [
                     'percentage' => $quotient,
-                    'name' => $name
+                    'name' => $name,
                 ];
             }
         }
@@ -93,7 +93,7 @@ class CheckVisitHours extends Command
         Notification::route('mail', [
             $settings->emailfirchief,
             $settings->emaildepfirchief,
-            $settings->emailcinstructor
+            $settings->emailcinstructor,
         ])->notify(new Email($members));
     }
 }

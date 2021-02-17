@@ -3,7 +3,6 @@
 namespace App\Notifications\network;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
@@ -22,8 +21,9 @@ class CheckVisitHours extends Notification
     {
         $this->members = $members;
 
-        if (!$this->members)
+        if (! $this->members) {
             exit;
+        }
     }
 
     /**
