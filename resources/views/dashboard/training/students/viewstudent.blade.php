@@ -125,7 +125,7 @@
                                   <a href="{{route('cbt.module.unassign', $module->id)}}">(Unassign)</a></li>
                           @endforeach
                       @endif
-                      <br><br>
+                      <br>
                       <a class="btn-sm btn-primary" href="#assignModule" data-toggle="modal" data-target="#assignModule" style="float: left;">Assign Module</a>
                   </div>
                   <div class="col">
@@ -172,7 +172,7 @@
                     <div class="card-body">
                         <h3 class="font-weight-bold blue-text pb-2">Primary Info</h3>
                         @if ($student->status == 0)
-                        <span class="btn btn-sm btn-primary">
+                        <span class="m-0 btn btn-sm btn-primary">
                             <h3 class="p-0 m-0">
                                 Waitlisted
                             </h3>
