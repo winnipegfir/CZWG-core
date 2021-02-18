@@ -220,7 +220,7 @@ class UserController extends Controller
     {
         $user = User::where('id', $id)->firstOrFail();
         if ($user->id == Auth::user()->id) {
-            abort(403, 'You cannot delete yourself you fucking idiot.');
+            abort(403, 'You cannot delete yourself!');
         }
 
         $entry = new AuditLogEntry([

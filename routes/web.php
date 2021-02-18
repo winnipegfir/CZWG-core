@@ -184,7 +184,6 @@ Route::group(['middleware' => 'auth'], function () {
     });
     // '/me'
     Route::prefix('dashboard/me')->group(function () {
-        Route::get('/editbiography', 'Users\UserController@editBioIndex')->name('me.editbioindex');
         Route::post('/editbiography', 'Users\UserController@editBio')->name('me.editbio');
         Route::get('/discord/link', 'Users\UserController@linkDiscord')->name('me.discord.link');
         Route::get('/discord/unlink', 'Users\UserController@unlinkDiscord')->name('me.discord.unlink');

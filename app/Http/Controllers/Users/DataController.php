@@ -12,7 +12,7 @@ class DataController extends Controller
 {
     public function emailPref()
     {
-        return view('me.preferences');
+        return view('dashboard.index');
     }
 
     public function subscribeEmails()
@@ -24,7 +24,7 @@ class DataController extends Controller
         $user->gdpr_subscribed_emails = 1;
         $user->save();
 
-        return redirect()->route('me.preferences')->with('success', 'You are subscribed!');
+        return redirect()->route('dashboard.index')->with('success', 'You have subscribed to emails!');
     }
 
     public function unsubscribeEmails()
@@ -36,7 +36,7 @@ class DataController extends Controller
         $user->gdpr_subscribed_emails = 0;
         $user->save();
 
-        return redirect()->route('me.preferences')->with('success', 'You are unsubscribed!');
+        return redirect()->route('dashboard.index')->with('success', 'You have unsubscribed from emails.');
     }
 
     public function index()

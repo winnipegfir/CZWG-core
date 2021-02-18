@@ -1,6 +1,49 @@
 @extends('layouts.dashboard')
 @section('content')
 
+<style>
+.accordion {
+  background-color: #013162;
+  color: #fff;
+  cursor: pointer;
+  padding: 2%;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 12px;
+  transition: 0.4s;
+}
+
+.accordion:hover {
+  background-color: #272727;
+}
+
+.active {
+  background-color: #013162;
+}
+
+.accordion:after {
+  font-family: "Font Awesome 5 Free";
+  content: '\f104';
+  float: right;
+  font-weight: 900;
+}
+
+.active:after {
+  font-family: "Font Awesome 5 Free";
+  content: "\f107";
+  font-weight: 900;
+}
+
+.panel {
+  background-color: white;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+}
+</style>
+
 <div style="background-color: #013162">
     <div class="container py-4">
         <h1 data-step="1"
@@ -33,8 +76,8 @@
                 @endif
                 <br>
                 <div data-step="2" data-intro="Here is where you manage and view the data we store on you and your Winnipeg FIR Profile." class="card ">
-                    <div class="card-body">
-                            <h3 class="font-weight-bold blue-text pb-2">Profile</h3>
+                    <div class="card-body pb-0">
+                        <h3 class="font-weight-bold blue-text pb-2">Profile</h3>
                         <div class="row">
                             <div class="col" data-step="3" data-intro="Here is an overview of your profile, including your CZWG roles. You can change the way your name is displayed by clicking on the 'Change display name' button. (CoC A4(b))">
                                 <h5 class="font-weight-bold card-title">
@@ -49,18 +92,6 @@
                                     Staff Role: {{Auth::user()->staffProfile->position}}
                                 @endif 
                                 <hr>
-                                @if($yourinstructor != null && $yourinstructor->instructor != null)
-                                    <p><b>Your Instructor is:</b> {{$yourinstructor->instructor->user->fullName('FL')}}
-                                        <br>
-                                        <b>Email:</b> <a
-                                            href="mailto:{{$yourinstructor->instructor_email}}">{{$yourinstructor->instructor->email}}</a>
-                                    </p>
-                                @else
-                                    @if ($certification == "training")
-                                        You do not have an Instructor yet!
-                                    @endif
-                                @endif
-                                <hr>
                                 <div data-step="4" data-intro="Here you can link your Discord account to receive reminders for training sessions, and gain access to the CZWG Discord.">
                                     <h5 class="mt-2 font-weight-bold blue-text">Discord</h5>
                                     @if (!Auth::user()->hasDiscord())
@@ -72,15 +103,11 @@
                                             src="{{Auth::user()->getDiscordAvatar()}}" alt="">&nbsp;&nbsp;{{Auth::user()->getDiscordUser()->username}}
                                             <span style="color: #d1d1d1;">#{{Auth::user()->getDiscordUser()->discriminator}}</span>
                                         </p>
-                                        @if(!Auth::user()->memberOfCZWGGuild())
-                                        <a href="#" class="btn-sm btn-primary m-0" data-toggle="modal" data-target="#joinDiscordServerModal" class="mt-1">Join The CZWG Discord</a><br/>
-                                        @endif
-                                        <a href="#" class="btn-sm btn-danger m-0" data-toggle="modal" data-target="#discordModal" class="mt-1">Unlink</a>
-                                        <hr>
+                                        <a href="#" class="btn-sm btn-danger m-0" data-toggle="modal" data-target="#discordModal" class="mt-1">Unlink</a>   
                                     @endif
                                 </div>
-
                             </div>
+                            
                             <div data-step="5" data-intro="You can change your avatar here. Your avatar is available when people view your account. This will likely only be staff members, unless you sign up for an event or similar activity."
                                  class="col">
                                 <h4 class="blue-text font-weight-bold card-title; text-center" style="padding-bottom: 2%">Avatar</h5>
@@ -97,53 +124,96 @@
                                 @endif
                             </div>
                         </div>
-                        <ul class="list-unstyled mt-2 mb-0">
-                            <li class="mb-2">
-                                <a href="" data-target="#changeDisplayNameModal" data-toggle="modal"
-                                   style="text-decoration:none;">
-                                <span class="blue-text">
-                                    <i class="fas fa-chevron-right"></i>
-                                </span>
-                                    &nbsp;
-                                    <span class="black-text">
-                                    Change display name
-                                </span>
-                                </a>
-                            </li>
-                            <li class="mb-2">
-                                <a href="" data-target="#viewBio" data-toggle="modal" style="text-decoration:none;">
-                                <span class="blue-text">
-                                    <i class="fas fa-chevron-right"></i>
-                                </span>
-                                    &nbsp;
-                                    <span class="black-text">
-                                    Your biography
-                                </span>
-                                </a>
-                            </li>
-                            <li class="mb-2">
-                                <a href="{{route('me.preferences')}}" style="text-decoration:none;">
-                                <span class="blue-text">
-                                    <i class="fas fa-chevron-right"></i>
-
-                                    &nbsp;
-                                    <span class="black-text">
-                                    Manage preferences
-                                </span>
-                                </a>
-                            </li>
-                            <li class="mb-2">
-                                <a href="{{route('me.data')}}" style="text-decoration:none;">
-                                <span class="blue-text">
-                                    <i class="fas fa-chevron-right"></i>
-                                </span>
-                                    &nbsp;
-                                    <span class="black-text">
-                                    Manage your data
-                                </span>
-                                </a>
-                            </li>
-                        </ul>
+                        <ul class="list-unstyled">
+                            <li class="mb-1">
+                                &nbsp;
+                                <button class="accordion">Change Display Name</button>
+                                    <div class="panel">
+                                        <form method="POST" action="{{route('users.changedisplayname')}}">
+                                            <div class="card-body pb-0">
+                                                @csrf
+                                                <div class="form-group">
+                                                    <h5 class="font-weight-bold blue-text">First Name</h5>
+                                                    <input type="text" class="form-control" value="{{Auth::user()->display_fname}}"
+                                                        name="display_fname" id="input_display_fname">
+                                                    <br>   
+                                                    <script>
+                                                        function resetToCertFirstName() {
+                                                            $("#input_display_fname").val("{{Auth::user()->fname}}")
+                                                        }
+                                                    </script>
+                                                </div>
+                                                <div class="form-group">
+                                                    <h5 class="font-weight-bold blue-text">Display Options</h5>
+                                                    <select name="format" class="custom-select">
+                                                        <option value="showall">Show first name, last name, and CID
+                                                            (e.g. {{Auth::user()->display_fname}} {{Auth::user()->lname}} {{Auth::id()}})
+                                                        </option>
+                                                        <option value="showfirstcid">Show first name and CID
+                                                            (e.g. {{Auth::user()->display_fname}} {{Auth::id()}})
+                                                        </option>
+                                                        <option value="showcid">Show CID only (e.g. {{Auth::id()}})</option>
+                                                    </select>
+                                                    <br>
+                                                    <input type="submit" class="ml-0 mt-4 btn btn-sm btn-success" value="Save">
+                                                    <a class="mt-4 btn btn-sm btn-primary" role="button"
+                                                    onclick="resetToCertFirstName()"><span>
+                                                            Reset to CERT first name</span></a>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <button class="accordion">Biography Editor</button>
+                                    <div class="panel">
+                                        <div class="card-body pb-0">
+                                            <h5 class="font-weight-bold blue-text">Your Biography</h5>
+                                                <form method="post" action="{{route('me.editbio')}}">
+                                                    @csrf
+                                                    <textarea name="bio" style="height: 100%;" class="form-control">{{Auth::user()->bio}}</textarea>
+                                                    <br>
+                                                    <p>Please ensure this complies with the VATSIM Code of Conduct.</p>
+                                                    <input type="submit" class="btn btn-sm btn-success ml-0" value="Save">
+                                                </form><br>
+                                        </div>                     
+                                    </div>
+                                    <button class="accordion">Your Preferences</button>
+                                        <div class="panel">
+                                            <div class="card-body pb-0">
+                                                <h5 class="font-weight-bold blue-text">Current Subscription Status</h5>
+                                                @if (Auth::user()->gdpr_subscribed_emails == 0)
+                                                    <h3>
+                                                        <span class="p-2 badge badge-danger">Not subscribed</span>
+                                                    </h3>
+                                                @else
+                                                    <h3>
+                                                        <span class="p-2 badge badge-success">Subscribed</span>
+                                                    </h3>
+                                                @endif
+                                                <hr>
+                                                <h5 class="font-weight-bold">What Does This Mean?</h5>
+                                                <p>
+                                                    When you subscribe to our email service, you allow the Winnipeg FIR to send you 'promotional' emails as defined by the European Union GDPR.
+                                                    These emails are typically not necessary to your continued participation in the FIR or holding an account with us on our system.<br/>
+                                                    Some examples would include:
+                                                </p>
+                                                <ul style="list-style: square">
+                                                    <li>Controller certifications for the month</li>
+                                                    <li>News from the FIR Chief about non-critical matters</li>
+                                                    <li>Updates from other staff members</li>
+                                                    <li>Event notifications</li>
+                                                </ul>
+                                                <br>
+                                                <p>To learn more about how we manage your data, please read our <a href="{{url('/privacy')}}">privacy policy!</a>
+                                                <br>
+                                                @if (Auth::user()->gdpr_subscribed_emails == 0)
+                                                <a role="button" class="ml-0 mt-3 btn btn-sm btn-success" href="{{url('/dashboard/emailpref/subscribe')}}">Subscribe to Winnipeg Emails Now!</a>
+                                                @else
+                                                <a role="button" class="ml-0 mt-3 btn btn-sm btn-danger" href="{{url('/dashboard/emailpref/unsubscribe')}}">Unsubscribe</a>
+                                                @endif
+                                            </div>                     
+                                        </div>
+                                    </li>
+                                </ul>
                     </div>
                 </div>
                 <br/>
@@ -169,7 +239,7 @@
                                                         from @endif
                                                     {{$capp->start_timestamp}}z - {{$capp->end_timestamp}}z
                                                 </li>
-                                                <br>
+                                                <br></br>
                                             @endif
                                         @endforeach
                                     @endforeach
@@ -495,13 +565,23 @@
                             <h3 class="font-weight-bold blue-text pb-2">1Winnipeg Training</h3>
                             <h5 class="font-weight-bold blue-text">Notifications</h5>
                             @if (count($cbtnotifications) < 1)
-                                There are no notifications to show!
+                                <text style="color: gray">There are no notifications to show!</text>
                             @else
                                 @foreach ($cbtnotifications as $cn)
                                     <li>{{$cn->message}} <a href="{{route('cbt.notification.dismiss', $cn->id)}}"><i style="color: red" class="fas fa-times"></i></a></li>
                                 @endforeach
                             @endif
-                            <br>
+                            <hr>
+                            @if($yourinstructor != null && $yourinstructor->instructor != null)
+                                <p class="mb-0"><b>Your Instructor:</b> {{$yourinstructor->instructor->user->fullName('FL')}}
+                                    <br>
+                                <b>Email:</b> <a href="mailto:{{$yourinstructor->instructor_email}}">{{$yourinstructor->instructor->email}}</a>
+                                </p>
+                            @else
+                                @if ($certification == "training")
+                                    You do not have an Instructor yet - check back soon or contact our Chief Instructor.
+                                @endif
+                            @endif
                             <ul class="list-unstyled mt-2 mb-0">
                                 <li class="mb-2">
                                     <a href="{{route('cbt.index')}}" style="text-decoration:none;">
@@ -587,6 +667,17 @@
                                             class="blue-text"><i class="fas fa-chevron-right"></i></span> &nbsp; <span
                                             class="black-text">View previous support tickets</span></a>
                                 </li>
+                                <li class="mb-2">
+                                    <a href="{{route('me.data')}}" style="text-decoration:none;">
+                                        <span class="blue-text">
+                                            <i class="fas fa-chevron-right"></i>
+                                        </span>
+                                    &nbsp;
+                                    <span class="black-text">
+                                    Manage your data
+                                </span>
+                                </a>
+                            </li>
                                 @if(Auth::user()->permissions >= 4)
                                     <li class="mb-2">
                                         <a href="{{route('tickets.staff')}}" style="text-decoration:none;"><span
@@ -692,6 +783,23 @@
         <a style="color: white" href="javascript:void(0);" onclick="javascript:introJs().setOption('showProgress', true).start();">Dashboard Tutorial</a>
     </div>
 
+    <script>
+    var acc = document.getElementsByClassName("accordion");
+    var i;
+
+    for (i = 0; i < acc.length; i++) {
+    acc[i].addEventListener("click", function() {
+        this.classList.toggle("active");
+        var panel = this.nextElementSibling;
+        if (panel.style.maxHeight) {
+        panel.style.maxHeight = null;
+        } else {
+        panel.style.maxHeight = panel.scrollHeight + "px";
+        } 
+    });
+    }
+    </script>
+
     <!--Change avatar modal-->
     <div class="modal fade" id="changeAvatar" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
          aria-hidden="true">
@@ -735,30 +843,7 @@
     <!--End change avatar modal-->
 
     <!--Biography modal-->
-    <div class="modal fade" id="viewBio" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-         aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">View your biography</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    @if (Auth::user()->bio)
-                        {{Auth::user()->bio}}
-                    @else
-                        You have no biography.
-                    @endif
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-light" data-dismiss="modal">Dismiss</button>
-                    <a href="{{route('me.editbioindex')}}" class="btn btn-primary" role="button">Edit Biography</a>
-                </div>
-            </div>
-        </div>
-    </div>
+
     <!--End biography modal-->
 
     <!-- Start Rating Change modal -->
@@ -785,53 +870,7 @@
     </div>
     <!-- End Rating Change modal -->
     <!--Change display name modal-->
-    <div class="modal fade" id="changeDisplayNameModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Display Name</h5><br>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form method="POST" action="{{route('users.changedisplayname')}}">
-                    <div class="modal-body">
-                        @csrf
-                        <div class="form-group">
-                            <label>First Name</label>
-                            <input type="text" class="form-control" value="{{Auth::user()->display_fname}}"
-                                   name="display_fname" id="input_display_fname">
-                            <br>
-                            <a class="btn btn-sm btn-primary" role="button"
-                               onclick="resetToCertFirstName()"><span>
-                                    Reset to CERT first name</span></a>
-                            <script>
-                                function resetToCertFirstName() {
-                                    $("#input_display_fname").val("{{Auth::user()->fname}}")
-                                }
-                            </script>
-                        </div>
-                        <div class="form-group">
-                            <label>Format</label>
-                            <select name="format" class="custom-select">
-                                <option value="showall">Show first name, last name, and CID
-                                    (e.g. {{Auth::user()->display_fname}} {{Auth::user()->lname}} {{Auth::id()}})
-                                </option>
-                                <option value="showfirstcid">Show first name and CID
-                                    (e.g. {{Auth::user()->display_fname}} {{Auth::id()}})
-                                </option>
-                                <option value="showcid">Show CID only (e.g. {{Auth::id()}})</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
-                        <input type="submit" class="btn btn-success" value="Save Changes">
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+    
     <!--End change display name modal-->
 
     <!--Link/unlink Discord modal-->
