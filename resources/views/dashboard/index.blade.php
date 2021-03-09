@@ -1,26 +1,29 @@
 @extends('layouts.dashboard')
 @section('content')
+@section('title', 'Dashboard - Winnipeg FIR')
 
 <style>
 .accordion {
-  background-color: #013162;
-  color: #fff;
+  background-color: white;
+  color: #013162;
   cursor: pointer;
   padding: 2%;
   width: 100%;
   border: none;
   text-align: left;
-  outline: none;
+  outline: none !important;
   font-size: 12px;
   transition: 0.4s;
 }
 
 .accordion:hover {
   background-color: #272727;
+  color: #fff;
 }
 
 .active {
   background-color: #013162;
+  color: #fff;
 }
 
 .accordion:after {
@@ -40,7 +43,7 @@
   background-color: white;
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.2s ease-out;
+  transition: max-height 0.1s ease-out;
 }
 </style>
 
@@ -104,6 +107,7 @@
                                             <span style="color: #d1d1d1;">#{{Auth::user()->getDiscordUser()->discriminator}}</span>
                                         </p>
                                         <a href="#" class="btn-sm btn-danger m-0" data-toggle="modal" data-target="#discordModal" class="mt-1">Unlink</a>   
+                                        <hr>
                                     @endif
                                 </div>
                             </div>

@@ -444,8 +444,7 @@
                     </button>
                 </div>
 
-                <div align="center" class="modal-body">
-
+                <div align="center" class="modal-body pb-0">
                     <div class="form-group row">
                         <div class="col-md-12">
                             <form method="POST" action="{{ route('roster.addcontroller' )}}">
@@ -465,19 +464,12 @@
                                 <td align="center">
                                     @csrf
                                     <br>
-                                    <p class="font-weight-bold">This user will be added to the Home Roster</p>
+                                    <p class="font-weight-bold">This user will be added to the Home Roster.</p>
                                     <button type="submit" class="btn btn-success">Add User</button>
-
                                 </td>
                             </form>
                         </div>
                     </div>
-
-                </div>
-
-                <div align="center" class="modal-footer">
-                    <button type="button" class="btn btn-light" data-dismiss="modal">Dismiss</button>
-                    </form>
                 </div>
             </div>
         </div>
@@ -496,7 +488,7 @@
                     </button>
                 </div>
 
-                <div align="center" class="modal-body">
+                <div align="center" class="modal-body pb-0">
 
                     <div class="form-group row">
                         <div class="col-md-12">
@@ -519,19 +511,12 @@
                                 <td align="center">
                                     @csrf
                                     <br>
-                                    <p class="font-weight-bold">This user will be added to the Visiting Roster</p>
+                                    <p class="font-weight-bold">This user will be added to the Visiting Roster.</p>
                                     <button type="submit" class="btn btn-success">Add User</button>
-
                                 </td>
                             </form>
                         </div>
                     </div>
-
-                </div>
-
-                <div align="center" class="modal-footer">
-                    <button type="button" class="btn btn-light" data-dismiss="modal">Dismiss</button>
-                    </form>
                 </div>
             </div>
         </div>

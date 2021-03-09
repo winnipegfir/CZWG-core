@@ -26,13 +26,13 @@
                                 {{$student->user->fullName('FLC')}}
                                 {{-- <i class="text-dark">Session planned at {date}</i> --}}
                                 @if ($student->status == 0)
-                                <span class="badge badge-success">
+                                <span class="btn-sm btn-success">
                                     <h6 class="p-0 m-0">
                                         Open
                                     </h6>
                                 </span>
                                 @elseif ($student->status == 4)
-                                <span class="badge badge-success">
+                                <span class="btn-sm btn-danger">
                                     <h6 class="p-0 m-0">
                                         On Hold
                                     </h6>
@@ -74,9 +74,10 @@
             </div>
         </div>
         <br>
+        @role('chief-instructor' || 'webmaster')
         <h3 class="font-weight-bold blue-text">Training Calendar</h3>
         <br>
-       @role('chief-instructor' || 'webmaster')
+       
         ONLY WEBMASTER ROLE CAN SEE THIS
         @endrole
     </div>
