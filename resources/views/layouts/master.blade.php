@@ -116,7 +116,7 @@
                                 <a class="dropdown-item {{ Request::is('news') ? 'active white-text' : '' }}" href="{{route('news.index')}}">Manage News</a>
                             @else
                                 <a href="{{route('news')}}" class="nav-link">News</a>
-                            @endif          
+                            @endif
                         </li>
                         <li class="nav-item {{ Request::is('events/*') || Request::is('events') ? 'active' : '' }}">
                             @if(Auth::check() && Auth::user()->permissions >= 4)
