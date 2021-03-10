@@ -14,8 +14,6 @@ class AddUserExamAssignallToCbtModules extends Migration
 public function up()
 {
 Schema::table('cbt_modules', function (Blueprint $table) {
-            $table->integer('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users');
             $table->integer('cbt_exam_id')->nullable()->unsigned();
             $table->foreign('cbt_exam_id')->references('id')->on('cbt_exams');
             $table->integer('assignall')->default('0');
