@@ -217,7 +217,6 @@ class TrainingController extends Controller
 
     public function assignExam(Request $request)
     {
-        $student = Student::whereId($request->input('studentid'))->first();
 
         $student = Student::find($request->input('studentid'));
         if (! $student) {
