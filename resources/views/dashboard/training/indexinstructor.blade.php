@@ -74,11 +74,8 @@
             </div>
         </div>
         <br>
-        @role('chief-instructor' || 'webmaster')
+        
         <h3 class="font-weight-bold blue-text">Training Calendar</h3>
         <br>
-       
-        ONLY WEBMASTER ROLE CAN SEE THIS
-        @endrole
     </div>
 @stop
