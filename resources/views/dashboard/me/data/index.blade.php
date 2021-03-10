@@ -1,5 +1,6 @@
 @extends('layouts.master')
 @section('content')
+@section('title', 'Your Data - Winnipeg FIR')
 <div class="container py-4">
     <a href="{{route('dashboard.index')}}" class="blue-text" style="font-size: 1.2em;"> <i class="fas fa-arrow-left"></i> Dashboard</a>
     <h1 class="blue-text font-weight-bold mt-2">Your Data</h1>
@@ -54,7 +55,7 @@
                             </a>
                             <div class="step-content grey lighten-3">
                               <p>Please open a support ticket to the Web Team or email them to request specific pieces of data.</p>
-                                <button onclick="location.href='{{route('tickets.index', ['create' => 'yes', 'department' => 'firchief', 'title' => 'Data request'])}}'" class="btn btn-primary">Support Ticket</button>
+                                <button onclick="location.href='{{route('tickets.index', ['create' => 'yes', 'department' => 'firchief', 'title' => 'Data request'])}}'" class="btn btn-primary">Open Support Ticket</button>
                             </div>
                           </li>
                       </ul>

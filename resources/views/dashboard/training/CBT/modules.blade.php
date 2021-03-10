@@ -1,5 +1,5 @@
 @extends('layouts.master')
-
+@section('title', 'Your Modules')
 @section('navbarprim')
 
     @parent

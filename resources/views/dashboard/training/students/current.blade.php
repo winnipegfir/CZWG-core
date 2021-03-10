@@ -8,6 +8,10 @@
 
 @section('content')
     @include('includes.trainingMenu')
+    <head>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css"; rel="stylesheet" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js";></script>
+    </head>
     <div class="container" style="margin-top: 20px;">
         <h1 class="font-weight-bold blue-text">Students <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#newStudent" style="float: right;">Add New Student</button></h1>
 
@@ -21,7 +25,7 @@
                 </tr>
             </thead>
             @if (count($students) < 1)
-            <font class="font-weight-bold">** There are no students in this category!</b></font>
+            <font class="font-weight-bold">There are no students in this category!</b></font>
             @else
             <tbody>
             @foreach ($students as $student)
@@ -52,25 +56,24 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Assign Student to Instructor</h5><br>
-                    <h4>Note: This will create an Application and approve it for this student using your CID.</h4>
+                    <h5 class="modal-title" id="exampleModalLongTitle">Assign Student to Instructor</h5>       
                 </div>
                 <div class="modal-body">
+                    <p><i>Note: This will create an Application and approve it for this student using your CID.</i></p>
                     <form method="POST" action="{{route('instructor.student.add.new')}}" class="form-group">
                         @csrf
-                        <label class="form-control">Choose a Student</label>
-                        <select name="student_id" id-"student_id" class="form-control">
+                        <label class="form-control font-weight-bold">Choose a Student</label>
+                        <select name="student_id" id="student_id" class="js-example-basic-single form-control" style="width:100%;">
                         @foreach ($potentialstudent as $u)
                             <option value="{{$u->id}}">{{$u->id}} - {{$u->fullName('FL')}}</option>
                             @endforeach
                             </select>
-                            <label class="form-control">Choose an Instructor</label>
-                            <select name="instructor_id" id="instructor_id" class="form-control">
+                            <label class="form-control font-weight-bold">Choose an Instructor</label>
+                            <select name="instructor" id="instructor" class="js-example-basic-single form-control" style="width:100%;">
                                 @foreach ($instructors as $i)
                                     <option value="{{$i->id}}">{{$i->user->id}} - {{$i->user->fullName('FL')}}</option>
                                 @endforeach
                             </select>
-
 
                 </div>
                 <div class="modal-footer">
@@ -81,4 +84,9 @@
             </div>
           </div>
         </div><br>
+    <script>
+        $(document).ready(function() {
+            $('.js-example-basic-single').select2();
+        });
+    </script>
 @stop

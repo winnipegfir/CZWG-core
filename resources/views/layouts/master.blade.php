@@ -11,6 +11,7 @@
         For Flight Simulation Use Only - Not to be used for real-world navigation. All content on this web site may not be shared, copied, reproduced or used in any way without prior express written consent of Gander Oceanic. © Copyright {{App\Models\Settings\CoreSettings::where('id', 1)->firstOrFail()->copyright_year}} Gander Oceanic, All Rights Reserved.
         -->
         <!--Metadata-->
+            
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
@@ -135,7 +136,7 @@
                             <a class="dropdown-item" href="{{route('roster.public')}}">Roster</a>
                             @if(Auth::check() && Auth::user()->permissions >= 4)
                                 <a class="dropdown-item {{ Request::is('roster') ? 'active white-text' : '' }}" href="{{route('roster.index')}}">Manage Roster</a>
-                            @endif          
+                            @endif
                             @if(!Auth::check() || Auth::user()->permissions == 0)
                                 <a class="dropdown-item {{ Request::is('join') ? 'active white-text' : '' }}" href="{{url ('/join')}}">How to Become a Winnipeg Controller</a>
                                 @auth
@@ -190,9 +191,14 @@
                             </a>
 
                             <div class="dropdown-menu dropdown-menu-right dropdown-default py-0" aria-labelledby="navbarDropdownMenuLink-333">
-                                <a class="dropdown-item {{ Request::is('dashboard') || Request::is('dashboard/*') ? 'active white-text' : '' }}" href="{{route('dashboard.index')}}">
-                                    <i class="fa fa-tachometer-alt mr-2"></i>&nbsp;Dashboard
+                                <a class="dropdown-item {{ Request::is('dashboard') || Request::is('dashboard/*')}}" href="{{route('dashboard.index')}}">
+                                    <i class="fa fa-tachometer-alt mr-2"></i>Dashboard
                                 </a>
+                                @if(!Auth::check() || Auth::user()->permissions >= 2)
+                                <a class="dropdown-item {{ Request::is('training.index') || Request::is('training.index/*')}}" "dropdown-item" href="{{route('training.index')}}">
+                                    <i class="fa fa-graduation-cap mr-2" style="margin-left: -1px"></i>1Winnipeg
+                                </a>
+                                @endif
                                 <a class="dropdown-item red-text" href="{{route('auth.logout')}}">
                                     <i class="fa fa-sign-out-alt mr-2"></i>&nbsp;Logout
                                 </a>

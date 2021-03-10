@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\AtcTraining\RosterMember;
 use App\Models\ControllerBookings\ControllerBookingsBan;
 use App\Models\Network\SessionLog;
+use App\Models\Roles\Role;
+use App\Models\Roles\UsersRole;
 use App\Models\Settings\AuditLogEntry;
 use App\Models\Users\User;
 use App\Models\Users\UserNote;
@@ -14,6 +16,7 @@ use App\Models\Users\UserPreferences;
 use App\Notifications\DiscordWelcome;
 use App\Notifications\WelcomeNewUser;
 use Auth;
+use Carbon\Carbon;
 use Exception;
 use function GuzzleHttp\Psr7\str;
 use Illuminate\Http\Request;
@@ -23,6 +26,7 @@ use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
 use mofodojodino\ProfanityFilter\Check;
 use NotificationChannels\Discord\Discord;
+use NotificationChannels\Discord\Exceptions\CouldNotSendNotification;
 use RestCord\DiscordClient;
 use SocialiteProviders\Manager\Config;
 
@@ -67,7 +71,6 @@ class UserController extends Controller
     public function viewProfile($id)
     {
         $user = User::where('id', $id)->firstOrFail();
-
         $rosterMember = RosterMember::where('user_id', $id)->first();
         if ($rosterMember) {
             $logs = SessionLog::where('cid', $id)->get();
@@ -165,8 +168,38 @@ class UserController extends Controller
         $userNotes = UserNote::where('user_id', $user->id)->orderBy('timestamp', 'desc')->get();
         //$xml['return'] = file_get_contents('https://cert.vatsim.net/cert/vatsimnet/idstatus.php?cid=' . $user->id);
         $auditLog = AuditLogEntry::where('affected_id', $id)->get();
+        $allroles = Role::all();
+        $roles = UsersRole::where('user_id', $user->id)->get();
 
-        return view('admin.users.profile', compact('user', 'xml', 'certification', 'active', 'auditLog', 'userNotes'));
+        return view('admin.users.profile', compact('user', 'xml', 'certification', 'active', 'auditLog', 'userNotes', 'roles', 'allroles'));
+    }
+
+    public function addRole(Request $request)
+    {
+        $u = User::whereId($request->input('id'))->first();
+        $role = Role::whereId($request->input('role'))->first();
+        if ($u->hasRole($role->slug)) {
+            return back()->withError('This user is already assigned the '.$role->name.' role!');
+        }
+        $u->roles()->attach($role);
+        $audit = new AuditLogEntry();
+        $audit->user_id = Auth::user()->id;
+        $audit->action = 'Added the '.$role->name.' Role.';
+        $audit->affected_id = $u->id;
+        $audit->time = Carbon::now()->toDateTimeString();
+        $audit->private = '0';
+        $audit->save();
+
+        return back()->withSuccess('Added the '.$role->name.' role!');
+    }
+
+    public function deleteRole($id, $user)
+    {
+        $role = Role::where('slug', $id)->first();
+        $u = User::whereId($user)->first();
+        $u->roles()->detach($role);
+
+        return back()->withSuccess('Deleted the role!');
     }
 
     public function editPermissions(Request $request, $id)
@@ -187,7 +220,7 @@ class UserController extends Controller
     {
         $user = User::where('id', $id)->firstOrFail();
         if ($user->id == Auth::user()->id) {
-            abort(403, 'You cannot delete yourself you fucking idiot.');
+            abort(403, 'You cannot delete yourself!');
         }
 
         $entry = new AuditLogEntry([
@@ -578,7 +611,13 @@ class UserController extends Controller
             $args['roles'] = [482835389640343562];
         }
         $discord->guild->addGuildMember($args);
-        Auth::user()->notify(new DiscordWelcome());
+
+        try {
+            Auth::user()->notify(new DiscordWelcome());
+        } catch (CouldNotSendNotification $e) {
+            // do nothing
+        }
+
         $discord->channel->createMessage(['channel.id' => 695849973585149962, 'content' => '<@'.$discordUser->id.'> ('.Auth::id().') has joined.']);
 
         return redirect()->route('dashboard.index')->with('success', 'You have joined the Winnipeg Discord server!');
