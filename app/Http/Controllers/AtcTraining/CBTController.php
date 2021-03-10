@@ -67,7 +67,7 @@ class CBTController extends Controller
         $module = CbtModule::create([
             'name' => $request->input('name'),
             'user_id' => Auth::user()->id,
-            'exam' => $exam,
+            'cbt_exam_id' => $exam,
         ]);
         CbtModuleLesson::create([
             'cbt_modules_id' => $module->id,
