@@ -217,7 +217,6 @@ class TrainingController extends Controller
 
     public function assignExam(Request $request)
     {
-
         $student = Student::find($request->input('studentid'));
         if (! $student) {
             return redirect()->back()->withError('Student cannot be found!');
