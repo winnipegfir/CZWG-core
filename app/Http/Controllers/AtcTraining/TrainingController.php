@@ -105,7 +105,7 @@ class TrainingController extends Controller
 
     public function newStudent(Request $request)
     {
-        $check = Student::where('user_id', $request->input('student_id'));
+        $check = Student::where('user_id', $request->input('student_id'))->first();
         if ($check != null) {
             return redirect()->back()->withError('This student already exists in the system!');
         }
@@ -219,8 +219,9 @@ class TrainingController extends Controller
     {
         $student = Student::whereId($request->input('studentid'))->first();
 
-        if ($student->instructor == null) {
-            return redirect()->back()->withError('This student needs an instructor for an exam to be assigned!');
+        $student = Student::find($request->input('studentid'));
+        if (! $student) {
+            return redirect()->back()->withError('Student cannot be found!');
         }
         $check = CbtExamResult::where([
             'student_id' => $student->id,
