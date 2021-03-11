@@ -25,7 +25,7 @@
 					<h3 class="font-weight-bold blue-text">Step 1 – Join VATSIM</h3>
 					<ol>
 						<li>If you are currently not a member of VATSIM then you can sign up for an account at the<span> </span><a href="http://cert.vatsim.net/vatsimnet/signup.html" target="_blank" rel="noopener noreferrer">VATSIM Registration Page</a>. Ensure that you read all of the pages and instructions carefully.</li>
-						<li>Under the preferred region field select the<span> </span><strong>North America</strong><span> </span>region and the <strong>Canada</strong> division.</li>
+						<li>Under the preferred region field select the<span> </span><strong>Americas</strong><span> </span>region and the <strong>Canada</strong> division.</li>
 						<li>After you complete your registration you receive an ID and password from VATSIM via email. When you have these two items, continue to step two.</li>
 					</ol>
 					<br>
