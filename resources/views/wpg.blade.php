@@ -10,15 +10,7 @@
 @section('content')
 
 <div class="container" style="margin-top: 1%;">
-    
-
-    @if (Auth::check() && Auth::user()->permissions < 4)
-    <h1 class="blue-text font-weight-bold">Change is Coming.</h1>
-    <p>But... we can't tell you what those changes are yet. Check back soon!</p>
-    <a href="{{route('index')}}" class="blue-text" style="font-size: 1.2em"> <i class="fas fa-arrow-left"></i> Back to Home</a>
-    <br></br>
-    @else
-    <a href="{{route('index')}}" class="blue-text" style="font-size: 1.2em"> <i class="fas fa-arrow-left"></i> Back to Home</a>
+    <a href="{{route('index')}}" class="blue-text" style="font-size: 1.2em"> <i class="fas fa-arrow-left"></i> Home</a>
         <img src="https://i.imgur.com/THmmkon.png" style="width: 100%">
         <br><br>
         <p>After years of being known on the VATSIM network as CZWG, we're finally changing things up. Starting in 2021 - <text class="font-weight-bold">we're changing our callsign from CZWG to WPG.</text> Here's what that means for you - whether you're a pilot, controller, or just an observer.</p>
@@ -76,8 +68,5 @@
     <br>
     <p>Questions, comments or concerns? Get in touch with the Winnipeg FIR Staff <a href="{{ route('staff') }}"><text class="font-weight-bold">HERE</text></a>.</p>
 </div>
-
-@endif
-
 
 @endsection
