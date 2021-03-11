@@ -49,7 +49,7 @@
             <br>
             <li>Centre has new splits! We've finally added more splits to CTR for higher-traffic events (or if you want to go on a strange CTR, for whatever reason.) They are as follows:</li>
             <br>
-            <img src="https://prnt.sc/zih4u6"><img src="https://prnt.sc/zih6v4">
+            <img src="https://winnipegfir.ca/storage/files/uploads/1615434515.png"><img src="https://winnipegfir.ca/storage/files/uploads/1615434526.png">
             <br></br>
             <p><text class="font-weight-bold">NOTE:</text> There are a handful of sectors that cover others when they are offline, as well as new details on splitting CTR - make sure to take a look at Winnipeg's <a href="{{ route('policies') }}">Standard Operating Procedures</a> for details.</p>
         </div>
