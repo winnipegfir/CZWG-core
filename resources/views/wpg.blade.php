@@ -13,7 +13,7 @@
     <a href="{{route('index')}}" class="blue-text" style="font-size: 1.2em"> <i class="fas fa-arrow-left"></i> Home</a>
         <img src="https://i.imgur.com/THmmkon.png" style="width: 100%">
         <br><br>
-        <p>After years of being known on the VATSIM network as CZWG, we're finally changing things up. Starting in 2021 - <text class="font-weight-bold">we're changing our callsign from CZWG to WPG.</text> Here's what that means for you - whether you're a pilot, controller, or just an observer.</p>
+        <p>After years of being known on the VATSIM network as CZWG, we're finally changing things up. Starting on March 25th, 2021, - <text class="font-weight-bold">we're changing our callsign from CZWG to WPG.</text> Here's what that means for you - whether you're a pilot, controller, or just an observer.</p>
         <hr>
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item">
