@@ -26,8 +26,7 @@
                                     <h5 class="mt-2">Discord</h5>
                                     @if (!Auth::user()->hasDiscord())
                                         <p class="mt-1">You don't have a linked Discord account.</p>
-                                        <a href="#" data-toggle="modal" data-target="#discordModal" class="mt-1">Link a
-                                            Discord account</a>
+                                        <a href="#" data-toggle="modal" data-target="#discordModal" class="mt-1">Link a Discord account</a>
                                     @else
                                         <p class="mt-1"><img style="border-radius:50%; height: 30px;" class="img-fluid" src="{{Auth::user()->getDiscordAvatar()}}" alt="">&nbsp;&nbsp;{{Auth::user()->getDiscordUser()->username}}
                                             <span style="color: #d1d1d1;">#{{Auth::user()->getDiscordUser()->discriminator}}</span>
