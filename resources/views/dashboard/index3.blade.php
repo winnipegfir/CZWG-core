@@ -523,17 +523,17 @@
                                                 class="blue-text"><i class="fas fa-chevron-right"></i></span> &nbsp;
                                             <span
                                                 class="black-text">View Your Applications</span></a>
-                                    </li>{{--
-                            <li class="mb-2">
-                                <a href="{{route('application.list')}}" style="text-decoration:none;"><span class="blue-text"><i class="fas fa-chevron-right"></i></span> &nbsp; <span class="black-text">Training Centre</span></a>
-                            </li> --}}
-                                    @endif
-                                    @if ($certification == "training")
-                                        <h5 class="card-title">Status</h5>
-                                        <div class="card-text">
-                                            <div class="d-flex flex-row justify-content-left">
+                                    </li>
+                                    <li class="mb-2">
+                                        <a href="{{route('application.list')}}" style="text-decoration:none;"><span class="blue-text"><i class="fas fa-chevron-right"></i></span> &nbsp; <span class="black-text">Training Centre</span></a>
+                                    </li>
+                            @endif
+                            @if ($certification == "training")
+                                <h5 class="card-title">Status</h5>
+                                    <div class="card-text">
+                                    <div class="d-flex flex-row justify-content-left">
 
-                                                <h3>
+                            <h3>
                           <span class="badge badge-warning rounded shadow-none">
                               <i class="fa fa-book-open"></i>&nbsp;
                               In Training
