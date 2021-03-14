@@ -32,11 +32,13 @@ class MonitoredPosition extends Model
     public function lastOnlinePretty()
     {
         $session = $this->lastSession();
-        if (! $session)
+        if (! $session) {
             return 'Never used';
+        }
 
-        if (!$session->session_end)
+        if (!$session->session_end) {
             return 'Online now';
+        }
 
         return Carbon::create($session->session_end)->diffForHumans();
     }
