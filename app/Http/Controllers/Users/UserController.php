@@ -74,7 +74,7 @@ class UserController extends Controller
         $rosterMember = RosterMember::where('user_id', $id)->first();
         if ($rosterMember) {
             $logs = SessionLog::where('cid', $id)->get();
-            $monthlyHours = decimal_to_hm(RosterMember::where('cid', $id)->firstOrFail()->currency);
+            $monthlyHours = decimal_to_hm($rosterMember->currency);
 
             //Start our array
             $time = [
@@ -88,34 +88,18 @@ class UserController extends Controller
 
             //Get our times per position for this month
             foreach ($logs as $l) {
-                if (Str::endsWith($l->callsign, 'DEL')) {
-                    $time['del'] += $l->duration;
-                } elseif (Str::endsWith($l->callsign, 'GND')) {
-                    $time['gnd'] += $l->duration;
-                } elseif (Str::endsWith($l->callsign, 'TWR')) {
-                    $time['twr'] += $l->duration;
-                } elseif (Str::endsWith($l->callsign, 'DEP')) {
-                    $time['dep'] += $l->duration;
-                } elseif (Str::endsWith($l->callsign, 'APP')) {
-                    $time['app'] += $l->duration;
-                } elseif (Str::endsWith($l->callsign, 'CTR')) {
-                    $time['ctr'] += $l->duration;
-                }
+                $last = explode('_', $l->callsign);
+                $time[strtolower(end($last))] += $l->duration;
             }
 
             //Make the time's readable
-            $time['del'] = decimal_to_hm($time['del']);
-            $time['gnd'] = decimal_to_hm($time['gnd']);
-            $time['twr'] = decimal_to_hm($time['twr']);
-            $time['dep'] = decimal_to_hm($time['dep']);
-            $time['app'] = decimal_to_hm($time['app']);
-            $time['ctr'] = decimal_to_hm($time['ctr']);
+            foreach ($time as $k => $v)
+                $time[$k] = decimal_to_hm($v);
 
             $connections = SessionLog::where('cid', $id)->get()->sortByDesc('session_end');
 
-            foreach ($connections as $c) {
+            foreach ($connections as $c)
                 $c['duration'] = decimal_to_hm($c['duration']);
-            }
         } else {
             $monthlyHours = 'N/A';
             $rosterMember = null;
