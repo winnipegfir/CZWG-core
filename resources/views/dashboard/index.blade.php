@@ -106,6 +106,10 @@
                                             src="{{Auth::user()->getDiscordAvatar()}}" alt="">&nbsp;&nbsp;{{Auth::user()->getDiscordUser()->username}}
                                             <span style="color: #d1d1d1;">#{{Auth::user()->getDiscordUser()->discriminator}}</span>
                                         </p>
+                                        @if(!Auth::user()->memberOfCZWGGuild())
+                                            <a href="#" data-toggle="modal" data-target="#joinDiscordServerModal"
+                                               class="mt-1">Join The CZWG Discord</a><br/>
+                                        @endif
                                         <a href="#" class="btn-sm btn-danger m-0" data-toggle="modal" data-target="#discordModal" class="mt-1">Unlink</a>   
                                         <hr>
                                     @endif
