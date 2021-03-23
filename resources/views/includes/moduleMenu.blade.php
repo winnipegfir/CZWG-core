@@ -22,10 +22,11 @@
           @foreach ($modules as $modules)
           <div class="card p-2">
             <h5 style="margin-bottom: 5%" class="font-weight-bold">
-            @if($modules->conclusion == '1')
+            {{$modules->cbtmodule->name}}
+                        @if($modules->conclusion == '1')
             <i style="color: green" class="fas fa-check"></i>
             @endif
-            {{$modules->cbtmodule->name}}</h5>
+            </h5>
             <a class="btn-sm btn-success" href="module/view/{{$modules->cbt_module_id}}/intro">Click to Start</a>
           </div>
           <br>
