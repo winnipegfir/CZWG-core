@@ -23,7 +23,7 @@
           <div class="card p-2">
             <h5 style="margin-bottom: 5%" class="font-weight-bold">
             {{$modules->cbtmodule->name}}
-                        @if($modules->conclusion == '1')
+                        @if($modules->completed_at != null)
             <i style="color: green" class="fas fa-check"></i>
             @endif
             </h5>
