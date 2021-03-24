@@ -70,7 +70,6 @@ class Kernel extends HttpKernel
         'bookingban' => \App\Http\Middleware\BookingBanMiddleware::class,
         'atc' => \App\Http\Middleware\CheckAtc::class,
         'mentor' => \App\Http\Middleware\CheckMentor::class,
-        'role' => \App\Http\Middleware\RoleMiddleware::class,
     ];
 
     /**
