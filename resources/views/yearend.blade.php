@@ -31,7 +31,7 @@
         <h5 class="blue-text font-weight-bold">To the Winnipeg Controllers,</h5>
         <br>
             <p>When I took the role of Winnipeg Chief over a year ago, I had no idea how to even begin staffing up. We were surrounded by neighbouring 
-            FIRs and ARTCCs with far more traffic, bigger airpots and more staff than we had - and what does a small FIR in the middle of Canada have 
+            FIRs and ARTCCs with far more traffic, bigger airports and more staff than we had - and what does a small FIR in the middle of Canada have 
             to offer compared to that?</p>
             <p>Turns out, we have a lot to offer - and you all have led me to realize that over the past year. From that one span of a few weeks in early
             2020, just before lockdowns across the world kept us all at home, Winnipeg went for the Iron Mic award - given to the FIR/ARTCC/vACC with the 
@@ -47,7 +47,7 @@
         <hr>
         <h5 class="blue-text font-weight-bold">To the VATCAN Staff,</h5>
         <br>
-            <p>It wasn't even a year ago that I was in charge of this entire division - and being VATCAN1 really showed me the power this country has on
+            <p>It was just under two years ago that I was in charge of this entire division - and being VATCAN1 really showed me the power this country has on
             the VATSIM network - we may not be nearly as busy as our friends south of the border in VATUSA, but Canada has always had strong numbers
             on this network.</p>
             <p>Since leaving my position as a Division Staff member for the role I've had ever since, Winnipeg and I been lucky enough to have the continued

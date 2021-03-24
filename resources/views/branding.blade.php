@@ -11,51 +11,51 @@
     <div class="p-2">
         <div class="row">
             <div class="col-md-3 d-flex flex-column align-items-center justify-content-center">
-                <img src="https://i.imgur.com/j1Y60BQ.png" class="img-fluid" alt="">
+                <img src="https://winnipegfir.ca/storage/files/uploads/1612961752.png" class="img-fluid" alt="">
                 <br/>
-                <a href="https://i.imgur.com/j1Y60BQ.png">Blue Wordmark</a>
+                <a href="https://winnipegfir.ca/storage/files/uploads/1612961752.png">Blue Wordmark</a>
             </div>
 
             <div class="col-md-3 d-flex flex-column align-items-center justify-content-center">
-                <img style="background-color: #444444;" src="https://i.imgur.com/c5dlKqc.png" class="img-fluid" alt="">
+                <img style="background-color: #444444;" src="https://winnipegfir.ca/storage/files/uploads/1612961784.png" class="img-fluid" alt="">
                 <br/>
-                <a href="https://i.imgur.com/c5dlKqc.png">White Wordmark</a>
+                <a href="https://winnipegfir.ca/storage/files/uploads/1612961784.png">White Wordmark</a>
             </div>
 
             <div class="col-md-3 d-flex flex-column align-items-center justify-content-center">
-                <img style="background-color: #ffffff" src="https://i.imgur.com/cwj9jWX.png" class="img-fluid" alt="">
+                <img style="background-color: #ffffff" src="https://winnipegfir.ca/storage/files/uploads/1612961824.png" class="img-fluid" alt="">
                 <br/>
-                <a href="https://i.imgur.com/cwj9jWX.png">Grey Letterhead</a>
+                <a href="https://winnipegfir.ca/storage/files/uploads/1612961824.png">Grey Letterhead</a>
             </div>
 
             <div class="col-md-3 d-flex flex-column align-items-center justify-content-center">
-                <img style="background-color: #444444" src="https://i.imgur.com/n4fiWZf.png" class="img-fluid" alt="">
+                <img style="background-color: #444444" src="https://winnipegfir.ca/storage/files/uploads/1612961851.png" class="img-fluid" alt="">
                 <br/>
-                <a href="https://i.imgur.com/n4fiWZf.png">White Letterhead</a>
+                <a href="https://winnipegfir.ca/storage/files/uploads/1612961851.png">White Letterhead</a>
             </div>
 
             <div class="col-md-3 d-flex flex-column align-items-center justify-content-center" style="padding-top: 2%">
-                <img style="background-color: #ffffff" src="https://i.imgur.com/PgYWxtX.png" class="img-fluid" alt="">
+                <img style="background-color: #ffffff" src="https://winnipegfir.ca/storage/files/uploads/1612961875.png" class="img-fluid" alt="">
                 <br/>
-                <a href="https://i.imgur.com/PgYWxtX.png">Grey Training Wordmark</a>
+                <a href="https://winnipegfir.ca/storage/files/uploads/1612961875.png">Grey Training Wordmark</a>
             </div>
 
             <div class="col-md-3 d-flex flex-column align-items-center justify-content-center" style="padding-top: 2%">
-                <img style="background-color: #444444" src="https://i.imgur.com/ZxZjpmI.png" class="img-fluid" alt="">
+                <img style="background-color: #444444" src="https://winnipegfir.ca/storage/files/uploads/1612961895.png" class="img-fluid" alt="">
                 <br/>
-                <a href="https://i.imgur.com/ZxZjpmI.png">White Training Wordmark</a>
+                <a href="https://winnipegfir.ca/storage/files/uploads/1612961895.png">White Training Wordmark</a>
             </div>
 
             <div class="col-md-3 d-flex flex-column align-items-center justify-content-center" style="padding-top: 2%">
-                <img style="background-color: #ffffff" src="https://i.imgur.com/jRE7m50.png" class="img-fluid" alt="">
+                <img style="background-color: #ffffff" src="https://winnipegfir.ca/storage/files/uploads/1612961918.png" class="img-fluid" alt="">
                 <br/>
-                <a href="https://i.imgur.com/jRE7m50.png">Blue Shop Logo</a>
+                <a href="https://winnipegfir.ca/storage/files/uploads/1612961918.png">Blue Shop Logo</a>
             </div>
 
             <div class="col-md-3 d-flex flex-column align-items-center justify-content-center" style="padding-top: 2%">
-                <img style="background-color: #444444" src=https://i.imgur.com/J2faZyh.png" class="img-fluid" alt="">
+                <img style="background-color: #444444" src="https://winnipegfir.ca/storage/files/uploads/1612961940.png" class="img-fluid" alt="">
                 <br/>
-                <a href="https://i.imgur.com/J2faZyh.png">White Shop Logo</a>
+                <a href="https://winnipegfir.ca/storage/files/uploads/1612961940.png">White Shop Logo</a>
             </div>
 
         </div>
@@ -65,32 +65,32 @@
     <div class="p-2">
         <div class="row">
             <div class="col-md-3 d-flex flex-column align-items-center justify-content-center">
-                <img src="https://i.imgur.com/tF4WbZu.png" class="img-fluid" alt="">
+                <img src="https://winnipegfir.ca/storage/files/uploads/1612961961.png" class="img-fluid" alt="">
                 <br/>
-                <a href="https://i.imgur.com/tF4WbZu.png">Blue "W"</a>
+                <a href="https://winnipegfir.ca/storage/files/uploads/1612961961.png">Blue "W"</a>
             </div>
            <div class="col-md-3 d-flex flex-column align-items-center justify-content-center">
-                <img style="background-color: #444444;" src="https://i.imgur.com/iz3Oy9v.png" class="img-fluid" alt="">
+                <img style="background-color: #444444;" src="https://winnipegfir.ca/storage/files/uploads/1612961985.png" class="img-fluid" alt="">
                 <br/>
-                <a href="https://i.imgur.com/iz3Oy9v.png">White "W"</a>
+                <a href="https://winnipegfir.ca/storage/files/uploads/1612961985.png">White "W"</a>
             </div>
         </div>
     </div>
     <hr>
     <h3>Official FIR Colours</h3>
-    <a class="btn btn-primary" style="color: white">
+    <button class="btn btn-primary">
         <strong>Winnipeg Blue:</strong><br>
         <br>Hex #013162
         <br>Pantone Type 648C
         <br>C 38%   M 19%   Y 0%   K 62%
-    </a>
-    <a class="btn btn-grey" style="color: white">
-        <strong>Plain White:</strong><br>
+    </button>
+    <a class="btn" style="color: black; background-color: #fff; border: 1px solid black">
+        <strong>Ice White:</strong><br>
         <br>Hex #ffffff
         <br>Pantone Type 115-1 U
         <br>C 0%   M 0%   Y 0%   K 0%
     </a>
-    <a class="btn btn-yellow" style="color: #013162">
+    <a class="btn" style="color: black; background-color: #f2d600">
         <strong>Prairie Gold:</strong><br>
         <br>Hex #f2d600
         <br>Pantone Type 3695 C

@@ -307,7 +307,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-light" data-dismiss="modal">Dismiss</button>
-                    <a href="{{route('me.editbioindex')}}" class="btn btn-primary" role="button">Edit Biography</a>
+                    <a href="{{route('me.editbio')}}" class="btn btn-primary" role="button">Edit Biography</a>
                 </div>
             </div>
         </div>

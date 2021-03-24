@@ -1,5 +1,5 @@
 @extends('layouts.master')
-
+@section('title', 'Your Modules')
 @section('navbarprim')
 
     @parent
@@ -19,7 +19,7 @@
       
 
 
-      Please select a module from the side-menu.
+      Please select a module from the side-menu. A <i style="color: green" class="fas fa-check"></i> indicates you have previously completed the module.
 
 </div></div>
 <br><br><br><br>

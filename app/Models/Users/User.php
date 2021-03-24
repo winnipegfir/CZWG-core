@@ -6,6 +6,7 @@ use App\Models\AtcTraining;
 use App\Models\ControllerBookings;
 use App\Models\Events;
 use App\Models\News;
+use App\Models\Roles\Permissions\HasPermissionsTrait;
 use App\Models\Tickets;
 use Exception;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -19,6 +20,7 @@ use RestCord\DiscordClient;
 
 class User extends Authenticatable
 {
+    use HasPermissionsTrait;
     use Notifiable;
 
     /**

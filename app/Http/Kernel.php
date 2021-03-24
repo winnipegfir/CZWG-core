@@ -19,6 +19,7 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\TrustProxies::class,
+
     ];
 
     /**
@@ -69,6 +70,7 @@ class Kernel extends HttpKernel
         'bookingban' => \App\Http\Middleware\BookingBanMiddleware::class,
         'atc' => \App\Http\Middleware\CheckAtc::class,
         'mentor' => \App\Http\Middleware\CheckMentor::class,
+        'role' => \App\Http\Middleware\RoleMiddleware::class,
     ];
 
     /**

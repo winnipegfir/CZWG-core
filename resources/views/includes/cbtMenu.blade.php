@@ -3,7 +3,7 @@
 <nav class="navbar navbar-light bg-light">
     <div class="container">
     <a href="/dashboard/training/cbt">
-    <img src=https://i.imgur.com/rVFE676.png style="height:50px">
+    <img src=https://winnipegfir.ca/storage/files/uploads/1613084163.png style="height:50px">
         </a>
         <ul class="nav nav-pills">
             <li class="nav-item">
@@ -23,7 +23,7 @@
   <nav class="navbar navbar-light bg-light">
       <div class="container">
       <a href="/dashboard/training/cbt">
-      <img src=https://i.imgur.com/rVFE676.png style="height:50px">
+      <img src=https://winnipegfir.ca/storage/files/uploads/1612961386.png style="height:50px">
           </a>
           <ul class="nav nav-pills">
               <li class="nav-item">

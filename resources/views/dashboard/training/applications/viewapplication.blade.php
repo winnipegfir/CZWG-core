@@ -73,7 +73,7 @@
         {!! Form::textarea('staff_comment', $application->staff_comment, ['class' => 'form-control', 'onblur' => 'showSaveButton()', 'id' => 'staffCommentsField']) !!}
         <small>This comment will be visible to the applicant and will be included in the application denied email sent if the application is denied.</small>
         <br/>
-        {!! Form::submit('Save Staff Comments', ['class' => 'btn btn-sm btn-success invisible', 'id' => 'saveCommentsButton']) !!}
+        {!! Form::submit('Save Staff Comments', ['class' => 'btn btn-sm btn-success', 'id' => 'saveCommentsButton']) !!}
         @if (Auth::user()->permissions >= 4)
         <script type="text/javascript">
             function showSaveButton() {
