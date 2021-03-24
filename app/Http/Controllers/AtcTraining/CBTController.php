@@ -18,6 +18,7 @@ use App\Notifications\ExamCompletion;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
 
 class CBTController extends Controller
 {
