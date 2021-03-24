@@ -77,10 +77,6 @@
 
         <h3 class="font-weight-bold blue-text">Training Calendar</h3>
         <br>
-        @role('Administrator')
-        <h3>If you see this, you have the admin role working!</h3>
-        @else
-            <h3>ADMIN ROLE NOT WORKING</h3>
-        @endrole
+
     </div>
 @stop
