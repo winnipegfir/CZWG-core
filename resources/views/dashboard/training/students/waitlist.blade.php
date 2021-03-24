@@ -8,6 +8,10 @@
 
 @section('content')
     @include('includes.trainingMenu')
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css"; rel="stylesheet" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js";></script>
+
     <div class="container" style="margin-top: 20px;">
         <h1 class="font-weight-bold blue-text">Waitlist <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#newStudent" style="float: right;">Add to Waitlist</button></h1>
 
@@ -65,7 +69,7 @@
                     <form method="POST" action="{{route('instructor.student.add.new')}}" class="form-group">
                         @csrf
                         <label class="form-control">Choose a Student</label>
-                        <select name="student_id" id-"student_id" class="form-control">
+                        <select name="student_id" id-"student_id" class="js-example-basic-single form-control" style="width:470px;">
                         @foreach ($potentialstudent as $u)
                             <option value="{{$u->id}}">{{$u->id}} - {{$u->fullName('FL')}}</option>
                             @endforeach
@@ -89,4 +93,9 @@
             </div>
           </div>
         </div><br>
+    <script>
+        $(document).ready(function() {
+            $('.js-example-basic-single').select2();
+        });
+    </script>
 @stop

@@ -11,7 +11,7 @@ class CbtModuleAssign extends Model
 {
     //
     protected $fillable = [
-        'name', 'content_html', 'assigned_at', 'started_at', 'completed_at', 'cbt_module_id', 'student_id', 'instructor_id', 'intro', 'lesson1', 'lesson2', 'lesson3', 'lesson4', 'lesson5', 'lesson6', 'lesson7', 'lesson8', 'lesson9', 'lesson10', 'conclusion',
+        'name', 'content_html', 'created_at', 'started_at', 'completed_at', 'cbt_module_id', 'student_id', 'instructor_id', 'intro', 'lesson1', 'lesson2', 'lesson3', 'lesson4', 'lesson5', 'lesson6', 'lesson7', 'lesson8', 'lesson9', 'lesson10', 'conclusion',
     ];
 
     public function user()

@@ -13,7 +13,7 @@
                     <div class="py-5">
                         <div>
                             <br>
-                            <h1 style="font-size: 6em; color: #fff">
+                            <h1 style="font-size: 7em; color: #fff">
                                 <span class="winnipeg-blue corner" style="padding: 1%">We Are Winnipeg.</span>
                             </h1>
                             <h6 style="font-size: 1.25em; color: #fff;">
@@ -21,7 +21,7 @@
                             </h6>
                             <br>
                             <h4 style="font-size: 2em; color: #fff;">
-                                <span class="white corner" style="padding: 0.5%"><a href="#mid" id="discoverMore" class="blue-text">Check out our new homepage below!&nbsp;&nbsp;<i class="fas fa-arrow-down"></i></a></span>
+                                <span class="white corner" style="padding: 0.5%"><a href="#mid" id="discoverMore" class="blue-text">Come explore the heart of Canada.&nbsp;&nbsp;<i class="fas fa-arrow-down"></i></a></span>
                             </h4>
                         </div>
                     </div>
@@ -138,8 +138,13 @@
                         <div class="card-body" style="padding-bottom:0%">
                             <div style="float: left;">
                                 @foreach($weather as $w)
-                                    <h5><text class="align-middle font-weight-bold">{{$w->icao}} - {{$w->station->name}}&nbsp;&nbsp;</text><span class="badge {{$w->flight_category}}">{{$w->flight_category}}</span></h5>
-                                    {{$w->raw_text}}
+                                    <h5><text class="align-middle font-weight-bold">{{$w->icao}} - {{$w->station->name}}&nbsp;&nbsp;</text>
+                                        <span class="badge {{$w->flight_category}}">{{$w->flight_category}}</span>
+                                    @if(Carbon\Carbon::make($w->observed) < Carbon\Carbon::now()->subHours(2))
+                                        <span class="badge grey">OUTDATED</span>
+                                    @endif
+                                    </h5>
+                                    {{$w->raw_text}}                                  
                                     <br><br>
                                 @endforeach
                             </div>

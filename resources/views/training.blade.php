@@ -8,14 +8,16 @@
             <p>Winnipeg always holds training to the highest standards. As a Winnipeg FIR student, the training we provide is always extremely professional and precise.</p>
         <hr>
         <div>
-            <h3>The 1Winnipeg System</h3>
+            <h3 class="font-weight-bold blue-text">The 1Winnipeg System</h3>
                 <p>Over the past year, the Winnipeg FIR has been busy working on building a brand new training system from scratch - the 1Winnipeg. Once completed, Winnipeg students
                 will have the ability to study for their ratings without the need for Instructors or Mentors - and can request help from their Instructor with the click of a button.
                 It also includes a brand new, state-of-the-art Computer-Based Training System.</p>
+                <h5 class="font-weight-bold blue-text">All In One Place.</h5>
+                <p>1Winnipeg has the benefit for students and instructors/mentors of all being in one place - always a click away on the menu.</p>
                 <p>For updates on the 1Winnipeg Training & CBT System, keep an eye on the <a href="https://blog.winnipegfir.ca">Winnipeg FIR Blog</a> where we post live updates on the status of this project.
             </div>
         <hr>
-        <h3>Training Wait Time</h3>
+        <h3 class="font-weight-bold blue-text">Current Wait Time</h3>
         <div class="row" style="padding-left:8px">
             <h3 class="btn btn-{{$training_time->colour}}" style="color:white" data-toggle="modal" data-target="#waitTime"><b>Estimated Wait Time:</b> {{$training_time->wait_length}}</h3>
                 <div class="row" style="padding-left:8px">
@@ -27,7 +29,7 @@
         </div>
         <hr>
         <div>
-            <h3>Sound Like a Deal?</h3>
+            <h3 class="font-weight-bold blue-text">Interested In Joining Winnipeg?</h3>
                 <p>Come join the community of students, controllers and instructors in Winnipeg today by clicking <a href="{{url('/join')}}">HERE.</a></p>
         </div>
         <hr>

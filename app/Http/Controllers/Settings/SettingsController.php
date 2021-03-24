@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
+use App\Models\Roles\Role;
 use App\Models\Settings\AuditLogEntry;
 use App\Models\Settings\CoreSettings;
 use App\Models\Settings\HomepageImages;
@@ -182,5 +183,36 @@ class SettingsController extends Controller
         $image->delete();
 
         return back()->withSuccess('Image deleted successfully!');
+    }
+
+    public function viewRoles()
+    {
+        $roles = Role::all();
+
+        return view('admin.settings.roles', compact('roles'));
+    }
+
+    public function addRole(Request $request)
+    {
+        $check = Role::where('slug', $request->input('slug'))->first();
+        if ($check != null) {
+            return back()->withError('This slug already exists!');
+        }
+        $role = new Role();
+        $role->slug = $request->input('slug');
+        $role->name = $request->input('name');
+        $role->secure = $request->input('secure');
+        $role->save();
+
+        return back()->withSuccess('Added the role!');
+    }
+
+    public function deleteRole($id)
+    {
+        $role = Role::whereId($id)->first();
+        $message = $role->name;
+        $role->delete();
+
+        return back()->withSuccess('Deleted the '.$message.' Role!');
     }
 }

@@ -1,6 +1,7 @@
 @extends('layouts.master')
 
 @section('navbarprim')
+@section('title', 'Exam Admin')
 
     @parent
 
@@ -29,6 +30,9 @@
               <div class="tab-pane fade show active" id="modules" role="tabpanel" aria-labelledby="home-tab"><br>
         <!--List of exams in table format (click to view the module), include name, # of lessons, created by who. Edit and Delete buttons for Staff/Admin-->
         <table id="dataTable" class="table table-hover">
+            @if (count($exams) < 1)
+            <text class="font-weight-bold" style="color:red">There are no exams!</b></text>
+            @else
             <thead>
                 <tr>
                     <th scope="col">Exam</th>
@@ -37,9 +41,6 @@
                     <th scope="col">Actions</th>
                 </tr>
             </thead>
-            @if (count($exams) < 1)
-            <font class="font-weight-bold" style="color:red">There are no exams!</b></font>
-            @else
             <tbody>
             @foreach ($exams as $exam)
             <tr>
@@ -55,10 +56,9 @@
               <div class="btn-toolbar" role="toolbar">
                 <div class="btn-group" role="group">
                   <a type="button" class="btn btn-sm btn-primary" href="{{route('cbt.exam.questions', $exam->id)}}" ><i class="fa fa-question-circle"></i> Question Bank</a>
-                  <a type="button" class="btn btn-sm btn-primary" style="color: #ff6161" href="#"><i class="fa fa-times" href="#"></i> Delete</a>
+                  <a type="button" class="btn btn-sm btn-primary" style="color: #ff6161" href="{{route('cbt.exam.delete', $exam->id)}}"><i class="fa fa-times"></i> Delete</a>
                 </div>
               </div>
-
               </td>
               @endif
             </tr>

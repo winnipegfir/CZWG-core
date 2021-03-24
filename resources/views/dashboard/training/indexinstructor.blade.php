@@ -15,7 +15,7 @@
             <div class="col">
                 <div class="card">
                     <div class="card-header">
-                        Your Students
+                        <text class="font-weight-bold">Your Students</text>
                         </div>
 
                     <div class="card-body">
@@ -26,13 +26,13 @@
                                 {{$student->user->fullName('FLC')}}
                                 {{-- <i class="text-dark">Session planned at {date}</i> --}}
                                 @if ($student->status == 0)
-                                <span class="badge badge-success">
+                                <span class="btn-sm btn-success">
                                     <h6 class="p-0 m-0">
                                         Open
                                     </h6>
                                 </span>
                                 @elseif ($student->status == 4)
-                                <span class="badge badge-success">
+                                <span class="btn-sm btn-danger">
                                     <h6 class="p-0 m-0">
                                         On Hold
                                     </h6>
@@ -48,47 +48,34 @@
                 </div>
             </div>
             <div class="col">
-                @if (Auth::check())
-                    @if (Auth::user()->permissions >= 4)
+                @if (Auth::user()->permissions >= 4)
                 <div class="card">
                     <div class="card-header">
-                        Pending Solo Requests
+                        <text class="font-weight-bold">Student Solo Requests</text>
                     </div>
 
                     <div class="card-body">
-                        @if (count($soloreq) < 1)
-                            There are no Solo Requests at this time! Check back later.
-                        @else
-
-                        @foreach ($soloreq as $solo)
-
-                               <div align="center">
-                              Student: {{$solo->student->user->fullName('FLC')}}<br>
-                              Position: {{$solo->position}}<br>
-                              Instructor: {{$solo->instructor->user->fullName('FL')}}<br>
-                                   <form action="{{route('training.solo.process', $solo->student->id)}}" method="POST" class="form-control">
-                                       <input type="hidden" name="position" value="{{$solo->position}}">
-                                       <select name="approve" class="custom-select form-group">
-                                           <option value="1">Approve</option>
-                                           <option value="0">Deny</option>
-                                       </select>
-                                       <button type="submit" class="form-control btn btn-primary">Submit</button>
-                                       @csrf
-                                   </form>
-                           </div>
-<br><br><br><br><br>
-                            <hr>
+                    @if (count($soloreq) < 1)
+                        There are currently no requests!
+                    @else
+                        @foreach ($soloreq as $s)
+                        <text class="font-weight-bold">Student: </text> {{$s->student->user->fullName('FLC')}}<br>
+                        <text class="font-weight-bold">Instructor: </text> {{$s->instructor->user->fullName('FLC')}}<br>
+                        <text class="font-weight-bold">Solo Position: </text> {{$s->position}}<br>
+                        <a href="{{route('training.solo.approve', $s->id)}}" class="ml-0 btn btn-success btn-sm" style="float: center;">Approve</a>
+                        <a href="{{route('training.solo.deny', $s->id)}}" class="btn btn-danger btn-sm" style="float: center;">Deny</a>    
+                        <hr>
                         @endforeach
-
-                        @endif
+                    @endif
                     </div>
-                </div>
-                    @endif
-                    @endif
+
+            </div>
+                @endif
             </div>
         </div>
-        <br/>
-        <h5>Training Calendar</h5>
+        <br>
+        
+        <h3 class="font-weight-bold blue-text">Training Calendar</h3>
         <br>
     </div>
 @stop

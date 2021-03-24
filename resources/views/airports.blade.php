@@ -41,7 +41,7 @@
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="cywg" role="tabpanel" aria-labelledby="cywg"><br>
         <div class="row">
-                @if(getAtisLetter('CYWG') == true)
+                @if(\App\Classes\WeatherHelper::getAtisLetter('CYWG') == true)
                     <div class="col">
                         <div class="card"
                              style="background-color:#013162; color:#ffffff; width: 25%; float:left; min-height: 100%;">
@@ -49,7 +49,7 @@
                                 <div class="CYWG" style="text-align: center;">
                                     <div class="ATIS">
                                         <h5>ATIS</h5>
-                                        <h1 style="font-size:45px;"><b>{{getAtisLetter('CYWG')}}</b></h1>
+                                        <h1 style="font-size:45px;"><b>{{\App\Classes\WeatherHelper::getAtisLetter('CYWG')}}</b></h1>
                                     </div>
                                 </div>
                             </div>
@@ -60,7 +60,7 @@
                              style="background-color:#9f9f9f; color:#ffffff; width: 175%; float: right;">
                             <div class="card-body">
                                 <h3>Current ATIS/METAR</h3>
-                                {{checkAtis('CYWG')}}
+                                {{\App\Classes\WeatherHelper::getAtis('CYWG')}}
                             </div>
                         </div>
                     </div>
@@ -69,7 +69,7 @@
                         <div class="card" style="background-color:#9f9f9f; color:#ffffff;">
                             <div class="card-body">
                                 <h3>Current ATIS/METAR</h3>
-                                {{checkAtis('CYWG')}}
+                                {{\App\Classes\WeatherHelper::getAtis('CYWG')}}
                             </div>
                         </div>
                     </div>
@@ -90,7 +90,7 @@
                     <p>SimAddons truly is a legend in creating scenery for Canadian airports, and the Winnipeg FIR has quite a lot of scenery from the team across the pond. Their scenery for Winnipeg isn't brand new, but is still the best available for P3D and MSFS as of late 2020.</p>
                     <a style="margin-left: -0.1%" target="_blank" href="http://www.simaddons.com/pages/simaddons_purchase1.htm"class="btn btn-primary">View More</a>
                 <br></br>
-                <h4>Orbx - for FDX & P3D</h4>
+                <h4>Orbx - for FSX & P3D</h4>
                     <h5>Freeware</h5>
                     <p>ORBX is some of the best in the business at creating scenery, and Winnipeg is one of those airports available in their freeware pack. Get it now for your sim and upgrade Winnipeg for no cost.</p>
                     <a style="margin-left: -0.1%" target="_blank" href="https://orbxdirect.com/product/ftx-global-airport-pack"class="btn btn-primary">View More</a>
@@ -98,7 +98,7 @@
 
         <div class="tab-pane fade" id="cypg" role="tabpanel" aria-labelledby="cypg"><br>
         <div class="row">
-                @if(getAtisLetter('CYPG') == true)
+                @if(\App\Classes\WeatherHelper::getAtisLetter('CYPG') == true)
                 <div class="col">
                         <div class="card"
                              style="background-color:#013162; color:#ffffff; width: 25%; float:left; min-height: 100%;">
@@ -106,7 +106,7 @@
                                 <div class="CYPG" style="text-align: center;">
                                     <div class="ATIS">
                                         <h5>ATIS</h5>
-                                        <h1 style="font-size:45px;"><b>{{checkAtisLetter('CYPG')}}</b></h1>
+                                        <h1 style="font-size:45px;"><b>{{\App\Classes\WeatherHelper::getAtisLetter('CYPG')}}</b></h1>
                                     </div>
                                 </div>
                             </div>
@@ -117,7 +117,7 @@
                              style="background-color:#9f9f9f; color:#ffffff; width: 175%; float: right;">
                             <div class="card-body">
                                 <h3>Current ATIS/METAR</h3>
-                                {{checkAtis('CYPG')}}
+                                {{\App\Classes\WeatherHelper::getAtis('CYPG')}}
                             </div>
                         </div>
                     </div>
@@ -126,7 +126,7 @@
                         <div class="card" style="background-color:#9f9f9f; color:#ffffff;">
                             <div class="card-body">
                                 <h3>Current ATIS/METAR</h3>
-                                {{checkAtis('CYPG')}}
+                                {{\App\Classes\WeatherHelper::getAtis('CYPG')}}
                             </div>
                         </div>
                     </div>
@@ -136,7 +136,7 @@
             <li>Tower open Mon - Fri from 1400Z - 2300Z, excluding holidays.</li>
             <hr>
             <h2 class="font-weight-bold blue-text">Scenery</h2>
-                <h4>Orbx - for FDX & P3D</h4>
+                <h4>Orbx - for FSX & P3D</h4>
                     <h5>Freeware</h5>
                     <p>ORBX is some of the best in the business at creating scenery, and CYPG is one of many airports included in their free Global Airport Pack. Snag it now and get an enhanced experience at Southport.</p>
                     <a style="margin-left: -0.1%" target="_blank" href="https://orbxdirect.com/product/ftx-global-airport-pack"class="btn btn-primary">View More</a>
@@ -144,7 +144,7 @@
 
         <div class="tab-pane fade" id="cyxe" role="tabpanel" aria-labelledby="cyxe"><br>
         <div class="row">
-                @if(getAtisLetter('CYXE') == true)
+                @if(\App\Classes\WeatherHelper::getAtisLetter('CYXE') == true)
                 <div class="col">
                         <div class="card"
                              style="background-color:#013162; color:#ffffff; width: 25%; float:left; min-height: 100%;">
@@ -152,7 +152,7 @@
                                 <div class="CYXE" style="text-align: center;">
                                     <div class="ATIS">
                                         <h5>ATIS</h5>
-                                        <h1 style="font-size:45px;"><b>{{checkAtisLetter('CYXE')}}</b></h1>
+                                        <h1 style="font-size:45px;"><b>{{\App\Classes\WeatherHelper::getAtisLetter('CYXE')}}</b></h1>
                                     </div>
                                 </div>
                             </div>
@@ -163,7 +163,7 @@
                              style="background-color:#9f9f9f; color:#ffffff; width: 175%; float: right;">
                             <div class="card-body">
                                 <h3>Current ATIS/METAR</h3>
-                                {{checkAtis('CYXE')}}
+                                {{\App\Classes\WeatherHelper::getAtis('CYXE')}}
                             </div>
                         </div>
                     </div>
@@ -172,7 +172,7 @@
                         <div class="card" style="background-color:#9f9f9f; color:#ffffff;">
                             <div class="card-body">
                                 <h3>Current ATIS/METAR</h3>
-                                {{checkAtis('CYXE')}}
+                                {{\App\Classes\WeatherHelper::getAtis('CYXE')}}
                             </div>
                         </div>
                     </div>
@@ -194,7 +194,7 @@
                     <p>With their unique terminal shape and classic General Aviation ramp, Saskatoon is welcoming to both major airlines and small private pilots. FSXCenery brings the airport to life with their scenery.</p>
                     <a style="margin-left: -0.1%" target="_blank" href="https://secure.simmarket.com/fsxcenery-cyxe-saskatoon-john-g.-diefenbaker-international-airport-fsx-p3dv5.phtml"class="btn btn-primary">View More</a>
                     <br></br>
-                <h4>Orbx - for FDX & P3D</h4>
+                <h4>Orbx - for FSX & P3D</h4>
                     <h5>Freeware</h5>
                     <p>ORBX is some of the best in the business at creating scenery. Like most airports, CYXE is covered in their freeware pack. Pick it up for zero dollars and upgrade your sim.</p>
                     <a style="margin-left: -0.1%" target="_blank" href="https://orbxdirect.com/product/ftx-global-airport-pack"class="btn btn-primary">View More</a>
@@ -202,7 +202,7 @@
 
         <div class="tab-pane fade" id="cyqt" role="tabpanel" aria-labelledby="cyqt"><br>
             <div class="row">
-                @if(getAtisLetter('CYQT') == true)
+                @if(\App\Classes\WeatherHelper::getAtisLetter('CYQT') == true)
                 <div class="col">
                         <div class="card"
                              style="background-color:#013162; color:#ffffff; width: 25%; float:left; min-height: 100%;">
@@ -210,7 +210,7 @@
                                 <div class="CYQT" style="text-align: center;">
                                     <div class="ATIS">
                                         <h5>ATIS</h5>
-                                        <h1 style="font-size:45px;"><b>{{checkAtisLetter('CYQT')}}</b></h1>
+                                        <h1 style="font-size:45px;"><b>{{\App\Classes\WeatherHelper::getAtisLetter('CYQT')}}</b></h1>
                                     </div>
                                 </div>
                             </div>
@@ -221,7 +221,7 @@
                              style="background-color:#9f9f9f; color:#ffffff; width: 175%; float: right;">
                             <div class="card-body">
                                 <h3>Current ATIS/METAR</h3>
-                                {{checkAtis('CYQT')}}
+                                {{\App\Classes\WeatherHelper::getAtis('CYQT')}}
                             </div>
                         </div>
                     </div>
@@ -230,7 +230,7 @@
                         <div class="card" style="background-color:#9f9f9f; color:#ffffff;">
                             <div class="card-body">
                                 <h3>Current ATIS/METAR</h3>
-                                {{checkAtis('CYQT')}}
+                                {{\App\Classes\WeatherHelper::getAtis('CYQT')}}
                             </div>
                         </div>
                     </div>
@@ -260,7 +260,7 @@
                     <p>SimAddons is here with Thunder Bay too, of course - they've had this out for some time, but the scenery still matches with the current setup in CYQT.</p>
                     <a style="margin-left: -0.1%" data-target="_blank" href="http://www.simaddons.com/pages/simaddons_purchase1.htm"class="btn btn-primary">View More</a>
                     <br></br>
-                <h4>Orbx - for FDX & P3D</h4>
+                <h4>Orbx - for FSX & P3D</h4>
                     <h5>Freeware</h5>
                     <p>ORBX is some of the best in the business at creating scenery. Thunder Bay is just another one on their list for the team - and at no cost, it's worth grabbing if you want to up your game.</p>
                     <a style="margin-left: -0.1%" target="_blank" href="https://orbxdirect.com/product/ftx-global-airport-pack"class="btn btn-primary">View More</a>
@@ -269,7 +269,7 @@
 
         <div class="tab-pane fade" id="cyqr" role="tabpanel" aria-labelledby="cyqr"><br>
         <div class="row">
-                @if(getAtisLetter('CYQR') == true)
+                @if(\App\Classes\WeatherHelper::getAtisLetter('CYQR') == true)
                 <div class="col">
                         <div class="card"
                              style="background-color:#013162; color:#ffffff; width: 25%; float:left; min-height: 100%;">
@@ -277,7 +277,7 @@
                                 <div class="CYQR" style="text-align: center;">
                                     <div class="ATIS">
                                         <h5>ATIS</h5>
-                                        <h1 style="font-size:45px;"><b>{{checkAtisLetter('CYQR')}}</b></h1>
+                                        <h1 style="font-size:45px;"><b>{{\App\Classes\WeatherHelper::getAtisLetter('CYQR')}}</b></h1>
                                     </div>
                                 </div>
                             </div>
@@ -288,7 +288,7 @@
                              style="background-color:#9f9f9f; color:#ffffff; width: 175%; float: right;">
                             <div class="card-body">
                                 <h3>Current ATIS/METAR</h3>
-                                {{checkAtis('CYQR')}}
+                                {{\App\Classes\WeatherHelper::getAtis('CYQR')}}
                             </div>
                         </div>
                     </div>
@@ -297,7 +297,7 @@
                         <div class="card" style="background-color:#9f9f9f; color:#ffffff;">
                             <div class="card-body">
                                 <h3>Current ATIS/METAR</h3>
-                                {{checkAtis('CYQR')}}
+                                {{\App\Classes\WeatherHelper::getAtis('CYQR')}}
                             </div>
                         </div>
                     </div>
@@ -318,7 +318,7 @@
                     <p>FSXCenery has Regina on lock for FSX and P3D - their scenery just released for the simulators models the airport great - and is a fantastic addition to any simulator for central Canada flying.</p>
                     <a style="margin-left: -0.1%" target="_blank" href="https://secure.simmarket.com/fsxcenery-cyqr-regina-international-airport-fsx-p3d.phtml"class="btn btn-primary">View More</a>
                     <br></br>
-                <h4>Orbx - for FDX & P3D</h4>
+                <h4>Orbx - for FSX & P3D</h4>
                     <h5>Freeware</h5>
                     <p>ORBX is some of the best in the business at creating scenery. You shouldn't be shocked that CYQR is covered in their freeware pack - it's free, it's a nice upgrade. Go get it today.</p>
                     <a style="margin-left: -0.1%" target="_blank" href="https://orbxdirect.com/product/ftx-global-airport-pack"class="btn btn-primary">View More</a>
@@ -326,7 +326,7 @@
 
         <div class="tab-pane fade" id="cymj" role="tabpanel" aria-labelledby="cymj"><br>
         <div class="row">
-                @if(getAtisLetter('CYMJ') == true)
+                @if(\App\Classes\WeatherHelper::getAtisLetter('CYMJ') == true)
                 <div class="col">
                         <div class="card"
                              style="background-color:#013162; color:#ffffff; width: 25%; float:left; min-height: 100%;">
@@ -334,7 +334,7 @@
                                 <div class="CYMJ" style="text-align: center;">
                                     <div class="ATIS">
                                         <h5>ATIS</h5>
-                                        <h1 style="font-size:45px;"><b>{{checkAtisLetter('CYMJ')}}</b></h1>
+                                        <h1 style="font-size:45px;"><b>{{\App\Classes\WeatherHelper::getAtisLetter('CYMJ')}}</b></h1>
                                     </div>
                                 </div>
                             </div>
@@ -345,7 +345,7 @@
                              style="background-color:#9f9f9f; color:#ffffff; width: 175%; float: right;">
                             <div class="card-body">
                                 <h3>Current ATIS/METAR</h3>
-                                {{checkAtis('CYMJ')}}
+                                {{\App\Classes\WeatherHelper::getAtis('CYMJ')}}
                             </div>
                         </div>
                     </div>
@@ -354,7 +354,7 @@
                         <div class="card" style="background-color:#9f9f9f; color:#ffffff;">
                             <div class="card-body">
                                 <h3>Current ATIS/METAR</h3>
-                                {{checkAtis('CYMJ')}}
+                                {{\App\Classes\WeatherHelper::getAtis('CYMJ')}}
                             </div>
                         </div>
                     </div>
@@ -366,7 +366,7 @@
             <li>Tower/Terminal also frequenty closed on weekends.</li>
             <hr>
             <h2 class="font-weight-bold blue-text">Scenery</h2>
-                <h4>Orbx - for FDX & P3D</h4>
+                <h4>Orbx - for FSX & P3D</h4>
                     <h5>Freeware</h5>
                     <p>ORBX is some of the best in the business at creating scenery. Moose Jaw is limited for scenery - but they've got ORBX on their side with their freeware pack - and it's a worthwile download.</p>
                     <a style="margin-left: -0.1%" target="_blank" href="https://orbxdirect.com/product/ftx-global-airport-pack"class="btn btn-primary">View More</a>
