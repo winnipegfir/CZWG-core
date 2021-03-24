@@ -102,7 +102,9 @@
                 <a class="navbar-brand" href="{{route('index')}}"><img style="height: 40px; width:auto;" src="https://winnipegfir.ca/storage/files/uploads/1612961752.png" alt=""></a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+                    <span class="navbar-toggler-icon">
+                        <i class="fas fa-bars"  style="color:#013162"></i>
+                    </span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mr-auto">

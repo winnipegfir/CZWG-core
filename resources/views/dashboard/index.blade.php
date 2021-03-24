@@ -10,7 +10,7 @@
         table-layout: fixed;
     }
 
-    .row {
+    .home {
         display: table-row;
         background-image: url('https://cdn.discordapp.com/attachments/598024220961931271/820022270177181797/unknown.png') !important;
         background-size: cover;
@@ -85,11 +85,7 @@
 </style>
 
 <div class="table mb-0">
-    <div class="row">
-        <div class="col left">
-            <h1 align="center" class="font-weight-bold white-text">Your Dashboard</h1>
-        </div>
-        
+    <div class="home">
         <div class="col right p-4">
         @if(Auth::user()->permissions >= 1)
         <!--Certification Card-->
@@ -251,37 +247,39 @@
                 </div>
             </div>
         </div>
-            <div class="col" style="width: 30%">
+            <div class="col" style="width: 35%">
                 <div class="card">
                     <div class="card-header">
                         <h2 align="center" class="font-weight-bold blue-text">1Winnipeg Training</h2>
                     </div>
                     <div class="card-body pb-0 pt-3">
+                    @if (count($cbtnotifications) >= 1)
                     <h5 class="font-weight-bold blue-text">Notifications</h5>
-                            @if (count($cbtnotifications) < 1)
-                                <text style="color: gray">There are no notifications to show!</text>
-                            @else
-                                @foreach ($cbtnotifications as $cn)
-                                    <li>{{$cn->message}} <a href="{{route('cbt.notification.dismiss', $cn->id)}}"><i style="color: red" class="fas fa-times"></i></a></li>
-                                @endforeach
-                            @endif
+                            @foreach ($cbtnotifications as $cn)
+                                <li>{{$cn->message}} <a href="{{route('cbt.notification.dismiss', $cn->id)}}"><i style="color: red" class="fas fa-times"></i></a></li>
+                            @endforeach
                             <hr>
+                            @endif
+                            
                             @if($yourinstructor != null && $yourinstructor->instructor != null)
                                 <p class="mb-0"><b>Your Instructor:</b> {{$yourinstructor->instructor->user->fullName('FL')}}
                                     <br>
                                 <b>Email:</b> <a href="mailto:{{$yourinstructor->instructor_email}}">{{$yourinstructor->instructor->email}}</a>
                                 </p>
-                            @else
-                                @if ($certification == "training")
-                                    You do not have an Instructor yet - check back soon or contact our Chief Instructor.
-                                @endif
                             @endif
                             <ul class="list-unstyled mt-2 ">
                                 <li class="mb-2">
                                     <a href="{{route('cbt.index')}}" style="text-decoration:none;">
                                         <span class="blue-text"><i class="fas fa-chevron-right"></i></span> 
                                         &nbsp; 
-                                        <span class="black-text">Training Centre</span></a>
+                                        <span class="black-text">Training Centre</span>
+                                    </a>
+                                    <br>
+                                    <a href="{{route('training')}}" style="text-decoration:none;">
+                                        <span class="blue-text"><i class="fas fa-chevron-right"></i></span> 
+                                        &nbsp; 
+                                        <span class="black-text">Current Training Wait Times</span>
+                                    </a>
                                 </li>
                             </ul>
                     </div>
@@ -318,9 +316,53 @@
             <div class="col" style="width: 33%">
                 <div class="card">
                     <div class="card-header">
-                        <h2 align="center" class="font-weight-bold blue-text">Panel 6</h2>
+                        <h2 align="center" class="font-weight-bold blue-text">Staff Tools</h2>
                     </div>
-                    <div class="card-body pb-0 pt-3">              
+                    <div class="card-body pb-0 pt-3">
+                        <ul class="list-unstyled">
+                            <li class="mb-2">
+                                <a href="{{route('roster.index')}}" style="text-decoration:none;"><span
+                                        class="blue-text"><i class="fas fa-chevron-right"></i></span> &nbsp;
+                                    <span
+                                        class="black-text">Manage Controller Roster</span></a>
+                            </li>
+                            <li class="mb-2">
+                                <a href="{{route('events.admin.index')}}" style="text-decoration:none;"><span
+                                        class="blue-text"><i class="fas fa-chevron-right"></i></span> &nbsp;
+                                    <span
+                                        class="black-text">Manage Events</span></a>
+                            </li>
+                            <li class="mb-2">
+                                <a href="{{route('news.index')}}" style="text-decoration:none;"><span
+                                        class="blue-text"><i class="fas fa-chevron-right"></i></span> &nbsp;
+                                    <span
+                                        class="black-text">Manage News</span></a>
+                            </li>
+                            <li class="mb-2">
+                                <a href="{{route('staff.feedback.index')}}" style="text-decoration:none;"><span
+                                        class="blue-text"><i class="fas fa-chevron-right"></i></span> &nbsp;
+                                    <span
+                                        class="black-text">Manage Feedback</span></a>
+                            </li>
+                            <li class="mb-2">
+                                <a href="{{(route('users.viewall'))}}" style="text-decoration:none;">
+                            <span class="blue-text">
+                                <i class="fas fa-chevron-right"></i>
+                            </span>
+                                    &nbsp;
+                                    <span class="black-text">Manage Users</span>
+                                </a>
+                            </li>
+                            <li class="mb-2">
+                                <a href="{{(route('dashboard.upload'))}}" style="text-decoration:none;">
+                            <span class="blue-text">
+                                <i class="fas fa-chevron-right"></i>
+                            </span>
+                                    &nbsp;
+                                    <span class="black-text">File Uploader</span>
+                                </a>
+                            </li>
+                        </ul>              
                     </div>
                 </div>
             </div>
