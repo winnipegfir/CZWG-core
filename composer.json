@@ -26,6 +26,7 @@
         "sentry/sentry-laravel": "^2.3",
         "socialiteproviders/discord": "^4.1",
         "spatie/laravel-google-calendar": "^3.2.1",
+        "spatie/laravel-permission": "^4.0",
         "thujohn/twitter": "^2.2",
         "vatsim/sso": "3.*",
         "vemcogroup/laravel-sparkpost-driver": "^3.0",
