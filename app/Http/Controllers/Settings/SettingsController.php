@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
-use App\Models\Roles\Role;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 use App\Models\Settings\AuditLogEntry;
 use App\Models\Settings\CoreSettings;
 use App\Models\Settings\HomepageImages;
@@ -194,22 +195,18 @@ class SettingsController extends Controller
 
     public function addRole(Request $request)
     {
-        $check = Role::where('slug', $request->input('slug'))->first();
+        $check = Role::where('name', $request->input('name'))->first();
         if ($check != null) {
-            return back()->withError('This slug already exists!');
+            return back()->withError('This role already exists!');
         }
-        $role = new Role();
-        $role->slug = $request->input('slug');
-        $role->name = $request->input('name');
-        $role->secure = $request->input('secure');
-        $role->save();
+        $role = Role::create(['name' => $request->input('name'), 'protected' => $request->input('secure')]);
 
         return back()->withSuccess('Added the role!');
     }
 
     public function deleteRole($id)
     {
-        $role = Role::whereId($id)->first();
+        $role = Role::findByName($id);
         $message = $role->name;
         $role->delete();
 

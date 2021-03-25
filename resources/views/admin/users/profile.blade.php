@@ -298,18 +298,10 @@
                     <ul class="list-unstyled mt-2 mb-0">
                         <li class="mb-2">
                     @foreach ($roles as $r)
-
-                            @if ($r->role->secure == "1")
-                                    <i class="fas fa-chevron-right"></i>{{$r->role->name}}
-                                @role('admin')
-                                <a type="button" class="btn btn-sm btn-primary" style="color: #ff6161" href="{{route('user.role.delete', [$r->role->slug, $user->id])}}"><i class="fa fa-times"></i></a><br>
-                                @endrole
-                                @else
-                                <br>
-                                    <i class="fas fa-chevron-right"></i>{{$r->role->name}}
-                                    <a type="button" class="btn btn-sm btn-primary" style="color: #ff6161" href="{{route('user.role.delete', [$r->role->slug, $user->id])}}"><i class="fa fa-times"></i></a><br>
-                                @endif
-                                    @endforeach
+                                {{$r}}
+                                <a type="button" class="btn btn-sm btn-primary" style="color: #ff6161" href="{{route('user.role.delete', [$r, $user->id])}}"><i class="fa fa-times"></i></a><br>
+                            <br>
+                            @endforeach
                             @endif
                         </li></ul><br>
 
@@ -474,13 +466,18 @@
                    <form action="{{route('user.role.add')}}" method="POST" class="form-group">
                        <select class="form-control" name="role">
                            @foreach ($allroles as $r)
-                            @if($r->secure == '1')
-                                @role('admin')
-                               <option value="{{$r->id}}">{{$r->name}}</option>
+                            @if($r->protected == '2')
+                                @role('Administrator')
+                               <option value="{{$r->name}}">{{$r->name}}</option>
                             @endrole
+                               @elseif($r->protected == '1')
+                                @hasanyrole('Administrator|Staff')
+                                   <option value="{{$r->name}}">{{$r->name}}</option>
+                                @endhasanyrole
                                @else
-                                   <option value="{{$r->id}}">{{$r->name}}</option>
+                                   <option value="{{$r->name}}">{{$r->name}}</option>
                                @endif
+
                        @endforeach
                        </select>
                        <input type="hidden" name="id" value="{{$user->id}}">
