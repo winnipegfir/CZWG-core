@@ -88,6 +88,7 @@ class Event extends Model
                 'CYXE' => ['name' => 'Saskatoon International Airport', 'icao' => 'CYXE'],
                 'CYQR' => ['name' => 'Regina International Airport', 'icao' => 'CYQR'],
                 'CYQT' => ['name' => 'Thunder Bay International Airport', 'icao' => 'CYQT'],
+                'CYYZ' => ['name' => 'Toronto Pearson International Airport', 'icao' => 'CYYZ'],
             ];
             json_encode($define);
 
@@ -134,6 +135,7 @@ class Event extends Model
                 'CYXE' => ['name' => 'Saskatoon International Airport', 'icao' => 'CYXE'],
                 'CYQR' => ['name' => 'Regina International Airport', 'icao' => 'CYQR'],
                 'CYQT' => ['name' => 'Thunder Bay International Airport', 'icao' => 'CYQT'],
+                'CYYZ' => ['name' => 'Toronto Pearson International Airport', 'icao' => 'CYYZ'],
             ];
             json_encode($define);
 

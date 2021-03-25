@@ -6,7 +6,6 @@ use App\Models\AtcTraining;
 use App\Models\ControllerBookings;
 use App\Models\Events;
 use App\Models\News;
-use App\Models\Roles\Permissions\HasPermissionsTrait;
 use App\Models\Tickets;
 use Exception;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -17,11 +16,11 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use LasseRafn\InitialAvatarGenerator\InitialAvatar;
 use RestCord\DiscordClient;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasPermissionsTrait;
-    use Notifiable;
+    use Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -49,6 +48,7 @@ class User extends Authenticatable
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
+
     public function news()
     {
         return $this->hasMany(News\News::class);

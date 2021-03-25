@@ -21,7 +21,12 @@
           <br>
           @foreach ($modules as $modules)
           <div class="card p-2">
-            <h5 style="margin-bottom: 5%" class="font-weight-bold">{{$modules->cbtmodule->name}}</h5>
+            <h5 style="margin-bottom: 5%" class="font-weight-bold">
+            {{$modules->cbtmodule->name}}
+                        @if($modules->completed_at != null)
+            <i style="color: green" class="fas fa-check"></i>
+            @endif
+            </h5>
             <a class="btn-sm btn-success" href="module/view/{{$modules->cbt_module_id}}/intro">Click to Start</a>
           </div>
           <br>
