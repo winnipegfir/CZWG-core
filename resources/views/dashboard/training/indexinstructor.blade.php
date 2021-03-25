@@ -63,7 +63,7 @@
                         <text class="font-weight-bold">Instructor: </text> {{$s->instructor->user->fullName('FLC')}}<br>
                         <text class="font-weight-bold">Solo Position: </text> {{$s->position}}<br>
                         <a href="{{route('training.solo.approve', $s->id)}}" class="ml-0 btn btn-success btn-sm" style="float: center;">Approve</a>
-                        <a href="{{route('training.solo.deny', $s->id)}}" class="btn btn-danger btn-sm" style="float: center;">Deny</a>    
+                        <a href="{{route('training.solo.deny', $s->id)}}" class="btn btn-danger btn-sm" style="float: center;">Deny</a>
                         <hr>
                         @endforeach
                     @endif
@@ -74,8 +74,9 @@
             </div>
         </div>
         <br>
-        
+
         <h3 class="font-weight-bold blue-text">Training Calendar</h3>
         <br>
+
     </div>
 @stop
