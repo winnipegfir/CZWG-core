@@ -48,7 +48,7 @@
                 </div>
             </div>
             <div class="col">
-                @if (Auth::user()->permissions >= 4)
+                @hasanyrole('Chief-Instructor|Administrator')
                 <div class="card">
                     <div class="card-header">
                         <text class="font-weight-bold">Student Solo Requests</text>
@@ -70,7 +70,7 @@
                     </div>
 
             </div>
-                @endif
+                @endhasanyrole
             </div>
         </div>
         <br>

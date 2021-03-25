@@ -12,7 +12,7 @@
                 <thead>
                 <tr>
                     <th scope="col">Role Name</th>
-                    <th scope="col">Role Slug</th>
+                    <th scope="col">Role Assign Protection</th>
                     <th scope="col">Action</th>
                 </tr>
                 </thead>
@@ -21,10 +21,16 @@
                     <tr>
                         <th scope="row">{{$role->name}}</th>
                         <td>
-                            {{$role->slug}}
+                            @if($role->protected == '0')
+                                Instructors and above
+                            @elseif($role->protected == '1')
+                                Staff and above
+                            @elseif($role->protected == '2')
+                                Admin Only
+                            @endif
                         </td>
                         <td>
-                            <a type="button" class="btn btn-sm btn-primary" style="color: #ff6161" href="{{route('roles.delete', $role->id)}}"><i class="fa fa-times"></i> Delete</a>
+                            <a type="button" class="btn btn-sm btn-primary" style="color: #ff6161" href="{{route('roles.delete', $role->name)}}"><i class="fa fa-times"></i> Delete</a>
                         </td>
                     </tr>
                 @endforeach
@@ -53,14 +59,14 @@
                             <input class="form-control" name="name"></input>
                         </div>
                         <div class="form-group">
-                            <label>Role Slug</label>
-                            <input class="form-control" name="slug"></input>
+                            <label>Protect the role?</label>
+                            <select name="secure" class="form-control">
+                                <option value="0">Instructor and above can Assign Role</option>
+                                <option value="1">Staff and above can Assign Role</option>
+                                <option value="2">Only Admin can Assign Role</option>
+                            </select>
                         </div>
-                        <label class=""form-group">Only Allow Admins to Attach/Detach this role?</label><br>
-                        <input type="radio" id="yes" name="secure" value="1" class="form-group">
-                        <label for="male" class="form-group">Yes</label><br>
-                        <input type="radio" id="no" name="secure" value="0" class="form-group">
-                        <label for="female" class="form-group">No</label><br>
+
 
                 </div>
                 <div class="modal-footer">
