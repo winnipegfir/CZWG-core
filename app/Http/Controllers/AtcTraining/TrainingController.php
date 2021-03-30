@@ -38,7 +38,7 @@ class TrainingController extends Controller
         if ($instructor) {
             $yourStudents = Student::where('instructor_id', $instructor->id)->get();
         }
-        
+
 
         return view('dashboard.training.indexinstructor', compact('yourStudents', 'soloreq'));
     }
@@ -320,24 +320,24 @@ class TrainingController extends Controller
         if (! $student) {
             return redirect()->back()->withError('Student cannot be found!');
         }
-        $check = CbtExamResult::where([
-            'student_id' => $request->input('studentid'),
-            'cbt_exam_id' => $request->input('examid'),
-        ])->first();
-        if ($check != null) {
-            $removeanswers = CbtExamAnswer::where([
-                'student_id' => $student->id,
-                'cbt_exam_id' => $request->input('examid'),
-            ])->get();
-            foreach ($removeanswers as $r) {
-                $r->delete();
-            }
-            $removeresult = CbtExamResult::where([
-                'student_id' => $student->id,
-                'cbt_exam_id' => $request->input('examid'),
-            ])->first();
-            $removeresult->delete();
-        }
+       // $check = CbtExamResult::where([
+        //     'student_id' => $request->input('studentid'),
+        //  'cbt_exam_id' => $request->input('examid'),
+        //])->first();
+        //if ($check != null) {
+        //  $removeanswers = CbtExamAnswer::where([
+        //      'student_id' => $student->id,
+        //      'cbt_exam_id' => $request->input('examid'),
+        //  ])->get();
+        //  foreach ($removeanswers as $r) {
+        //      $r->delete();
+        //  }
+        //  $removeresult = CbtExamResult::where([
+        //      'student_id' => $student->id,
+        //      'cbt_exam_id' => $request->input('examid'),
+        //  ])->first();
+        //  $removeresult->delete();
+        //}
         $questioncount = CbtExamQuestion::where('cbt_exam_id', $request->input('examid'))->get();
         if (count($questioncount) < 10) {
             return redirect()->back()->withError('This exam does not have the minimum 10 questions, so it cannot be assigned!');

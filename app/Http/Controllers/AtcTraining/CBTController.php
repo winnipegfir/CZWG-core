@@ -362,7 +362,7 @@ class CBTController extends Controller
     public function gradeExam(Request $req, $id)
     {
         $student = Student::where('user_id', Auth::user()->id)->first();
-        $r = CbtExamResults::create([
+        $r = CbtExamResult::create([
             'student_id' => $student->id,
             'cbt_exam_id' => $id,
             'instructor_id' => $student->instructor->id,
@@ -471,8 +471,7 @@ class CBTController extends Controller
         ]);
         $score = '0';
         $answers = CbtExamAnswer::where([
-            ['student_id', $student->id],
-            ['cbt_exam_id', $id],
+            ['cbt_exam_result_id', $r->id],
         ])->get();
         foreach ($answers as $a) {
             if ($a->user_answer == $a->right_answer) {
@@ -489,7 +488,7 @@ class CBTController extends Controller
         ])->first();
         $removeexam->delete();
         $exam = CbtExam::whereId($id)->first();
-        $student->instructor->user->notify(new ExamCompletion($grade, $student, $exam));
+        //$student->instructor->user->notify(new ExamCompletion($grade, $student, $exam));
 
         return redirect()->route('cbt.exam.results', [$id, $student->id, $r->id]);
     }
@@ -498,15 +497,10 @@ class CBTController extends Controller
     {
         $student = Student::whereId($sid)->first();
         $exam = CbtExam::whereId($id)->first();
+        $grade = CbtExamResult::whereId($rid)->first();
         $results = CbtExamAnswer::where([
-            'student_id' => $sid,
-            'cbt_exam_id' => $id,
             'cbt_exam_result_id' => $rid,
         ])->get();
-        $grade = CbtExamResult::where([
-            'student_id' => $sid,
-            'cbt_exam_id' => $id,
-        ])->first();
 
         return view('dashboard.training.CBT.exams.results', compact('exam', 'results', 'grade', 'student'));
     }
