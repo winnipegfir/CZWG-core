@@ -2,6 +2,11 @@
 
 namespace App\Console;
 
+use App\Console\Commands\ActivityLog;
+use App\Console\Commands\CheckVisitHours;
+use App\Console\Commands\CurrencyCheck;
+use App\Console\Commands\RatingUpdate;
+use App\Notifications\events\EventReminder;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -25,21 +30,21 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->call(function () use ($schedule) {
-            $schedule->command('ActivityLog')->evenInMaintenanceMode();
-            $schedule->command('EventReminder');
+            $schedule->command(ActivityLog::class)->evenInMaintenanceMode();
+            $schedule->command(EventReminder::class);
 
             file_get_contents(config('cronurls.minute'));
         })->everyMinute();
 
         $schedule->call(function () use ($schedule) {
-            $schedule->command('RatingUpdate');
+            $schedule->command(RatingUpdate::class);
 
             file_get_contents(config('cronurls.daily'));
         })->weekly();
 
         $schedule->call(function () use ($schedule) {
-            $schedule->command('CheckVisitHours');
-            $schedule->command('CurrencyCheck');
+            $schedule->command(CheckVisitHours::class);
+            $schedule->command(CurrencyCheck::class);
 
             file_get_contents(config('cronurls.monthly'));
         })->monthly();
