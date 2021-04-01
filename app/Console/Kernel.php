@@ -5,8 +5,8 @@ namespace App\Console;
 use App\Console\Commands\ActivityLog;
 use App\Console\Commands\CheckVisitHours;
 use App\Console\Commands\CurrencyCheck;
+use App\Console\Commands\EventReminders;
 use App\Console\Commands\RatingUpdate;
-use App\Notifications\events\EventReminder;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -31,7 +31,7 @@ class Kernel extends ConsoleKernel
     {
         $schedule->call(function () use ($schedule) {
             $schedule->command(ActivityLog::class)->evenInMaintenanceMode();
-            $schedule->command(EventReminder::class);
+            $schedule->command(EventReminders::class);
 
             file_get_contents(config('cronurls.minute'));
         })->everyMinute();
