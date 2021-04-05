@@ -277,7 +277,6 @@ Route::group(['middleware' => 'auth'], function () {
     //ADMIN ONLY
     //Minutes
     Route::group(['middleware' => 'executive'], function () {
-        Route::get('/addroles', 'Users\UserController@baseRole');
         Route::get('/meetingminutes/{id}', 'News\NewsController@minutesDelete')->name('meetingminutes.delete');
         Route::post('/meetingminutes', 'News\NewsController@minutesUpload')->name('meetingminutes.upload');
         //Network

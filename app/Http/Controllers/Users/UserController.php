@@ -194,40 +194,6 @@ class UserController extends Controller
         return back()->withSuccess('Added the '.$role->name.' role!');
     }
 
-    public function baseRole()
-    {
-        $allusers = User::all();
-        $role1 = Role::where('name', 'Guest')->first();
-        foreach ($allusers as $u) {
-            if (!$u->hasRole($role1->name)) {
-                $u->assignRole($role1->name);
-            }
-        }
-        $controllers = User::where('permissions', '!=', '0')->get();
-        $role2 = Role::where('name', 'Controller')->first();
-        foreach ($controllers as $u) {
-            if (!$u->hasRole($role2->name)) {
-                $u->assignRole($role2->name);
-            }
-        }
-        $mentors = User::where('permissions', '2')->get();
-        $role3 = Role::where('name', 'Mentor')->first();
-        foreach ($mentors as $u) {
-            if (!$u->hasRole($role3->name)) {
-                $u->assignRole($role3->name);
-            }
-        }
-        $instructors = User::where('permissions', '3')->get();
-        $role4 = Role::where('name', 'Instructor')->first();
-        foreach ($instructors as $u) {
-                if (!$u->hasRole($role4->name)) {
-                    $u->assignRole($role4->name);
-                }
-            }
-
-        print('Completed!');
-    }
-
     public function deleteRole($id, $user)
     {
         $role = Role::where('name', $id)->first();
