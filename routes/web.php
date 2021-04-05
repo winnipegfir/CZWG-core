@@ -197,7 +197,7 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     //Users View/Edit
-    Route::group(['prefix' => 'admin/users', 'middleware' => ['role:Staff']], function () {
+    Route::group(['prefix' => 'admin/users', 'middleware' => ['role:Administrator|Staff']], function () {
         Route::get('/', 'Users\UserController@viewAllUsers')->name('users.viewall');
         Route::post('/search/ajax', 'Users\UserController@searchUsers')->name('users.search.ajax');
         Route::get('{id}', 'Users\UserController@adminViewUserProfile')->name('users.viewprofile');
