@@ -70,6 +70,9 @@ class Kernel extends HttpKernel
         'bookingban' => \App\Http\Middleware\BookingBanMiddleware::class,
         'atc' => \App\Http\Middleware\CheckAtc::class,
         'mentor' => \App\Http\Middleware\CheckMentor::class,
+        'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
+        'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
+        'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
     ];
 
     /**
