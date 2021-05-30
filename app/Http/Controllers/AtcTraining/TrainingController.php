@@ -4,6 +4,7 @@ namespace App\Http\Controllers\AtcTraining;
 
 use App\Http\Controllers\Controller;
 use App\Models\AtcTraining\Application;
+use App\Models\AtcTraining\InstructingSession;
 use App\Models\AtcTraining\CBT\CbtExam;
 use App\Models\AtcTraining\CBT\CbtExamAnswer;
 use App\Models\AtcTraining\CBT\CbtExamAssign;
@@ -488,5 +489,18 @@ class TrainingController extends Controller
         }
 
         return redirect('/dashboard')->withSuccess('Student/Instructor Pairing Removed!');
+    }
+
+    public function instructingSessionsIndex()
+    {
+        $iid = Instructor::where('user_id', Auth::user()->id)->first();
+        $sessions = InstructingSession::where('instructor_id', $iid->id)->get();
+        $upcomingSessions = InstructingSession::where('instructor_id', $iid->id)->get();
+        return view('dashboard.training.instructingsessions.index', compact('sessions', 'upcomingSessions'));
+    }
+
+    public function createInstructingSession()
+    {
+        return redirect()->back()->withError('This is still a work in progress.');
     }
 }
