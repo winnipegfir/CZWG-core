@@ -5,7 +5,7 @@
 <div class="container py-4">
     <h1 class="font-weight-bold blue-text">Branding</h1>
     <p>This is the place to find all official Winnipeg FIR branding. Please feel free to use this branding for any event postings and publications.</p>
-    Any modification of the branding must be approved by the FIR Chief: <a href="mailto:n.power@vatcan.ca">n.power@vatcan.ca.</a>
+    Be sure to read up on our <a href="https://winnipegfir.ca/policies">Branding Guidelines</a> before using any of our brand. Thank you!
     <hr>
     <h3>Banners/Wordmarks/Letterheads</h3>
     <div class="p-2">
