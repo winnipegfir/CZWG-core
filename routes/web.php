@@ -34,6 +34,7 @@ Route::get('/training', 'AtcTraining\TrainingController@trainingTime')->name('tr
 Route::view('/bill', 'bill')->name('bill');
 Route::view('/wpg', 'wpg')->name('wpg');
 Route::view('/yearend', 'yearend')->name('yearend');
+Route::view('/pdc', 'pdc')->name('pdc');
 //Redirects
 Route::get('/merch', function () {
     return redirect()->to('https://www.designbyhumans.com/shop/WinnipegFIR');
