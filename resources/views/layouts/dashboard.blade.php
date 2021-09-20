@@ -22,8 +22,8 @@
         <meta name="theme-color" content="#013162">
         <meta name="og:title" content="@yield('title', 'Winnipeg FIR')">
         <meta name="og:description" content="@yield('description', '')">
-        <meta name="og:image" content="@yield('image','https://winnipegfir.ca/storage/files/uploads/1612961752.png')">
-        <link rel="shortcut icon" href="{{ asset('winnipeg.ico') }}" type="image/x-icon">
+        <meta name="og:image" content="@yield('image','https://winnipegfir.ca/storage/files/uploads/1612961961.png')">
+        <link rel="shortcut icon" href="https://winnipegfir.ca/storage/files/uploads/1612961961.png" type="image/x-icon">
         <!-- Font Awesome -->
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
         <!-- Bootstrap core CSS -->
@@ -98,7 +98,7 @@
     <header>
         <nav id="czwgHeader" class="navbar navbar-expand-lg navbar-dark p-0" style="min-height:59px; background-color: #fff">
             <div class="container">
-                <a class="navbar-brand" href="{{route('index')}}"><img style="height: 40px; width:auto;" src="https://winnipegfir.ca/storage/files/uploads/1612961752.png" alt=""></a>
+                <a class="navbar-brand" href="{{route('index')}}"><img style="height: 40px; width:auto;" src="https://winnipegfir.ca/storage/files/uploads/1632116747.png" alt=""></a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>

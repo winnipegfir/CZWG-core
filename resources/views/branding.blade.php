@@ -90,11 +90,11 @@
         <br>Pantone Type 115-1 U
         <br>C 0%   M 0%   Y 0%   K 0%
     </a>
-    <a class="btn" style="color: black; background-color: #f2d600">
+    <a class="btn" style="color: black; background-color: #feba00">
         <strong>Prairie Gold:</strong><br>
-        <br>Hex #f2d600
-        <br>Pantone Type 3695 C
-        <br>C 0%   M 12%   Y 100%   K 5%
+        <br>Hex #feba00
+        <br>Pantone Type 7548 C
+        <br>C 0%   M 27%   Y 100%   K 0%
     </a>
     </div>
 </div>

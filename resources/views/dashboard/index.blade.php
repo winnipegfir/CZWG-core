@@ -107,10 +107,10 @@
                                             <span style="color: #d1d1d1;">#{{Auth::user()->getDiscordUser()->discriminator}}</span>
                                         </p>
                                         @if(!Auth::user()->memberOfCZWGGuild())
-                                            <a href="#" data-toggle="modal" data-target="#joinDiscordServerModal"
-                                               class="mt-1">Join The CZWG Discord</a><br/>
+                                            <a href="#" class="btn-sm btn-primary m-0" data-toggle="modal" data-target="#joinDiscordServerModal"
+                                               class="mt-1">Join The Discord</a>
                                         @endif
-                                        <a href="#" class="btn-sm btn-danger m-0" data-toggle="modal" data-target="#discordModal" class="mt-1">Unlink</a>   
+                                            <a href="#" class="btn-sm btn-danger m-0" data-toggle="modal" data-target="#discordModal">Unlink</a>   
                                         <hr>
                                     @endif
                                 </div>
@@ -190,7 +190,7 @@
                                                 <h5 class="font-weight-bold blue-text">Current Subscription Status</h5>
                                                 @if (Auth::user()->gdpr_subscribed_emails == 0)
                                                     <h3>
-                                                        <span class="p-2 badge badge-danger">Not subscribed</span>
+                                                        <span class="p-2 badge badge-danger">Not Subscribed</span>
                                                     </h3>
                                                 @else
                                                     <h3>
@@ -232,24 +232,12 @@
                             <h3 class="font-weight-bold blue-text pb-2">Upcoming Events</h3>
                             <div class="list-group">
                                 @if (count($confirmedevent) < 1)
-                                    <h5>There are no scheduled events!</h5>
+                                    <h5><b>There are no scheduled events!</b></h5>
                                 @else
-
                                     @foreach ($confirmedevent as $cevent)
-                                        <h5><u><b>{{$cevent->name}}</b> on {{$cevent->start_timestamp_pretty()}}</h5></u>
-                                        @foreach ($confirmedapp as $capp)
-                                            @if ($cevent->id == $capp->event->id)
-                                                <li>
-                                                    <b>Slot:</b> {{$capp->airport}}
-                                                    @if($capp->position != "Relief"){{$capp->position}} from @endif
-                                                    @if($capp->position == "Relief")
-                                                        <text class="text-danger">{{$capp->position}}</text>
-                                                        from @endif
-                                                    {{$capp->start_timestamp}}z - {{$capp->end_timestamp}}z
-                                                </li>
-                                                <br></br>
-                                            @endif
-                                        @endforeach
+                                        <h5><li>
+                                            <b>{{$cevent->name}}</b> - {{$cevent->start_timestamp_pretty()}}
+                                        </h5></li>
                                     @endforeach
                                 @endif
                                 @if (count($unconfirmedapp) < 1)
@@ -1024,33 +1012,20 @@
                 <div class="modal-body">
                   @foreach ($confirmedevent as $cevent)
 
-                  <h5><text class="font-weight-bold">{{$cevent->name}}</text> on {{$cevent->start_timestamp_pretty()}}</h5>
-
-
-                              @foreach ($unconfirmedapp as $uapp)
-                            @if ($cevent->name == $uapp->event->name)
-
-
-                              <li>
-
-                                            <text class="font-weight-bold"> Position Requested:</text> {{$uapp->position}}
-                                            from {{$uapp->start_availability_timestamp}}z - {{$uapp->end_availability_timestamp}}z
-
-
-
-                                      </li><br>
-
-
-                                          @endif
-
-                      @endforeach
-                      @endforeach
-
-
+                  <h5><text class="font-weight-bold">{{$cevent->name}}</text> - {{$cevent->start_timestamp_pretty()}}</h5>
+                    @foreach ($unconfirmedapp as $uapp)
+                    @if ($cevent->name == $uapp->event->name)
+                    <li>
+                        <text class="font-weight-bold"> Position Requested:</text> {{$uapp->position}}
+                        from {{$uapp->start_availability_timestamp}}z - {{$uapp->end_availability_timestamp}}z
+                    </li>
+                    <br>
+                    @endif
+                    @endforeach 
+                    @endforeach
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-light" data-dismiss="modal">Dismiss</button>
-
                 </div>
             </div>
         </div>
