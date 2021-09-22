@@ -4,11 +4,11 @@
 @section('content')
 <div class="container py-4">
     <h1 class="font-weight-bold blue-text">Branding</h1>
-    <p>This is the place to find all official Winnipeg FIR branding. Please feel free to use this branding for any event postings and publications.</p>
-    Any modification of the branding must be approved by the FIR Chief: <a href="mailto:n.power@vatcan.ca">n.power@vatcan.ca.</a>
+        <p>This is the place to find all official Winnipeg FIR branding. Please feel free to use this branding for any event postings and publications.</p>
+        <p>Be sure to read up on our <a href="https://winnipegfir.ca/policies">Branding Guidelines</a> before using any of our brand. Thank you!</p>
     <hr>
-    <h3>Banners/Wordmarks/Letterheads</h3>
-    <div class="p-2">
+    <h4 class="font-weight-bold blue-text">Banners/Wordmarks/Letterheads</h4>
+    <div class="pt-1">
         <div class="row">
             <div class="col-md-3 d-flex flex-column align-items-center justify-content-center">
                 <img src="https://winnipegfir.ca/storage/files/uploads/1612961752.png" class="img-fluid" alt="">
@@ -61,8 +61,8 @@
         </div>
     </div>
     <hr>
-    <h3>Squares</h3>
-    <div class="p-2">
+    <h4 class="font-weight-bold blue-text">Squares</h4>
+    <div class="pt-1">
         <div class="row">
             <div class="col-md-3 d-flex flex-column align-items-center justify-content-center">
                 <img src="https://winnipegfir.ca/storage/files/uploads/1612961961.png" class="img-fluid" alt="">
@@ -77,8 +77,8 @@
         </div>
     </div>
     <hr>
-    <h3>Official FIR Colours</h3>
-    <button class="btn btn-primary">
+    <h4 class="font-weight-bold blue-text">Official FIR Colour Palette</h4>
+    <button class="ml-0 btn btn-primary">
         <strong>Winnipeg Blue:</strong><br>
         <br>Hex #013162
         <br>Pantone Type 648C
