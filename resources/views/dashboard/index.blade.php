@@ -228,7 +228,7 @@
                 @if (Auth::user()->permissions >= 1)
 
                     <div class="card">
-                        <div class="card-body">
+                        <div class="card-body pb-3">
                             <h3 class="font-weight-bold blue-text pb-2">Upcoming Events</h3>
                             <div class="list-group">
                                 @if (count($confirmedevent) < 1)
@@ -269,7 +269,7 @@
                                 @endif
 
                                 @if(count($confirmedevent) != 0)
-                                    <a href="{{url('/dashboard/events/view')}}" style="text-align: center">View Event Rosters</a>
+                                    <a href="{{url('/dashboard/events/view')}}" class="font-weight-bold" style="text-align: center; padding-top: 2%; color: #013162;">View Event Rosters</a>
                                 @endif
                             </div>
                         </div>
@@ -578,6 +578,7 @@
                                     You do not have an Instructor yet - check back soon or contact our Chief Instructor.
                                 @endif
                             @endif
+                            <hr>
                             <ul class="list-unstyled mt-2 mb-0">
                                 <li class="mb-2">
                                     <a href="{{route('cbt.index')}}" style="text-decoration:none;">
@@ -644,7 +645,7 @@
                                         @endforeach
                                     </div>
                                 @endif
-                                <br>
+                                <hr>
                             @endif
                             <ul class="list-unstyled mt-2 mb-0">
                                 <li class="mb-2">
