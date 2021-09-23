@@ -57,12 +57,12 @@
             <div class="col">
                 @if (Auth::user()->permissions >= 1 | $certification == "training")
                     <div class="card">
-                        <div class="card-body">
-                            <h3 class="font-weight-bold blue-text pb-2">ATC Resources</h3>
+                        <div class="card-body pb-0">
+                            <h3 class="font-weight-bold blue-text pb-0">ATC Resources</h3>
                             @if(Auth::user()->permissions >= 4)
                                 <a href="{{route('atcresources.index')}}">Manage Resources</a><br></br>
                             @endif
-                            <div class="list-group" style="border-radius: 0.5em !important">
+                            <div class="list-group pb-3" style="border-radius: 0.5em !important">
                                 @foreach($atcResources as $resource)
                                     @if($resource->atc_only && Auth::user()->permissions < 1)
                                         @continue
@@ -235,16 +235,25 @@
                                     <h5><b>There are no scheduled events!</b></h5>
                                 @else
                                     @foreach ($confirmedevent as $cevent)
-                                        <h5><li>
-                                            <b>{{$cevent->name}}</b> - {{$cevent->start_timestamp_pretty()}}
-                                        </h5></li>
+                                    <h5><li>
+                                        <b>{{$cevent->name}}</b> - {{$cevent->start_timestamp_pretty()}}</h5>
+                                            @foreach ($confirmedapp as $capp)
+                                            @if ($cevent->id == $capp->event->id)
+                                                    <p class="pt-0"><b>Confirmed Slot:</b> {{$capp->airport}}
+                                                    @if($capp->position != "Relief"){{$capp->position}} from @endif
+                                                    @if($capp->position == "Relief")
+                                                        <text class="text-danger">{{$capp->position}}</text>
+                                                        from @endif
+                                                    {{$capp->start_timestamp}}z - {{$capp->end_timestamp}}z
+                                                    </p>     
+                                            @endif
+                                            @endforeach
+                                    </h5></li>
                                     @endforeach
                                 @endif
                                 @if (count($unconfirmedapp) < 1)
                                     <p>
-                                        You have
-                                        <text class="text-primary"><b>no</b></text>
-                                        active event applications
+                                        You have <text class="text-primary"><b>no</b></text> active event applications
                                     </p>
                                 @elseif (count($unconfirmedapp) == 1)
                                     <a href="" data-target="#unconfirmedEvents" data-toggle="modal"
@@ -267,7 +276,6 @@
                                                 class="text-success"><b>{{count($unconfirmedapp)}}</b></text> active event applications</span>
                                     </a>
                                 @endif
-
                                 @if(count($confirmedevent) != 0)
                                     <a href="{{url('/dashboard/events/view')}}" class="font-weight-bold" style="text-align: center; padding-top: 2%; color: #013162;">View Event Rosters</a>
                                 @endif
