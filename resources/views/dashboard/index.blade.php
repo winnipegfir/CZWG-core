@@ -566,10 +566,10 @@
                     <div class="card" data-step="7"
                          data-intro="This is where you'll see any training-related notifications - exams, modules and more will appear here!">
                         <div class="card-body">
-                            <h3 class="font-weight-bold blue-text pb-2">1Winnipeg Training</h3>
+                            <h3 class="font-weight-bold blue-text pb-2">Your Training</h3>
                             <h5 class="font-weight-bold blue-text">Notifications</h5>
                             @if (count($cbtnotifications) < 1)
-                                <text style="color: gray">There are no notifications to show!</text>
+                                <text style="color: gray">Good news! You have no new notifications.</text>
                             @else
                                 @foreach ($cbtnotifications as $cn)
                                     <li>{{$cn->message}} <a href="{{route('cbt.notification.dismiss', $cn->id)}}"><i style="color: red" class="fas fa-times"></i></a></li>
@@ -586,15 +586,6 @@
                                     You do not have an Instructor yet - check back soon or contact our Chief Instructor.
                                 @endif
                             @endif
-                            <hr>
-                            <ul class="list-unstyled mt-2 mb-0">
-                                <li class="mb-2">
-                                    <a href="{{route('cbt.index')}}" style="text-decoration:none;">
-                                        <span class="blue-text"><i class="fas fa-chevron-right"></i></span> 
-                                        &nbsp; 
-                                        <span class="black-text">Training Centre</span></a>
-                                </li>
-                            </ul>
                         </div>
                     </div>
                 <br/>
