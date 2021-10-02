@@ -68,7 +68,7 @@
         @endif
         @endforeach
 
-        @if (Auth::user()->permissions >= 4)
+        @if (Auth::check() && Auth::user()->permissions >= 4)
         <button class="ml-0 btn btn-primary" data-target="#addTeacher" data-toggle="modal">Add Teacher</button>
         @endif
             <!--Create teacher modal-->
