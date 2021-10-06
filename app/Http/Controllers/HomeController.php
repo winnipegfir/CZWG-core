@@ -18,12 +18,8 @@ class HomeController extends Controller
     {
         //Winnipeg online controllers
         $client = new Client();
-        try {
-            $response = $client->request('GET', VatsimHelper::getDatafeedUrl());
-            $controllers = json_decode($response->getBody()->getContents())->controllers;
-        } catch (\Exception $e) {
-            $controllers = null;
-        }
+        $response = $client->request('GET', VatsimHelper::getDatafeedUrl());
+        $controllers = json_decode($response->getBody()->getContents())->controllers;
 
         $finalPositions = [];
 

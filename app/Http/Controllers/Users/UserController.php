@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\AtcTraining\RosterMember;
 use App\Models\ControllerBookings\ControllerBookingsBan;
 use App\Models\Network\SessionLog;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 use App\Models\Settings\AuditLogEntry;
 use App\Models\Users\User;
 use App\Models\Users\UserNote;
@@ -16,16 +18,17 @@ use App\Notifications\WelcomeNewUser;
 use Auth;
 use Carbon\Carbon;
 use Exception;
+use function GuzzleHttp\Psr7\str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
 use mofodojodino\ProfanityFilter\Check;
 use NotificationChannels\Discord\Discord;
 use NotificationChannels\Discord\Exceptions\CouldNotSendNotification;
 use RestCord\DiscordClient;
 use SocialiteProviders\Manager\Config;
-use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -71,7 +74,7 @@ class UserController extends Controller
         $rosterMember = RosterMember::where('user_id', $id)->first();
         if ($rosterMember) {
             $logs = SessionLog::where('cid', $id)->get();
-            $monthlyHours = decimal_to_hm($rosterMember->currency);
+            $monthlyHours = decimal_to_hm(RosterMember::where('cid', $id)->firstOrFail()->currency);
 
             //Start our array
             $time = [
@@ -85,14 +88,28 @@ class UserController extends Controller
 
             //Get our times per position for this month
             foreach ($logs as $l) {
-                $last = explode('_', $l->callsign);
-                $time[strtolower(end($last))] += $l->duration;
+                if (Str::endsWith($l->callsign, 'DEL')) {
+                    $time['del'] += $l->duration;
+                } elseif (Str::endsWith($l->callsign, 'GND')) {
+                    $time['gnd'] += $l->duration;
+                } elseif (Str::endsWith($l->callsign, 'TWR')) {
+                    $time['twr'] += $l->duration;
+                } elseif (Str::endsWith($l->callsign, 'DEP')) {
+                    $time['dep'] += $l->duration;
+                } elseif (Str::endsWith($l->callsign, 'APP')) {
+                    $time['app'] += $l->duration;
+                } elseif (Str::endsWith($l->callsign, 'CTR')) {
+                    $time['ctr'] += $l->duration;
+                }
             }
 
             //Make the time's readable
-            foreach ($time as $k => $v) {
-                $time[$k] = decimal_to_hm($v);
-            }
+            $time['del'] = decimal_to_hm($time['del']);
+            $time['gnd'] = decimal_to_hm($time['gnd']);
+            $time['twr'] = decimal_to_hm($time['twr']);
+            $time['dep'] = decimal_to_hm($time['dep']);
+            $time['app'] = decimal_to_hm($time['app']);
+            $time['ctr'] = decimal_to_hm($time['ctr']);
 
             $connections = SessionLog::where('cid', $id)->get()->sortByDesc('session_end');
 
@@ -182,11 +199,12 @@ class UserController extends Controller
         $role = Role::where('name', $id)->first();
         $m = $role->name;
         $u = User::whereId($user)->first();
-        if ($role->protected == '2' && ! Auth::user()->hasRole('Administrator')) {
-            return back()->withError('You do not have the permissions to delete this role!');
+        if($role->protected == '2' && !Auth::user()->hasRole('Administrator')) {
+                return back()->withError('You do not have the permissions to delete this role!');
         }
-        if ($role->protected == '1' && ! Auth::user()->hasAnyRole('Administrator|Staff')) {
-            return back()->withError('You do not have the permissions to delete this role!');
+        if($role->protected == '1' && !Auth::user()->hasAnyRole('Administrator|Staff')) {
+                return back()->withError('You do not have the permissions to delete this role!');
+
         }
         $u->removeRole($id);
         $audit = new AuditLogEntry();

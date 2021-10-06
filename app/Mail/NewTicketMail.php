@@ -16,7 +16,7 @@ class NewTicketMail extends Mailable
     /**
      * Create a new message instance.
      *
-     * @param  Ticket  $ticket
+     * @param Ticket $ticket
      */
     public function __construct(Ticket $ticket)
     {

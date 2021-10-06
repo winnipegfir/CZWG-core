@@ -10,7 +10,6 @@ class WeatherHelper
 {
     /**
      * Gets ATIS Letter for Winnipeg Airports Page.
-     *
      * @param $icao
      * @return string|null
      */
@@ -33,7 +32,6 @@ class WeatherHelper
 
     /**
      * Gets ATIS Letter for Winnipeg Airports Page.
-     *
      * @param $icao
      * @return string
      */

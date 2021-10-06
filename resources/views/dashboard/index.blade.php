@@ -57,12 +57,12 @@
             <div class="col">
                 @if (Auth::user()->permissions >= 1 | $certification == "training")
                     <div class="card">
-                        <div class="card-body pb-0">
-                            <h3 class="font-weight-bold blue-text pb-0">ATC Resources</h3>
+                        <div class="card-body">
+                            <h3 class="font-weight-bold blue-text pb-2">ATC Resources</h3>
                             @if(Auth::user()->permissions >= 4)
                                 <a href="{{route('atcresources.index')}}">Manage Resources</a><br></br>
                             @endif
-                            <div class="list-group pb-3" style="border-radius: 0.5em !important">
+                            <div class="list-group" style="border-radius: 0.5em !important">
                                 @foreach($atcResources as $resource)
                                     @if($resource->atc_only && Auth::user()->permissions < 1)
                                         @continue
@@ -107,10 +107,10 @@
                                             <span style="color: #d1d1d1;">#{{Auth::user()->getDiscordUser()->discriminator}}</span>
                                         </p>
                                         @if(!Auth::user()->memberOfCZWGGuild())
-                                            <a href="#" class="btn-sm btn-primary m-0" data-toggle="modal" data-target="#joinDiscordServerModal"
-                                               class="mt-1">Join The Discord</a>
+                                            <a href="#" data-toggle="modal" data-target="#joinDiscordServerModal"
+                                               class="mt-1">Join The CZWG Discord</a><br/>
                                         @endif
-                                            <a href="#" class="btn-sm btn-danger m-0" data-toggle="modal" data-target="#discordModal">Unlink</a>   
+                                        <a href="#" class="btn-sm btn-danger m-0" data-toggle="modal" data-target="#discordModal" class="mt-1">Unlink</a>   
                                         <hr>
                                     @endif
                                 </div>
@@ -190,7 +190,7 @@
                                                 <h5 class="font-weight-bold blue-text">Current Subscription Status</h5>
                                                 @if (Auth::user()->gdpr_subscribed_emails == 0)
                                                     <h3>
-                                                        <span class="p-2 badge badge-danger">Not Subscribed</span>
+                                                        <span class="p-2 badge badge-danger">Not subscribed</span>
                                                     </h3>
                                                 @else
                                                     <h3>
@@ -228,32 +228,35 @@
                 @if (Auth::user()->permissions >= 1)
 
                     <div class="card">
-                        <div class="card-body pb-3">
+                        <div class="card-body">
                             <h3 class="font-weight-bold blue-text pb-2">Upcoming Events</h3>
                             <div class="list-group">
                                 @if (count($confirmedevent) < 1)
-                                    <h5><b>There are no scheduled events!</b></h5>
+                                    <h5>There are no scheduled events!</h5>
                                 @else
+
                                     @foreach ($confirmedevent as $cevent)
-                                    <h5><li>
-                                        <b>{{$cevent->name}}</b> - {{$cevent->start_timestamp_pretty()}}</h5>
-                                            @foreach ($confirmedapp as $capp)
+                                        <h5><u><b>{{$cevent->name}}</b> on {{$cevent->start_timestamp_pretty()}}</h5></u>
+                                        @foreach ($confirmedapp as $capp)
                                             @if ($cevent->id == $capp->event->id)
-                                                    <p class="pt-0"><b>Confirmed Slot:</b> {{$capp->airport}}
+                                                <li>
+                                                    <b>Slot:</b> {{$capp->airport}}
                                                     @if($capp->position != "Relief"){{$capp->position}} from @endif
                                                     @if($capp->position == "Relief")
                                                         <text class="text-danger">{{$capp->position}}</text>
                                                         from @endif
                                                     {{$capp->start_timestamp}}z - {{$capp->end_timestamp}}z
-                                                    </p>     
+                                                </li>
+                                                <br></br>
                                             @endif
-                                            @endforeach
-                                    </h5></li>
+                                        @endforeach
                                     @endforeach
                                 @endif
                                 @if (count($unconfirmedapp) < 1)
                                     <p>
-                                        You have <text class="text-primary"><b>no</b></text> active event applications
+                                        You have
+                                        <text class="text-primary"><b>no</b></text>
+                                        active event applications
                                     </p>
                                 @elseif (count($unconfirmedapp) == 1)
                                     <a href="" data-target="#unconfirmedEvents" data-toggle="modal"
@@ -276,8 +279,9 @@
                                                 class="text-success"><b>{{count($unconfirmedapp)}}</b></text> active event applications</span>
                                     </a>
                                 @endif
+
                                 @if(count($confirmedevent) != 0)
-                                    <a href="{{url('/dashboard/events/view')}}" class="font-weight-bold" style="text-align: center; padding-top: 2%; color: #013162;">View Event Rosters</a>
+                                    <a href="{{url('/dashboard/events/view')}}" style="text-align: center">View Event Rosters</a>
                                 @endif
                             </div>
                         </div>
@@ -566,10 +570,10 @@
                     <div class="card" data-step="7"
                          data-intro="This is where you'll see any training-related notifications - exams, modules and more will appear here!">
                         <div class="card-body">
-                            <h3 class="font-weight-bold blue-text pb-2">Your Training</h3>
+                            <h3 class="font-weight-bold blue-text pb-2">1Winnipeg Training</h3>
                             <h5 class="font-weight-bold blue-text">Notifications</h5>
                             @if (count($cbtnotifications) < 1)
-                                <text style="color: gray">Good news! You have no new notifications.</text>
+                                <text style="color: gray">There are no notifications to show!</text>
                             @else
                                 @foreach ($cbtnotifications as $cn)
                                     <li>{{$cn->message}} <a href="{{route('cbt.notification.dismiss', $cn->id)}}"><i style="color: red" class="fas fa-times"></i></a></li>
@@ -586,6 +590,14 @@
                                     You do not have an Instructor yet - check back soon or contact our Chief Instructor.
                                 @endif
                             @endif
+                            <ul class="list-unstyled mt-2 mb-0">
+                                <li class="mb-2">
+                                    <a href="{{route('cbt.index')}}" style="text-decoration:none;">
+                                        <span class="blue-text"><i class="fas fa-chevron-right"></i></span> 
+                                        &nbsp; 
+                                        <span class="black-text">Training Centre</span></a>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 <br/>
@@ -644,7 +656,7 @@
                                         @endforeach
                                     </div>
                                 @endif
-                                <hr>
+                                <br>
                             @endif
                             <ul class="list-unstyled mt-2 mb-0">
                                 <li class="mb-2">
@@ -1012,20 +1024,33 @@
                 <div class="modal-body">
                   @foreach ($confirmedevent as $cevent)
 
-                  <h5><text class="font-weight-bold">{{$cevent->name}}</text> - {{$cevent->start_timestamp_pretty()}}</h5>
-                    @foreach ($unconfirmedapp as $uapp)
-                    @if ($cevent->name == $uapp->event->name)
-                    <li>
-                        <text class="font-weight-bold"> Position Requested:</text> {{$uapp->position}}
-                        from {{$uapp->start_availability_timestamp}}z - {{$uapp->end_availability_timestamp}}z
-                    </li>
-                    <br>
-                    @endif
-                    @endforeach 
-                    @endforeach
+                  <h5><text class="font-weight-bold">{{$cevent->name}}</text> on {{$cevent->start_timestamp_pretty()}}</h5>
+
+
+                              @foreach ($unconfirmedapp as $uapp)
+                            @if ($cevent->name == $uapp->event->name)
+
+
+                              <li>
+
+                                            <text class="font-weight-bold"> Position Requested:</text> {{$uapp->position}}
+                                            from {{$uapp->start_availability_timestamp}}z - {{$uapp->end_availability_timestamp}}z
+
+
+
+                                      </li><br>
+
+
+                                          @endif
+
+                      @endforeach
+                      @endforeach
+
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-light" data-dismiss="modal">Dismiss</button>
+
                 </div>
             </div>
         </div>

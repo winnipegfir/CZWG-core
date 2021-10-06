@@ -36,10 +36,6 @@ class MonitoredPosition extends Model
             return 'Never used';
         }
 
-        if (! $session->session_end) {
-            return 'Online now';
-        }
-
         return Carbon::create($session->session_end)->diffForHumans();
     }
 }

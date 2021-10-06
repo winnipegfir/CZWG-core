@@ -208,25 +208,6 @@ div.d-flex.flex-row > i {
     background-color: #013162 !important;
 }
 
-.btn-local {
-    background-color: #2ecc71 !important;
-    color: #fff;
-}
-
-.btn-radar {
-    background-color: #1f8b4c !important;
-    color: #fff;
-}
-
-.btn-enroute {
-    background-color: #11806a !important;
-    color: #fff;
-}
-
-.bg-ins {
-    background-color: #013162;
-}
-
 .dashboard-card-actions {
     font-size: 1.3em !important;
     color: #013162;

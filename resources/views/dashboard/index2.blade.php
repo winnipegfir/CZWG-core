@@ -34,7 +34,7 @@
                                         </p>
                                         @if(!Auth::user()->memberOfCZWGGuild())
                                             <a href="#" data-toggle="modal" data-target="#joinDiscordServerModal"
-                                               class="mt-1">Join The Discord</a><br>
+                                               class="mt-1">Join The CZWG Discord</a><br/>
                                         @endif
                                         <a href="#" data-toggle="modal" data-target="#discordModal"
                                            class="mt-1">Unlink</a>
@@ -378,7 +378,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Join the Winnipeg FIR Discord!</h5>
+                    <h5 class="modal-title" id="exampleModalLongTitle">Join the Winnipeg FIR Discord server</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>

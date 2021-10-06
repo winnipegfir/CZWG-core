@@ -47,7 +47,7 @@
           @endswitch</h4>
         <br>
         <div class="row">
-            <div class="col">
+            <div class="col">     
                 <div class="card">
                     <div class="card-body">
                         <h3 class="font-weight-bold blue-text">Training Notes</h3>
@@ -68,7 +68,7 @@
                                       <td>
                                         {{$notes->created_at}}
                                       </td>
-                                      <td>
+                                      <td>                     
                                         {{$notes->instructor->user->fullName('FLC')}}
                                       </td>
                                   </tr>
@@ -147,7 +147,7 @@
                           @endforeach
 
                           @foreach ($completedexams as $cexams)
-                                  <li><a href="{{route('cbt.exam.results', [$cexams->cbtexam->id, $student->id, $cexams->id])}}">{{$cexams->cbtexam->name}}</a> -
+                                  <li><a href="{{route('cbt.exam.results', [$cexams->cbtexam->id, $student->id])}}">{{$cexams->cbtexam->name}}</a> -
                                   @if ($cexams->grade >= 80)
                                       <text class="text-success">
                                           {{$cexams->grade}}% (Pass)
@@ -230,7 +230,7 @@
                 </div>
             </div>
             <br>
-
+            
                 <div class="card">
                     <div class="card-body">
                         <h3 class="font-weight-bold blue-text pb-2">Actions</h3>

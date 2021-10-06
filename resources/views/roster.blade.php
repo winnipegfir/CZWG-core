@@ -12,7 +12,8 @@
 @section('content')
 <div class="container" style="margin-top: 20px;">
         <h1 class="blue-text font-weight-bold">Controller Roster</h1>
-        <hr>
+    <hr>
+
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
                 <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home Controllers</a>
@@ -31,6 +32,7 @@
 <!--WINNIPEG CONTROLLERS ROSTER-->
         <table id="rosterTable" class="table table-hover">
             <thead>
+
                 <tr>
                     <th style="text-align:center" scope="col"><b>CID</b></th>
                     <th style="text-align:center" scope="col">Controller Name</th>
@@ -41,6 +43,8 @@
                     <th style="text-align:center" scope="col">DEP</th>
                     <th style="text-align:center" scope="col">APP</th>
                     <th style="text-align:center" scope="col">CTR</th>
+                    <th style="text-align:center" scope="col">Remarks</th>
+
                 </tr>
             </thead>
             <tbody>
@@ -126,13 +130,18 @@
                     @else
                         <td align="center" class="bg-danger text-white">ERROR</td>
                     @endif
-
+<!--Remarks-->
+                    <td align="center" style="width:15%">
+                        {{$controller->remarks}}
+                    </td>
 <!--Active Status-->
+
                 </tr>
             @endforeach
             </tbody>
         </table>
-<br>
+
+<br></br>
 </div>
 <div class="tab-pane fade" id="visit" role="tabpanel" aria-labelledby="visit-tab"><br>
 
@@ -149,6 +158,7 @@
                     <th style="text-align:center" scope="col">DEP</th>
                     <th style="text-align:center" scope="col">APP</th>
                     <th style="text-align:center" scope="col">CTR</th>
+                    <th style="text-align:center" scope="col">Remarks</th>
                 </tr>
             </thead>
             <tbody>
@@ -235,10 +245,14 @@
                     @else
                         <td align="center" class="bg-danger text-white">ERROR</td>
                     @endif
+<!--Remarks-->
+                    <td align="center">
+                        {{$visitcontroller->remarks}}
+                    </td>
                 </tr>
             @endforeach
             </tbody>
-        </table><br>
+        </table><br></br>
 
         </div>
     </div>
