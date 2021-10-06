@@ -36,7 +36,7 @@ class MonitoredPosition extends Model
             return 'Never used';
         }
 
-        if (!$session->session_end) {
+        if (! $session->session_end) {
             return 'Online now';
         }
 

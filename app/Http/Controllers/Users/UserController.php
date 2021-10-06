@@ -6,8 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\AtcTraining\RosterMember;
 use App\Models\ControllerBookings\ControllerBookingsBan;
 use App\Models\Network\SessionLog;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
 use App\Models\Settings\AuditLogEntry;
 use App\Models\Users\User;
 use App\Models\Users\UserNote;
@@ -18,17 +16,16 @@ use App\Notifications\WelcomeNewUser;
 use Auth;
 use Carbon\Carbon;
 use Exception;
-use function GuzzleHttp\Psr7\str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
 use mofodojodino\ProfanityFilter\Check;
 use NotificationChannels\Discord\Discord;
 use NotificationChannels\Discord\Exceptions\CouldNotSendNotification;
 use RestCord\DiscordClient;
 use SocialiteProviders\Manager\Config;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -93,13 +90,15 @@ class UserController extends Controller
             }
 
             //Make the time's readable
-            foreach ($time as $k => $v)
+            foreach ($time as $k => $v) {
                 $time[$k] = decimal_to_hm($v);
+            }
 
             $connections = SessionLog::where('cid', $id)->get()->sortByDesc('session_end');
 
-            foreach ($connections as $c)
+            foreach ($connections as $c) {
                 $c['duration'] = decimal_to_hm($c['duration']);
+            }
         } else {
             $monthlyHours = 'N/A';
             $rosterMember = null;
@@ -183,12 +182,11 @@ class UserController extends Controller
         $role = Role::where('name', $id)->first();
         $m = $role->name;
         $u = User::whereId($user)->first();
-        if($role->protected == '2' && !Auth::user()->hasRole('Administrator')) {
-                return back()->withError('You do not have the permissions to delete this role!');
+        if ($role->protected == '2' && ! Auth::user()->hasRole('Administrator')) {
+            return back()->withError('You do not have the permissions to delete this role!');
         }
-        if($role->protected == '1' && !Auth::user()->hasAnyRole('Administrator|Staff')) {
-                return back()->withError('You do not have the permissions to delete this role!');
-
+        if ($role->protected == '1' && ! Auth::user()->hasAnyRole('Administrator|Staff')) {
+            return back()->withError('You do not have the permissions to delete this role!');
         }
         $u->removeRole($id);
         $audit = new AuditLogEntry();
