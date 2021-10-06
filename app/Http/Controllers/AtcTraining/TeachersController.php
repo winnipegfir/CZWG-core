@@ -3,12 +3,13 @@
 namespace App\Http\Controllers\AtcTraining;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Teacher;
+use Illuminate\Http\Request;
 
 class TeachersController extends Controller
 {
-    public function store(Request $request) {
+    public function store(Request $request)
+    {
         $teacher = new Teacher;
         $teacher->user_cid = $request->input('newteacher');
         $teacher->is_local = $request->has('is_local');
@@ -20,7 +21,8 @@ class TeachersController extends Controller
         return redirect()->route('instructors');
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         $teacher = Teacher::whereId($id)->firstOrFail();
         $teacher->delete();
 
