@@ -17,7 +17,7 @@
                 <label class="form-control">Name of Lesson</label>
                 <input type="text" name="name" value="{{$lesson->name}}" class="form-control"><br>
                 <label class="form-control">Content - HTML Accepted!</label>
-                <textarea name="content" class="form-control">{{$lesson->content_html}}</textarea>
+                <textarea id="tiny" name="content" class="form-control">{{$lesson->content_html}}</textarea>
                 <br>
                 <button type="submit" class="btn btn-success">Save Changes</button>
                 @csrf
@@ -25,5 +25,13 @@
             </div>
         </div>
     <br>
+
+        <script>
+            tinymce.init({
+                selector: 'textarea#tiny',
+                plugins: 'autolink link lists image imagetools',
+                toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+            });
+        </script>
     @endif
 @stop

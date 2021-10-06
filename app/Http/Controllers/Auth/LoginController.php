@@ -149,7 +149,7 @@ class LoginController extends Controller
                 ],
             ]);
         } catch (ClientException $e) {
-            return redirect()->route('')->with('error-modal', $e->getResponse()->getBody());
+            return redirect()->route('index')->with('error-modal', $e->getResponse()->getBody());
         }
         session()->put('token', json_decode((string) $response->getBody(), true));
         try {

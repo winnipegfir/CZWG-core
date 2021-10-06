@@ -4,8 +4,8 @@
 @section('content')
 <div class="container py-4">
     <h1 class="font-weight-bold blue-text">Branding</h1>
-        <p>This is the place to find all official Winnipeg FIR branding. Please feel free to use this branding for any event postings and publications.</p>
-        <p>Be sure to read up on our <a href="https://winnipegfir.ca/policies">Branding Guidelines</a> before using any of our brand. Thank you!</p>
+    <p>This is the place to find all official Winnipeg FIR branding. Please feel free to use this branding for any event postings and publications.</p>
+    Be sure to read up on our <a href="https://winnipegfir.ca/policies">Branding Guidelines</a> before using any of our brand. Thank you!
     <hr>
     <h4 class="font-weight-bold blue-text">Banners/Wordmarks/Letterheads</h4>
     <div class="pt-1">

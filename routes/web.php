@@ -77,7 +77,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/dashboard/tickets', 'Tickets\TicketsController@startNewTicket')->name('tickets.startticket');
     Route::post('/dashboard/tickets/{id}', 'Tickets\TicketsController@addReplyToTicket')->name('tickets.reply');
 
-    Route::group(['middleware' => 'staff'], function () {
+    Route::group(['middleware' => ['role:Administrator|Staff']], function () {
         Route::prefix('admin')->group(function () {
             //Uploads
             Route::get('/upload', 'Publications\UploadController@upload')->middleware('staff')->name('dashboard.upload');
@@ -126,20 +126,20 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/dashboard/events/view', 'Events\EventController@viewControllers');
 
     //Staff Events
-    Route::group(['prefix' => 'admin/events', 'middleware' => 'staff'], function () {
+    Route::group(['prefix' => 'admin/events', 'middleware' => ['role:Administrator|Staff']], function () {
         Route::get('/', 'Events\EventController@adminIndex')->name('events.admin.index');
-        Route::get('/create', 'Events\EventController@adminCreateEvent')->name('events.admin.create');
-        Route::post('/create', 'Events\EventController@adminCreateEventPost')->name('events.admin.create.post');
-        Route::post('/{slug}/edit', 'Events\EventController@adminEditEventPost')->name('events.admin.edit.post');
-        Route::post('/{slug}/update/create', 'Events\EventController@adminCreateUpdatePost')->name('events.admin.update.post');
+        Route::get('/create', 'Events\EventController@adminCreateEvent')->middleware(['role:Administrator|Events-Coordinator'])->name('events.admin.create');
+        Route::post('/create', 'Events\EventController@adminCreateEventPost')->middleware(['role:Administrator|Events-Coordinator'])->name('events.admin.create.post');
+        Route::post('/{slug}/edit', 'Events\EventController@adminEditEventPost')->middleware(['role:Administrator|Events-Coordinator'])->name('events.admin.edit.post');
+        Route::post('/{slug}/update/create', 'Events\EventController@adminCreateUpdatePost')->middleware(['role:Administrator|Events-Coordinator'])->name('events.admin.update.post');
         Route::get('/{slug}', 'Events\EventController@adminViewEvent')->name('events.admin.view');
-        Route::get('/{slug}/delete', 'Events\EventController@adminDeleteEvent')->name('events.admin.delete');
-        Route::get('/{slug}/controllerapps/{cid}/delete', 'Events\EventController@adminDeleteControllerApp')->name('events.admin.controllerapps.delete');
-        Route::get('/{slug}/updates/{id}/delete', 'Events\EventController@adminDeleteUpdate')->name('events.admin.update.delete');
-        Route::get('/applications/{id}', 'Events\EventController@viewApplications')->name('event.viewapplications');
-        Route::post('/applications/confirm/{id}', 'Events\EventController@confirmController')->name('event.confirmapplication');
-        Route::post('/applications/manualconfirm/{id}', 'Events\EventController@addController')->name('event.addcontroller');
-        Route::post('/applications/manualconfirm/delete/{id}', 'Events\EventController@deleteController')->name('event.deletecontroller');
+        Route::get('/{slug}/delete', 'Events\EventController@adminDeleteEvent')->middleware(['role:Administrator|Events-Coordinator'])->name('events.admin.delete');
+        Route::get('/{slug}/controllerapps/{cid}/delete', 'Events\EventController@adminDeleteControllerApp')->middleware(['role:Administrator|Chief-Instructor|Events-Coordinator'])->name('events.admin.controllerapps.delete');
+        Route::get('/{slug}/updates/{id}/delete', 'Events\EventController@adminDeleteUpdate')->middleware(['role:Administrator|Events-Coordinator'])->name('events.admin.update.delete');
+        Route::get('/applications/{id}', 'Events\EventController@viewApplications')->middleware(['role:Administrator|Chief-Instructor|Events-Coordinator'])->name('event.viewapplications');
+        Route::post('/applications/confirm/{id}', 'Events\EventController@confirmController')->middleware(['role:Administrator|Chief-Instructor|Events-Coordinator'])->name('event.confirmapplication');
+        Route::post('/applications/manualconfirm/{id}', 'Events\EventController@addController')->middleware(['role:Administrator|Chief-Instructor|Events-Coordinator'])->name('event.addcontroller');
+        Route::post('/applications/manualconfirm/delete/{id}', 'Events\EventController@deleteController')->middleware(['role:Administrator|Chief-Instructor|Events-Coordinator'])->name('event.deletecontroller');
     });
 
     //Dashboard
@@ -160,7 +160,7 @@ Route::group(['middleware' => 'auth'], function () {
         });
 
         //Roster
-        Route::group(['middleware' => 'instructor'], function () {
+        Route::group(['middleware' => ['role:Administrator|Instructor']], function () {
             Route::get('/roster', 'AtcTraining\RosterController@index')->name('roster.index');
             Route::post('/roster/controller/add/', 'AtcTraining\RosterController@addController')->name('roster.addcontroller');
             Route::post('/roster/controller/addv/', 'AtcTraining\RosterController@addVisitController')->name('roster.addvisitcontroller');
@@ -181,7 +181,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/application/{application_id}/withdraw', 'AtcTraining\ApplicationsController@withdrawApplication');
 
         //Applications View/Accept/Deny
-        Route::group(['middleware' => 'staff'], function () {
+        Route::group(['middleware' => ['role:Administrator|Chief-Instructor']], function () {
             Route::get('/training/applications', 'AtcTraining\ApplicationsController@viewAllApplications')->name('training.applications');
             Route::get('/training/applications/{id}', 'AtcTraining\TrainingController@viewApplication')->name('training.viewapplication');
             Route::get('/training/applications/{id}/accept', 'AtcTraining\TrainingController@acceptApplication')->name('training.application.accept');
@@ -205,7 +205,7 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     //Users View/Edit
-    Route::group(['prefix' => 'admin/users', 'middleware' => 'staff'], function () {
+    Route::group(['prefix' => 'admin/users', 'middleware' => ['role:Administrator|Staff']], function () {
         Route::get('/', 'Users\UserController@viewAllUsers')->name('users.viewall');
         Route::post('/search/ajax', 'Users\UserController@searchUsers')->name('users.search.ajax');
         Route::get('{id}', 'Users\UserController@adminViewUserProfile')->name('users.viewprofile');
@@ -229,10 +229,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/feedback', 'Feedback\FeedbackController@createPost')->name('feedback.create.post');
 
     //ATC Resources View
-    Route::get('/atcresources', 'Publications\AtcResourcesController@index')->middleware('atc')->name('atcresources.index');
+    Route::get('/atcresources', 'Publications\AtcResourcesController@index')->middleware(['role:Controller'])->name('atcresources.index');
 
     //Upload and Delete ATC Resources
-    Route::group(['middleware' => 'staff'], function () {
+    Route::group(['middleware' => ['role:Administrator|Staff']], function () {
         Route::post('/atcresources', 'Publications\AtcResourcesController@uploadResource')->name('atcresources.upload');
         Route::get('/atcresources/delete/{id}', 'Publications\AtcResourcesController@deleteResource')->name('atcresources.delete');
     });
@@ -249,23 +249,23 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('exam/grade/{id}', 'AtcTraining\CBTController@gradeExam')->name('cbt.exam.grade');
         Route::get('exam/results/{id}/{sid}/{rid}', 'AtcTraining\CBTController@examResults')->name('cbt.exam.results');
         //Mentor
-        Route::group(['middleware' => 'mentor'], function () {
+        Route::group(['middleware' => ['role:Administrator|Instructor|Mentor']], function () {
             Route::get('/moduleadmin', 'AtcTraining\CBTController@moduleindexadmin')->name('cbt.module.admin');
         });
         //Instructor
-        Route::group(['middleware' => 'instructor'], function () {
+        Route::group(['middleware' => ['role:Administrator|Instructor']], function () {
             Route::post('/exam/assign', 'AtcTraining\TrainingController@assignExam')->name('cbt.exam.assign');
             Route::post('/module/assign', 'AtcTraining\TrainingController@assignModule')->name('cbt.module.assign');
             Route::get('/module/unassign/{id}', 'AtcTraining\TrainingController@ModuleUnassign')->name('cbt.module.unassign');
             Route::get('/examadmin', 'AtcTraining\CBTController@examadminview')->name('cbt.exam.adminview');
-            Route::post('/addexam', 'AtcTraining\CBTController@addExam')->name('cbt.exam.add');
-            Route::get('/deleteexam/{id}', 'AtcTraining\CBTController@deleteExam')->name('cbt.exam.delete');
             Route::get('/examadmin/view/{id}', 'AtcTraining\CBTController@questionBank')->name('cbt.exam.questions');
             Route::get('/examadmin/unassign/{id}', 'AtcTraining\TrainingController@unassignExam')->name('cbt.exam.unassign');
             Route::get('/module/edit/{id}', 'AtcTraining\CBTController@editModule')->name('cbt.module.edit');
         });
         //Staff/Admin
-        Route::group(['middleware' => 'staff'], function () {
+        Route::group(['middleware' => ['role:Administrator|Chief-Instructor']], function () {
+            Route::post('/addexam', 'AtcTraining\CBTController@addExam')->name('cbt.exam.add');
+            Route::get('/deleteexam/{id}', 'AtcTraining\CBTController@deleteExam')->name('cbt.exam.delete');
             Route::post('/module/add', 'AtcTraining\CBTController@addModule')->name('cbt.module.add');
             Route::post('/module/editdetails/{id}', 'AtcTraining\CBTController@editModuleDetails')->name('cbt.edit.moduledetails');
             Route::get('/module/assignall/{id}', 'AtcTraining\CBTController@assignModuleAll')->name('cbt.module.assignall');
@@ -284,7 +284,7 @@ Route::group(['middleware' => 'auth'], function () {
 
     //ADMIN ONLY
     //Minutes
-    Route::group(['middleware' => 'executive'], function () {
+    Route::group(['middleware' => ['role:Administrator']], function () {
         Route::get('/meetingminutes/{id}', 'News\NewsController@minutesDelete')->name('meetingminutes.delete');
         Route::post('/meetingminutes', 'News\NewsController@minutesUpload')->name('meetingminutes.upload');
         //Network
@@ -338,7 +338,7 @@ Route::group(['middleware' => 'auth'], function () {
 //AtcTraining
 Route::get('/dashboard/training', 'AtcTraining\TrainingController@index')->name('training.index');
 Route::post('/training', 'AtcTraining\TrainingController@editTrainingTime')->middleware('staff')->name('waittime.edit');
-Route::group(['middleware' => 'instructor'], function () {
+Route::group(['middleware' => ['role:Administrator|Instructor']], function () {
     Route::get('/dashboard/training/sessions', 'AtcTraining\TrainingController@instructingSessionsIndex')->name('training.instructingsessions.index');
     Route::get('/dashboard/training/sessions/{id}', 'AtcTraining\TrainingController@viewInstructingSession')->name('training.instructingsessions.viewsession');
     Route::view('/dashboard/training/sessions/create', 'dashboard.training.instructingsessions.create')->name('training.instructingsessions.createsessionindex');
@@ -360,8 +360,8 @@ Route::group(['middleware' => 'instructor'], function () {
     //AtcTraining
     Route::post('/dashboard/training/instructors', 'AtcTraining\TrainingController@addInstructor')->name('training.instructors.add');
 });
-//Staff
-Route::group(['middleware' => 'staff'], function () {
+//Admin and CI
+Route::group(['middleware' => ['role:Administrator|Chief-Instructor']], function () {
     Route::get('/training/solo/approve/{id}', 'AtcTraining\TrainingController@approveSoloRequest')->name('training.solo.approve');
     Route::get('/training/solo/deny/{id}', 'AtcTraining\TrainingController@denySoloRequest')->name('training.solo.deny');
 });
