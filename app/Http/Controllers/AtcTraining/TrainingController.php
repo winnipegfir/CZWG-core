@@ -4,7 +4,6 @@ namespace App\Http\Controllers\AtcTraining;
 
 use App\Http\Controllers\Controller;
 use App\Models\AtcTraining\Application;
-use App\Models\AtcTraining\InstructingSession;
 use App\Models\AtcTraining\CBT\CbtExam;
 use App\Models\AtcTraining\CBT\CbtExamAnswer;
 use App\Models\AtcTraining\CBT\CbtExamAssign;
@@ -13,6 +12,7 @@ use App\Models\AtcTraining\CBT\CbtExamResult;
 use App\Models\AtcTraining\CBT\CbtModule;
 use App\Models\AtcTraining\CBT\CbtModuleAssign;
 use App\Models\AtcTraining\CBT\CbtNotification;
+use App\Models\AtcTraining\InstructingSession;
 use App\Models\AtcTraining\Instructor;
 use App\Models\AtcTraining\InstructorStudents;
 use App\Models\AtcTraining\RosterMember;
@@ -26,7 +26,6 @@ use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Spatie\Permission\Models\Role;
 
 class TrainingController extends Controller
 {
@@ -39,7 +38,6 @@ class TrainingController extends Controller
         if ($instructor) {
             $yourStudents = Student::where('instructor_id', $instructor->id)->get();
         }
-
 
         return view('dashboard.training.indexinstructor', compact('yourStudents', 'soloreq'));
     }
@@ -321,7 +319,7 @@ class TrainingController extends Controller
         if (! $student) {
             return redirect()->back()->withError('Student cannot be found!');
         }
-       // $check = CbtExamResult::where([
+        // $check = CbtExamResult::where([
         //     'student_id' => $request->input('studentid'),
         //  'cbt_exam_id' => $request->input('examid'),
         //])->first();
@@ -496,6 +494,7 @@ class TrainingController extends Controller
         $iid = Instructor::where('user_id', Auth::user()->id)->first();
         $sessions = InstructingSession::where('instructor_id', $iid->id)->get();
         $upcomingSessions = InstructingSession::where('instructor_id', $iid->id)->get();
+
         return view('dashboard.training.instructingsessions.index', compact('sessions', 'upcomingSessions'));
     }
 

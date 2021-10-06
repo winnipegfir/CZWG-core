@@ -74,7 +74,7 @@ class CheckVisitHours extends Command
             // Change to hours as that is how it's stored in the roster
             $hours = $minutes / 60;
 
-            $quotient = round($r->currency / $hours, 3);
+            $quotient = $hours == 0 ? 0 : round($r->currency / $hours, 3);
 
             // Winnipeg Hours / VATSIM Total is less than 50%
             if ($quotient < 0.5) {
