@@ -22,8 +22,8 @@
         <meta name="theme-color" content="#013162">
         <meta name="og:title" content="@yield('title', 'Winnipeg FIR')">
         <meta name="og:description" content="@yield('description', '')">
-        <meta name="og:image" content="@yield('image','https://i.imgur.com/7Rz1DOr.png')">
-        <link rel="shortcut icon" href="{{ asset('winnipeg.ico') }}" type="image/x-icon">
+        <meta name="og:image" content="@yield('image','https://winnipegfir.ca/storage/files/uploads/1612961961.png')">
+        <link rel="shortcut icon" href="https://winnipegfir.ca/storage/files/uploads/1612961961.png" type="image/x-icon">
         <!-- Font Awesome -->
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
         <!-- Bootstrap core CSS -->
@@ -98,7 +98,7 @@
     <header>
         <nav id="czwgHeader" class="navbar navbar-expand-lg navbar-dark p-0" style="min-height:59px; background-color:#013162">
             <div class="container">
-                <a class="navbar-brand" href="{{route('index')}}"><img style="height: 40px; width:auto;" src="https://winnipegfir.ca/storage/files/uploads/1612557788.png" alt=""></a>
+                <a class="navbar-brand" href="{{route('index')}}"><img style="height: 40px; width:auto;" src="https://winnipegfir.ca/storage/files/uploads/1632116869.png" alt=""></a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -150,6 +150,7 @@
                             <a class="nav-link dropdown-toggle" style="cursor:pointer" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pilots</a>
                             <div class="dropdown-menu" aria-labelledby="dropdown01">
                                 <a class="dropdown-item" href="{{route('airports')}}">Airports</a>
+                                <a class="dropdown-item" href="{{route('pdc')}}">Pre-Departure Clearance</a>
                                 <a class="dropdown-item" href="https://www.vatsim.net/pilots/resources" target="_blank">VATSIM Resources</a>
                                 <a class="dropdown-item" href="https://simaware.ca" target="_blank">Live Map</a>
                             </div>
@@ -194,11 +195,6 @@
                                 <a class="dropdown-item {{ Request::is('dashboard') || Request::is('dashboard/*')}}" href="{{route('dashboard.index')}}">
                                     <i class="fa fa-tachometer-alt mr-2"></i>Dashboard
                                 </a>
-                                @if(!Auth::check() || Auth::user()->permissions >= 2)
-                                <a class="dropdown-item {{ Request::is('training.index') || Request::is('training.index/*')}}" "dropdown-item" href="{{route('training.index')}}">
-                                    <i class="fa fa-graduation-cap mr-2" style="margin-left: -1px"></i>1Winnipeg
-                                </a>
-                                @endif
                                 <a class="dropdown-item red-text" href="{{route('auth.logout')}}">
                                     <i class="fa fa-sign-out-alt mr-2"></i>&nbsp;Logout
                                 </a>
@@ -388,15 +384,14 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Join the Winnipeg Discord!</h5>
+                    <h3 class="font-weight-bold blue-text pb-0" id="exampleModalLongTitle">Join the Winnipeg Discord!</h3>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                <img style="height: 90px;" src="{{asset('/img/discord/winnipegdiscord.png')}}" class="img-fluid mb-2" alt=""></img>
                     <p>To link your Discord account and join our Discord community, please head to your <a href="{{route('dashboard.index')}}">dashboard.</a></p>
-                    <p>VATCAN has a Discord too! You can join the VATCAN discord by clicking <a href="https://vatcan.ca/my/discord/join" rel="noopener noreferrer" target="_blank">here!</a>
+                    <p>VATCAN has a Discord too! You can join the VATCAN discord by clicking <a href="https://vatcan.ca/my/discord/join" rel="noopener noreferrer" target="_blank">here.</a>
                 </div>
             </div>
         </div>

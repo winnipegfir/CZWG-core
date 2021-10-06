@@ -34,6 +34,14 @@ Route::get('/training', 'AtcTraining\TrainingController@trainingTime')->name('tr
 Route::view('/bill', 'bill')->name('bill');
 Route::view('/wpg', 'wpg')->name('wpg');
 Route::view('/yearend', 'yearend')->name('yearend');
+Route::view('/pdc', 'pdc')->name('pdc');
+
+Route::prefix('instructors')->group(function () {
+    Route::view('/', 'instructors')->name('instructors');
+    Route::post('/', 'AtcTraining\TeachersController@store')->name('instructors.store')->middleware('staff');
+    Route::get('{id}', 'AtcTraining\TeachersController@delete')->name('instructors.delete')->middleware('staff');
+});
+
 //Redirects
 Route::get('/merch', function () {
     return redirect()->to('https://www.designbyhumans.com/shop/WinnipegFIR');
@@ -239,7 +247,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/exam/start/{id}', 'AtcTraining\CBTController@startExam')->name('cbt.exam.begin');
         Route::get('/exam/{id}', 'AtcTraining\CBTController@exam')->name('cbt.exam.start');
         Route::post('exam/grade/{id}', 'AtcTraining\CBTController@gradeExam')->name('cbt.exam.grade');
-        Route::get('exam/results/{id}/{sid}', 'AtcTraining\CBTController@examResults')->name('cbt.exam.results');
+        Route::get('exam/results/{id}/{sid}/{rid}', 'AtcTraining\CBTController@examResults')->name('cbt.exam.results');
         //Mentor
         Route::group(['middleware' => ['role:Administrator|Instructor|Mentor']], function () {
             Route::get('/moduleadmin', 'AtcTraining\CBTController@moduleindexadmin')->name('cbt.module.admin');
@@ -334,7 +342,7 @@ Route::group(['middleware' => ['role:Administrator|Instructor']], function () {
     Route::get('/dashboard/training/sessions', 'AtcTraining\TrainingController@instructingSessionsIndex')->name('training.instructingsessions.index');
     Route::get('/dashboard/training/sessions/{id}', 'AtcTraining\TrainingController@viewInstructingSession')->name('training.instructingsessions.viewsession');
     Route::view('/dashboard/training/sessions/create', 'dashboard.training.instructingsessions.create')->name('training.instructingsessions.createsessionindex');
-    Route::get('/dashboard/training/sessions/create', 'AtcTraining\TrainingController@createInstructingSession')->name('training.instructingsessions.createsession');
+    Route::get('/dashboard/training/createsessions', 'AtcTraining\TrainingController@createInstructingSession')->name('training.instructingsessions.createsession');
     Route::get('/dashboard/training/instructors', 'AtcTraining\TrainingController@instructorsIndex')->name('training.instructors');
     Route::get('/dashboard/training/students/current', 'AtcTraining\TrainingController@currentStudents')->name('training.students.current');
     Route::get('/dashboard/training/students/new', 'AtcTraining\TrainingController@newStudents')->name('training.students.new');

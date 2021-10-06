@@ -9,7 +9,7 @@ class CbtExamAnswer extends Model
 {
     //
     protected $fillable = [
-        'student_id', 'cbt_exam_question_id', 'cbt_exam_id', 'user_answer', 'question', 'option1', 'option2', 'option3', 'option4', 'right_answer',
+        'student_id', 'cbt_exam_result_id', 'cbt_exam_question_id', 'cbt_exam_id', 'user_answer', 'question', 'option1', 'option2', 'option3', 'option4', 'right_answer',
     ];
 
     public function user()
