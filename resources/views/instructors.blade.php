@@ -9,11 +9,12 @@
     <div class="col p-0">
 
     <h2 class="blue-text font-weight-bold">Instructors</h2>
-    @foreach (\App\Models\Teacher::all() as $instructor)
-    @if($instructor->is_instructor == 1)
+    <div class="row">
+    @foreach (\App\Models\Teacher::where('is_instructor', 1)->get() as $instructor)
+    <div class="col col-6 mb-3">
         <div class="card card-body">
             <div class="d-flex flex-row">
-                <img src="{{$instructor->user->avatar}}" style="height: 100px; margin-right: 2%;">
+                <img src="{{$instructor->user->avatar()}}" style="border-radius: 50%; width: 100px; height: 100px; margin-right: 4%;">
                 <div class="d-flex flex-column">
                     <h3 class="mb-1 font-weight-bold blue-text">{{$instructor->user->fullName('FL')}}</h3>
                     <a href="mailto:{{$instructor->user->email}}"><h5 class="blue-text">{{$instructor->user->email}}</h5></a>
@@ -27,23 +28,27 @@
                         @if($instructor->is_enroute)
                         <button class="btn btn-sm btn-enroute ml-0">En-Route</button>
                         @endif
+                        @if (Auth::check() && Auth::user()->permissions >= 4)
                         <a href="{{route('instructors.delete', [$instructor->id]) }}">
                         <button class="ml-0 btn btn-sm btn-danger">Delete</button>
                         </a>
+                        @endif
                     </div>                  
                 </div>
             </div>
         </div>
-        <br>
-        @endif
-        @endforeach
+    </div>
+    @endforeach
+    </div>
+    <br>
 
     <h2 class="blue-text font-weight-bold">Mentors</h2>
-    @foreach (\App\Models\Teacher::all() as $instructor)
-    @if($instructor->is_instructor == 0)
+    <div class="row">
+    @foreach (\App\Models\Teacher::where('is_instructor', 0)->get() as $instructor)
+    <div class="col col-6 mb-3">
         <div class="card card-body">
             <div class="d-flex flex-row">
-                <img src="{{$instructor->user->avatar}}" style="height: 100px; margin-right: 2%;">
+                <img src="{{$instructor->user->avatar()}}" style="border-radius: 50%; width: 100px; height: 100px; margin-right: 4%;">
                 <div class="d-flex flex-column">
                     <h3 class="mb-1 font-weight-bold blue-text">{{$instructor->user->fullName('FL')}}</h3>
                     <a href="mailto:{{$instructor->user->email}}"><h5 class="blue-text">{{$instructor->user->email}}</h5></a>
@@ -57,16 +62,19 @@
                         @if($instructor->is_enroute)
                         <button class="btn btn-sm btn-enroute ml-0">En-Route</button>
                         @endif
+                        @if (Auth::check() && Auth::user()->permissions >= 4)
                         <a href="{{route('instructors.delete', [$instructor->id]) }}">
                         <button class="ml-0 btn btn-sm btn-danger">Delete</button>
                         </a>
+                        @endif
                     </div>                  
                 </div>
             </div>
         </div>
-        <br>
-        @endif
-        @endforeach
+    </div>
+    @endforeach
+    </div>
+    <br>
 
         @if (Auth::check() && Auth::user()->permissions >= 4)
         <button class="ml-0 btn btn-primary" data-target="#addTeacher" data-toggle="modal">Add Teacher</button>

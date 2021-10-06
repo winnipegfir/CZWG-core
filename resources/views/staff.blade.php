@@ -21,7 +21,7 @@
                     {{$g->name}}
                 </a>
                 @endforeach
-                <a href="{{('instructors')}}" style="background-color: #feba00" class="font-weight-bold list-group-item list-group-item-action">Instructors & Mentors</a>
+                <a href="{{('instructors')}}" style="background-color: #feba00" class="list-group-item list-group-item-action">Instructors & Mentors</a>
             </div>
         </div>
         <div class="col-md-9">
