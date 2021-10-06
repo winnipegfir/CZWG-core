@@ -16,6 +16,7 @@
                     @foreach ($articles as $a)
                     <tr>
                         <td><a class="blue-text" href="{{route('news.articles.view', $a->slug)}}">{{$a->title}}</a></td>
+
                     <td align="center">
                       <a href="{{route('news.articles.delete', [$a->id]) }}">
                           <button class="btn btn-sm btn-danger">Delete</button>

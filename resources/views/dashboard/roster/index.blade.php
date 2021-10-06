@@ -19,7 +19,7 @@
     <div class="container" style="margin-top: 20px;">
         <a href="{{route('dashboard.index')}}" class="blue-text" style="font-size: 1.2em;"> <i
                 class="fas fa-arrow-left"></i> Dashboard</a>
-        <div>
+        <div class="container" style="margin-top: 20px;">
             <h1 class="blue-text font-weight-bold">Controller Roster</h1>
             <hr>
             <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -32,11 +32,12 @@
                        aria-selected="false">Visiting Controllers</a>
                 </li>
             </ul>
-            <br>
+            <hr>
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
                     <div class="row">
                         <div class="col-md-3">
+                            <h4 class="font-weight-bold blue-text">Actions</h4>
                             <ul class="list-unstyled mt-2 mb-0">
                                 <li class="mb-2">
                                     <a href="" data-target="#addController" data-toggle="modal"
@@ -68,8 +69,9 @@
                             <th style="text-align:center" scope="col">DEP</th>
                             <th style="text-align:center" scope="col">APP</th>
                             <th style="text-align:center" scope="col">CTR</th>
+                            <th style="text-align:center" scope="col">Remarks</th>
                             <th style="text-align:center" scope="col">Status</th>
-                            <th style="text-align:center" width="18%" class="blue-text" scope="col"><b>Actions</b>
+                            <th style="text-align:center" width="18%" class="text-danger" scope="col"><b>Actions</b>
                             </th>
 
                         </tr>
@@ -159,7 +161,10 @@
                                 @else
                                     <td align="center" class="bg-danger text-white">ERROR</td>
                                 @endif
-
+                            <!--Remarks-->
+                                <td align="center">
+                                    {{$controller->remarks}}
+                                </td>
                                 <!--Active Status-->
                                 @if ($controller->active == "0")
                                     <td align="center" class="bg-danger text-white">Not Active</td>
@@ -171,7 +176,7 @@
                             <!--Edit controller-->
                                 <td align="center" style="width=100px">
                                     <a href="{{route('roster.editcontrollerform', [$controller->cid]) }}">
-                                        <button class="btn btn-sm btn-primary"
+                                        <button class="btn btn-sm btn-info"
                                                 style="vertical-align:top; float:left;">Edit
                                         </button>
                                     </a>
@@ -214,7 +219,10 @@
                                         </div>
                                     </div>
                                     <!--end delete controller-->
-                                    <button class="btn btn-sm btn-danger" data-toggle="modal" style="vertical-align:top; float:right;" data-target="#deleteController{{$controller->id}}">Delete</button>
+                                    <a role="button" data-toggle="modal"
+                                       data-target="#deleteController{{$controller->id}}"
+                                       class="btn btn-sm btn-danger"
+                                       style="vertical-align:bottom; float:right;">Delete</a>
                 </div>
             </div>
             </td>
@@ -228,6 +236,7 @@
         <div class="tab-pane fade" id="visit" role="tabpanel" aria-labelledby="visit-tab">
             <div class="row">
                 <div class="col-md-3">
+                    <h4 class="font-weight-bold blue-text">Actions</h4>
                     <ul class="list-unstyled mt-2 mb-0">
                         <li class="mb-2">
                             <a href="" data-target="#addVisitController" data-toggle="modal"
@@ -241,6 +250,7 @@
                 <!--WINNIPEG VISITING CONTROLLERS ROSTER-->
                 <table id="rosterVisitTable" class="table table-hover">
                     <thead>
+
                     <tr>
                         <th style="text-align:center" scope="col"><b>CID</b></th>
                         <th style="text-align:center" scope="col">Controller Name</th>
@@ -251,11 +261,13 @@
                         <th style="text-align:center" scope="col">DEP</th>
                         <th style="text-align:center" scope="col">APP</th>
                         <th style="text-align:center" scope="col">CTR</th>
+                        <th style="text-align:center" scope="col">Remarks</th>
                         <th style="text-align:center" scope="col">Status</th>
-                        <th style="text-align:center" width="18%" class="blue-text" scope="col"><b>Actions</b></th>
+                        <th style="text-align:center" width="18%" class="text-danger" scope="col"><b>Actions</b></th>
+
                     </tr>
                     </thead>
-                    
+
                     <tbody>
                     @foreach ($visitroster2 as $visitcontroller)
                         <tr>
@@ -340,6 +352,10 @@
                             @else
                                 <td align="center" class="bg-danger text-white">ERROR</td>
                             @endif
+                        <!--Remarks-->
+                            <td align="center">
+                                {{$visitcontroller->remarks}}
+                            </td>
                             <!--Active Status-->
                             @if ($visitcontroller->active == "0")
                                 <td align="center" class="bg-danger text-white">Not Active</td>
@@ -350,7 +366,7 @@
                         @endif
                             <td align="center">
                                 <a href="{{route('roster.editcontrollerform', [$visitcontroller->cid]) }}">
-                                    <button class="btn btn-sm btn-primary" style="vertical-align:top; float:left;">
+                                    <button class="btn btn-sm btn-info" style="vertical-align:top; float:left;">
                                         Edit
                                     </button>
                                 </a>
@@ -390,7 +406,10 @@
                                         </div>
                                     </div>
                                     <!--end delete visitor-->
-                                    <button class="btn btn-sm btn-danger" data-toggle="modal" style="vertical-align:top; float:right;" data-target="#deleteVisitController{{$visitcontroller->id}}">Delete</button>
+
+                                    <a role="button" data-toggle="modal"
+                                       data-target="#deleteVisitController{{$visitcontroller->id}}"
+                                       class="btn btn-sm btn-danger" style="vertical-align:bottom; float:right;">Delete</a>
                                 </div>
                             </td>
                         </tr>

@@ -12,7 +12,6 @@ use App\Models\AtcTraining\CBT\CbtExamResult;
 use App\Models\AtcTraining\CBT\CbtModule;
 use App\Models\AtcTraining\CBT\CbtModuleAssign;
 use App\Models\AtcTraining\CBT\CbtNotification;
-use App\Models\AtcTraining\InstructingSession;
 use App\Models\AtcTraining\Instructor;
 use App\Models\AtcTraining\InstructorStudents;
 use App\Models\AtcTraining\RosterMember;
@@ -26,6 +25,7 @@ use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Role;
 
 class TrainingController extends Controller
 {
@@ -38,6 +38,7 @@ class TrainingController extends Controller
         if ($instructor) {
             $yourStudents = Student::where('instructor_id', $instructor->id)->get();
         }
+        
 
         return view('dashboard.training.indexinstructor', compact('yourStudents', 'soloreq'));
     }
@@ -319,24 +320,24 @@ class TrainingController extends Controller
         if (! $student) {
             return redirect()->back()->withError('Student cannot be found!');
         }
-        // $check = CbtExamResult::where([
-        //     'student_id' => $request->input('studentid'),
-        //  'cbt_exam_id' => $request->input('examid'),
-        //])->first();
-        //if ($check != null) {
-        //  $removeanswers = CbtExamAnswer::where([
-        //      'student_id' => $student->id,
-        //      'cbt_exam_id' => $request->input('examid'),
-        //  ])->get();
-        //  foreach ($removeanswers as $r) {
-        //      $r->delete();
-        //  }
-        //  $removeresult = CbtExamResult::where([
-        //      'student_id' => $student->id,
-        //      'cbt_exam_id' => $request->input('examid'),
-        //  ])->first();
-        //  $removeresult->delete();
-        //}
+        $check = CbtExamResult::where([
+            'student_id' => $request->input('studentid'),
+            'cbt_exam_id' => $request->input('examid'),
+        ])->first();
+        if ($check != null) {
+            $removeanswers = CbtExamAnswer::where([
+                'student_id' => $student->id,
+                'cbt_exam_id' => $request->input('examid'),
+            ])->get();
+            foreach ($removeanswers as $r) {
+                $r->delete();
+            }
+            $removeresult = CbtExamResult::where([
+                'student_id' => $student->id,
+                'cbt_exam_id' => $request->input('examid'),
+            ])->first();
+            $removeresult->delete();
+        }
         $questioncount = CbtExamQuestion::where('cbt_exam_id', $request->input('examid'))->get();
         if (count($questioncount) < 10) {
             return redirect()->back()->withError('This exam does not have the minimum 10 questions, so it cannot be assigned!');
@@ -487,19 +488,5 @@ class TrainingController extends Controller
         }
 
         return redirect('/dashboard')->withSuccess('Student/Instructor Pairing Removed!');
-    }
-
-    public function instructingSessionsIndex()
-    {
-        $iid = Instructor::where('user_id', Auth::user()->id)->first();
-        $sessions = InstructingSession::where('instructor_id', $iid->id)->get();
-        $upcomingSessions = InstructingSession::where('instructor_id', $iid->id)->get();
-
-        return view('dashboard.training.instructingsessions.index', compact('sessions', 'upcomingSessions'));
-    }
-
-    public function createInstructingSession()
-    {
-        return redirect()->back()->withError('This is still a work in progress.');
     }
 }

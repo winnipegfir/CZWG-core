@@ -18,6 +18,7 @@ use App\Notifications\ExamCompletion;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
 
 class CBTController extends Controller
 {
@@ -361,15 +362,14 @@ class CBTController extends Controller
     public function gradeExam(Request $req, $id)
     {
         $student = Student::where('user_id', Auth::user()->id)->first();
-        $r = CbtExamResult::create([
-            'student_id' => $student->id,
-            'cbt_exam_id' => $id,
-            'instructor_id' => $student->instructor->id,
-            'grade' => '0',
-            'created_at' => Carbon::now()->toDateTimeString(),
-        ]);
+        $examcheck = CbtExamResult::where([
+            ['student_id', $student->id],
+            ['cbt_exam_id', $id],
+        ])->first();
+        if ($examcheck != null) {
+            return redirect()->route('cbt.exam')->withError('You have already completed this exam!');
+        }
         CbtExamAnswer::create([
-            'cbt_exam_result_id' => $r->id,
             'student_id' => $student->id,
             'cbt_exam_question_id' => $req->input('question_1'),
             'cbt_exam_id' => $id,
@@ -379,7 +379,6 @@ class CBTController extends Controller
             'created_at' => Carbon::now()->toDateTimeString(),
         ]);
         CbtExamAnswer::create([
-            'cbt_exam_result_id' => $r->id,
             'student_id' => $student->id,
             'cbt_exam_question_id' => $req->input('question_2'),
             'cbt_exam_id' => $id,
@@ -389,7 +388,6 @@ class CBTController extends Controller
             'created_at' => Carbon::now()->toDateTimeString(),
         ]);
         CbtExamAnswer::create([
-            'cbt_exam_result_id' => $r->id,
             'student_id' => $student->id,
             'cbt_exam_question_id' => $req->input('question_3'),
             'cbt_exam_id' => $id,
@@ -399,7 +397,6 @@ class CBTController extends Controller
             'created_at' => Carbon::now()->toDateTimeString(),
         ]);
         CbtExamAnswer::create([
-            'cbt_exam_result_id' => $r->id,
             'student_id' => $student->id,
             'cbt_exam_question_id' => $req->input('question_4'),
             'cbt_exam_id' => $id,
@@ -409,7 +406,6 @@ class CBTController extends Controller
             'created_at' => Carbon::now()->toDateTimeString(),
         ]);
         CbtExamAnswer::create([
-            'cbt_exam_result_id' => $r->id,
             'student_id' => $student->id,
             'cbt_exam_question_id' => $req->input('question_5'),
             'cbt_exam_id' => $id,
@@ -419,7 +415,6 @@ class CBTController extends Controller
             'created_at' => Carbon::now()->toDateTimeString(),
         ]);
         CbtExamAnswer::create([
-            'cbt_exam_result_id' => $r->id,
             'student_id' => $student->id,
             'cbt_exam_question_id' => $req->input('question_6'),
             'cbt_exam_id' => $id,
@@ -429,7 +424,6 @@ class CBTController extends Controller
             'created_at' => Carbon::now()->toDateTimeString(),
         ]);
         CbtExamAnswer::create([
-            'cbt_exam_result_id' => $r->id,
             'student_id' => $student->id,
             'cbt_exam_question_id' => $req->input('question_7'),
             'cbt_exam_id' => $id,
@@ -439,7 +433,6 @@ class CBTController extends Controller
             'created_at' => Carbon::now()->toDateTimeString(),
         ]);
         CbtExamAnswer::create([
-            'cbt_exam_result_id' => $r->id,
             'student_id' => $student->id,
             'cbt_exam_question_id' => $req->input('question_8'),
             'cbt_exam_id' => $id,
@@ -449,7 +442,6 @@ class CBTController extends Controller
             'created_at' => Carbon::now()->toDateTimeString(),
         ]);
         CbtExamAnswer::create([
-            'cbt_exam_result_id' => $r->id,
             'student_id' => $student->id,
             'cbt_exam_question_id' => $req->input('question_9'),
             'cbt_exam_id' => $id,
@@ -459,7 +451,6 @@ class CBTController extends Controller
             'created_at' => Carbon::now()->toDateTimeString(),
         ]);
         CbtExamAnswer::create([
-            'cbt_exam_result_id' => $r->id,
             'student_id' => $student->id,
             'cbt_exam_question_id' => $req->input('question_10'),
             'cbt_exam_id' => $id,
@@ -470,7 +461,8 @@ class CBTController extends Controller
         ]);
         $score = '0';
         $answers = CbtExamAnswer::where([
-            ['cbt_exam_result_id', $r->id],
+            ['student_id', $student->id],
+            ['cbt_exam_id', $id],
         ])->get();
         foreach ($answers as $a) {
             if ($a->user_answer == $a->right_answer) {
@@ -478,8 +470,13 @@ class CBTController extends Controller
             }
         }
         $grade = $score / 10 * 100;
-        $r->grade = $grade;
-        $r->save();
+        CbtExamResult::create([
+            'student_id' => $student->id,
+            'cbt_exam_id' => $id,
+            'instructor_id' => $student->instructor->id,
+            'grade' => $grade,
+            'created_at' => Carbon::now()->toDateTimeString(),
+        ]);
 
         $removeexam = CbtExamAssign::where([
             'student_id' => $student->id,
@@ -487,19 +484,27 @@ class CBTController extends Controller
         ])->first();
         $removeexam->delete();
         $exam = CbtExam::whereId($id)->first();
-        //$student->instructor->user->notify(new ExamCompletion($grade, $student, $exam));
+        $results = CbtExamAnswer::where([
+            'student_id' => $student->id,
+            'cbt_exam_id' => $id,
+        ])->get();
+        $student->instructor->user->notify(new ExamCompletion($grade, $student, $exam));
 
-        return redirect()->route('cbt.exam.results', [$id, $student->id, $r->id]);
+        return redirect()->route('cbt.exam.results', [$id, $student->id]);
     }
 
-    public function examResults($id, $sid, $rid)
+    public function examResults($id, $sid)
     {
         $student = Student::whereId($sid)->first();
         $exam = CbtExam::whereId($id)->first();
-        $grade = CbtExamResult::whereId($rid)->first();
         $results = CbtExamAnswer::where([
-            'cbt_exam_result_id' => $rid,
+            'student_id' => $sid,
+            'cbt_exam_id' => $id,
         ])->get();
+        $grade = CbtExamResult::where([
+            'student_id' => $sid,
+            'cbt_exam_id' => $id,
+        ])->first();
 
         return view('dashboard.training.CBT.exams.results', compact('exam', 'results', 'grade', 'student'));
     }
