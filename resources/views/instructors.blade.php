@@ -5,10 +5,10 @@
 
 @section('content')
 <div class="container" style="margin-top: 20px;">
-    <a href="{{route('index')}}" class="blue-text" style="font-size: 1.2em"> <i class="fas fa-arrow-left"></i> Staff</a>
+    <a href="{{route('staff')}}" class="blue-text" style="font-size: 1.2em"> <i class="fas fa-arrow-left"></i> Staff</a>
     <div class="col p-0">
 
-    <h1 class="blue-text font-weight-bold">Instructors</h1>
+    <h2 class="blue-text font-weight-bold">Instructors</h2>
     @foreach (\App\Models\Teacher::all() as $instructor)
     @if($instructor->is_instructor == 1)
         <div class="card card-body">
@@ -38,7 +38,7 @@
         @endif
         @endforeach
 
-    <h1 class="blue-text font-weight-bold">Mentors</h1>
+    <h2 class="blue-text font-weight-bold">Mentors</h2>
     @foreach (\App\Models\Teacher::all() as $instructor)
     @if($instructor->is_instructor == 0)
         <div class="card card-body">
