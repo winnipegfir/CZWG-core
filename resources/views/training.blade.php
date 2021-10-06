@@ -8,13 +8,13 @@
             <p>Winnipeg always holds training to the highest standards. As a Winnipeg FIR student, the training we provide is always extremely professional and precise.</p>
         <hr>
         <div>
-            <h3 class="font-weight-bold blue-text">The 1Winnipeg System</h3>
-                <p>Over the past year, the Winnipeg FIR has been busy working on building a brand new training system from scratch - the 1Winnipeg. Once completed, Winnipeg students
+            <h3 class="font-weight-bold blue-text">Our System</h3>
+                <p>Over the past year, the Winnipeg FIR has been busy working on building a brand new training system from scratch. Once completed, Winnipeg students
                 will have the ability to study for their ratings without the need for Instructors or Mentors - and can request help from their Instructor with the click of a button.
                 It also includes a brand new, state-of-the-art Computer-Based Training System.</p>
-                <h5 class="font-weight-bold blue-text">All In One Place.</h5>
-                <p>1Winnipeg has the benefit for students and instructors/mentors of all being in one place - always a click away on the menu.</p>
-                <p>For updates on the 1Winnipeg Training & CBT System, keep an eye on the <a href="https://blog.winnipegfir.ca">Winnipeg FIR Blog</a> where we post live updates on the status of this project.
+                <h3 class="font-weight-bold blue-text">All In One Place.</h3>
+                <p>Our training has a benefit for students and instructors/mentors of all being in one place - always a click away on the menu.</p>
+                <p>For updates on our training, keep an eye on the <a href="https://blog.winnipegfir.ca">Winnipeg FIR Blog</a> where we post live updates on the status of this project.
             </div>
         <hr>
         <h3 class="font-weight-bold blue-text">Current Wait Time</h3>
