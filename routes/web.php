@@ -34,6 +34,14 @@ Route::get('/training', 'AtcTraining\TrainingController@trainingTime')->name('tr
 Route::view('/bill', 'bill')->name('bill');
 Route::view('/wpg', 'wpg')->name('wpg');
 Route::view('/yearend', 'yearend')->name('yearend');
+Route::view('/pdc', 'pdc')->name('pdc');
+
+Route::prefix('instructors')->group(function () {
+    Route::view('/', 'instructors')->name('instructors');
+    Route::post('/', 'AtcTraining\TeachersController@store')->name('instructors.store')->middleware('staff');
+    Route::get('{id}', 'AtcTraining\TeachersController@delete')->name('instructors.delete')->middleware('staff');
+});
+
 //Redirects
 Route::get('/merch', function () {
     return redirect()->to('https://www.designbyhumans.com/shop/WinnipegFIR');
