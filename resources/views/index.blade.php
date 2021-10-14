@@ -3,8 +3,7 @@
 
 
 @section('content')
-    <link rel="stylesheet" type="text/css" href="{{ asset('/css/home.css') }}" />
-
+<link rel="stylesheet" type="text/css" href="{{ asset('/css/home.css') }}" />
     <div class="winnipeg-blue">
         <div data-jarallax data-speed="0.2" class="jarallax" style="height: calc(100vh - 59px)">
             <div class="mask flex-center flex-column"
@@ -158,7 +157,7 @@
                 <div class="col-md-12" style="padding-top: 2%">
                     <div class="card">
                         <div class="card-body" style="padding: 0%">
-                            <a href="https://www.designbyhumans.com/shop/WinnipegFIR/#" a target=”_blank”><img src="https://winnipegfir.ca/storage/files/uploads/1607879161.png" style="width:100%"></a>
+                            <a href="https://www.designbyhumans.com/shop/WinnipegFIR/#" a target=”_blank”><img src="https://i.imgur.com/cE41pr0.png" style="width:100%"></a>
                         </div>
                     </div>
                 </div>
