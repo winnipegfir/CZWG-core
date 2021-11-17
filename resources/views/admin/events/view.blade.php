@@ -100,6 +100,7 @@
                             @if($roster->position == "Relief" && $position->position == "Relief")
                             <form method="POST" action="{{route('event.deletecontroller', [$roster->user_id])}}">
                                 <text class="font-weight-bold">{{$roster->user->fullName('FLC')}}</text> is on Stand-by available from {{$roster->start_timestamp}}z to {{$roster->end_timestamp}}z. <input class="btn btn-sm btn-danger" type="submit" value="Delete" style="color: red"><br>
+                                <input type="hidden" name="id" value="{{$roster->event_id}}"></input>
                                 @csrf
                             </form>
                             @endif
