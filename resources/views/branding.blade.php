@@ -11,7 +11,7 @@
     <div class="pt-1">
         <div class="row">
             <div class="col-md-3 d-flex flex-column align-items-center justify-content-center">
-                <img src="https://winnipegfir.ca/storage/files/uploads/1612961752.png" class="img-fluid" alt="">
+                <img src="https://winnipegfir.ca/storage/files/uploads/1638293555.png" class="img-fluid" alt="">
                 <br/>
                 <a href="https://winnipegfir.ca/storage/files/uploads/1638293555.png">Blue Wordmark</a>
             </div>
