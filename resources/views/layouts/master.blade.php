@@ -274,7 +274,7 @@
     <footer class="page-footer text-light font-small py-4 bg-dark {{Request::is('/dashboard') ? 'mt-5' : ''}}">
         <div class="container">
             <p style="color:white">For Flight Simulation Use Only - Not to be used for real-world navigation. By using this site, you agree to hold harmless and indemnify the owners and authors of these web pages, those listed on these pages, and all pages that this site that may be pointed to (i.e. external links).</p>
-            <p style="color:white">Copyright © {{App\Models\Settings\CoreSettings::where('id', 1)->firstOrFail()->copyright_year}} Winnipeg FIR | All Rights Reserved.</p>
+            <p style="color:white">Copyright © {{ date('Y') }} Winnipeg FIR | All Rights Reserved.</p>
             <div class="flex-left mt-3">
             <a href="{{route('about')}}">Github</a>
                 &nbsp;
