@@ -34,6 +34,7 @@ class HomeController extends Controller
             'CYQR_',
             'CYQT_',
             'CYMJ_',
+            'CYFO_',
         ];
 
         foreach ($controllers as $c) {
