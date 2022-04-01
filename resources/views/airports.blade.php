@@ -94,6 +94,11 @@
                     <h5>Freeware</h5>
                     <p>ORBX is some of the best in the business at creating scenery, and Winnipeg is one of those airports available in their freeware pack. Get it now for your sim and upgrade Winnipeg for no cost.</p>
                     <a style="margin-left: -0.1%" target="_blank" href="https://orbxdirect.com/product/ftx-global-airport-pack"class="btn btn-primary">View More</a>
+                <br></br>
+                <h4>ProjectSierra - for P3D v4/v5</h4>
+                    <h5>Freeware</h5>
+                    <p>P3D user who's looking for some good freeware? ProjectSierra has updated a scenery for the sim, and is available at no cost - pick it up and enjoy!.</p>
+                    <a style="margin-left: -0.1%" target="_blank" href="https://drive.google.com/drive/u/0/folders/1BITJA-audI2-7Zmk5Vq-_e5YSOGM8049"class="btn btn-primary">View More</a>
         </div>
 
         <div class="tab-pane fade" id="cypg" role="tabpanel" aria-labelledby="cypg"><br>
