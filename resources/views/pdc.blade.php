@@ -5,7 +5,7 @@
     <div class="container py-4">
         <h1 class="font-weight-bold blue-text"><strong>Pre-Departure Clearance</strong></h1>
         <p>Pre-Departure Clearances (PDCs) are issued when the Winnipeg FIR is experiencing high volumes of traffic.</p>
-        <p>VATCAN PDC currently uses the private message (PM) communications protocol, with service currently limited to all VATSIM pilot clients. Airports where PDC service is currently provided in the Toronto FIR are Toronto International, Toronto Island, London International, and Ottawa International. Expansion of the service to additional airports will be notified.</p>
+        <p>VATCAN PDC currently uses the private message (PM) communications protocol, with service currently limited to all VATSIM pilot clients.</p>
         <hr>
         <h3 class="font-weight-bold blue-text">Requesting & Issuing of PDC</h3>
         <p>Pilots can request a Pre-Departure Clearance from ATC by voice or by text - controllers may also elect to only use PDC during high-traffic events, as mentioned above.</p>
