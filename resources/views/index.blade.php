@@ -157,7 +157,7 @@
                 <div class="col-md-12" style="padding-top: 2%">
                     <div class="card">
                         <div class="card-body" style="padding: 0%">
-                            <a href="https://www.designbyhumans.com/shop/WinnipegFIR/#" a target=”_blank”><img src="https://winnipegfir.ca/storage/files/uploads/1642879822.png" style="width:100%"></a>
+                            <a href="https://www.designbyhumans.com/shop/WinnipegFIR/#" a target=”_blank”><img src="https://winnipegfir.ca/storage/files/uploads/1654329915.png" style="width:100%"></a>
                         </div>
                     </div>
                 </div>
