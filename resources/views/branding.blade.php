@@ -5,66 +5,98 @@
 <div class="container py-4">
     <h1 class="font-weight-bold blue-text">Branding</h1>
     <p>This is the place to find all official Winnipeg FIR branding. Please feel free to use this branding for any event postings and publications.</p>
-    Any modification of the branding must be approved by the FIR Chief: <a href="mailto:n.power@vatcan.ca">n.power@vatcan.ca.</a>
+    Be sure to read up on our <a href="https://winnipegfir.ca/policies">Branding Guidelines</a> before using any of our brand. Thank you!
     <hr>
-    <h3>Banners</h3>
-    <div class="p-2">
+    <h4 class="font-weight-bold blue-text">Banners/Wordmarks/Letterheads</h4>
+    <div class="pt-1">
         <div class="row">
             <div class="col-md-3 d-flex flex-column align-items-center justify-content-center">
-                <img src="https://i.imgur.com/j1Y60BQ.png" class="img-fluid" alt="">
+                <img src="https://winnipegfir.ca/storage/files/uploads/1638293555.png" class="img-fluid" alt="">
                 <br/>
-                <a href="https://i.imgur.com/j1Y60BQ.png">Blue Wordmark on Transparent</a>
+                <a href="https://winnipegfir.ca/storage/files/uploads/1638293555.png">Blue Wordmark</a>
             </div>
 
             <div class="col-md-3 d-flex flex-column align-items-center justify-content-center">
-                <img style="background-color: #444444;" src="https://i.imgur.com/c5dlKqc.png" class="img-fluid" alt="">
+                <img style="background-color: #444444;" src="https://winnipegfir.ca/storage/files/uploads/1612961784.png" class="img-fluid" alt="">
                 <br/>
-                <a href="https://i.imgur.com/c5dlKqc.png">White Wordmark on Transparent</a>
+                <a href="https://winnipegfir.ca/storage/files/uploads/1612961784.png">White Wordmark</a>
             </div>
 
             <div class="col-md-3 d-flex flex-column align-items-center justify-content-center">
-                <img style="background-color: #ffffff" src="https://i.imgur.com/cwj9jWX.png" class="img-fluid" alt="">
+                <img style="background-color: #ffffff" src="https://winnipegfir.ca/storage/files/uploads/1612961824.png" class="img-fluid" alt="">
                 <br/>
-                <a href="https://i.imgur.com/cwj9jWX.png">Grey Letterhead on Transparent</a>
+                <a href="https://winnipegfir.ca/storage/files/uploads/1612961824.png">Grey Letterhead</a>
             </div>
 
             <div class="col-md-3 d-flex flex-column align-items-center justify-content-center">
-                <img style="background-color: #444444" src="https://i.imgur.com/n4fiWZf.png" class="img-fluid" alt="">
+                <img style="background-color: #444444" src="https://winnipegfir.ca/storage/files/uploads/1612961851.png" class="img-fluid" alt="">
                 <br/>
-                <a href="https://i.imgur.com/n4fiWZf.png">White Letterhead on Transparent</a>
+                <a href="https://winnipegfir.ca/storage/files/uploads/1612961851.png">White Letterhead</a>
             </div>
 
             <div class="col-md-3 d-flex flex-column align-items-center justify-content-center" style="padding-top: 2%">
-                <img style="background-color: #ffffff" src="https://i.imgur.com/PgYWxtX.png" class="img-fluid" alt="">
+                <img style="background-color: #ffffff" src="https://winnipegfir.ca/storage/files/uploads/1612961875.png" class="img-fluid" alt="">
                 <br/>
-                <a href="https://i.imgur.com/PgYWxtX.png">Grey Training Wordmark on Transparent</a>
+                <a href="https://winnipegfir.ca/storage/files/uploads/1612961875.png">Grey Training Wordmark</a>
             </div>
 
             <div class="col-md-3 d-flex flex-column align-items-center justify-content-center" style="padding-top: 2%">
-                <img style="background-color: #444444" src="https://i.imgur.com/ZxZjpmI.png" class="img-fluid" alt="">
+                <img style="background-color: #444444" src="https://winnipegfir.ca/storage/files/uploads/1612961895.png" class="img-fluid" alt="">
                 <br/>
-                <a href="https://i.imgur.com/ZxZjpmI.png">White Training Wordmark on Transparent</a>
+                <a href="https://winnipegfir.ca/storage/files/uploads/1612961895.png">White Training Wordmark</a>
             </div>
+
+            <div class="col-md-3 d-flex flex-column align-items-center justify-content-center" style="padding-top: 2%">
+                <img style="background-color: #ffffff" src="https://winnipegfir.ca/storage/files/uploads/1612961918.png" class="img-fluid" alt="">
+                <br/>
+                <a href="https://winnipegfir.ca/storage/files/uploads/1612961918.png">Blue Shop Logo</a>
+            </div>
+
+            <div class="col-md-3 d-flex flex-column align-items-center justify-content-center" style="padding-top: 2%">
+                <img style="background-color: #444444" src="https://winnipegfir.ca/storage/files/uploads/1612961940.png" class="img-fluid" alt="">
+                <br/>
+                <a href="https://winnipegfir.ca/storage/files/uploads/1612961940.png">White Shop Logo</a>
+            </div>
+
         </div>
     </div>
     <hr>
-    <h3>Squares</h3>
-    <div class="p-2">
+    <h4 class="font-weight-bold blue-text">Squares</h4>
+    <div class="pt-1">
         <div class="row">
             <div class="col-md-3 d-flex flex-column align-items-center justify-content-center">
-                <img src="https://i.imgur.com/tF4WbZu.png" class="img-fluid" alt="">
+                <img src="https://winnipegfir.ca/storage/files/uploads/1612961961.png" class="img-fluid" alt="">
                 <br/>
-                <a href="https://i.imgur.com/tF4WbZu.png">Blue Transparent</a>
+                <a href="https://winnipegfir.ca/storage/files/uploads/1612961961.png">Blue "W"</a>
             </div>
            <div class="col-md-3 d-flex flex-column align-items-center justify-content-center">
-                <img style="background-color: #444444;" src="https://i.imgur.com/iz3Oy9v.png" class="img-fluid" alt="">
+                <img style="background-color: #444444;" src="https://winnipegfir.ca/storage/files/uploads/1612961985.png" class="img-fluid" alt="">
                 <br/>
-                <a href="https://i.imgur.com/iz3Oy9v.png">White on Transparent</a>
+                <a href="https://winnipegfir.ca/storage/files/uploads/1612961985.png">White "W"</a>
             </div>
         </div>
     </div>
     <hr>
-    <p>The hex colour codes used by the Winnipeg FIR are <span class="font-weight-bold black-text">#013162 (Blue)</span> and <span class="font-weight-bold black-text">#FFFFFF (White)</span>.
-    The fonts used by Winnipeg fall under the <span class="font-weight-bold black-text">Avenir</span> family.</p>
+    <h4 class="font-weight-bold blue-text">Official FIR Colour Palette</h4>
+    <button class="ml-0 btn btn-primary">
+        <strong>Winnipeg Blue:</strong><br>
+        <br>Hex #013162
+        <br>Pantone Type 648C
+        <br>C 38%   M 19%   Y 0%   K 62%
+    </button>
+    <a class="btn" style="color: black; background-color: #fff; border: 1px solid black">
+        <strong>Ice White:</strong><br>
+        <br>Hex #ffffff
+        <br>Pantone Type 115-1 U
+        <br>C 0%   M 0%   Y 0%   K 0%
+    </a>
+    <a class="btn" style="color: black; background-color: #feba00">
+        <strong>Prairie Gold:</strong><br>
+        <br>Hex #feba00
+        <br>Pantone Type 7548 C
+        <br>C 0%   M 27%   Y 100%   K 0%
+    </a>
+    </div>
 </div>
+
 @endsection

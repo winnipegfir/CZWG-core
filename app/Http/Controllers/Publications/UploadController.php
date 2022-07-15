@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Publications;
 
 use App\Http\Controllers\Controller;
-use Auth;
 use Illuminate\Support\Facades\Storage;
 
 class UploadController extends Controller
@@ -13,7 +12,6 @@ class UploadController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-
     public function upload()
     {
         return view('dashboard.upload');
@@ -31,6 +29,6 @@ class UploadController extends Controller
         );
 
         return back()
-            ->with('success','File uploaded to: <a href='.config('app.url').'/storage/files/uploads/'.$fileName.'>'.config('app.url').'/storage/files/uploads/'.$fileName.'</a>');
+            ->with('success', 'File uploaded to: <a href='.config('app.url').'/storage/files/uploads/'.$fileName.'>'.config('app.url').'/storage/files/uploads/'.$fileName.'</a>');
     }
 }

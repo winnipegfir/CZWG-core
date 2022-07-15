@@ -16,8 +16,10 @@
             </div>
         </div>
     <div class="container py-4">
-      <img src="{{$article->image}}" alt="" title="" width="100%" height="50%">
-        <hr>
+        @if($article->image)
+            <img src="{{$article->image}}" alt="" title="" width="100%" height="50%">
+            <hr>
+        @endif
         @if(!$article->visible)
         @if(!Auth::user()->permissions >= 4)
             <?php abort(403, "Hidden");?>

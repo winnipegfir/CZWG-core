@@ -10,18 +10,10 @@
 @section('content')
 
 <div class="container" style="margin-top: 1%;">
-    
-
-    @if (Auth::check() && Auth::user()->permissions < 4)
-    <h1 class="blue-text font-weight-bold">Change is Coming.</h1>
-    <p>But... we can't tell you what those changes are yet. Check back soon!</p>
-    <a href="{{route('index')}}" class="blue-text" style="font-size: 1.2em"> <i class="fas fa-arrow-left"></i> Back to Home</a>
-    <br></br>
-    @else
-    <a href="{{route('index')}}" class="blue-text" style="font-size: 1.2em"> <i class="fas fa-arrow-left"></i> Back to Home</a>
+    <a href="{{route('index')}}" class="blue-text" style="font-size: 1.2em"> <i class="fas fa-arrow-left"></i> Home</a>
         <img src="https://i.imgur.com/THmmkon.png" style="width: 100%">
         <br><br>
-        <p>After years of being known on the VATSIM network as CZWG, we're finally changing things up. Starting in 2021 - <text class="font-weight-bold">we're changing our callsign from CZWG to WPG.</text> Here's what that means for you - whether you're a pilot, controller, or just an observer.</p>
+        <p>After years of being known on the VATSIM network as CZWG, we're finally changing things up. Starting on March 25th, 2021, - <text class="font-weight-bold">we're changing our callsign from CZWG to WPG.</text> Here's what that means for you - whether you're a pilot, controller, or just an observer.</p>
         <hr>
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item">
@@ -57,7 +49,7 @@
             <br>
             <li>Centre has new splits! We've finally added more splits to CTR for higher-traffic events (or if you want to go on a strange CTR, for whatever reason.) They are as follows:</li>
             <br>
-            <img src="https://i.imgur.com/q9BrUaE.png"><img src="https://i.imgur.com/Wqjm8v8.png">
+            <img src="https://winnipegfir.ca/storage/files/uploads/1615434515.png"><img src="https://winnipegfir.ca/storage/files/uploads/1615434526.png">
             <br></br>
             <p><text class="font-weight-bold">NOTE:</text> There are a handful of sectors that cover others when they are offline, as well as new details on splitting CTR - make sure to take a look at Winnipeg's <a href="{{ route('policies') }}">Standard Operating Procedures</a> for details.</p>
         </div>
@@ -76,8 +68,5 @@
     <br>
     <p>Questions, comments or concerns? Get in touch with the Winnipeg FIR Staff <a href="{{ route('staff') }}"><text class="font-weight-bold">HERE</text></a>.</p>
 </div>
-
-@endif
-
 
 @endsection

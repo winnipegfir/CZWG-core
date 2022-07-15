@@ -191,7 +191,7 @@
                 <h2 class="font-weight-bold blue-text pb-2">Modify User</h2>
                 <div class="card p-3">
                   <div class="d-flex flex-row align-items-center">
-                      <ul class="list-unstyled" style="width:500px; height:80px">
+                      <ul class="list-unstyled" style="width:500px; height: 80px">
 
                     <li><h5>Current Permissions Level: {{$user->permissions()}} </h5></li>
                     @if ($user->id == Auth::user()->id)
@@ -290,10 +290,28 @@
                     This user does not have a linked Discord account.
                     @endif
                 </div><br>
+                <h2 class="font-weight-bold blue-text pb-2">User's Attached Roles</h2>
+                <div class="card p-3">
+                    @if (count($roles) < 1)
+                        This user has no roles attached!
+                    @else
+                    <ul class="list-unstyled mt-2 mb-0">
+                        <li class="mb-2">
+                    @foreach ($roles as $r)
+                                {{$r}}
+                                <a type="button" class="btn btn-sm btn-primary" style="color: #ff6161" href="{{route('user.role.delete', [$r, $user->id])}}"><i class="fa fa-times"></i></a><br>
+                            <br>
+                            @endforeach
+                            @endif
+                        </li></ul><br>
+
+                        <a href="#" data-toggle="modal" data-target="#addRole" class="btn btn-sm bg-czqo-blue-light">Attach a Role</a>
+
+                </div><br>
                 <h2 class="font-weight-bold blue-text pb-2">User Notes</h2>
                 <div class="card p-3">
-                <a href="#" data-toggle="modal" data-target="#addNoteModal" class="btn btn-sm bg-czqo-blue-light">Add Note</a>
-                <a href="#" data-toggle="modal" data-target="#viewNotesModal" class="btn btn-sm bg-primary text-light">View Notes</a>
+                    <a href="#" data-toggle="modal" data-target="#addNoteModal" class="btn btn-sm bg-czqo-blue-light">Add Note</a>
+                    <a href="#" data-toggle="modal" data-target="#viewNotesModal" class="btn btn-sm bg-primary text-light">View Notes</a>
                 </div>
             </div>
         </div>
@@ -434,6 +452,45 @@
         </div>
     </div>
 </div>
+    <!--Add Role Modal-->
+    <div class="modal fade" id="addRole" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add a Role to User</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                   <form action="{{route('user.role.add')}}" method="POST" class="form-group">
+                       <select class="form-control" name="role">
+                           @foreach ($allroles as $r)
+                            @if($r->protected == '2')
+                                @role('Administrator')
+                               <option value="{{$r->name}}">{{$r->name}}</option>
+                            @endrole
+                               @elseif($r->protected == '1')
+                                @hasanyrole('Administrator|Staff')
+                                   <option value="{{$r->name}}">{{$r->name}}</option>
+                                @endhasanyrole
+                               @else
+                                   <option value="{{$r->name}}">{{$r->name}}</option>
+                               @endif
+
+                       @endforeach
+                       </select>
+                       <input type="hidden" name="id" value="{{$user->id}}">
+                       @csrf
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Add Role</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </form>
+                </div>
+            </div>
+        </div>
+    </div>
 <!--End Confirm change own permissions modal-->
     <script>
         function displayDeleteModal() {

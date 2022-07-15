@@ -3,7 +3,6 @@
 namespace App\Notifications\Feedback;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
@@ -45,8 +44,8 @@ class NewControllerFeedback extends Notification
                     ->line('A user has submitted feedback on a controller.')
                     ->line('User: '.$this->feedback->user->fullName('FLC'))
                     ->line('Email: '.$this->feedback->user->email)
-                    ->line('Controller CID: ' .$this->feedback->controller_cid)
-                    ->line('Content: ' .$this->feedback->content);
+                    ->line('Controller CID: '.$this->feedback->controller_cid)
+                    ->line('Content: '.$this->feedback->content);
     }
 
     /**

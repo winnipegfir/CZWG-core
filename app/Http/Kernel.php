@@ -2,7 +2,6 @@
 
 namespace App\Http;
 
-use App\Http\Middleware\BookingBanMiddleware;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -20,6 +19,7 @@ class Kernel extends HttpKernel
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\TrustProxies::class,
+
     ];
 
     /**
@@ -70,6 +70,9 @@ class Kernel extends HttpKernel
         'bookingban' => \App\Http\Middleware\BookingBanMiddleware::class,
         'atc' => \App\Http\Middleware\CheckAtc::class,
         'mentor' => \App\Http\Middleware\CheckMentor::class,
+        'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
+        'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
+        'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
     ];
 
     /**

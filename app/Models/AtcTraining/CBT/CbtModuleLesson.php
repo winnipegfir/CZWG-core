@@ -2,16 +2,16 @@
 
 namespace App\Models\AtcTraining\CBT;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Models\Users\User;
-use App\Models\AtcTraining\Student;
-use App\Models\AtcTraining\CBT\CbtModule;
-use App\Models\AtcTraining\CBT\CbtModuleAssign;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\HtmlString;
+use Parsedown;
+
 class CbtModuleLesson extends Model
 {
     //
     protected $fillable = [
-        'name', 'content_html', 'created_by', 'updated_by', 'updated_at', 'cbt_modules_id',
+        'name', 'lesson', 'content_html', 'created_by', 'updated_by', 'updated_at', 'cbt_modules_id',
     ];
 
     public function user()
@@ -21,7 +21,11 @@ class CbtModuleLesson extends Model
 
     public function CbtModule()
     {
-      return $this->hasMany(CbtModule::class);
+        return $this->hasMany(CbtModule::class);
     }
 
+    public function html()
+    {
+        return new HtmlString(app(Parsedown::class)->text($this->content_html));
+    }
 }

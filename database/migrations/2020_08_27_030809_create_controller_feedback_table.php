@@ -15,14 +15,14 @@ class CreateControllerFeedbackTable extends Migration
     {
         Schema::create('controller_feedback', function (Blueprint $table) {
             $table->increments('id');
-	        $table->integer('user_id')->unsigned();
-	        $table->foreign('user_id')->references('id')->on('users');
-	        $table->timestamp('deleted_at')->nullable();
-	        $table->integer('controller_cid')->unsigned();
-	        $table->foreign('controller_cid')->references('id')->on('users');
-	        $table->text('position');
-	        $table->longText('content');
-	        $table->timestamps();
+            $table->integer('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->timestamp('deleted_at')->nullable();
+            $table->integer('controller_cid')->unsigned();
+            $table->foreign('controller_cid')->references('id')->on('users');
+            $table->text('position');
+            $table->longText('content');
+            $table->timestamps();
         });
     }
 

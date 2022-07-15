@@ -11,6 +11,11 @@
 
 @section('content')
 
+    <head>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css"; rel="stylesheet" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js";></script>
+    </head>
+
     <div class="container" style="margin-top: 20px;">
         <a href="{{route('dashboard.index')}}" class="blue-text" style="font-size: 1.2em;"> <i
                 class="fas fa-arrow-left"></i> Dashboard</a>
@@ -52,9 +57,8 @@
 
 
                     <!--WINNIPEG CONTROLLERS ROSTER-->
-                    <table id="rosterTable" class="table table-hover" style="position:relative; left:-70px; top:2px; width:116%;">
+                    <table id="rosterVisitTable" class="table table-hover">
                         <thead>
-
                         <tr>
                             <th style="text-align:center" scope="col"><b>CID</b></th>
                             <th style="text-align:center" scope="col">Controller Name</th>
@@ -434,26 +438,23 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Add Winnipeg Controller to roster</h5>
+                    <h5 class="modal-title" id="exampleModalLongTitle">Add Controller to Home Roster</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
 
-                <div align="center" class="modal-body">
-
+                <div align="center" class="modal-body pb-0">
                     <div class="form-group row">
-                        <label for="dropdown"
-                               class="col-sm-4 col-form-label text-md-right">{{ __('Controllers') }}</label>
-
                         <div class="col-md-12">
                             <form method="POST" action="{{ route('roster.addcontroller' )}}">
-                                <select class="custom-select" name="newcontroller">
+                                <select class="js-example-basic-single form-control" style="width:100%" name="newcontroller">
                                     @foreach($users as $user)
                                         <option value="{{ $user->id}}">{{$user->id}}
                                             - {{$user->fname}} {{$user->lname}}</option>
                                     @endforeach
                                 </select>
+                                <br>
 
                                 @if ($errors->has('dropdown'))
                                     <span class="invalid-feedback" role="alert">
@@ -462,19 +463,13 @@
                                 @endif
                                 <td align="center">
                                     @csrf
-                                    <p class="font-weight-bold"> *This will add them to the Home Controller Roster*</p>
+                                    <br>
+                                    <p class="font-weight-bold">This user will be added to the Home Roster.</p>
                                     <button type="submit" class="btn btn-success">Add User</button>
-
                                 </td>
                             </form>
                         </div>
                     </div>
-
-                </div>
-
-                <div align="center" class="modal-footer">
-                    <button type="button" class="btn btn-light" data-dismiss="modal">Dismiss</button>
-                    </form>
                 </div>
             </div>
         </div>
@@ -487,21 +482,18 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Add Visiting Controller to roster</h5>
+                    <h5 class="modal-title" id="exampleModalLongTitle">Add Controller to Visiting Roster</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
 
-                <div align="center" class="modal-body">
+                <div align="center" class="modal-body pb-0">
 
                     <div class="form-group row">
-                        <label for="dropdown"
-                               class="col-sm-4 col-form-label text-md-right">{{ __('Controllers') }}</label>
-
                         <div class="col-md-12">
                             <form method="POST" action="{{ route('roster.addvisitcontroller' )}}">
-                                <select class="custom-select" name="newcontroller">
+                                <select class="js-example-basic-single form-control" style="width:100%" name="newcontroller">
                                     @foreach($users as $user)
                                         <option value="{{ $user->id}}">{{$user->id}}
                                             - {{$user->fname}} {{$user->lname}}</option>
@@ -518,19 +510,13 @@
 
                                 <td align="center">
                                     @csrf
-                                    <p class="font-weight-bold"> *This will add them to the Visiting Controller Roster*</p>
+                                    <br>
+                                    <p class="font-weight-bold">This user will be added to the Visiting Roster.</p>
                                     <button type="submit" class="btn btn-success">Add User</button>
-
                                 </td>
                             </form>
                         </div>
                     </div>
-
-                </div>
-
-                <div align="center" class="modal-footer">
-                    <button type="button" class="btn btn-light" data-dismiss="modal">Dismiss</button>
-                    </form>
                 </div>
             </div>
         </div>
@@ -662,7 +648,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body"> 
                     <p>Joining the Winnipeg FIR Discord server allows you to join the Winnipeg FIR controller and pilot
                         community.</p>
                     <h5>Rules</h5>
@@ -675,7 +661,7 @@
                         <li>4. Do not send spam in the server, including images, text, or emotes.</li>
                     </ul>
                     <p>Clicking the 'Join' button will redirect you to Discord. We require the Join Server permission to
-                        add your Discord account to the server.</p>
+                        add your Discord account to the server.</p> 
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-light" data-dismiss="modal">Dismiss</button>
@@ -710,6 +696,11 @@
             });
             //End Edit Record
 
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('.js-example-basic-single').select2();
         });
     </script>
 

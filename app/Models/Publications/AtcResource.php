@@ -9,7 +9,7 @@ use Parsedown;
 class AtcResource extends Model
 {
     protected $fillable = [
-        'user_id', 'title', 'description', 'url', 'atc_only'
+        'user_id', 'title', 'description', 'url', 'atc_only',
     ];
 
     public function html()

@@ -2,7 +2,6 @@
 
 namespace App\Models\Users;
 
-
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\HtmlString;
 use Parsedown;

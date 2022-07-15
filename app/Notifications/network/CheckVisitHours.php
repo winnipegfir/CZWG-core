@@ -1,24 +1,29 @@
 <?php
 
-namespace App\Notifications;
+namespace App\Notifications\network;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class MassEmail extends Notification
+class CheckVisitHours extends Notification
 {
     use Queueable;
+
+    private $members;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($user)
+    public function __construct($members)
     {
-        $this->user = $user;
+        $this->members = $members;
+
+        if (! $this->members) {
+            exit;
+        }
     }
 
     /**
@@ -41,8 +46,8 @@ class MassEmail extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)->view(
-            'emails.massemail', ['user' => $this->user]
-        )->subject($this->);
+            'emails.network.visiting', ['members' => $this->members]
+        )->subject('Controller Visiting Violations!');
     }
 
     /**

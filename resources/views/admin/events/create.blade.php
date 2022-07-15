@@ -71,9 +71,22 @@
                     <div class="step-content w-75 pt-0">
                         <div class="form-group">
                             <label for="">Use Markdown</label>
-                            <textarea id="contentMD" name="description" class="w-75"></textarea>
+                            <textarea id="tiny" name="description" class="w-75"></textarea>
                             <script>
                                 var simplemde = new SimpleMDE({ element: document.getElementById("contentMD"), toolbar: false });
+                            </script>
+                            <script>
+                            tinymce.init({
+                            selector: 'textarea#tiny',
+                            height: 500,
+                            plugins: [
+                            'advlist autolink lists link image charmap print preview anchor',
+                            'searchreplace visualblocks code fullscreen',
+                            'insertdatetime media table paste imagetools wordcount'
+                            ],
+                            toolbar: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+                            content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+                            });
                             </script>
                         </div>
                     </div>

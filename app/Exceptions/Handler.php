@@ -34,6 +34,10 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $exception)
     {
+        if (app()->bound('sentry') && $this->shouldReport($exception)) {
+            app('sentry')->captureException($exception);
+        }
+
         parent::report($exception);
     }
 
@@ -45,11 +49,11 @@ class Handler extends ExceptionHandler
      * @return \Illuminate\Http\Response
      */
     public function render($request, Exception $exception)
-{
-    if ($exception instanceof CustomException) {
-        return response()->view('errors.403', [], 403);
-    }
+    {
+        if ($exception instanceof CustomException) {
+            return response()->view('errors.403', [], 403);
+        }
 
-    return parent::render($request, $exception);
-}
+        return parent::render($request, $exception);
+    }
 }

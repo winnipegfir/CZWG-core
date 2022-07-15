@@ -2,13 +2,11 @@
 
 namespace App\Notifications\Network;
 
-use App\Models\Settings\CoreSettings;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class OneMonthInactivityReminder extends Notification
+class MonthlyInactivity extends Notification
 {
     use Queueable;
 

@@ -11,9 +11,10 @@
         For Flight Simulation Use Only - Not to be used for real-world navigation. All content on this web site may not be shared, copied, reproduced or used in any way without prior express written consent of Gander Oceanic. © Copyright {{App\Models\Settings\CoreSettings::where('id', 1)->firstOrFail()->copyright_year}} Gander Oceanic, All Rights Reserved.
         -->
         <!--Metadata-->
+
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="shortcut icon" href="{{ asset('winnipeg.ico') }}" type="image/x-icon">
+        <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <!--Rich Preview Meta-->
         <title>@yield('title', 'Winnipeg FIR')</title>
@@ -57,7 +58,7 @@
         <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js" integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg==" crossorigin=""></script>
         <script src="{{asset('/js/leaflet.rotatedMarker.js')}}"></script>
         <!--TinyMCE-->
-        <script src='https://cloud.tinymce.com/5/tinymce.min.js?apiKey=k2zv68a3b4m423op71lnifx4a9lm0a2ee96o58zafhrdnddb'></script>
+            <script src="https://cdn.tiny.cloud/1/iz7e8hg00dm8miggx7tpbcws8glzakaodu6y0i3t3sc59u42/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
         <!--DataTables-->
         <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css"/>
         <script type="text/javascript" src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
@@ -97,7 +98,7 @@
     <header>
         <nav id="czwgHeader" class="navbar navbar-expand-lg navbar-dark p-0" style="min-height:59px; background-color:#013162">
             <div class="container">
-                <a class="navbar-brand" href="{{route('index')}}"><img style="height: 40px; width:auto;" src="https://i.imgur.com/c5dlKqc.png" alt=""></a>
+                <a class="navbar-brand" href="{{route('index')}}"><img style="height: 40px; width:auto;" src="https://winnipegfir.ca/storage/files/uploads/1612557788.png" alt=""></a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -107,10 +108,16 @@
                         {{-- <li class="nav-item">
                             <a href="{{route('controllerbookings.public')}}" class="nav-link {{ Request::is('bookings/*') || Request::is('bookings') ? 'active' : '' }}">Bookings</a>
                         </li> --}}
-                        <li class="nav-item {{ Request::is('news') ? 'active white-text' : '' }} {{ Request::is('news/*') ? 'active white-text' : '' }}">
-                            <a class="nav-link" href="{{route('news')}}">
-                                News
-                            </a>
+                        <li class="nav-item {{ Request::is('news/*') || Request::is('news') ? 'active' : '' }}">
+                            @if(Auth::check() && Auth::user()->permissions >= 4)
+                            <li class="nav-item dropdown {{ Request::is('news') || Request::is('news/*') || Request::is('news') ? 'active' : '' }}">
+                            <a class="nav-link dropdown-toggle" style="cursor:pointer" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">News</a>
+                            <div class="dropdown-menu" aria-labelledby="dropdown01">
+                            <a class="dropdown-item" href="{{route('news')}}">News</a>
+                                <a class="dropdown-item {{ Request::is('news') ? 'active white-text' : '' }}" href="{{route('news.index')}}">Manage News</a>
+                            @else
+                                <a href="{{route('news')}}" class="nav-link">News</a>
+                            @endif
                         </li>
                         <li class="nav-item {{ Request::is('events/*') || Request::is('events') ? 'active' : '' }}">
                             @if(Auth::check() && Auth::user()->permissions >= 4)
@@ -121,7 +128,7 @@
                                 <a class="dropdown-item {{ Request::is('events') ? 'active white-text' : '' }}" href="{{route('events.admin.index')}}">Manage Events</a>
                             @else
                                 <a href="{{route('events.index')}}" class="nav-link">Events</a>
-                            @endif          
+                            @endif
                         </li>
                         <li class="nav-item dropdown {{ Request::is('dashboard/applicationdashboard/application') || Request::is('dashboard/application/*') || Request::is('atcresources') ? 'active' : '' }}">
                             <a class="nav-link dropdown-toggle" style="cursor:pointer" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">ATC</a>
@@ -129,7 +136,7 @@
                             <a class="dropdown-item" href="{{route('roster.public')}}">Roster</a>
                             @if(Auth::check() && Auth::user()->permissions >= 4)
                                 <a class="dropdown-item {{ Request::is('roster') ? 'active white-text' : '' }}" href="{{route('roster.index')}}">Manage Roster</a>
-                            @endif          
+                            @endif
                             @if(!Auth::check() || Auth::user()->permissions == 0)
                                 <a class="dropdown-item {{ Request::is('join') ? 'active white-text' : '' }}" href="{{url ('/join')}}">How to Become a Winnipeg Controller</a>
                                 @auth
@@ -143,6 +150,7 @@
                             <a class="nav-link dropdown-toggle" style="cursor:pointer" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pilots</a>
                             <div class="dropdown-menu" aria-labelledby="dropdown01">
                                 <a class="dropdown-item" href="{{route('airports')}}">Airports</a>
+                                <a class="dropdown-item" href="{{route('pdc')}}">Pre-Departure Clearance</a>
                                 <a class="dropdown-item" href="https://www.vatsim.net/pilots/resources" target="_blank">VATSIM Resources</a>
                                 <a class="dropdown-item" href="https://simaware.ca" target="_blank">Live Map</a>
                             </div>
@@ -184,9 +192,14 @@
                             </a>
 
                             <div class="dropdown-menu dropdown-menu-right dropdown-default py-0" aria-labelledby="navbarDropdownMenuLink-333">
-                                <a class="dropdown-item {{ Request::is('dashboard') || Request::is('dashboard/*') ? 'active white-text' : '' }}" href="{{route('dashboard.index')}}">
-                                    <i class="fa fa-tachometer-alt mr-2"></i>&nbsp;Dashboard
+                                <a class="dropdown-item {{ Request::is('dashboard') || Request::is('dashboard/*')}}" href="{{route('dashboard.index')}}">
+                                    <i class="fa fa-tachometer-alt mr-2"></i>Dashboard
                                 </a>
+                                @if(!Auth::check() || Auth::user()->permissions >= 2)
+                                <a class="dropdown-item {{ Request::is('training.index') || Request::is('training.index/*')}}" "dropdown-item" href="{{route('training.index')}}">
+                                    <i class="fa fa-graduation-cap mr-2" style="margin-left: -1px"></i>1Winnipeg
+                                </a>
+                                @endif
                                 <a class="dropdown-item red-text" href="{{route('auth.logout')}}">
                                     <i class="fa fa-sign-out-alt mr-2"></i>&nbsp;Logout
                                 </a>
@@ -261,7 +274,7 @@
     <footer class="page-footer text-light font-small py-4 bg-dark {{Request::is('/dashboard') ? 'mt-5' : ''}}">
         <div class="container">
             <p style="color:white">For Flight Simulation Use Only - Not to be used for real-world navigation. By using this site, you agree to hold harmless and indemnify the owners and authors of these web pages, those listed on these pages, and all pages that this site that may be pointed to (i.e. external links).</p>
-            <p style="color:white">Copyright © {{App\Models\Settings\CoreSettings::where('id', 1)->firstOrFail()->copyright_year}} Winnipeg FIR | All Rights Reserved.</p>
+            <p style="color:white">Copyright © {{ date('Y') }} Winnipeg FIR | All Rights Reserved.</p>
             <div class="flex-left mt-3">
             <a href="{{route('about')}}">Github</a>
                 &nbsp;

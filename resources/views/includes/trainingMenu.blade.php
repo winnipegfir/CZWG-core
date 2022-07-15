@@ -2,7 +2,7 @@
 <nav class="navbar navbar-light bg-light">
     <div class="container">
     <a href="/dashboard/training">
-        <img src=https://site-dev.winnipegfir.ca/images/uploads/1594001053.png style="width:150px;height:72px;">
+        <img src=https://winnipegfir.ca/storage/files/uploads/1613084163.png style="height:50px">
     </a>
         <ul class="nav nav-pills">
             <li class="nav-item">

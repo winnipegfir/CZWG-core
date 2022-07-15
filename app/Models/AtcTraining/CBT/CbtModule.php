@@ -2,16 +2,14 @@
 
 namespace App\Models\AtcTraining\CBT;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Models\Users\User;
-use App\Models\AtcTraining\Student;
-use App\Models\AtcTraining\CBT\CbtModuleLesson;
-use App\Models\AtcTraining\CBT\CbtModuleAssign;
+use Illuminate\Database\Eloquent\Model;
+
 class CbtModule extends Model
 {
     //
     protected $fillable = [
-        'name', 'description_html', 'created_by', 'updated_by', 'updated_at'
+        'name', 'description_html', 'user_id', 'updated_at', 'cbt_exam_id',
     ];
 
     public function user()
@@ -21,12 +19,16 @@ class CbtModule extends Model
 
     public function CbtModuleLesson()
     {
-      return $this->belongsTo(CbtModuleLesson::class);
+        return $this->belongsTo(CbtModuleLesson::class);
     }
 
     public function CbtModuleAssign()
     {
-      return $this->hasMany(CbtModuleAssign::class);
+        return $this->hasMany(CbtModuleAssign::class);
     }
 
+    public function CbtExam()
+    {
+        return $this->belongsTo(CbtExam::class);
+    }
 }

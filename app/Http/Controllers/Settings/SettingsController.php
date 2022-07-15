@@ -3,13 +3,11 @@
 namespace App\Http\Controllers\Settings;
 
 use App\Http\Controllers\Controller;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 use App\Models\Settings\AuditLogEntry;
 use App\Models\Settings\CoreSettings;
-use App\Models\Settings\RotationImage;
 use App\Models\Settings\HomepageImages;
-use App\Notifications\MaintenanceNotification;
-use Artisan;
-use Auth;
 use Illuminate\Http\Request;
 
 class SettingsController extends Controller
@@ -94,32 +92,34 @@ class SettingsController extends Controller
         return view('admin.settings.auditlog', compact('entries'));
     }
 
-    public function banner() {
+    public function banner()
+    {
         $banner = CoreSettings::find(1);
 
         return view('admin.settings.banner', compact('banner'));
     }
 
-    public function bannerEdit(Request $request) {
+    public function bannerEdit(Request $request)
+    {
         //Get the settings
         $coreSettings = CoreSettings::find(1);
 
         if ($request->get('bannerMessage') == null) {
-            $bannerMessage = "";
+            $bannerMessage = '';
         } else {
             $bannerMessage = $request->get('bannerMessage');
         }
 
         if ($request->get('bannerLink') == null) {
-            $bannerLink = "";
+            $bannerLink = '';
         } else {
             $bannerLink = $request->get('bannerLink');
         }
 
         if ($request->get('bannerMode') == null) {
-            $bannerMode = "";
-            $bannerMessage = "";
-            $bannerLink = "";
+            $bannerMode = '';
+            $bannerMessage = '';
+            $bannerLink = '';
         } else {
             $bannerMode = $request->get('bannerMode');
         }
@@ -129,20 +129,21 @@ class SettingsController extends Controller
         $coreSettings->bannerLink = $bannerLink;
         $coreSettings->save();
 
-
         return back()->withSuccess('The banner has been updated!');
     }
 
-    public function imagesIndex() {
+    public function imagesIndex()
+    {
         $images = HomepageImages::all();
 
         return view('admin.settings.homepageimages', compact('images'));
     }
 
-    public function uploadImage(Request $request) {
+    public function uploadImage(Request $request)
+    {
         $this->validate($request, [
             'URL' => 'required',
-            'nameCredit' => 'required'
+            'nameCredit' => 'required',
         ]);
 
         $image = new HomepageImages();
@@ -154,10 +155,11 @@ class SettingsController extends Controller
         return back()->withSuccess('Image uploaded successfully!');
     }
 
-    public function editImage(Request $request, $id) {
+    public function editImage(Request $request, $id)
+    {
         $this->validate($request, [
             'URL' => 'required',
-            'nameCredit' => 'required'
+            'nameCredit' => 'required',
         ]);
 
         $image = HomepageImages::where('id', $id)->first();
@@ -169,16 +171,45 @@ class SettingsController extends Controller
         return back()->withSuccess('Image edited successfully!');
     }
 
-    public function testImage($id) {
+    public function testImage($id)
+    {
         $image = HomepageImages::where('id', $id)->first();
 
         return view('admin.settings.testimage', compact('image'));
     }
 
-    public function deleteImage($id) {
+    public function deleteImage($id)
+    {
         $image = HomepageImages::where('id', $id)->first();
         $image->delete();
 
         return back()->withSuccess('Image deleted successfully!');
+    }
+
+    public function viewRoles()
+    {
+        $roles = Role::all();
+
+        return view('admin.settings.roles', compact('roles'));
+    }
+
+    public function addRole(Request $request)
+    {
+        $check = Role::where('name', $request->input('name'))->first();
+        if ($check != null) {
+            return back()->withError('This role already exists!');
+        }
+        $role = Role::create(['name' => $request->input('name'), 'protected' => $request->input('secure')]);
+
+        return back()->withSuccess('Added the role!');
+    }
+
+    public function deleteRole($id)
+    {
+        $role = Role::findByName($id);
+        $message = $role->name;
+        $role->delete();
+
+        return back()->withSuccess('Deleted the '.$message.' Role!');
     }
 }

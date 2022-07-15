@@ -3,11 +3,11 @@
 namespace App\Models\Tickets;
 
 use App\Models\Users\StaffMember;
+use App\Models\Users\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\HtmlString;
 use Parsedown;
-use App\Models\Users\User;
 
 class Ticket extends Model
 {

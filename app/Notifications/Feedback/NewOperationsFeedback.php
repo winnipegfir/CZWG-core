@@ -3,7 +3,6 @@
 namespace App\Notifications\Feedback;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
@@ -45,8 +44,8 @@ class NewOperationsFeedback extends Notification
                     ->line('A user has submitted feedback on Winnipeg operations.')
                     ->line('User: '.$this->feedback->user->fullName('FLC'))
                     ->line('Email: '.$this->feedback->user->email)
-                    ->line('Subject: ' .$this->feedback->subject)
-                    ->line('Content: ' .$this->feedback->content);
+                    ->line('Subject: '.$this->feedback->subject)
+                    ->line('Content: '.$this->feedback->content);
     }
 
     /**

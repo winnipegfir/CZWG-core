@@ -5,7 +5,6 @@ namespace App\Mail;
 use App\Models\AtcTraining\RosterMember;
 use App\Models\Users\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 

@@ -2,17 +2,10 @@
 
 namespace App\Models\Events;
 
-use App\Models\Users\User;
 use App\Models\AtcTraining\RosterMember;
-use App\Models\Events\Event;
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
-use Parsedown;
-use Illuminate\Support\HtmlString;
+use App\Models\Users\User;
 use Auth;
-use Exception;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Database\Eloquent\Model;
 
 class EventConfirm extends Model
 {
@@ -30,17 +23,17 @@ class EventConfirm extends Model
         if (EventConfirm::where('event_id', $this->id)->where('user_cid', Auth::id())->first()) {
             return true;
         }
+
         return false;
     }
 
     public function rostermember()
     {
-      return $this->belongsTo(RosterMember::class);
+        return $this->belongsTo(RosterMember::class);
     }
 
     public function event()
     {
-      return $this->belongsTo(Event::class);
+        return $this->belongsTo(Event::class);
     }
-
 }

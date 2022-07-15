@@ -16,7 +16,7 @@ class CreateCbtExamAnswersTable extends Migration
         Schema::create('cbt_exam_answers', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('student_id')->unsigned();
-            $table->foreign('student_id')->references('id')->on('users');
+            $table->foreign('student_id')->references('id')->on('students');
             $table->integer('cbt_exam_question_id')->unsigned();
             $table->foreign('cbt_exam_question_id')->references('id')->on('cbt_exam_questions');
             $table->integer('cbt_exam_id')->unsigned();
