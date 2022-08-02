@@ -11,14 +11,14 @@
     <br><br>
     Event Information Below:
     <br><br>
-    {{$event->description}}
+    {!!$event->description!!}
     @if($event->departure_icao)
         <br><br>
-        Departure{{$event->departure_icao}}
+        Departure: {{$event->departure_icao}}
     @endif
     @if($event->arrival_icao)
         <br><br>
-        Arrival:{{$event->arrival_icao}}
+        Arrival: {{$event->arrival_icao}}
     @endif
     <br>
     <br>
