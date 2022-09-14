@@ -16,7 +16,7 @@
                     <div class="blue waves-effect homepage-news-img"></div>
                     @endif
                 </a>
-                <div class="card-body pb-2">
+                <div class="card-body pb-3">
                     <a class="card-title font-weight-bold white-text" href="{{route('news.articlepublic', $n->slug)}}"><h4>{{$n->title}}</h4></a>
                     <small><i class="far fa-clock"></i>&nbsp;&nbsp;<span @if($n->edited) title="Last edited {{$n->edited_pretty()}}" @endif>Published {{$n->published_pretty()}}</span><br/><i class="far fa-user-circle"></i>&nbsp;&nbsp;{{$n->author_pretty()}}</small>
                 </div>
