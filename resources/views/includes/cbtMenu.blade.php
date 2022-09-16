@@ -3,7 +3,7 @@
 <nav class="navbar navbar-light bg-light">
     <div class="container">
     <a href="/dashboard/training/cbt">
-    <img src=https://winnipegfir.ca/storage/files/uploads/1613084163.png style="height:50px">
+    <h1 class="font-weight-bold blue-text"Online Training"></h1>
         </a>
         <ul class="nav nav-pills">
             <li class="nav-item">
