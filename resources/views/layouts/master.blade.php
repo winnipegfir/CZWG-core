@@ -197,7 +197,7 @@
                                 </a>
                                 @if(!Auth::check() || Auth::user()->permissions >= 2)
                                 <a class="dropdown-item {{ Request::is('training.index') || Request::is('training.index/*')}}" "dropdown-item" href="{{route('training.index')}}">
-                                    <i class="fa fa-graduation-cap mr-2" style="margin-left: -1px"></i>1Winnipeg
+                                    <i class="fa fa-graduation-cap mr-2" style="margin-left: -1px"></i>Online Training
                                 </a>
                                 @endif
                                 <a class="dropdown-item red-text" href="{{route('auth.logout')}}">

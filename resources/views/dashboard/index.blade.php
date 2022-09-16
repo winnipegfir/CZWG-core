@@ -570,7 +570,7 @@
                     <div class="card" data-step="7"
                          data-intro="This is where you'll see any training-related notifications - exams, modules and more will appear here!">
                         <div class="card-body">
-                            <h3 class="font-weight-bold blue-text pb-2">1Winnipeg Training</h3>
+                            <h3 class="font-weight-bold blue-text pb-2">Online Training</h3>
                             <h5 class="font-weight-bold blue-text">Notifications</h5>
                             @if (count($cbtnotifications) < 1)
                                 <text style="color: gray">There are no notifications to show!</text>
@@ -710,7 +710,7 @@
                                         <a href="{{route('training.index')}}" style="text-decoration:none;"><span
                                                 class="blue-text"><i class="fas fa-chevron-right"></i></span> &nbsp;
                                             <span
-                                                class="black-text">1Winnipeg Training System</span></a>
+                                                class="black-text">Online Training System</span></a>
                                     </li>
                                     <li class="mb-2">
                                         <a href="{{route('roster.index')}}" style="text-decoration:none;"><span
