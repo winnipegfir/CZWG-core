@@ -2,7 +2,7 @@
 <nav class="navbar navbar-light bg-light">
     <div class="container">
     <a href="/dashboard/training">
-        <h1 class="font-weight-bold blue-text">Online Training"</h1>
+        <h1 class="font-weight-bold blue-text">Online Training</h1>
     </a>
         <ul class="nav nav-pills">
             <li class="nav-item">
