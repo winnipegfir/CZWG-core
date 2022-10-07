@@ -58,9 +58,11 @@
                 @if (Auth::user()->permissions >= 1 | $certification == "training")
                     <div class="card">
                         <div class="card-body">
-                            <h3 class="font-weight-bold blue-text pb-2">ATC Resources</h3>
                             @if(Auth::user()->permissions >= 4)
-                                <a href="{{route('atcresources.index')}}">Manage Resources</a><br></br>
+                            <h3 class="font-weight-bold blue-text pb-0">ATC Resources</h3>
+                            <a href="{{route('atcresources.index')}}"><i class="fa fa-edit"></i> Manage Resources</a><br></br>
+                            @else
+                            <h3 class="font-weight-bold blue-text pb-2">ATC Resources</h3>
                             @endif
                             <div class="list-group" style="border-radius: 0.5em !important">
                                 @foreach($atcResources as $resource)
@@ -108,7 +110,7 @@
                                         </p>
                                         @if(!Auth::user()->memberOfCZWGGuild())
                                             <a href="#" data-toggle="modal" data-target="#joinDiscordServerModal"
-                                               class="mt-1">Join The CZWG Discord</a><br/>
+                                               class="btn-sm btn-primary mt-1">Join The CZWG Discord</a>
                                         @endif
                                         <a href="#" class="btn-sm btn-danger m-0" data-toggle="modal" data-target="#discordModal" class="mt-1">Unlink</a>   
                                         <hr>
@@ -125,7 +127,7 @@
                                     </div>
 
                                     <center><a role="button" data-toggle="modal" data-target="#changeAvatar"
-                                               class="btn btn-sm btn-primary" href="#">Change</a></center>
+                                               class="btn btn-sm btn-primary mb-0" href="#">Change</a></center>
                                     @if (!Auth::user()->isAvatarDefault())
                                         <center><a role="button" class="btn btn-sm btn-danger"
                                                    href="{{route('users.resetavatar')}}">Reset</a></center>
@@ -570,16 +572,7 @@
                     <div class="card" data-step="7"
                          data-intro="This is where you'll see any training-related notifications - exams, modules and more will appear here!">
                         <div class="card-body">
-                            <h3 class="font-weight-bold blue-text pb-2">Online Training</h3>
-                            <h5 class="font-weight-bold blue-text">Notifications</h5>
-                            @if (count($cbtnotifications) < 1)
-                                <text style="color: gray">There are no notifications to show!</text>
-                            @else
-                                @foreach ($cbtnotifications as $cn)
-                                    <li>{{$cn->message}} <a href="{{route('cbt.notification.dismiss', $cn->id)}}"><i style="color: red" class="fas fa-times"></i></a></li>
-                                @endforeach
-                            @endif
-                            <hr>
+                            <h3 class="font-weight-bold blue-text pb-2">Training</h3>
                             @if($yourinstructor != null && $yourinstructor->instructor != null)
                                 <p class="mb-0"><b>Your Instructor:</b> {{$yourinstructor->instructor->user->fullName('FL')}}
                                     <br>
@@ -587,17 +580,9 @@
                                 </p>
                             @else
                                 @if ($certification == "training")
-                                    You do not have an Instructor yet - check back soon or contact our Chief Instructor.
+                                    You do not have an Instructor yet! Check back soon, or contact our Chief Instructor.
                                 @endif
                             @endif
-                            <ul class="list-unstyled mt-2 mb-0">
-                                <li class="mb-2">
-                                    <a href="{{route('cbt.index')}}" style="text-decoration:none;">
-                                        <span class="blue-text"><i class="fas fa-chevron-right"></i></span> 
-                                        &nbsp; 
-                                        <span class="black-text">Training Centre</span></a>
-                                </li>
-                            </ul>
                         </div>
                     </div>
                 <br/>
@@ -606,11 +591,10 @@
                          class="card">
                         <div class="card-body">
                             <h3 class="font-weight-bold blue-text pb-2">Support</h3>
-                            <h5 class="font-weight-bold blue-text">Tickets</h5>
                             @if (count($openTickets) < 1)
-                                You have no open support tickets
-                                <br>
+                            <p>You have no open support tickets!</p>
                             @else
+                                <h5 class="font-weight-bold blue-text">Tickets</h5>
                                 <h5 class="black-text" style="font-weight: bold">
                                     @if (count($openTickets) == 1)
                                         1 open ticket
@@ -871,7 +855,7 @@
                     <p>If you would like to fix your rating on our website, you may <a href="/logout">logout</a> and log back in, or wait until our check happens at 00:00 Eastern Time.</p>
                 </div>
                 <div class="modal-footer">
-                    <button class="btn btn-sm btn-light" data-dismiss="modal">Dismiss</button>
+                    <button class="btn btn-sm btn-primary" data-dismiss="modal">Dismiss</button>
                 </div>
             </div>
         </div>

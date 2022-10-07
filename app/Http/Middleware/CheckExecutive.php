@@ -22,6 +22,6 @@ class CheckExecutive
             }
         }
 
-        abort(403, 'Only Administrators have access to this resource! IP Has been logged.');
+        abort(403, 'Only administrators have access to this resource! IP has been logged.');
     }
 }

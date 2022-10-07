@@ -11,7 +11,7 @@
 
     <div class="container" style="margin-top: 20px;">
       <h1 class="font-weight-bold blue-text">Training Centre</h1>
-        <p>Welcome to Winnipeg FIR's CBT brand new training system - 1Winnipeg.</p>
+        <p>Welcome to Winnipeg FIR's CBT brand new training system.</p>
       <hr>
         <h5>Please select from one of the options below:<h5>
         <a class="btn btn-primary" href="{{route('cbt.module')}}" style="margin-left: 0%">View Available Training</a>
