@@ -19,7 +19,7 @@
         <!--Rich Preview Meta-->
         <title>@yield('title', 'Winnipeg FIR')</title>
         <meta name="description" content="@yield('description', '')">
-        <meta name="theme-color" content="#013162">
+        <meta name="theme-color" content="#122b44">
         <meta name="og:title" content="@yield('title', 'Winnipeg FIR')">
         <meta name="og:description" content="@yield('description', '')">
         <meta name="og:image" content="@yield('image','https://winnipegfir.ca/storage/files/uploads/1612961752.png')">
@@ -98,7 +98,7 @@
     <header>
         <nav id="czwgHeader" class="navbar navbar-expand-lg navbar-dark p-0" style="min-height:59px; background-color: #fff">
             <div class="container">
-                <a class="navbar-brand" href="{{route('index')}}"><img style="height: 40px; width:auto;" src="https://winnipegfir.ca/storage/files/uploads/1638293555.png" alt=""></a>
+                <a class="navbar-brand" href="{{route('index')}}"><img style="height: 37px; width:auto;" src="https://winnipegfir.ca/storage/files/uploads/1667526972.png" alt=""></a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -111,7 +111,7 @@
                         <li class="nav-item {{ Request::is('news/*') || Request::is('news') ? 'active' : '' }}">
                             @if(Auth::check() && Auth::user()->permissions >= 4)
                             <li class="nav-item dropdown {{ Request::is('news') || Request::is('news/*') || Request::is('news') ? 'active' : '' }}">
-                            <a class="nav-link dropdown-toggle" style="cursor:pointer; color: #013162" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">News</a>
+                            <a class="nav-link dropdown-toggle" style="cursor:pointer; color: #122b44" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">News</a>
                             <div class="dropdown-menu" aria-labelledby="dropdown01">
                             <a class="dropdown-item" href="{{route('news')}}">News</a>
                                 <a class="dropdown-item {{ Request::is('news') ? 'active white-text' : '' }}" href="{{route('news.index')}}">Manage News</a>
@@ -122,7 +122,7 @@
                         <li class="nav-item {{ Request::is('events/*') || Request::is('events') ? 'active' : '' }}">
                             @if(Auth::check() && Auth::user()->permissions >= 4)
                             <li class="nav-item dropdown {{ Request::is('events') || Request::is('events/*') || Request::is('events') ? 'active' : '' }}">
-                            <a class="nav-link dropdown-toggle" style="cursor:pointer; color: #013162" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Events</a>
+                            <a class="nav-link dropdown-toggle" style="cursor:pointer; color: #122b44" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Events</a>
                             <div class="dropdown-menu" aria-labelledby="dropdown01">
                             <a class="dropdown-item" href="{{route('events.index')}}">Events</a>
                                 <a class="dropdown-item {{ Request::is('events') ? 'active white-text' : '' }}" href="{{route('events.admin.index')}}">Manage Events</a>
@@ -131,7 +131,7 @@
                             @endif
                         </li>
                         <li class="nav-item dropdown {{ Request::is('dashboard/applicationdashboard/application') || Request::is('dashboard/application/*') || Request::is('atcresources') ? 'active' : '' }}">
-                            <a class="nav-link dropdown-toggle" style="cursor:pointer; color: #013162" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">ATC</a>
+                            <a class="nav-link dropdown-toggle" style="cursor:pointer; color: #122b44" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">ATC</a>
                             <div class="dropdown-menu" aria-labelledby="dropdown01">
                             <a class="dropdown-item" href="{{route('roster.public')}}">Roster</a>
                             @if(Auth::check() && Auth::user()->permissions >= 4)
@@ -147,7 +147,7 @@
                             </div>
                         </li>
                         <li class="nav-item dropdown {{ Request::is('airports') ? 'active' : '' }}">
-                            <a class="nav-link dropdown-toggle" style="cursor:pointer; color: #013162" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pilots</a>
+                            <a class="nav-link dropdown-toggle" style="cursor:pointer; color: #122b44" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pilots</a>
                             <div class="dropdown-menu" aria-labelledby="dropdown01">
                                 <a class="dropdown-item" href="{{route('airports')}}">Airports</a>
                                 <a class="dropdown-item" href="https://www.vatsim.net/pilots/resources" target="_blank">VATSIM Resources</a>
@@ -155,7 +155,7 @@
                             </div>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" style="cursor:pointer; color: #013162" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Publications</a>
+                            <a class="nav-link dropdown-toggle" style="cursor:pointer; color: #122b44" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Publications</a>
                             <div class="dropdown-menu" aria-labelledby="dropdown01">
                                 <a class="dropdown-item {{ Request::is('policies') ? 'active white-text' : '' }}" href="{{route('policies')}}">Policies</a>
                                 <a class="dropdown-item {{ Request::is('meetingminutes') ? 'active white-text' : '' }}" href="{{route('meetingminutes')}}">Meeting Minutes</a>
@@ -163,10 +163,10 @@
                             </div>
                         </li>
                         <li class="nav-item  {{ Request::is('staff') ? 'active' : '' }}">
-                            <a style="color: #013162" class="nav-link" href="{{url ('/staff')}}" aria-expanded="false">Staff</a>
+                            <a style="color: #122b44" class="nav-link" href="{{url ('/staff')}}" aria-expanded="false">Staff</a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" style="cursor:pointer; color: #013162" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Feedback</a>
+                            <a class="nav-link dropdown-toggle" style="cursor:pointer; color: #122b44" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Feedback</a>
                             <div class="dropdown-menu" aria-labelledby="dropdown01">
                                 <a class="dropdown-item {{ Request::is('feedback') ? 'active white-text' : '' }}" href="{{route('feedback.create')}}">Submit Feedback</a>
                                 <a class="dropdown-item {{ Request::is('yourfeedback') ? 'active white-text' : '' }}" href="{{route('yourfeedback')}}">Your Feedback</a>
@@ -180,13 +180,13 @@
                                 <i class="fas fa-sign-in-alt"></i>&nbsp;Login
                             </a> --}}
                             <a href="{{route('auth.connect.login')}}" class="nav-link waves-effect waves-light">
-                                <i class="fas fa-sign-in-alt" style="color: #013162"></i>&nbsp;Login
+                                <i class="fas fa-sign-in-alt" style="color: #122b44"></i>&nbsp;Login
                             </a>
                         </li>
                         @endunless
                         @auth
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-333" data-toggle="dropdown" style="color: #013162" aria-haspopup="true" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-333" data-toggle="dropdown" style="color: #122b44" aria-haspopup="true" aria-expanded="false">
                                 <img src="{{Auth::user()->avatar()}}" style="height: 27px; width: 27px; margin-right: 7px; margin-bottom: 3px; border-radius: 50%;">&nbsp;<span class="font-weight-bold">{{Auth::user()->fullName("F")}}</span>
                             </a>
 
@@ -202,22 +202,22 @@
                         @endauth
                         <li class="nav-item d-flex align-items-center">
                             <a href="https://www.facebook.com/CZWGFIR" class="nav-link waves-effect waves-light" target="_BLANK" >
-                                <i style="font-size: 1.7em; color: #013162" class="fab fa-facebook"></i>
+                                <i style="font-size: 1.7em; color: #122b44" class="fab fa-facebook"></i>
                             </a>
                         </li>
                         <li class="nav-item d-flex align-items-center">
                             <a href="https://twitter.com/CZWGFIR" class="nav-link waves-effect waves-light" target="_BLANK" >
-                                <i style="font-size: 1.7em; color: #013162" class="fab fa-twitter"></i>
+                                <i style="font-size: 1.7em; color: #122b44" class="fab fa-twitter"></i>
                             </a>
                         </li>
                         <li class="nav-item d-flex align-items-center">
                             <a href="https://www.instagram.com/CZWGFIR" class="nav-link waves-effect waves-light" target="_BLANK" >
-                                <i style="font-size: 1.7em; color: #013162" class="fab fa-instagram"></i>
+                                <i style="font-size: 1.7em; color: #122b44" class="fab fa-instagram"></i>
                             </a>
                         </li>
                         <li class="nav-item d-flex align-items-center">
                             <a class="nav-link waves-effect waves-light" data-toggle="modal" data-target="#discordTopModal" target="_BLANK" >
-                                <i style="height: 22px; font-size: 1.7em; width: 28px; padding-left: 5px; padding-top: 2px; color: #013162" class="fab fa-discord"></i>
+                                <i style="height: 22px; font-size: 1.7em; width: 28px; padding-left: 5px; padding-top: 2px; color: #122b44" class="fab fa-discord"></i>
                             </a>
                         </li>
                     </ul>

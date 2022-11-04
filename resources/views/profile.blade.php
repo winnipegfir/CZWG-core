@@ -30,7 +30,7 @@
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="card" style="background-color: #013162; color: #ffffff; float: right;">
+                <div class="card" style="background-color: #122b44; color: #ffffff; float: right;">
                     <div class="flex-container card-body" style="padding-top: 10%;">
                         <h3 style="text-align: center;">&nbsp;Monthly Hours: <b>{{$monthlyHours}}&nbsp;</b></h3>
                     </div>
@@ -41,7 +41,7 @@
         <div class="row">
             @if($rosterMember)
                 <div class="col-md-6">
-                    <h4 class="font-weight-bold" style="color: #013162; text-align: center;">Certifications</h4>
+                    <h4 class="font-weight-bold" style="color: #122b44; text-align: center;">Certifications</h4>
                     <table id="certificationTable" class="table table-hover">
                         <thead>
                         <tr>
@@ -156,7 +156,7 @@
                 </div>
             @endif
             <div class="col-md-6">
-                <h4 class="font-weight-bold" style="color: #013162; text-align: center;">Recent Connections</h4>
+                <h4 class="font-weight-bold" style="color: #122b44; text-align: center;">Recent Connections</h4>
                 <table id="connectionsTable" class="table table-hover">
                     <thead>
                     <tr>
@@ -183,7 +183,7 @@
                         @endforeach
                         <tr>
                             <td colspan="2" style="text-align: center">
-                                <a href="/roster/{{$id}}/connections" style="color: #013162;">View all their connections this month here.</a>
+                                <a href="/roster/{{$id}}/connections" style="color: #122b44;">View all their connections this month here.</a>
                             </td>
                         </tr>
                     @endif

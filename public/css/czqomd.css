@@ -1,6 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Arimo');
+@import url('public/fonts');
 * {
-    font-family: 'Arimo', sans-serif;
+    font-family: 'Gilroy', sans-serif;
 }
 
 body, html {
@@ -12,7 +12,7 @@ body, html {
     background-color: rgb(0, 0, 0);
 }
 #czwgHeader {
-    background-color: #013162;
+    background-color: #122b44;
 }
 
 #czqoHeaderImg {
@@ -33,7 +33,7 @@ body, html {
 }
 
 .dropdown-menu .dropdown-item.active, .dropdown-item:active {
-    background: #013162;
+    background: #122b44;
 }
 
 .staff_img_container {
@@ -122,7 +122,7 @@ div.d-flex.flex-row > i {
 }
 
 .nav-item .active {
-    color:#013162!important;
+    color:#122b44!important;
 }
 
 .dropdown-item.active {
@@ -130,7 +130,7 @@ div.d-flex.flex-row > i {
 }
 
 .dropdown-item:active {
-    color: #013162!important;
+    color: #122b44!important;
     background: none!important;
 }
 
@@ -142,11 +142,11 @@ div.d-flex.flex-row > i {
 
 .btn .bg-czqo-blue-light:not([disabled]):not(.disabled):active {
     background-color: #cfeaff !important;
-    color: #013162 !important;
+    color: #122b44 !important;
 }
 
 .list-group-item.active {
-    background-color: #013162;
+    background-color: #122b44;
 }
 
 .btn, .btn:hover, .btn:active {
@@ -165,7 +165,7 @@ div.d-flex.flex-row > i {
 
 .modal-content .modal-header h5.modal-title {
     font-weight: 700 !important;
-    color: #013162!important;
+    color: #122b44!important;
     font-size: 1.2rem;
 }
 
@@ -197,15 +197,15 @@ div.d-flex.flex-row > i {
 }
 
 .blue {
-    background-color: #013162 !important;
+    background-color: #122b44 !important;
 }
 
 .blue-text {
-    color: #013162 !important;
+    color: #122b44 !important;
 }
 
 .btn-primary {
-    background-color: #013162 !important;
+    background-color: #122b44 !important;
 }
 
 .btn-local {
@@ -224,12 +224,12 @@ div.d-flex.flex-row > i {
 }
 
 .bg-ins {
-    background-color: #013162;
+    background-color: #122b44;
 }
 
 .dashboard-card-actions {
     font-size: 1.3em !important;
-    color: #013162;
+    color: #122b44;
     font-weight: 600;
 }
 

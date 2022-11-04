@@ -63,7 +63,7 @@
                             </h3>
                         @elseif ($certification == "home")
                             <h3>
-                            <span class="badge rounded shadow-none" style="background-color:#013162">
+                            <span class="badge rounded shadow-none" style="background-color:#122b44">
                                 <i class="fa fa-user-check"></i>&nbsp;
                                 CZWG Controller
                             </span>

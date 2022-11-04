@@ -13,14 +13,14 @@
                         <div>
                             <br>
                             <h1 style="font-size: 7em; color: #fff">
-                                <span class="winnipeg-blue corner" style="padding: 1%">We Are Winnipeg.</span>
+                                <span class="winnipeg-blue corner" style="padding: 1%">We Are <text class="font-weight-bold">Winnipeg.</text></span>
                             </h1>
                             <h6 style="font-size: 1.25em; color: #fff;">
-                                <span class="winnipeg-blue corner" style="padding: 0.5%">Screenshot by {{$background->credit}}</span>
+                                <span class="winnipeg-blue corner" style="padding: 0.5%"><i class="fas fa-chevron-right" style="font-size: .75em"></i> Screenshot by {{$background->credit}}</span>
                             </h6>
                             <br>
                             <h4 style="font-size: 2em; color: #fff;">
-                                <span class="white corner" style="padding: 0.5%"><a href="#mid" id="discoverMore" class="blue-text">Come explore the heart of Canada.&nbsp;&nbsp;<i class="fas fa-arrow-down"></i></a></span>
+                                <span class="white corner" style="padding: 0.5%"><a href="#mid" id="discoverMore" class="blue-text">Come explore the heart of Canada.&nbsp;<i class="fas fa-arrow-down"></i></a></span>
                             </h4>
                         </div>
                     </div>
@@ -31,7 +31,7 @@
             <div class="row py-3" style="padding-bottom: 0px !important;">
                 <div class="col-md-6" style="padding-top: 2%">
                     <div class="card card-background" style="min-height: 100%">
-                        <div class="card-header" style="color: #013162;">
+                        <div class="card-header" style="color: #122b44;">
                             <h2 class="font-weight-bold" style="text-align: center; padding-top:1%"><i class="fas fa-newspaper"></i>&nbsp;&nbsp;Recent News</h2>
                         </div>
                         <div class="card-body" style="padding-bottom:2%">
@@ -40,14 +40,14 @@
                             @endforeach
                         </div>
                         <div class="card-footer pb-1">
-                            <a href="{{url('/news')}}"><h6 style="text-align: center; color: #013162"><i class="fas fa-eye"></i>&nbsp;View all news</h6></a>
+                            <a href="{{url('/news')}}"><h6 style="text-align: center; color: #122b44"><i class="fas fa-eye"></i>&nbsp;View all news</h6></a>
                         </div>
                     </div>
                 </div>
                 <br>
                 <div class="col-md-6" style="padding-top: 2%">
                     <div class="card card-background" style="min-height: 100%">
-                        <div class="card-header" style="color: #013162;">
+                        <div class="card-header" style="color: #122b44;">
                             <h2 class="font-weight-bold" style="text-align: center; padding-top:1%"><i class="fas fa-calendar"></i>&nbsp;&nbsp;Upcoming Events</h2>
                         </div>
                         <div class="card-body" style="padding-bottom:2%">
@@ -59,7 +59,7 @@
                             @endforeach
                         </div>
                         <div class="card-footer pb-1">
-                            <a href="{{url('/events')}}"><h6 style="text-align: center; color: #013162"><i class="fas fa-eye"></i>&nbsp;View all events</h6></a>
+                            <a href="{{url('/events')}}"><h6 style="text-align: center; color: #122b44"><i class="fas fa-eye"></i>&nbsp;View all events</h6></a>
                         </div>
                     </div>
                 </div>
@@ -67,7 +67,7 @@
             <div class="row py-3" style="padding-bottom: 0px !important; min-height: 100%">
                 <div class="col-md-6" style="padding-top: 2%">
                     <div class="card card-background" style="min-height: 100%">
-                        <div class="card-header" style="color: #013162;">
+                        <div class="card-header" style="color: #122b44;">
                             <h2 class="font-weight-bold" style="text-align: center; padding-top:1%"><i class="fas fa-award"></i>&nbsp;&nbsp;Top Controllers this Month</h2>
                         </div>
                         <div class="card-body" style="padding-bottom:2%">
@@ -95,7 +95,7 @@
                 </div>
                 <div class="col-md-6" style="padding-top: 2%">
                     <div class="card card-background" style="min-height: 100%">
-                        <div class="card-header" style="color: #013162;">
+                        <div class="card-header" style="color: #122b44;">
                             <h2 class="font-weight-bold" style="text-align: center; padding-top:1%"><i class="fas fa-user"></i>&nbsp;&nbsp;Online Controllers</h2>
                         </div>
                         <div class="card-body" style="padding-bottom:2%">
@@ -123,7 +123,7 @@
                             @endforeach
                         </div>
                         <div class="card-footer pb-1">
-                            <a href="https://map.vatsim.net" target="_blank"><h6 style="text-align: center; color: #013162"><i class="fas fa-map"></i>&nbsp;Live VATSIM Map</h6></a>
+                            <a href="https://map.vatsim.net" target="_blank"><h6 style="text-align: center; color: #122b44"><i class="fas fa-map"></i>&nbsp;Live VATSIM Map</h6></a>
                         </div>
                     </div>
                 </div>
@@ -131,7 +131,7 @@
             <div class="row py-3">
                 <div class="col-md-12" style="padding-top: 2%">
                     <div class="card card-background" style="width: 100%">
-                        <div class="card-header" style="color: #013162;">
+                        <div class="card-header" style="color: #122b44;">
                             <h2 class="font-weight-bold" style="text-align: center; padding-top:1%"><i class="fas fa-sun"></i>&nbsp;&nbsp;Weather</h2>
                         </div>
                         <div class="card-body" style="padding-bottom:0%">
@@ -154,10 +154,10 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-12" style="padding-top: 2%">
+                <div class="col-md-12 mb-3" style="padding-top: 2%">
                     <div class="card">
                         <div class="card-body" style="padding: 0%">
-                            <a href="https://www.designbyhumans.com/shop/WinnipegFIR/#" a target=”_blank”><img src="https://winnipegfir.ca/storage/files/uploads/1654329915.png" style="width:100%"></a>
+                            <a href="/branding" a target=”_blank”><img src="https://winnipegfir.ca/storage/files/uploads/1667584332.png" style="width:100%"></a>
                         </div>
                     </div>
                 </div>

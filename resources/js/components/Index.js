@@ -49,7 +49,7 @@ export default class Index extends Component {
     render() {
         return (
             <div className="card card-background" style={{width: '100%'}}>
-                <div className="card-header" style={{color: '#013162'}}>
+                <div className="card-header" style={{color: '#122b44'}}>
                     <h2 className="font-weight-bold" style={{textAlign: 'center'}}><i className="fas fa-sun"></i>&nbsp;&nbsp;Weather</h2>
                 </div>
                 <div className="card-body">

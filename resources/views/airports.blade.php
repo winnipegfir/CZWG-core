@@ -44,7 +44,7 @@
                 @if(\App\Classes\WeatherHelper::getAtisLetter('CYWG') == true)
                     <div class="col">
                         <div class="card"
-                             style="background-color:#013162; color:#ffffff; width: 25%; float:left; min-height: 100%;">
+                             style="background-color:#122b44; color:#ffffff; width: 25%; float:left; min-height: 100%;">
                             <div class="card-body">
                                 <div class="CYWG" style="text-align: center;">
                                     <div class="ATIS">
@@ -106,7 +106,7 @@
                 @if(\App\Classes\WeatherHelper::getAtisLetter('CYPG') == true)
                 <div class="col">
                         <div class="card"
-                             style="background-color:#013162; color:#ffffff; width: 25%; float:left; min-height: 100%;">
+                             style="background-color:#122b44; color:#ffffff; width: 25%; float:left; min-height: 100%;">
                             <div class="card-body">
                                 <div class="CYPG" style="text-align: center;">
                                     <div class="ATIS">
@@ -152,7 +152,7 @@
                 @if(\App\Classes\WeatherHelper::getAtisLetter('CYXE') == true)
                 <div class="col">
                         <div class="card"
-                             style="background-color:#013162; color:#ffffff; width: 25%; float:left; min-height: 100%;">
+                             style="background-color:#122b44; color:#ffffff; width: 25%; float:left; min-height: 100%;">
                             <div class="card-body">
                                 <div class="CYXE" style="text-align: center;">
                                     <div class="ATIS">
@@ -210,7 +210,7 @@
                 @if(\App\Classes\WeatherHelper::getAtisLetter('CYQT') == true)
                 <div class="col">
                         <div class="card"
-                             style="background-color:#013162; color:#ffffff; width: 25%; float:left; min-height: 100%;">
+                             style="background-color:#122b44; color:#ffffff; width: 25%; float:left; min-height: 100%;">
                             <div class="card-body">
                                 <div class="CYQT" style="text-align: center;">
                                     <div class="ATIS">
@@ -277,7 +277,7 @@
                 @if(\App\Classes\WeatherHelper::getAtisLetter('CYQR') == true)
                 <div class="col">
                         <div class="card"
-                             style="background-color:#013162; color:#ffffff; width: 25%; float:left; min-height: 100%;">
+                             style="background-color:#122b44; color:#ffffff; width: 25%; float:left; min-height: 100%;">
                             <div class="card-body">
                                 <div class="CYQR" style="text-align: center;">
                                     <div class="ATIS">
@@ -334,7 +334,7 @@
                 @if(\App\Classes\WeatherHelper::getAtisLetter('CYMJ') == true)
                 <div class="col">
                         <div class="card"
-                             style="background-color:#013162; color:#ffffff; width: 25%; float:left; min-height: 100%;">
+                             style="background-color:#122b44; color:#ffffff; width: 25%; float:left; min-height: 100%;">
                             <div class="card-body">
                                 <div class="CYMJ" style="text-align: center;">
                                     <div class="ATIS">

@@ -35,6 +35,7 @@ Route::view('/bill', 'bill')->name('bill');
 Route::view('/wpg', 'wpg')->name('wpg');
 Route::view('/yearend', 'yearend')->name('yearend');
 Route::view('/pdc', 'pdc')->name('pdc');
+Route::view('/excds', 'excds')->name('excds');
 
 Route::prefix('instructors')->group(function () {
     Route::view('/', 'instructors')->name('instructors');

@@ -45,7 +45,7 @@
             </thead>
             <tbody>
             @foreach ($roster as $controller)
-                    <th style="text-align: center" scope="row"><a href="{{url('/roster/'.$controller->cid)}}" style="color: #013162;"><b>{{$controller->cid}}</b></a></th>
+                    <th style="text-align: center" scope="row"><a href="{{url('/roster/'.$controller->cid)}}" style="color: #122b44;"><b>{{$controller->cid}}</b></a></th>
                     <td align="center" >
                         {{$controller->user->fullName('FL')}}
                     </td>
@@ -154,7 +154,7 @@
             <tbody>
             @foreach ($visitroster as $visitcontroller)
                 <tr>
-                    <th style="text-align: center" scope="row"><a href="{{url('/roster/'.$visitcontroller->cid)}}" style="color: #013162;"><b>{{$visitcontroller->cid}}</b></a></th>
+                    <th style="text-align: center" scope="row"><a href="{{url('/roster/'.$visitcontroller->cid)}}" style="color: #122b44;"><b>{{$visitcontroller->cid}}</b></a></th>
                     <td align="center" >
                         {{$visitcontroller->user->fullName('FL')}}
                     </td>

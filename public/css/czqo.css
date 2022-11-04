@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css?family=Cabin');
 .czqoHomeCard {
-  background: #013162;
+  background: #122b44;
   padding: 10px;
   border: transparent;
   border-radius: 3.5px;
@@ -13,7 +13,7 @@
     color: white;
     margin-bottom: 5px; }
   .czqoHomeCard .czqoOnlineControllers {
-    background: #013162 !important;
+    background: #122b44 !important;
     color: white; }
 
 .czqoCardTitle {
@@ -43,7 +43,7 @@ ul {
   .rosterTable th {
     font-weight: bold; }
   .rosterTable thead {
-    background: #013162;
+    background: #122b44;
     color: white; }
   .rosterTable .rosterActive {
     background: lightgreen; }
@@ -70,7 +70,7 @@ ul {
       .rosterVisitTable th {
         font-weight: bold; }
       .rosterVisitTable thead {
-        background: #013162;
+        background: #122b44;
         color: white; }
       .rosterVisitTable .rosterActive {
         background: lightgreen; }

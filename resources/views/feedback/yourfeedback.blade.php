@@ -9,7 +9,7 @@
     <hr>
     @foreach($feedback as $f)
         <div class="card">
-            <div class="card-body" style="background-color:#013162; color:#ffffff;">
+            <div class="card-body" style="background-color:#122b44; color:#ffffff;">
                 <p>"{{$f->content}}"</p>
                 <h5><strong>Controller: </strong>{{User::where('id', $f->controller_cid)->first()->fullName('FL')}}</h5>
             </div>

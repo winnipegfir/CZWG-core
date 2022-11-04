@@ -5,7 +5,7 @@
 <style>
 .accordion {
   background-color: white;
-  color: #013162;
+  color: #122b44;
   cursor: pointer;
   padding: 2%;
   width: 100%;
@@ -22,7 +22,7 @@
 }
 
 .active {
-  background-color: #013162;
+  background-color: #122b44;
   color: #fff;
 }
 
@@ -47,7 +47,7 @@
 }
 </style>
 
-<div style="background-color: #013162">
+<div style="background-color: #122b44">
     <div class="container py-4">
         <h1 data-step="1"
             data-intro="Welcome to your Dashboard! This is your central hub for all things Winnipeg. Here you can interact with our FIR, and manage your account."
@@ -266,7 +266,7 @@
                                                 <span class="blue-text">
                                                     <i class="fas fa-chevron-right"></i>
                                                 </span>
-                                        <span style="color: #013162">
+                                        <span style="color: #122b44">
                                                     You have <text
                                                 class="text-success"><b>{{count($unconfirmedapp)}}</b></text> active event application
                                                 </span>
@@ -277,7 +277,7 @@
                                              <span class="blue-text">
                                                  <i class="fas fa-chevron-right"></i>
                                              </span>
-                                        <span style="color: #013162">You have <text
+                                        <span style="color: #122b44">You have <text
                                                 class="text-success"><b>{{count($unconfirmedapp)}}</b></text> active event applications</span>
                                     </a>
                                 @endif
@@ -374,7 +374,7 @@
                                         </h3>
                                     @elseif ($certification == "home")
                                         <h3>
-                            <span class="badge rounded shadow-none" style="background-color:#013162">
+                            <span class="badge rounded shadow-none" style="background-color:#122b44">
                                 <i class="fa fa-user-check"></i>&nbsp;
                                 CZWG Controller
                             </span>
@@ -555,7 +555,6 @@
                                           You have the required <b>25 hours</b> to begin the training for your next rating!
                                       </span>
                                     @endif
-                                    {{--  Hi James! Make sure we are using isset to make sure the data is present, otherwise we will run into issues with invalid properties in Laravel!  --}}
                                     @if (isset(Auth::user()->rosterProfile->rating))
                                         @if (Auth::user()->rosterProfile->rating == 'S1' || Auth::user()->rosterProfile->rating == 'S2' || Auth::user()->rosterProfile->rating == 'S3')
                                             @if ($potentialRosterMember->rating_hours < 25.0)

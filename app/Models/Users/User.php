@@ -264,7 +264,7 @@ class User extends Authenticatable
                 $image = $avatar
                     ->name($this->fullName('FL'))
                     ->size(125)
-                    ->background('#013162')
+                    ->background('#122b44')
                     ->color('#2196f3')
                     ->generate();
                 Storage::put('public/files/avatars/'.$this->id.'/initials.png', (string) $image->encode('png'));

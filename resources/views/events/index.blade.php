@@ -17,7 +17,7 @@
                 <div class="card" style="@if($e->image_url) background-color: rgb(0, 0, 0, 0.6) @endif">
                     <div class="p-3">
                         <a href="{{route('events.view', $e->slug)}}">
-                            <h3 style="@if($e->image_url) color: white @else color: #013162 @endif">{{$e->name}}</h3>
+                            <h3 style="@if($e->image_url) color: white @else color: #122b44 @endif">{{$e->name}}</h3>
                         </a>
                         <h5>{{$e->start_timestamp_pretty()}} to {{$e->end_timestamp_pretty()}}</h5>
                         @if ($e->departure_icao && $e->arrival_icao)
@@ -42,7 +42,7 @@
                     <div class="d-flex flex-row justify-content-between">
                         <div class="p-3">
                             <a href="{{route('events.view', $e->slug)}}">
-                                <h3 style="color: #013162">{{$e->name}}</h3>
+                                <h3 style="color: #122b44">{{$e->name}}</h3>
                             </a>
                             <h5>{{$e->start_timestamp_pretty()}} to {{$e->end_timestamp_pretty()}}</h5>                       
                             @if ($e->departure_icao && $e->arrival_icao)

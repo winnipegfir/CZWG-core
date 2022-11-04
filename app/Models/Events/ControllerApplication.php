@@ -78,7 +78,7 @@ class ControllerApplication extends Model
                     'timestamp' => date('Y-m-d H:i:s'),
 
                     // The integer color to be used on the left side of the embed
-                    'color' => hexdec('013162'),
+                    'color' => hexdec('122b44'),
 
                     // Footer object
                     'footer' => [

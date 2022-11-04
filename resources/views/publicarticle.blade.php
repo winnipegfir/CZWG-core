@@ -7,7 +7,7 @@
     <div class="card card-image blue rounded-0">
 
     </div>
-        <div class="text-white text-left py-1 px-4" style="background-color:#013162">
+        <div class="text-white text-left py-1 px-4" style="background-color:#122b44">
             <div class="container">
                 <div class="py-5">
                     <h1 align="center" class="h1" style="font-size: 3em;">{{$article->title}}</h1>
