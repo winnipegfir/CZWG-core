@@ -32,16 +32,22 @@ class Kernel extends ConsoleKernel
         // * * * * * schedulers
         $schedule->command(ActivityLog::class)->everyMinute()->evenInMaintenanceMode();
         $schedule->command(EventReminders::class)->everyMinute();
-        $schedule->call(function () { file_get_contents(config('cronurls.minute')); })->everyMinute();
+        $schedule->call(function () {
+            file_get_contents(config('cronurls.minute'));
+        })->everyMinute();
 
         // 0 0 * * * schedulers
         $schedule->command(RatingUpdate::class)->daily();
-        $schedule->call(function () { file_get_contents(config('cronurls.daily')); })->daily();
+        $schedule->call(function () {
+            file_get_contents(config('cronurls.daily'));
+        })->daily();
 
         // 0 0 1 * * schedulers
         $schedule->command(CheckVisitHours::class)->monthly();
         $schedule->command(CurrencyCheck::class)->monthly();
-        $schedule->call(function () { file_get_contents(config('cronurls.monthly')); })->monthly();
+        $schedule->call(function () {
+            file_get_contents(config('cronurls.monthly'));
+        })->monthly();
     }
 
     /**
