@@ -39,8 +39,9 @@ class ApplicationsController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param  Request  $request
      * @return \Illuminate\Http\RedirectResponse
+     *
      * @throws \Illuminate\Validation\ValidationException
      */
     public function submitApplication(Request $request)

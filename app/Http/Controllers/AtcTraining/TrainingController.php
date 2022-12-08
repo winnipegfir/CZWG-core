@@ -25,7 +25,6 @@ use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Spatie\Permission\Models\Role;
 
 class TrainingController extends Controller
 {
@@ -38,7 +37,6 @@ class TrainingController extends Controller
         if ($instructor) {
             $yourStudents = Student::where('instructor_id', $instructor->id)->get();
         }
-        
 
         return view('dashboard.training.indexinstructor', compact('yourStudents', 'soloreq'));
     }
