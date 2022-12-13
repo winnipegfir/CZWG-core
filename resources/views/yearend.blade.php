@@ -34,7 +34,7 @@
             <p>For the first time since starting this tradition a couple years ago, there will be staff members seeing this for the first time! So, a very warm hello to Mark and Cody. You both bring tremendous leadership to Phil and his already well-solidified team in the division, and I’m hopeful you can help continue driving our division in the right direction.</p>
             
             <p>VATCAN’s relationship with Winnipeg has always been a bit strange, given that I stepped from VATCAN1 right to WPG1 - but I remain extremely grateful that our relationship has stayed as strong as ever before, and look forward to that continuing into the new year.</p>
-            
+        <hr>    
         <h5 class="blue-text font-weight-bold">On a Personal Note;</h5>
         <br>
             <p>In my 2021 letter, I spoke of getting my job back following a world-altering pandemic, visiting Winnipeg for the first time, and hosting Real Ops for the first time. That seems like a hundred years ago after this past year.</p>
