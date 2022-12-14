@@ -3,9 +3,10 @@
 @section('content')
 
 <div class="container py-4">
-    <a href="{{route('index')}}" class="blue-text" style="font-size: 1.2em"> <i class="fas fa-arrow-left"></i> Winnipeg FIR</a>
-    <h1 class="font-weight-bold blue-text">A Letter from Nate</h1>
-    <br>
+    <a href="{{route('index')}}" class="blue-text" style="font-size: 1.2em"> <i class="fas fa-arrow-left"></i> Back to the Winnipeg FIR</a>
+    <br></br>  
+    <div class="card card-body">
+    <h1 class="font-weight-bold blue-text">Nate's 2021 Letter to the FIR </h1>
         <p>Friends,</p>
             <p>As we look back on 2021 – a year that, like 2020, was truly unique in many ways – I once again have the chance to say a few words to 
             the controllers, staff, and pilots here in Winnipeg.</p>
@@ -84,11 +85,17 @@
             this past year, thank you for continuing to help Winnipeg grow. As I approach my 10 year anniversary on the VATSIM network, it is the community 
             that keeps me going. It always has been.</p>
     <hr>
-    <div>
+        <div>
         <p>I hope you all enjoy a safe, cheerful holiday season, and a very happy new year as we look to 2022.</p>
         <h5 class="font-weight-bold mb-1">Nate Power</h5>
         <p class="mb-1">Winnipeg FIR Chief</p>
         <img src="https://i.imgur.com/7xuoHQ9.gif" style="width:10%">
+        </div>
+    </div>
+    <br>
+    <div class="row pl-2">
+        <a class="btn btn-primary" href="/yearend2020"><i class="fas fa-arrow-left"></i> Read Nate's 2020 Letter</a>
+        <a class="btn btn-primary" href="/yearend">Read Nate's 2022 Letter <i class="fas fa-arrow-right"></i></a>
     </div>
 </div>
 @endsection

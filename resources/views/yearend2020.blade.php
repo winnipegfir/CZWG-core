@@ -3,9 +3,10 @@
 @section('content')
 
 <div class="container py-4">
-    <a href="{{route('index')}}" class="blue-text" style="font-size: 1.2em"> <i class="fas fa-arrow-left"></i> Winnipeg FIR</a>
-    <h1 class="font-weight-bold blue-text">A Letter from Nate</h1>
-    <br>
+    <a href="{{route('index')}}" class="blue-text" style="font-size: 1.2em"> <i class="fas fa-arrow-left"></i> Back to the Winnipeg FIR</a>
+    <br></br>
+    <div class="card card-body">
+    <h1 class="font-weight-bold blue-text">Nate's 2020 Letter to the FIR</h1>
         <p>Friends,</p>
             <p>As 2020 comes to a close, it's a good time to take a minute to look back at the past year for our FIR - and what a year it was.</p>
         <hr>
@@ -72,6 +73,11 @@
         <h5 class="font-weight-bold mb-1">Nate Power</h5>
         <p class="mb-1">Winnipeg FIR Chief</p>
         <img src="https://i.imgur.com/7xuoHQ9.gif" style="width:10%">
+    </div>
+    </div>
+    <br>
+    <div class="row pl-2">
+        <a class="btn btn-primary" href="/yearend2021">Read Nate's 2021 Letter <i class="fas fa-arrow-right"></i></a>
     </div>
 </div>
 @endsection

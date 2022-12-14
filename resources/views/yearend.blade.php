@@ -3,10 +3,11 @@
 @section('content')
 
 <div class="container py-4">
-    <a href="{{route('index')}}" class="blue-text" style="font-size: 1.2em"> <i class="fas fa-arrow-left"></i> Winnipeg FIR</a>
-    <h1 class="font-weight-bold blue-text">A Letter from Nate</h1>
-    <br>
-            <p>It’s a bit wild to think that we’re soon approaching the end of 2022. This year seemed to fly by - but as with the past couple years, I’d still like to share some thoughts as we wrap up another year.</p>
+    <a href="{{route('index')}}" class="blue-text" style="font-size: 1.2em"> <i class="fas fa-arrow-left"></i> Back to the Winnipeg FIR</a>
+    <br></br>
+    <div class="card card-body">
+    <h1 class="font-weight-bold blue-text">Nate's Letter to the FIR</h1>
+        <p>It’s a bit wild to think that we’re soon approaching the end of 2022. This year seemed to fly by - but as with the past couple years, I’d still like to share some thoughts as we wrap up another year.</p>
         <hr>
         <h5 class="blue-text font-weight-bold">To My Staff;</h5>
         <br>
@@ -14,8 +15,7 @@
             
             <p>I continue to be lucky enough to have Kolby Dunning as my Deputy Chief - who also recently stepped in to help fill some webmaster duties as James White decided to take a step back to work on other projects. We also continue to be helped by Ryan Miltenberger, savior of sector files and noted ERAM fan - oh, and our Facility Engineer, too. As well, Tavis Harrison continues to hold down the fort when it comes to the FIR’s events - he’s got a lot on his plate in 2023, from Winnipeg’s first ever Friday Night Ops, as well as another possible Cross The Pond run.</p>
             
-            <p>As I hinted to, we’ve also welcomed some changes over the span of the last year - a new Chief Instructor - Liam Shaw, someone who brings a plethora of real-world experience alongside his work on the VATSIM network. He’s been working hard behind the scenes on projects that we’re excited to share more details about soon, as well as helping our training team continue to develop, in my humble opinion, the best controllers on the network. We also welcomed a brand new staff position for the first time since I took over the reins - the Assistant Chief Instructor, Ethan Mason. Ethan, like Liam, brings plenty of experience to the table and is already hard at work getting our students the help they need to reach their potential.
-</p>
+            <p>As I hinted to, we’ve also welcomed some changes over the span of the last year - a new Chief Instructor - Liam Shaw, someone who brings a plethora of real-world experience alongside his work on the VATSIM network. He’s been working hard behind the scenes on projects that we’re excited to share more details about soon, as well as helping our training team continue to develop, in my humble opinion, the best controllers on the network. We also welcomed a brand new staff position for the first time since I took over the reins - the Assistant Chief Instructor, Ethan Mason. Ethan, like Liam, brings plenty of experience to the table and is already hard at work getting our students the help they need to reach their potential.</p>
            
             <p>I feel that our FIR’s staff remains extremely strong - and I’m so grateful to have the members we have who stepped up to help our corner of the network continue to grow.</p>
               
@@ -44,11 +44,16 @@
             <p>Is it hard to tell the past year has been filled with change? Here’s to hoping 2023 is a little less hectic - if I try and move again, someone hold me back, please. There is, however, one thing that hasn’t changed - this network. I’ve been here for over ten years now, somehow, and my love for this shared passion of ours still is as steady as ever. As we move into the new year together, I can’t wait to see what’s in store for Winnipeg, and for VATSIM.</p>
             
     <hr>
-    <div>
-        <p>Wishing you a safe, fun and cheerful holiday season, and a very happy new year as we look to 2023 together.</p>
-        <h5 class="font-weight-bold mb-1">Nate Power</h5>
-        <p class="mb-1">Winnipeg FIR Chief</p>
-        <img src="https://i.imgur.com/7xuoHQ9.gif" style="width:10%">
+        <div>
+            <p>Wishing you a safe, fun and cheerful holiday season, and a very happy new year as we look to 2023 together.</p>
+            <h5 class="font-weight-bold mb-1">Nate Power</h5>
+            <p class="mb-1">Winnipeg FIR Chief</p>
+            <img src="https://i.imgur.com/7xuoHQ9.gif" style="width:10%">
+        </div>
+    </div>
+    <br>
+    <div class="row pl-2">
+        <a class="btn btn-primary" href="/yearend2021"><i class="fas fa-arrow-left"></i> Read Nate's 2021 Letter</a>
     </div>
 </div>
 @endsection

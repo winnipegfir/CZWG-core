@@ -33,6 +33,8 @@ Route::get('/news', 'News\NewsController@viewAllPublic')->name('news');
 Route::get('/training', 'AtcTraining\TrainingController@trainingTime')->name('training');
 Route::view('/bill', 'bill')->name('bill');
 Route::view('/wpg', 'wpg')->name('wpg');
+Route::view('/yearend2021', 'yearend2021')->name('yearend2021');
+Route::view('/yearend2020', 'yearend2020')->name('yearend2020');
 Route::view('/yearend', 'yearend')->name('yearend');
 Route::view('/pdc', 'pdc')->name('pdc');
 Route::view('/excds', 'excds')->name('excds');
