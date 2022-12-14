@@ -1,5 +1,6 @@
 @extends('layouts.master')
 @section('title', 'A Letter from the Chief')
+@section('description', 'Take a read look at the Winnipeg FIR Chief's yearly letter to the FIR.')
 @section('content')
 
 <div class="container py-4">
