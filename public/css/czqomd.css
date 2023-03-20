@@ -1,4 +1,14 @@
-@import url('public/fonts');
+@font-face {
+    font-family: Gilroy;
+    src: url("/fonts/Gilroy-Light.otf") format("opentype");
+}
+
+@font-face {
+    font-family: Gilroy;
+    font-weight: bold;
+    src: url("/fonts/Gilroy-ExtraBold.otf") format("opentype");
+}
+
 * {
     font-family: 'Gilroy', sans-serif;
 }
