@@ -18,7 +18,7 @@
 		</ul>
 		
 	<div class="card">
-		<div class="card-body">	
+		<div class="card-body pt-1 pb-0 ">	
 			<div class="tab-content" id="myTabContent">
 				<div class="tab-pane fade show active" id="new" role="tabpanel" aria-labelledby="new">
 					<br>
