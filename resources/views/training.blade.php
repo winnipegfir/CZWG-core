@@ -30,7 +30,7 @@
         <hr>
         <div>
             <h3 class="font-weight-bold blue-text">Waiting for Visiting Training?</h3>
-                <p>Visiting controllers are provided training based on instructor availability, similar to standard home contrllers and students. Howeever, Winnipeg's home controllers always hold priority, so we ask for and appreciate your patience during what can sometimes be a lengthy waiting period.</p>
+                <p>Visiting controllers are provided training based on instructor availability, similar to standard home controllers and students. However, Winnipeg's home controllers always hold priority, so we ask for (and appreciate) your patience during what can sometimes be a lengthy waiting period.</p>
         </div>
         <hr>
         <div>
