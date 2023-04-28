@@ -29,6 +29,11 @@
         </div>
         <hr>
         <div>
+            <h3 class="font-weight-bold blue-text">Waiting for Visiting Training?</h3>
+                <p>Visiting controllers are provided training based on instructor availability, similar to standard home contrllers and students. Howeever, Winnipeg's home controllers always hold priority, so we ask for and appreciate your patience during what can sometimes be a lengthy waiting period.</p>
+        </div>
+        <hr>
+        <div>
             <h3 class="font-weight-bold blue-text">Interested In Joining Winnipeg?</h3>
                 <p>Come join the community of students, controllers and instructors in Winnipeg today by clicking <a href="{{url('/join')}}">HERE.</a></p>
         </div>
