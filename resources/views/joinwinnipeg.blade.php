@@ -6,7 +6,7 @@
 
     <div class="container" style="margin-top: 20px;">
         <h1 class="blue-text font-weight-bold">Welcome to Winnipeg.</h1>
-        <p>We're home to VATSIM's most modern training program, some of the best instructors around and a great controlling environment. Interested in joining? We're happy to help out.</p>
+        <p>We're home to a constantly-evolving, modern training program, some of the best instructors around and an all-around great controlling environment. Interested in joining? We're happy to help out.</p>
 		
 		<ul class="nav nav-tabs" id="myTab" role="tablist">
 			<li class="nav-item">
@@ -18,7 +18,7 @@
 		</ul>
 		
 	<div class="card">
-		<div class="card-body pt-1 pb-0 ">	
+		<div class="card-body pt-0 pb-2 ">	
 			<div class="tab-content" id="myTabContent">
 				<div class="tab-pane fade show active" id="new" role="tabpanel" aria-labelledby="new">
 					<br>
@@ -50,13 +50,13 @@
 
 				<div class="tab-pane fade" id="visit" role="tabpanel" aria-labelledby="visit"><br>
 					<div class="card">	
-						<div class="card-body bg-warning">
-							<text class="font-weight-bold">NOTE:</text> Winnipeg is currently busy with a home controller wait list - this may result in lengthy delays for visiting controllers awaiting training. Controllers will be contacted with updates when available. Thank you for your patience.</text>
+						<div class="card-body bg-primary">
+							<text>Winnipeg is currently welcome visiting applications for Canadian-based, active controllers holding a Student 2 (S2) rating or higher, as well as all international active controllers who hold a rating of Controller (C1) or above! See below for information on how to apply.</text>
 						</div>
 					</div>
 					<br>
 					<p>Winnipeg is always looking for controllers to visit our FIR. Whether it's for a change of scenery, to learn a new way of controlling, or just for fun, come visit Winnipeg!</p>
-					<p>Members who are interested in visiting are now asked to visit the VATCAN.ca website to apply for visiting status.</p>
+					<p>Members who are interested in visiting are now asked to visit the VATCAN.ca website to apply for visiting status. Click below to be re-directed to the website to continue the application process.</p>
 					<a class="ml-0 btn btn-success" href="https://vatcan.ca/my/visit">Apply Now!</a>
 					</div>
 				</div>
