@@ -50,7 +50,7 @@
 
 				<div class="tab-pane fade" id="visit" role="tabpanel" aria-labelledby="visit"><br>
 					<div class="card">	
-						<div class="card-body bg-primary">
+						<div class="card-body btn-primary">
 							<text>Winnipeg is currently welcome visiting applications for Canadian-based, active controllers holding a Student 2 (S2) rating or higher, as well as all international active controllers who hold a rating of Controller (C1) or above! See below for information on how to apply.</text>
 						</div>
 					</div>
