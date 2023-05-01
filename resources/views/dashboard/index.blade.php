@@ -418,12 +418,11 @@
                                     @endif
                                 </div>
                                 <span class="text-danger">
-                        @if ($certification == "not_certified")
-                                        <h5>You are not a certified controller, please contact an instructor to begin training.</h5>
+                                    @if ($certification == "not_certified")
+                                        <h5 class="mb-0">You are not a certified controller! Please contact an instructor to begin training!</h5>
                                     @endif
                                     @if ($active == 0)
-                                        <h5>You are currently inactive, please contact the FIR Chief</h5>
-                                        <h5>You should not control on the network while inactive.</h5>
+                                        <p class="mb-0">You are currently listed as inactive! please contact staff to be added to the active roster.</p>
                                     @endif
                                   </span>
                             </div>
@@ -456,7 +455,7 @@
                           </span></h3>
                                         @endif
                                     @endif
-                                    <p>You require <b>2 hours</b> of activity every month!</p>
+                                    <p class="mb-0">You require <b>2 hours</b> of activity every month!</p>
                                 @endif
 
                             <!--End Winnipeg Training Hours-->
@@ -473,7 +472,7 @@
                           </span></h3>
                                         @endif
                                     @endif
-                                    <p>You require <b>2 hours</b> of activity every month!</p>
+                                    <p class="mb-0">You require <b>2 hours</b> of activity every month!</p>
                                 @endif
                             <!--End Winnipeg Cntrlr Hours-->
 
@@ -490,7 +489,7 @@
                           </span></h3>
                                         @endif
                                     @endif
-                                    <p>You require <b>1 hour</b> of activity every month!</p>
+                                    <p class="mb-0">You require <b>1 hour</b> of activity every month!</p>
                                 @endif
 
                             <!--End Winnipeg Cntrlr Hours-->
@@ -508,7 +507,7 @@
                                             </span></h3>
                                         @endif
                                     @endif
-                                    <p>You require <b>3 hours</b> of activity every month!</p>
+                                    <p class="mb-0">You require <b>3 hours</b> of activity every month!</p>
                                 @endif
                             <!--End Winnipeg Instrctr Hours-->
                                 @if (Auth::user()->rosterProfile->rating == 'S1' || Auth::user()->rosterProfile->rating == 'S2' || Auth::user()->rosterProfile->rating == 'S3')

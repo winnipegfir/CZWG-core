@@ -38,6 +38,7 @@ Route::view('/yearend2020', 'yearend2020')->name('yearend2020');
 Route::view('/yearend', 'yearend')->name('yearend');
 Route::view('/pdc', 'pdc')->name('pdc');
 Route::view('/excds', 'excds')->name('excds');
+Route::view('/vote', 'vote')->name('vote');
 
 Route::prefix('instructors')->group(function () {
     Route::view('/', 'instructors')->name('instructors');
@@ -177,11 +178,6 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/emailpref', 'Users\DataController@emailPref')->name('dashboard.emailpref');
         Route::get('/emailpref/subscribe', 'Users\DataController@subscribeEmails');
         Route::get('/emailpref/unsubscribe', 'Users\DataController@unsubscribeEmails');
-
-        //Applications
-        Route::get('/application/list', 'AtcTraining\ApplicationsController@viewApplications')->name('application.list');
-        Route::get('/application/{application_id}', 'AtcTraining\ApplicationsController@viewApplication')->name('application.view');
-        Route::get('/application/{application_id}/withdraw', 'AtcTraining\ApplicationsController@withdrawApplication');
 
         //Applications View/Accept/Deny
         Route::group(['middleware' => ['role:Administrator|Chief-Instructor']], function () {
