@@ -3,11 +3,11 @@
 @section('description', 'Check out the Winnipeg FIR events!')
 @section('content')
     <div class="container py-4">
-        <div class="d-flex flex-row justify-content-between align-items-center mb-1">
+        <div class="d-flex flex-row justify-content-between align-items-center mb-0">
             <h1 class="blue-text font-weight-bold">Upcoming Events</h1>
             <a href="#" class="btn btn-link float-right mx-0 px-0" data-toggle="modal" data-target="#requestModal">Need ATC Coverage? Click Here!</a>
         </div>
-        <hr>
+        <hr class="mt-0">
         <ul class="list-unstyled">
             @if (count($events) == 0)
             <li>No Events... Stay tuned!</li>

@@ -137,9 +137,6 @@
                   eligible to participate in voting. Visiting controllers need to hold an active controller status for six months, as well as holding a minimum S2 rating (the same as 
                   home controllers.) Further details to this are available in section 2.0 of the proposal document.
                 </p>
-                <p>Just as important, visiting controller votes only count for half as much as a home controllers's vote - ensuring that the FIR's home controllers always have the main 
-                  power as to who is selected to lead their FIR.
-                </p>
                 </div>
             </div>
         </li>
@@ -157,6 +154,7 @@
 </div>
 
 @endif
+
 <!--Script for accordions-->
 <script>
 

@@ -255,7 +255,7 @@
                                     @endforeach
                                 @endif
                                 @if (count($unconfirmedapp) < 1)
-                                    <p>
+                                    <p class="mb-0">
                                         You have
                                         <text class="text-primary"><b>no</b></text>
                                         active event applications
@@ -589,9 +589,10 @@
                          data-intro="If you have any enquires or issues for the staff, feel free to make a ticket via the ticketing system."
                          class="card">
                         <div class="card-body">
-                            <h3 class="font-weight-bold blue-text pb-2">Support</h3>
+                            <h3 class="font-weight-bold blue-text pb-0">Support</h3>
                             @if (count($openTickets) < 1)
                             <p>You have no open support tickets!</p>
+                            <hr class="mb-0">
                             @else
                                 <h5 class="font-weight-bold blue-text">Tickets</h5>
                                 <h5 class="black-text" style="font-weight: bold">
@@ -639,7 +640,7 @@
                                         @endforeach
                                     </div>
                                 @endif
-                                <br>
+                                <hr>
                             @endif
                             <ul class="list-unstyled mt-2 mb-0">
                                 <li class="mb-2">
@@ -670,7 +671,7 @@
                                 </a>
                             </li>
                                 @if(Auth::user()->permissions >= 4)
-                                    <li class="mb-2">
+                                    <li class="mb-0">
                                         <a href="{{route('tickets.staff')}}" style="text-decoration:none;"><span
                                                 class="blue-text"><i class="fas fa-chevron-right"></i></span> &nbsp;
                                             <span
@@ -728,7 +729,7 @@
                                             <span class="black-text">Manage Users</span>
                                         </a>
                                     </li>
-                                    <li class="mb-2">
+                                    <li class="mb-0">
                                         <a href="{{(route('dashboard.upload'))}}" style="text-decoration:none;">
                                     <span class="blue-text">
                                         <i class="fas fa-chevron-right"></i>
@@ -753,7 +754,7 @@
                                             <span
                                                 class="black-text">Settings</span></a>
                                     </li>
-                                    <li class="mb-2">
+                                    <li class="mb-0">
                                         <a href="{{route('network.index')}}" style="text-decoration:none;">
                                 <span class="blue-text">
                                     <i class="fas fa-chevron-right"></i>
