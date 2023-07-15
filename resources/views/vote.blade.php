@@ -4,6 +4,7 @@
 @section('content')
 
 @if(Auth::user()->permissions >= 4)
+
 <style>
 .accordion {
   background-color: #122b44;
@@ -55,7 +56,7 @@
       ability to truly choose among themselves who leads them. Here’s how we plan to change that.</p>
   <br>
     <div class="card card-body">
-        <h3 class="font-weight-bold blue-text">The Rules, Simplified</h3>
+        <h3 class="font-weight-bold blue-text">The Proposal, Simplified</h3>
             <p class="pb-2">The whole process starts with a simple yes/no confidence vote, held yearly. If the Chief does not have the confidence of the FIR, the election process is triggered.</p>
 
         <h5 class="font-weight-bold blue-text">The Electioral Process</h5>

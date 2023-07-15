@@ -37,7 +37,6 @@ Route::view('/yearend2021', 'yearend2021')->name('yearend2021');
 Route::view('/yearend2020', 'yearend2020')->name('yearend2020');
 Route::view('/yearend', 'yearend')->name('yearend');
 Route::view('/pdc', 'pdc')->name('pdc');
-Route::view('/excds', 'excds')->name('excds');
 Route::view('/vote', 'vote')->name('vote');
 
 Route::prefix('instructors')->group(function () {
