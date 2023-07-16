@@ -578,9 +578,9 @@
                                 </p>
                             @else
                                 @if ($certification == "training")
-                                <p class="mb-0">You do not have an Instructor assigned! Check back soon, or contact our Chief Instructor.</p>
+                                <p class="mb-0">You do not have an Instructor assigned! If you have any questions, please contact staff.</p>
                                 @endif
-                                <p class="mb-0">You do not have an Instructor assigned! Check back soon, or contact our Chief Instructor.</p>
+                                <p class="mb-0">You do not have an Instructor assigned! If you have any questions, please contact staff.</p>
                             @endif
                         </div>
                     </div>
