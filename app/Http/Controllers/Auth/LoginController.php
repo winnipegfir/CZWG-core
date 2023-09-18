@@ -47,7 +47,7 @@ class LoginController extends Controller
             session()->put('secret', $secret);
             session()->save();
             header('Location: '.$url);
-            exit();
+            exit;
         });
     }
 

@@ -64,7 +64,7 @@ class ActivityLog extends Command
             $identFound = false;
 
             foreach ($positions as $position) {
-                if (($controller->callsign == $position->identifier)) {
+                if ($controller->callsign == $position->identifier) {
                     $identFound = true; // set flag
                     array_push($onlineControllers, $controller); // Add if the callsign is the same as the position identifier
                 }

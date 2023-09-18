@@ -35,7 +35,7 @@ class DiscordWelcome extends Notification
     }
 
     /**
-     * @param $notifiable
+     * @param  $notifiable
      * @return DiscordMessage
      */
     public function toDiscord($notifiable)

@@ -21,6 +21,6 @@ class CheckIfPrivacy
             }
         }
 
-        return ('/')->with('error', 'Please accept the CZWG privacy policy.');
+        return '/'->with('error', 'Please accept the CZWG privacy policy.');
     }
 }

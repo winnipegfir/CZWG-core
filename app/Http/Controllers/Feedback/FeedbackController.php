@@ -150,7 +150,7 @@ class FeedbackController extends Controller
                     $validator->errors()->add('position', 'You need to specify the Controller\'s position.');
                 });
             }
-        } else /*Otherwise*/ {
+        } else { /*Otherwise*/
             //No subject
             if ($request->get('subject') == null) {
                 $validator->after(function ($validator) {

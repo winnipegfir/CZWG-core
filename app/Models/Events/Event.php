@@ -78,7 +78,6 @@ class Event extends Model
         }
 
         $output = Cache::remember('events.data.'.$this->departure_icao, 172800, function () {
-
             //Let's make sure our airport names look pretty
             $define = [
                 'CYWG' => ['name' => 'Winnipeg International Airport', 'icao' => 'CYWG'],
@@ -125,7 +124,6 @@ class Event extends Model
         }
 
         $output = Cache::remember('events.data.'.$this->arrival_icao, 172800, function () {
-
             //Let's make sure our airport names look pretty
             $define = [
                 'CYWG' => ['name' => 'Winnipeg International Airport', 'icao' => 'CYWG'],

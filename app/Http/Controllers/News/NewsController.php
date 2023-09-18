@@ -103,16 +103,16 @@ class NewsController extends Controller
         switch ($request->get('emailOption')) {
             case 'no':
                 $article->email_level = 0;
-            break;
+                break;
             case 'controllers':
                 $article->email_level = 1;
-            break;
+                break;
             case 'all':
                 $article->email_level = 2;
-            break;
+                break;
             case 'allimportant':
                 $article->email_level = 3;
-            break;
+                break;
         }
 
         //Create and publish if needed
@@ -149,8 +149,7 @@ class NewsController extends Controller
 
     public function editArticle(Request $request, $id)
     {
-
-    //Define validator messages
+        //Define validator messages
         $messages = [
             'title.required' => 'A title is required.',
             'title.max' => 'A title may not be more than 100 characters long.',

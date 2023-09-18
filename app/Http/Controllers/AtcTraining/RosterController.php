@@ -62,7 +62,6 @@ class RosterController extends Controller
 
     public function addVisitController(Request $request)
     {
-
         //here we are getting the data from the table
         $users = User::findOrFail($request->input('newcontroller'));
         $rosterMember = RosterMember::where('cid', $users->id)->first();
