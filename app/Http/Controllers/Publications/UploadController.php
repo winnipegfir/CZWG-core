@@ -20,7 +20,7 @@ class UploadController extends Controller
     public function uploadPost()
     {
         request()->validate([
-            'file' => 'required|max:2048',
+            'file' => 'required',
         ]);
 
         $fileName = time().'.'.request()->file->getClientOriginalExtension();
