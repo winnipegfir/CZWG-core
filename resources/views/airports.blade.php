@@ -80,10 +80,10 @@
                 <li>Tower St. Andrews (CYAV) is open daily from 1300Z - 0400Z.</li>
             <hr>
                 <h2 class="font-weight-bold blue-text">Scenery</h2>
-                    <h4>MapleSim - for XPlane 11+</h4>
-                    <h5>Freeware</h5>
-                    <p>MapleSim's Winnipeg 2020 is brand new, and looks stunning (especially in snowy weather - something we are used to in winnipeg.) Developed by one of Winnipeg's own controllers, this is some of the best free XP11 scenery on the market.</p>
-                    <a style="margin-left: -0.1%" target=”_blank” href="https://forum.thresholdx.net/files/file/875-maplesim-winnipeg-international-airport-cywg/"class="btn btn-primary">View More</a>
+                    <h4>FSimStudios - For MSFS</h4>
+                    <h5>Payware</h5>
+                    <p>If you asked what sim developer creates the most consistently high-quality product, most people would say FSimStudios! The team based in Vancouver announced their release of Winnipeg, just in time for CTP East 2023..</p>
+                    <a style="margin-left: -0.1%" target=”_blank” class="btn btn-primary">Coming Soon</a>
                 <br></br>
                     <h4>SimAddons - For FSX, P3Dv4, v5 & MSFS</h4>
                     <h5>Payware</h5>
