@@ -86,7 +86,7 @@
                         <text class="font-weight-bold"> FSimStudios - For MSFS</text>
                     </h4>
                     <p class="mb-0">If you asked what sim developer creates the most consistently high-quality product, most people would say FSimStudios! The team based in Vancouver announced their release of Winnipeg, just in time for CTP East 2023..</p>
-                    <a style="margin-left: -0.1%" target=”_blank” class="btn btn-sm btn-primary">Coming Soon</a>
+                    <a style="margin-left: -0.1%" target=”_blank” href="https://store.fsimstudios.com/products/fsimstudios-winnipeg-international-airport-cywg-for-msfs "class="btn btn-sm btn-primary">Now Available</a>
                 <hr>
                     <h4>
                         <span class="badge rounded p-1 shadow-none orange">Payware</span><text class="font-weight-bold"> SimAddons - For FSX, P3Dv4, v5 & MSFS</text>
