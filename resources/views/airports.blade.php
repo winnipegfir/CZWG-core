@@ -76,6 +76,16 @@
                 @endif
             </div>
             <br>
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="font-weight-bold blue-text">Active Configuration</h2>
+                    <ul class="mb-0">
+                        <li><h5><text class="font-weight-bold">Landing & Departing:</text> RUNWAY 31</h5></li>
+                        <li><h5><text class="font-weight-bold">Traffic Flow:</text> NO CURRENT INITIATIVES... CTP SLOTS EXPECT DEPARTURE PRIORITY</h5></li>
+                    </ul>
+                </div>
+            </div>
+            <br>
                 <li>Tower/Terminal at Winnipeg International (CYWG) is open 24/7.</li>
                 <li>Tower St. Andrews (CYAV) is open daily from 1300Z - 0400Z.</li>
             <hr>
