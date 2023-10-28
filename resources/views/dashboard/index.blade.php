@@ -249,9 +249,10 @@
                                                         from @endif
                                                     {{$capp->start_timestamp}}z - {{$capp->end_timestamp}}z
                                                 </li>
-                                                <br></br>
+                                                
                                             @endif
                                         @endforeach
+                                        <br>
                                     @endforeach
                                 @endif
                                 @if (count($unconfirmedapp) < 1)
