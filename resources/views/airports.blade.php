@@ -81,7 +81,7 @@
                     <h2 class="font-weight-bold blue-text">Active Configuration</h2>
                     <ul class="mb-0">
                         <li><h5><text class="font-weight-bold">Landing & Departing:</text> RUNWAY 31 </h5></li>
-                        <li><h5><text class="font-weight-bold">Traffic Flow:</text> NO CURRENT INITIATIVES... CTP SLOTS EXPECT DEPARTURE PRIORITY</h5></li>
+                        <li><h5><text class="font-weight-bold">Traffic Flow:</text> NON-EVENT TRAFFIC EXPECT APREQ DELAYS</h5></li>
                     </ul>
                 </div>
             </div>
