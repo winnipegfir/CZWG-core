@@ -256,6 +256,14 @@
             <hr>
             <h1 class="font-weight-bold blue-text">Scenery</h1> 
                 <h4>
+                    <span class="badge rounded p-1 shadow-none green">NEW</span>
+                    <span class="badge rounded p-1 shadow-none orange">Payware</span>
+                    <text class="font-weight-bold"> MFSG - for MSFS, P3Dv3+, FSX, FS2004 </text>
+                </h4>
+                    <p class="mb-0">It's not easy to find a developer who covers a handful of simulators - but that's what MFSG did with their wonderful Thunder Bay scenery! Check out their rendition, featuring the most updated airport layout of any CYQT options.</p>
+                    <a style="margin-left: -0.1%" data-target="_blank" href="https://secure.simmarket.com/mfsg.mhtml"class="btn btn-sm btn-primary">View More</a>
+                <hr> 
+                <h4>
                     <span class="badge rounded p-1 shadow-none orange">Payware</span><text class="font-weight-bold"> SimAddons - For FSX, P3Dv4, v5 & MSFS</text>
                 </h4>
                     <p class="mb-0">SimAddons is here with Thunder Bay too, of course - they've had this out for some time, but the scenery still matches with the current setup in CYQT.</p>
