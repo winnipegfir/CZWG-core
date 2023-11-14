@@ -572,6 +572,12 @@
                          data-intro="This is where you'll see any training-related notifications - exams, modules and more will appear here!">
                         <div class="card-body">
                             <h3 class="font-weight-bold blue-text pb-2">Training</h3>
+                            <ul class="list-unstyled mt-2 mb-0">
+                                <li class="mb-2">
+                                    <a href="https://training.winnipegfir.ca" style="text-decoration:none;"><span class="blue-text"><i class="fas fa-book"></i></span> &nbsp; <span class="black-text">Winnipeg365</span></a>
+                                </li>
+                            </ul>
+                            <hr>
                             @if($yourinstructor != null && $yourinstructor->instructor != null)
                                 <p class="mb-0"><b>Your Instructor:</b> {{$yourinstructor->instructor->user->fullName('FL')}}
                                     <br>
