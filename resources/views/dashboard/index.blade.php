@@ -571,10 +571,10 @@
                     <div class="card" data-step="7"
                          data-intro="This is where you'll see any training-related notifications - exams, modules and more will appear here!">
                         <div class="card-body">
-                            <h3 class="font-weight-bold blue-text pb-2">Training</h3>
+                            <h3 class="font-weight-bold blue-text">Training</h3>
                             <ul class="list-unstyled mt-2 mb-0">
                                 <li class="mb-2">
-                                    <a href="https://training.winnipegfir.ca" style="text-decoration:none;"><span class="blue-text"><i class="fas fa-book"></i></span> &nbsp; <span class="black-text">Winnipeg365</span></a>
+                                    <a href="https://training.winnipegfir.ca" style="text-decoration:none;"><span class="blue-text"><text><h5 class="font-weight-bold blue-text"><i class="fas fa-arrow-right"></i></span> &nbsp; Winnipeg365</h5></text></a>
                                 </li>
                             </ul>
                             <hr>
