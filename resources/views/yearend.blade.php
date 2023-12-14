@@ -7,45 +7,40 @@
     <br></br>
     <div class="card card-body">
     <h1 class="font-weight-bold blue-text">Nate's Letter to the FIR</h1>
-        <p>It’s a bit wild to think that we’re soon approaching the end of 2022. This year seemed to fly by - but as with the past couple years, I’d still like to share some thoughts as we wrap up another year.</p>
+            <p>As I write my fourth year end letter, in my fifth year in the position of Winnipeg FIR Chief, I find it more and more difficult to really put into words my appreciation for the reins I have the pleasure of holding. Thankfully, that’s what this letter is all about - reflecting.</p>
         <hr>
         <h5 class="blue-text font-weight-bold">To My Staff;</h5>
         <br>
-            <p>When I wrote my letter to the FIR in December 2021, I wrote about how excited I was to have a fully staffed leadership team. And while some of the names on Winnipeg’s staff have changed over the past year, our core remains the same.</p>
+            <p>2023 was, to say the least, a major year for Winnipeg. One of the most major changes? The changing of the guard in the Deputy Chief position, with Kolby Dunning stepping back from the role, and Tavis Harrison taking the leap forward into a job that is often overlooked, but extremely complex.</p>
             
-            <p>I continue to be lucky enough to have Kolby Dunning as my Deputy Chief - who also recently stepped in to help fill some webmaster duties as James White decided to take a step back to work on other projects. We also continue to be helped by Ryan Miltenberger, savior of sector files and noted ERAM fan - oh, and our Facility Engineer, too. As well, Tavis Harrison continues to hold down the fort when it comes to the FIR’s events - he’s got a lot on his plate in 2023, from Winnipeg’s first ever Friday Night Ops, as well as another possible Cross The Pond run.</p>
+            <p>We also saw changes in the Events & Marketing position, as well as a change in our Chief Instructor position - with Kathryn and Ethan teaming up to work on our training. And with the help of Dylan Oakes, who took on the daunting task of developing a brand new online platform, we created Winnipeg365 - and so far, it’s been a major success. Those three, along with the rest of the team who has been helping develop material for the platform, deserve a million thanks. Their commitment to getting things ready for the strict timelines we’ve set for ourselves has been nothing but incredible.</p>
             
-            <p>As I hinted to, we’ve also welcomed some changes over the span of the last year - a new Chief Instructor - Liam Shaw, someone who brings a plethora of real-world experience alongside his work on the VATSIM network. He’s been working hard behind the scenes on projects that we’re excited to share more details about soon, as well as helping our training team continue to develop, in my humble opinion, the best controllers on the network. We also welcomed a brand new staff position for the first time since I took over the reins - the Assistant Chief Instructor, Ethan Mason. Ethan, like Liam, brings plenty of experience to the table and is already hard at work getting our students the help they need to reach their potential.</p>
-           
-            <p>I feel that our FIR’s staff remains extremely strong - and I’m so grateful to have the members we have who stepped up to help our corner of the network continue to grow.</p>
-              
+            <p>Of course, just because some positions change doesn’t mean all of them do! I’m still thrilled that we have Ryan Miltenberger running our sector file development - and as we march into the new year, look for some upgrades to those files as well.</p>   
         <hr>
         <h5 class="blue-text font-weight-bold">To Winnipeg's Controllers;</h5>
         <br>
-            <p>Over the past few years, Winnipeg has turned from an FIR that really only had a few members, mostly locals who knew their stuff, and worked on their own - to a vast, diverse group of controllers from across the world. Why would they choose Winnipeg, then, over their home? I can’t speak for everyone, but I’d like to think our great leadership, dedicated pilots and training team have something to do with it.</p>
+             <p>The FIR saw some exciting controlling events this year! We had the pleasure of welcoming VATSIM’s pilots from around the world to Winnipeg again - starting with our very own Friday Night Ops event! After the amazing traffic we saw there, we went all in for Cross the Pond - and as if that wasn’t enough, we had Worldflight visit shortly after - giving us, we believe, the most traffic Winnipeg’s ever recorded on a single day. This, on top of our other events, exams and more made for a phenomenal 2023.</p>
             
-            <p>Thanks to the amazing controllers here in the FIR, we’ve been lucky enough to hold a Cross the Pond event, and have more major events on the horizon as we move into 2023. Experience on this network is key, and the traffic we’re seeing here in Winnipeg continues to grow.</p>
-
-            <p>This past year saw a change in training leadership, as mentioned previously in my letter. Of course, that also means that there was a brief pause on training as our new staff members got settled in their new roles. If you’re a student who has been, or had to wait for their training, you have my sincere thanks. We might just be a small community, but running an FIR’s training can sometimes be a daunting task. Your patience is always appreciated and does not go unnoticed.</p>
-        
+            <p>To say every single person’s time controlling is appreciated would be quite the understatement - your passion, patience and desire to show the world how great our neck of the woods is makes Winnipeg, well, Winnipeg - the best. Thank you.</p>
         <hr>
         <h5 class="blue-text font-weight-bold">To the VATCAN Staff;</h5>
         <br>
-            <p>For the first time since starting this tradition a couple years ago, there will be staff members seeing this for the first time! So, a very warm hello to Mark and Cody. You both bring tremendous leadership to Phil and his already well-solidified team in the division, and I’m hopeful you can help continue driving our division in the right direction.</p>
+
+            <p>For the first time since taking on the Winnipeg Chief position half a decade ago, I get to welcome a new Division Director in my year end letter! It’s a pleasure to see Mark Walsh take on the position of VATCAN1. I’ve known Mark personally since my journey on VATSIM started… a number of years ago. We won’t worry about the specifics - it’s for the best for both of us, trust me.</p>
             
-            <p>VATCAN’s relationship with Winnipeg has always been a bit strange, given that I stepped from VATCAN1 right to WPG1 - but I remain extremely grateful that our relationship has stayed as strong as ever before, and look forward to that continuing into the new year.</p>
+            <p>As always, the teamwork between Winnipeg and our division is key to making sure our FIR and VATCAN succeeds - and we’re always grateful for that cooperation that we’ve become so used to seeing. As 2024 approaches, I look forward to seeing all of this continue as we work to implement GCAP here in the FIR, and across the network.</p>
+        
         <hr>    
         <h5 class="blue-text font-weight-bold">On a Personal Note;</h5>
         <br>
-            <p>In my 2021 letter, I spoke of getting my job back following a world-altering pandemic, visiting Winnipeg for the first time, and hosting Real Ops for the first time. That seems like a hundred years ago after this past year.</p>
+
+            <p>Unlike last year, I don’t have much to share about myself! No moving across the country this year, no life-altering pandemics - not that I want to go through either again, for the record. 2023 was a year filled with travel for myself, more than anything.</p>
             
-            <p>For those of you who aren’t aware, this past summer, I packed up my home in Halifax and moved three time zones away, to my new city in Edmonton. I’m still in the aviation industry - because of course I am - just with a new airline now, and a new place to call “home”, something I’m still getting used to doing. Ethan Mason, our Assistant Chief Instructor, deserves a special thank you here - not just any old friend would be willing to drive with you across the country, for seventy-ish hours just to move jobs. So, thanks for being a great friend, and helping me get settled in this new adventure. At least we’re in the same city and can drink about it together now.</p>
+            <p>I had the privilege of seeing a handful of places this year - from Cleveland (shoutout to Leo and friends, who made that trip one to remember for sure, let’s go Guards), to Florida, Vancouver, Halifax, and everywhere in between. I spent over four days of my year just sitting on a plane in 2023. And I plan to try and break that record next year, somehow.</p>
             
-            <p>Is it hard to tell the past year has been filled with change? Here’s to hoping 2023 is a little less hectic - if I try and move again, someone hold me back, please. There is, however, one thing that hasn’t changed - this network. I’ve been here for over ten years now, somehow, and my love for this shared passion of ours still is as steady as ever. As we move into the new year together, I can’t wait to see what’s in store for Winnipeg, and for VATSIM.</p>
-            
-    <hr>
+        <hr>
         <div>
-            <p>Wishing you a safe, fun and cheerful holiday season, and a very happy new year as we look to 2023 together.</p>
+            <p>To all, I hope you enjoy a wonderful holiday season and new year. I look forward to seeing you all on the scopes in 2024.</p>
             <h5 class="font-weight-bold mb-1">Nate Power</h5>
             <p class="mb-1">Winnipeg FIR Chief</p>
             <img src="https://i.imgur.com/7xuoHQ9.gif" style="width:10%">
@@ -53,7 +48,7 @@
     </div>
     <br>
     <div class="row pl-2">
-        <a class="btn btn-primary" href="/yearend2021"><i class="fas fa-arrow-left"></i> Read Nate's 2021 Letter</a>
+        <a class="btn btn-primary" href="/yearend2022"><i class="fas fa-arrow-left"></i> Read Nate's 2022 Letter</a>
     </div>
 </div>
 @endsection

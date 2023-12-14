@@ -35,6 +35,7 @@ Route::view('/bill', 'bill')->name('bill');
 Route::view('/wpg', 'wpg')->name('wpg');
 Route::view('/yearend2021', 'yearend2021')->name('yearend2021');
 Route::view('/yearend2020', 'yearend2020')->name('yearend2020');
+Route::view('/yearend2022', 'yearend2022')->name('yearend2022');
 Route::view('/yearend', 'yearend')->name('yearend');
 Route::view('/pdc', 'pdc')->name('pdc');
 Route::view('/vote', 'vote')->name('vote');
