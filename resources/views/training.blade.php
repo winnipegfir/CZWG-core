@@ -19,7 +19,7 @@
     <div class="container" style="margin-top: 20px;">
         <div>
             <h3 class="font-weight-bold blue-text">Training, on Your Schedule.</h3>
-                <p>For many years, VATSIM controllers-to-be have had the same pathway to getting on the scope - join their FIR of choice, then wait for an instructor to become available. This causes bottlenecks, and we wanted to find a way to fix that. That's when the Winnipeg team created <a href="training.winnipegfir.ca">Winnipeg365</a> - a brand new, state of the art and robust online training platform, built for both instructors <i>and</i> students.
+                <p>For many years, VATSIM controllers-to-be have had the same pathway to getting on the scope - join their FIR of choice, then wait for an instructor to become available. This causes bottlenecks, and we wanted to find a way to fix that. That's when the Winnipeg team created <a href="https://training.winnipegfir.ca">Winnipeg365</a> - a brand new, state of the art and robust online training platform, built for both instructors <i>and</i> students.
                 The best feature of Winnipeg365? As a new student, you don't have to sit around and wait.</p>
                 <p>Once you are accepted into the FIR (typically only taking a few days), you will automatically be enrolled into the system - and will be eligible to get right into the fundamentals. From the laws of aviation, to taxiing and aircraft for the first time, Winnipeg365 has it all. And while you'll still have to wait for an instructor before heading onto the network to control, this platform speeds that up for everyone - and we all love when things are done quickly and properly!</p>
         </div>
