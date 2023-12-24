@@ -47,7 +47,7 @@
             @foreach ($roster as $controller)
                     <th style="text-align: center" scope="row"><a href="{{url('/roster/'.$controller->cid)}}" style="color: #122b44;"><b>{{$controller->cid}}</b></a></th>
                     <td align="center" >
-                        {{$controller->user->fullName('FL')}}
+                        {{$controller->user->fname}} {{$controller->user->lname}}
                     </td>
                     <td align="center">
                         {{$controller->user->rating_short}}
@@ -156,7 +156,7 @@
                 <tr>
                     <th style="text-align: center" scope="row"><a href="{{url('/roster/'.$visitcontroller->cid)}}" style="color: #122b44;"><b>{{$visitcontroller->cid}}</b></a></th>
                     <td align="center" >
-                        {{$visitcontroller->user->fullName('FL')}}
+                        {{$visitcontroller->user->fname}} {{$visitcontroller->user->lname}}
                     </td>
                     <td align="center">
                         {{$visitcontroller->user->rating_short}}
