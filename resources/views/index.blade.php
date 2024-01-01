@@ -157,7 +157,7 @@
                 <div class="col-md-12 mb-3" style="padding-top: 2%">
                     <div class="card">
                         <div class="card-body" style="padding: 0%">
-                            <img src="https://winnipegfir.ca/storage/files/uploads/1695350651.png" style="width:100%">
+                            <img src="https://winnipegfir.ca/storage/files/uploads/1704072088.png" style="width:100%">
                         </div>
                     </div>
                 </div>
