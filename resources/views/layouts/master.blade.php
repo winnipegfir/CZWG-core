@@ -172,9 +172,6 @@
                     <ul class="navbar-nav ml-auto nav-flex-icons">
                         @unless (Auth::check())
                         <li class="nav-item d-flex align-items-center">
-                            {{-- <a href="{{route('auth.connect.login')}}" class="nav-link waves-effect waves-light">
-                                <i class="fas fa-sign-in-alt"></i>&nbsp;Login
-                            </a> --}}
                             <a href="{{route('auth.connect.login')}}" class="nav-link waves-effect waves-light">
                                 <i class="fas fa-sign-in-alt"></i>&nbsp;Login
                             </a>
@@ -392,27 +389,6 @@
         </div>
     </div>
     <!-- End Discord (top nav) modal -->
-    <!-- Start Connect modal -->
-    <div class="modal fade" id="connectModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Login with VATSIM</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>The Winnipeg FIR uses VATSIM Connect (auth.vatsim.net) for authentication. This is similar to SSO, but allows you to select specific data to share with us. Click 'Login' below to continue.</p>
-                    <p><small>If you are having issues with Connect, please send an email to the Webmaster and use <a href="{{route('auth.sso.login')}}">SSO to login.</a></small></p>
-                </div>
-                <div class="modal-footer">
-                    <a href="{{route('auth.connect.login')}}" role="button" class="btn bg-czqo-blue-light">Login</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- End Connect modal -->
     <script type="text/javascript">
         Dropzone.options.dropzone =
             {

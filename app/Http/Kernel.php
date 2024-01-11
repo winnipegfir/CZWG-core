@@ -65,13 +65,10 @@ class Kernel extends HttpKernel
         'instructor' => \App\Http\Middleware\CheckInstructor::class,
         'certified' => \App\Http\Middleware\CheckCertified::class,
         'notcertified' => \App\Http\Middleware\CheckNotCertified::class,
-        'privacy' => \App\Http\Middleware\CheckPrivacy::class,
+        'privacy' => \App\Http\Middleware\CheckIfPrivacy::class,
         'bookingban' => \App\Http\Middleware\BookingBanMiddleware::class,
         'atc' => \App\Http\Middleware\CheckAtc::class,
-        'mentor' => \App\Http\Middleware\CheckMentor::class,
-        'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
-        'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
-        'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
+        'mentor' => \App\Http\Middleware\CheckMentor::class
     ];
 
     /**

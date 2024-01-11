@@ -23,8 +23,6 @@
         "parsedown/laravel": "^1.2",
         "sentry/sentry-laravel": "^4.0",
         "socialiteproviders/discord": "^4.1",
-        "spatie/laravel-google-calendar": "^3.2.1",
-        "spatie/laravel-permission": "^6.0",
         "vatsim/sso": "3.*",
         "wohali/oauth2-discord-new": "^1.0"
     },

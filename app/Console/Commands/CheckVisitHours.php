@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\AtcTraining\RosterMember;
 use App\Models\Settings\CoreSettings;
-use App\Notifications\network\CheckVisitHours as Email;
+use App\Notifications\Network\CheckVisitHours as Email;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Console\Command;

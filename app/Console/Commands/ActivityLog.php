@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Classes\HttpHelper;
 use App\Classes\VatsimHelper;
 use App\Models\AtcTraining\RosterMember;
 use App\Models\Network\MonitoredPosition;
@@ -55,9 +56,8 @@ class ActivityLog extends Command
         // Getters
         $positions = MonitoredPosition::all();
 
-        $client = new Client();
-        $response = $client->request('GET', VatsimHelper::getDatafeedUrl());
-        $controllers = json_decode($response->getBody()->getContents())->controllers;
+        $response = HttpHelper::getClient()->get(VatsimHelper::getDatafeedUrl());
+        $controllers = $response->object()->controllers;
 
         foreach ($controllers as $controller) {
             //Set our flag

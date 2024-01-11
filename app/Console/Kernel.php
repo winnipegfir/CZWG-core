@@ -44,10 +44,12 @@ class Kernel extends ConsoleKernel
 
         // 0 0 1 * * schedulers
         $schedule->command(CheckVisitHours::class)->monthly();
-        $schedule->command(CurrencyCheck::class)->monthly();
         $schedule->call(function () {
             file_get_contents(config('cronurls.monthly'));
         })->monthly();
+
+        // GRP requires quarterly review
+        $schedule->command(CurrencyCheck::class)->quarterly();
     }
 
     /**

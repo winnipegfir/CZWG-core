@@ -19,82 +19,6 @@ use Vatsim\OAuth\SSO;
 class LoginController extends Controller
 {
     /**
-     * @var SSO
-     */
-    private $sso;
-
-    /**
-     * LoginController constructor.
-     */
-    public function __construct()
-    {
-        $this->sso = new SSO(config('sso.base'), config('sso.key'), config('sso.secret'), config('sso.method'), config('sso.cert'), config('sso.additionalConfig'));
-    }
-
-    /**
-     * Redirect user to VATSIM SSO for login.
-     *
-     * @throws \Vatsim\OAuth\SSOException
-     */
-    public function ssoLogin()
-    {
-        abort(403, 'Disabled');
-        $this->sso->login(config('sso.return'), function ($key, $secret, $url) {
-            session()->put('key', $key);
-            session()->put('secret', $secret);
-            session()->save();
-            header('Location: '.$url);
-            exit();
-        });
-    }
-
-    /**
-     * Validate the login and access protected resources, create the user if they don't exist, update them if they do, and log them in.
-     *
-     * @param  Request  $get
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     *
-     * @throws \Vatsim\OAuth\SSOException
-     */
-    public $newUser;
-
-    public function validateSsoLogin(Request $get)
-    {
-        abort(403, 'Disabled');
-        $this->sso->validate(session('key'), session('secret'), $get->input('oauth_verifier'), function ($user, $request) {
-            session()->forget('key');
-            session()->forget('secret');
-            User::updateOrCreate(['id' => $user->id], [
-                'email' => $user->email,
-                'fname' => utf8_decode($user->name_first),
-                'lname' => $user->name_last,
-                'rating_id' => $user->rating->id,
-                'rating_short' => $user->rating->short,
-                'rating_long' => $user->rating->long,
-                'rating_GRP' => $user->rating->GRP,
-                'reg_date' => $user->reg_date,
-                'region_code' => $user->region->code,
-                'region_name' => $user->region->name,
-                'division_code' => $user->division->code,
-                'division_name' => $user->division->name,
-                'subdivision_code' => $user->subdivision->code,
-                'subdivision_name' => $user->subdivision->name,
-                'display_fname' => $user->name_first,
-            ]);
-            $user = User::find($user->id);
-            Auth::login($user, true);
-
-            if (! UserPreferences::where('user_id', $user->id)->first()) {
-                $prefs = new UserPreferences();
-                $prefs->user_id = $user->id;
-                $prefs->save();
-            }
-        });
-
-        return redirect('/index')->with('success', 'Logged in!');
-    }
-
-    /**
      * Log the user out.
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
@@ -176,7 +100,7 @@ class LoginController extends Controller
         $checkUser = User::where('id', '=', $response->data->cid)->first();
 
         User::updateOrCreate(['id' => $response->data->cid], [
-            'email' => isset($response->data->personal->email) ? $response->data->personal->email : 'no-reply@czqo.vatcan.ca',
+            'email' => isset($response->data->personal->email) ? $response->data->personal->email : 'no-reply@winnipegfir.ca',
             'fname' => isset($response->data->personal->name_first) ? utf8_decode($response->data->personal->name_first) : $response->data->cid,
             'lname' => isset($response->data->personal->name_last) ? $response->data->personal->name_last : $response->data->cid,
             'rating_id' => $response->data->vatsim->rating->id,
@@ -188,7 +112,6 @@ class LoginController extends Controller
             'region_name' => $response->data->vatsim->region->name,
             'division_code' => $response->data->vatsim->division->id,
             'division_name' => $response->data->vatsim->division->name,
-            'used_connect' => true,
         ]);
 
         $user = User::find($response->data->cid);

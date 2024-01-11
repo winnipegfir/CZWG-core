@@ -6,18 +6,24 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class MonthlyInactivity extends Notification
+class CheckVisitHours extends Notification
 {
     use Queueable;
+
+    private $members;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($badMembers)
+    public function __construct($members)
     {
-        $this->badMembers = $badMembers;
+        $this->members = $members;
+
+        if (! $this->members) {
+            exit;
+        }
     }
 
     /**
@@ -40,8 +46,8 @@ class MonthlyInactivity extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)->view(
-            'emails.network.monthlyinactivity', ['members' => $this->badMembers]
-        )->subject('Controller Inactivity Alert!');
+            'emails.network.visiting', ['members' => $this->members]
+        )->subject('Controller Visiting Violations!');
     }
 
     /**
