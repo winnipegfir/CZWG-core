@@ -152,8 +152,6 @@ return [
         /*
          * Package Service Providers...
          */
-        MisterPhilip\MaintenanceMode\MaintenanceModeServiceProvider::class,
-        MisterPhilip\MaintenanceMode\MaintenanceCommandServiceProvider::class,
         NotificationChannels\Discord\DiscordServiceProvider::class,
         SocialiteProviders\Manager\ServiceProvider::class,
         /*

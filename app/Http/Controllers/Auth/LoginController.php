@@ -8,7 +8,6 @@ use App\Models\Users\User;
 use App\Models\Users\UserPreferences;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -19,8 +18,6 @@ use Vatsim\OAuth\SSO;
  */
 class LoginController extends Controller
 {
-    use AuthenticatesUsers;
-
     /**
      * @var SSO
      */

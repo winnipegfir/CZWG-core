@@ -87,8 +87,6 @@
     </head>
     <body>
     <!--Header-->
-    
-    @include('maintenancemode::notification')
     @if (\App\Models\Settings\CoreSettings::where('id', 1)->firstOrFail()->banner)
         <div class="alert alert-{{\App\Models\Settings\CoreSettings::where('id', 1)->firstOrFail()->bannerMode}}" style="margin: 0; border-radius: 0; border: none;">
             <div class="text-center align-self-center">
