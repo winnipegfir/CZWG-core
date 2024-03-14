@@ -61,18 +61,6 @@ class DashboardController extends Controller
         }
     }
 
-    public function dismissCbtNotification($id)
-    {
-        $note = CbtNotification::whereId($id)->first();
-        $student = Student::where('user_id', Auth::user()->id)->first();
-        if ($student->id != $note->student_id) {
-            return redirect()->back()->withError('This is not a notification you can dismiss!');
-        }
-        $note->delete();
-
-        return redirect()->back();
-    }
-
     public function postTweet()
     {
         return 'nothing';
