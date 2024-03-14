@@ -7,7 +7,6 @@ use App\Models\Tickets\Ticket;
 use App\Models\Tickets\TicketReply;
 use App\Models\Users\StaffGroup;
 use App\Models\Users\StaffMember;
-use App\Models\Users\User;
 use App\Notifications\NewTicket;
 use App\Notifications\TicketReply as NotificationsTicketReply;
 use Carbon\Carbon;
@@ -24,7 +23,7 @@ class TicketsController extends Controller
         $closedTickets = Ticket::where('user_id', Auth::user()->id)->where('status', 1)->get()->sortByDesc('id');
         $onHoldTickets = Ticket::where('user_id', Auth::user()->id)->where('status', 2)->get()->sortByDesc('id');
         $staff_members = StaffMember::where('user_id', '!=', 1)->where('group_id', 1)->get();
-        $groups = StaffGroup::where('can_recieve_tickets', true)->get();
+        $groups = StaffGroup::where('can_receive_tickets', true)->get();
 
         return view('dashboard.tickets.index', compact('openTickets', 'closedTickets', 'onHoldTickets', 'staff_members', 'groups'));
     }

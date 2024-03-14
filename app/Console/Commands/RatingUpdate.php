@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Classes\HttpHelper;
 use App\Classes\VatsimHelper;
 use App\Models\Users\User;
 use GuzzleHttp\Client;
@@ -43,9 +44,8 @@ class RatingUpdate extends Command
     {
         $ratings = [];
 
-        $client = new Client();
-        $response = $client->request('GET', VatsimHelper::getDatafeedUrl());
-        $vatsimRatings = json_decode($response->getBody()->getContents())->ratings;
+        $response = HttpHelper::getClient()->get(VatsimHelper::getDatafeedUrl());
+        $vatsimRatings = $response->object();
 
         foreach ($vatsimRatings as $r) {
             $ratings[$r->id] = [

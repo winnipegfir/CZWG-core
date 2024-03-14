@@ -5,5 +5,5 @@ return [
     'secret' => env('CONNECT_SECRET'),
     'redirect' => env('CONNECT_REDIRECT_URI'),
 
-    'url' => 'https://auth.vatsim.net',
+    'url' => config('app.debug') ? 'https://auth-dev.vatsim.net' : 'https://auth.vatsim.net',
 ];

@@ -1,8 +1,17 @@
 @extends('layouts.master')
 @section('title', 'Training')
 
-@section('content')
+@php
+if (!$training_time)
+{
+    $training_time = (object) [
+        'colour' => 'grey',
+        'wait_length' => 'N/A'
+    ];
+}
+@endphp
 
+@section('content')
     <div class="container pt-2 pb-0">
         <h1 class="blue-text font-weight-bold">Controller Training</h1>
     </div>
@@ -15,7 +24,7 @@
             @endif
         </div>
     </div>
-    
+
     <div class="container" style="margin-top: 20px;">
         <div>
             <h3 class="font-weight-bold blue-text">Training, on Your Schedule.</h3>

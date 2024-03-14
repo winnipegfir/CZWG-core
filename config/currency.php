@@ -1,8 +1,8 @@
 <?php
 
-// Set required hours per month for each member on roster in here.
+// Set required hours per quarter for each member on roster in here.
 return [
-    'visit' => 1,
-    'home' => 1,
-    'instructor' => 1,
+    'visit' => 3,
+    'home' => 3,
+    'instructor' => 3,
 ];

@@ -1,29 +1,23 @@
 <?php
 
-namespace App\Notifications\network;
+namespace App\Notifications\Network;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class CheckVisitHours extends Notification
+class QuarterlyInactivity extends Notification
 {
     use Queueable;
-
-    private $members;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($members)
+    public function __construct($badMembers)
     {
-        $this->members = $members;
-
-        if (! $this->members) {
-            exit;
-        }
+        $this->badMembers = $badMembers;
     }
 
     /**
@@ -46,8 +40,8 @@ class CheckVisitHours extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)->view(
-            'emails.network.visiting', ['members' => $this->members]
-        )->subject('Controller Visiting Violations!');
+            'emails.network.quarterly-inactivity', ['members' => $this->badMembers]
+        )->subject('Quarterly Inactivity Alert!');
     }
 
     /**

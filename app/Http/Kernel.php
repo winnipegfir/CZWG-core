@@ -14,11 +14,10 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middleware = [
-        \MisterPhilip\MaintenanceMode\Http\Middleware\CheckForMaintenanceMode::class,
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
-        \App\Http\Middleware\TrustProxies::class,
+        \Illuminate\Http\Middleware\TrustProxies::class
 
     ];
 
@@ -66,13 +65,10 @@ class Kernel extends HttpKernel
         'instructor' => \App\Http\Middleware\CheckInstructor::class,
         'certified' => \App\Http\Middleware\CheckCertified::class,
         'notcertified' => \App\Http\Middleware\CheckNotCertified::class,
-        'privacy' => \App\Http\Middleware\CheckPrivacy::class,
+        'privacy' => \App\Http\Middleware\CheckIfPrivacy::class,
         'bookingban' => \App\Http\Middleware\BookingBanMiddleware::class,
         'atc' => \App\Http\Middleware\CheckAtc::class,
-        'mentor' => \App\Http\Middleware\CheckMentor::class,
-        'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
-        'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
-        'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
+        'mentor' => \App\Http\Middleware\CheckMentor::class
     ];
 
     /**

@@ -16,11 +16,10 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use LasseRafn\InitialAvatarGenerator\InitialAvatar;
 use RestCord\DiscordClient;
-use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use Notifiable, HasRoles;
+    use Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -29,9 +28,8 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'id', 'fname', 'lname', 'email', 'rating_id', 'rating_short', 'rating_long', 'rating_GRP',
-        'reg_date', 'region_code', 'region_name', 'division_code', 'division_name',
-        'subdivision_code', 'subdivision_name', 'permissions', 'init', 'gdpr_subscribed_emails', 'avatar', 'bio', 'display_cid_only', 'display_fname', 'display_last_name',
-        'discord_user_id', 'discord_dm_channel_id', 'avatar_mode', 'used_connect',
+        'reg_date', 'permissions', 'init', 'gdpr_subscribed_emails', 'avatar', 'bio', 'display_cid_only', 'display_fname', 'display_last_name',
+        'discord_user_id', 'discord_dm_channel_id', 'avatar_mode'
     ];
 
     /**
@@ -114,25 +112,15 @@ class User extends Authenticatable
 
     public function permissions()
     {
-        switch ($this->permissions) {
-            case 0:
-                return 'Guest';
-            break;
-            case 1:
-                return 'Controller/Trainee';
-            break;
-            case 2:
-                return 'Mentor';
-            break;
-            case 3:
-                return 'Instructor';
-            case 4:
-                return 'Staff Member';
-            case 5:
-                return 'Administrator';
-            default:
-                return 'Unknown';
-        }
+        return match ($this->permissions) {
+            0 => 'Guest',
+            1 => 'Controller/Trainee',
+            2 => 'Mentor',
+            3 => 'Instructor',
+            4 => 'Staff Member',
+            5 => 'Administrator',
+            default => 'Unknown',
+        };
     }
 
     public function fullName($format)
