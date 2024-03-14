@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AtcTraining\CBT\CbtNotification;
 use App\Models\AtcTraining\RosterMember;
 use App\Models\AtcTraining\Student;
 use App\Models\Events\ControllerApplication;
