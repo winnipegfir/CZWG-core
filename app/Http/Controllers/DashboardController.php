@@ -24,12 +24,6 @@ class DashboardController extends Controller
         $active = null;
         $cbtnotifications = [];
         $student = Student::where('user_id', $user->id)->first();
-        if ($student != null) {
-            $cbtnotifications = CbtNotification::where([
-                ['student_id', $student->id],
-                ['dismissed', '0'],
-            ])->get();
-        }
         $confirmedevent = [];
         $potentialRosterMember = RosterMember::where('user_id', $user->id)->first();
         if ($potentialRosterMember !== null) {
