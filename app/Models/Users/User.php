@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use LasseRafn\InitialAvatarGenerator\InitialAvatar;
-use Discord\Discord;
+use App\Classes\DiscordClient;
 
 class User extends Authenticatable
 {
@@ -193,9 +193,11 @@ class User extends Authenticatable
     public function getDiscordUser()
     {
         return Cache::remember('users.discorduserdata.'.$this->id, 84600, function () {
-            $discord = new Discord(['token' => config('services.discord.token')]);
+            if (!$this->discord_user_id)
+                return null;
 
-            return $discord->users->get($this->discord_user_id);
+            $discord = new DiscordClient(config('services.discord.token'));
+            return $discord->GetDiscordUser($this->discord_user_id);
         });
     }
 
@@ -204,7 +206,6 @@ class User extends Authenticatable
         return Cache::remember('users.discorduserdata.'.$this->id.'.avatar', 21600, function () {
             $user = $this->getDiscordUser();
             $url = 'https://cdn.discordapp.com/avatars/'.$user->id.'/'.$user->avatar.'.png';
-            Log::info($url);
 
             return $url;
         });
@@ -212,9 +213,9 @@ class User extends Authenticatable
 
     public function memberOfCZWGGuild()
     {
-        $discord = new Discord(['token' => config('services.discord.token')]);
+        $discord = new DiscordClient(config('services.discord.token'));
         try {
-            if ($discord->users->get($this->discord_user_id)) {
+            if ($discord->GetGuildMember($this->discord_user_id)) {
                 return true;
             }
         } catch (Exception $ex) {
