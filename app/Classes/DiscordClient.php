@@ -36,10 +36,10 @@ class DiscordClient
     function AddGuildMember(int $user_id, string $access_token, string $nickname, array $roles) : void {
         try {
             $this->http->put("guilds/" . self::WINNIPEG_GUILD . "/members/$user_id", [
-                'body' => [
+                'json' => [
                     'access_token' => $access_token,
                     'nick' => $nickname,
-                    'roles' => $roles
+                    'roles' => /*$roles*/ null // TODO: Fix this, idk why discord doesn't like how I send the roles from the UserController
                 ]
             ]);
         } catch (GuzzleException $e) {
@@ -93,7 +93,7 @@ class DiscordClient
     function SendAuditMessage(string $content): void {
         try {
             $this->http->post("channels/" . self::AUDIT_CHANNEL . "/messages", [
-                'body' => [ 'content' => $content ]
+                'json' => [ 'content' => $content ]
             ]);
         } catch (GuzzleException $e) {
             Log::error($e->getMessage());

@@ -616,7 +616,7 @@ class UserController extends Controller
             } elseif (Auth::user()->rosterProfile->status == 'home') {
                 $roles[] = [713914598750683157];
             } elseif (Auth::id() == '1427371') {
-                $roles[] = [673725707259609093];
+                $roles[] = [673731111171391518];
             }
         } else {
             $roles[] = [482835389640343562];
