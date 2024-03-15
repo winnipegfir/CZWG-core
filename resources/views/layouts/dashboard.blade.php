@@ -11,7 +11,7 @@
         For Flight Simulation Use Only - Not to be used for real-world navigation. All content on this web site may not be shared, copied, reproduced or used in any way without prior express written consent of Gander Oceanic. © Copyright {{App\Models\Settings\CoreSettings::where('id', 1)->firstOrFail()->copyright_year}} Gander Oceanic, All Rights Reserved.
         -->
         <!--Metadata-->
-            
+
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="shortcut icon" href="{{ asset('winnipeg.ico') }}" type="image/x-icon">
@@ -87,7 +87,6 @@
     </head>
     <body>
     <!--Header-->
-    @include('maintenancemode::notification')
     @if (\App\Models\Settings\CoreSettings::where('id', 1)->firstOrFail()->banner)
         <div class="alert alert-{{\App\Models\Settings\CoreSettings::where('id', 1)->firstOrFail()->bannerMode}}" style="margin: 0; border-radius: 0; border: none;">
             <div class="text-center align-self-center">
@@ -397,26 +396,6 @@
         </div>
     </div>
     <!-- End Discord (top nav) modal -->
-    <!-- Start Connect modal -->
-    <div class="modal fade" id="connectModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Login with VATSIM</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>The Winnipeg FIR uses VATSIM Connect (auth.vatsim.net) for authentication. This is similar to SSO, but allows you to select specific data to share with us. Click 'Login' below to continue.</p>
-                    <p><small>If you are having issues with Connect, please send an email to the Webmaster and use <a href="{{route('auth.sso.login')}}">SSO to login.</a></small></p>
-                </div>
-                <div class="modal-footer">
-                    <a href="{{route('auth.connect.login')}}" role="button" class="btn bg-czqo-blue-light">Login</a>
-                </div>
-            </div>
-        </div>
-    </div>
     <!-- End Connect modal -->
     <script type="text/javascript">
         Dropzone.options.dropzone =

@@ -30,7 +30,6 @@
                                             Discord account</a>
                                     @else
                                         <p class="mt-1"><img style="border-radius:50%; height: 30px;" class="img-fluid" src="{{Auth::user()->getDiscordAvatar()}}" alt="">&nbsp;&nbsp;{{Auth::user()->getDiscordUser()->username}}
-                                            <span style="color: #d1d1d1;">#{{Auth::user()->getDiscordUser()->discriminator}}</span>
                                         </p>
                                         @if(!Auth::user()->memberOfCZWGGuild())
                                             <a href="#" data-toggle="modal" data-target="#joinDiscordServerModal"

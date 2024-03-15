@@ -104,14 +104,7 @@ class LoginController extends Controller
             'fname' => isset($response->data->personal->name_first) ? utf8_decode($response->data->personal->name_first) : $response->data->cid,
             'lname' => isset($response->data->personal->name_last) ? $response->data->personal->name_last : $response->data->cid,
             'rating_id' => $response->data->vatsim->rating->id,
-            'rating_short' => $response->data->vatsim->rating->short,
-            'rating_long' => $response->data->vatsim->rating->long,
-            'rating_GRP' => $response->data->vatsim->rating->long,
             'reg_date' => null,
-            'region_code' => $response->data->vatsim->region->id,
-            'region_name' => $response->data->vatsim->region->name,
-            'division_code' => $response->data->vatsim->division->id,
-            'division_name' => $response->data->vatsim->division->name,
         ]);
 
         $user = User::find($response->data->cid);

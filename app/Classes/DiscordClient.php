@@ -24,17 +24,18 @@ class DiscordClient
     function __construct(string $token) {
         $this->token = $token;
         $this->http = new Client([
+            'base_uri' => 'https://discord.com/api/v10/',
             'headers' => [
                 'Authorization' => "Bot " . $this->token,
-                'User-Agent' => 'DiscordBot (winnipegfir.ca, v1.0.0)'
-            ],
-            'base_uri' => 'https://discord.com/api/v10'
+                'User-Agent' => 'DiscordBot (winnipegfir.ca, v1.0.0)',
+                'Accept' => 'application/json'
+            ]
         ]);
     }
 
     function AddGuildMember(int $user_id, string $access_token, string $nickname, array $roles) : void {
         try {
-            $this->http->put("/guilds/" . self::WINNIPEG_GUILD . "/members/$user_id", [
+            $this->http->put("guilds/" . self::WINNIPEG_GUILD . "/members/$user_id", [
                 'body' => [
                     'access_token' => $access_token,
                     'nick' => $nickname,
@@ -46,9 +47,9 @@ class DiscordClient
         }
     }
 
-    function GetGuildMember(int $user_id) : array|null {
+    function GetGuildMember(int $user_id) : object|null {
         try {
-            $response = $this->http->get("/guilds/" . self::WINNIPEG_GUILD . "/members/$user_id");
+            $response = $this->http->get("guilds/" . self::WINNIPEG_GUILD . "/members/$user_id");
 
             if ($response->getStatusCode() != 200)
                 return null;
@@ -63,7 +64,7 @@ class DiscordClient
 
     function RemoveGuildMember(int $user_id) : void {
         try {
-            $this->http->delete("/guilds/" . self::WINNIPEG_GUILD . "/members/$user_id", [
+            $this->http->delete("guilds/" . self::WINNIPEG_GUILD . "/members/$user_id", [
                 'headers' => [
                     'X-Audit-Log-Reason' => "User disconnected via website."
                 ]
@@ -73,13 +74,14 @@ class DiscordClient
         }
     }
 
-    function GetDiscordUser(int $user_id) : array|null {
+    function GetDiscordUser(int $user_id): object|null {
         try {
-            $response = $this->http->get("/users/$user_id");
+            $response = $this->http->get("users/$user_id");
+
             if ($response->getStatusCode() !== 200)
                 throw new Exception("Couldn't get user $user_id.");
 
-            return json_decode($response->getBody());
+            return json_decode($response->getBody()->getContents());
         } catch (Exception | GuzzleException $e) {
             Log::error($e->getMessage());
         }
@@ -90,7 +92,7 @@ class DiscordClient
 
     function SendAuditMessage(string $content): void {
         try {
-            $this->http->post("/channels/" . self::AUDIT_CHANNEL . "/messages", [
+            $this->http->post("channels/" . self::AUDIT_CHANNEL . "/messages", [
                 'body' => [ 'content' => $content ]
             ]);
         } catch (GuzzleException $e) {

@@ -95,7 +95,7 @@
                                 Role: {{Auth::user()->permissions()}}<br/>
                                 @if(Auth::user()->staffProfile)
                                     Staff Role: {{Auth::user()->staffProfile->position}}
-                                @endif 
+                                @endif
                                 <hr>
                                 <div data-step="4" data-intro="Here you can link your Discord account to receive reminders for training sessions, and gain access to the CZWG Discord.">
                                     <h5 class="mt-2 font-weight-bold blue-text">Discord</h5>
@@ -106,18 +106,17 @@
                                     @else
                                         <p class="mt-1"><i class="fa fa-check-circle" style="color:green"> </i> <img style="border-radius:50%; height: 30px;" class="img-fluid"
                                             src="{{Auth::user()->getDiscordAvatar()}}" alt="">&nbsp;&nbsp;{{Auth::user()->getDiscordUser()->username}}
-                                            <span style="color: #d1d1d1;">#{{Auth::user()->getDiscordUser()->discriminator}}</span>
                                         </p>
                                         @if(!Auth::user()->memberOfCZWGGuild())
                                             <a href="#" data-toggle="modal" data-target="#joinDiscordServerModal"
                                                class="btn-sm btn-primary mt-1">Join The CZWG Discord</a>
                                         @endif
-                                        <a href="#" class="btn-sm btn-danger m-0" data-toggle="modal" data-target="#discordModal" class="mt-1">Unlink</a>   
+                                        <a href="#" class="btn-sm btn-danger m-0" data-toggle="modal" data-target="#discordModal" class="mt-1">Unlink</a>
                                         <hr>
                                     @endif
                                 </div>
                             </div>
-                            
+
                             <div data-step="5" data-intro="You can change your avatar here. Your avatar is available when people view your account. This will likely only be staff members, unless you sign up for an event or similar activity."
                                  class="col">
                                 <h4 class="blue-text font-weight-bold card-title; text-center" style="padding-bottom: 2%">Avatar</h5>
@@ -146,7 +145,7 @@
                                                     <h5 class="font-weight-bold blue-text">First Name</h5>
                                                     <input type="text" class="form-control" value="{{Auth::user()->display_fname}}"
                                                         name="display_fname" id="input_display_fname">
-                                                    <br>   
+                                                    <br>
                                                     <script>
                                                         function resetToCertFirstName() {
                                                             $("#input_display_fname").val("{{Auth::user()->fname}}")
@@ -184,7 +183,7 @@
                                                     <p>Please ensure this complies with the VATSIM Code of Conduct.</p>
                                                     <input type="submit" class="btn btn-sm btn-success ml-0" value="Save">
                                                 </form><br>
-                                        </div>                     
+                                        </div>
                                     </div>
                                     <button class="accordion">Your Preferences</button>
                                         <div class="panel">
@@ -220,7 +219,7 @@
                                                 @else
                                                 <a role="button" class="ml-0 mt-3 btn btn-sm btn-danger" href="{{url('/dashboard/emailpref/unsubscribe')}}">Unsubscribe</a>
                                                 @endif
-                                            </div>                     
+                                            </div>
                                         </div>
                                     </li>
                                 </ul>
@@ -249,7 +248,7 @@
                                                         from @endif
                                                     {{$capp->start_timestamp}}z - {{$capp->end_timestamp}}z
                                                 </li>
-                                                
+
                                             @endif
                                         @endforeach
                                         <br>
@@ -794,7 +793,7 @@
         panel.style.maxHeight = null;
         } else {
         panel.style.maxHeight = panel.scrollHeight + "px";
-        } 
+        }
     });
     }
     </script>
@@ -869,7 +868,7 @@
     </div>
     <!-- End Rating Change modal -->
     <!--Change display name modal-->
-    
+
     <!--End change display name modal-->
 
     <!--Link/unlink Discord modal-->

@@ -205,6 +205,7 @@ class User extends Authenticatable
     {
         return Cache::remember('users.discorduserdata.'.$this->id.'.avatar', 21600, function () {
             $user = $this->getDiscordUser();
+
             $url = 'https://cdn.discordapp.com/avatars/'.$user->id.'/'.$user->avatar.'.png';
 
             return $url;
