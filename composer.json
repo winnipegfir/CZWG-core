@@ -23,6 +23,7 @@
         "parsedown/laravel": "^1.2",
         "sentry/sentry-laravel": "^4.0",
         "socialiteproviders/discord": "^4.1",
+        "team-reflex/discord-php": "dev-master",
         "vatsim/sso": "3.*",
         "wohali/oauth2-discord-new": "^1.0"
     },

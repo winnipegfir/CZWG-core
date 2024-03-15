@@ -15,6 +15,8 @@ use App\Notifications\DiscordWelcome;
 use App\Notifications\WelcomeNewUser;
 use Auth;
 use Carbon\Carbon;
+use Discord\Http\Endpoint;
+use Discord\Parts\Guild\Guild;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -24,7 +26,7 @@ use Laravel\Socialite\Facades\Socialite;
 use mofodojodino\ProfanityFilter\Check;
 use NotificationChannels\Discord\Discord;
 use NotificationChannels\Discord\Exceptions\CouldNotSendNotification;
-use RestCord\DiscordClient;
+use Discord\Discord as DiscordClient;
 use SocialiteProviders\Manager\Config;
 use Spatie\Permission\Models\Role;
 
@@ -607,8 +609,6 @@ class UserController extends Controller
         $config = new Config(config('services.discord.client_id'), config('services.discord.client_secret'), config('services.discord.redirect_join'));
         $discordUser = Socialite::driver('discord')->setConfig($config)->user();
         $args = [
-            'guild.id' => 598023748741758976,
-            'user.id' => intval($discordUser->id),
             'access_token' => $discordUser->token,
             'nick' => Auth::user()->fullName('FL'),
         ];
@@ -623,7 +623,9 @@ class UserController extends Controller
         } else {
             $args['roles'] = [482835389640343562];
         }
-        $discord->guild->addGuildMember($args);
+
+        // Add to server
+        $discord->getHttpClient()->put(Str::replace([':guild_id',':user_id'], [598023748741758976, $discordUser->id], Endpoint::GUILD_MEMBER), $args);
 
         try {
             Auth::user()->notify(new DiscordWelcome());
@@ -642,8 +644,8 @@ class UserController extends Controller
         $user = Auth::user();
         if ($user->memberOfCZWGGuild()) {
             try {
-                $discord->guild->removeGuildMember(['guild.id' => 598023748741758976, 'user.id' => $user->discord_user_id]);
-                $discord->channel->createMessage(['channel.id' => 695849973585149962, 'content' => '<@'.$user->discord_user_id.'> ('.Auth::id().') has unlinked their account and has been kicked.']);
+                $discord->getHttpClient()->delete(Str::replace([':guild_id',':user_id'], [598023748741758976, $user->discord_user_id], Endpoint::GUILD_MEMBER));
+                $discord->getChannel(695849973585149962)->sendMessage('<@'.$user->discord_user_id.'> ('.Auth::id().') has unlinked their account and has been kicked.');
             } catch (Exception $ex) {
                 Log::error($ex->getMessage());
             }
