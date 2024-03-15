@@ -443,7 +443,6 @@
                                 @endif
 
                             <!--Winnipeg Training Hrs-->
-                                @if (Auth::user()->rosterProfile->status == "training")
                                     @if (!Auth::user()->rosterProfile->currency == 0)
                                         @if (Auth::user()->rosterProfile->currency < 2.0)
                                             <h3><span class="badge rounded shadow-none blue">
@@ -455,70 +454,7 @@
                           </span></h3>
                                         @endif
                                     @endif
-                                    <p class="mb-0">You require <b>2 hours</b> of activity every month!</p>
-                                @endif
-
-                            <!--End Winnipeg Training Hours-->
-                                <!--Winnipeg Cntrlr Hrs-->
-                                @if (Auth::user()->rosterProfile->status == "home")
-                                    @if (!Auth::user()->rosterProfile->currency == 0)
-                                        @if (Auth::user()->rosterProfile->currency < 2.0)
-                                            <h3><span class="badge rounded shadow-none blue">
-                            {{decimal_to_hm(Auth::user()->rosterProfile->currency)}} hours recorded
-                          </span></h3>
-                                        @elseif (Auth::user()->rosterProfile->currency >= 2.0)
-                                            <h3><span class="badge rounded shadow-none green">
-                            {{decimal_to_hm(Auth::user()->rosterProfile->currency)}} hours recorded
-                          </span></h3>
-                                        @endif
-                                    @endif
-                                    <p class="mb-0">You require <b>2 hours</b> of activity every month!</p>
-                                @endif
-                            <!--End Winnipeg Cntrlr Hours-->
-
-                                <!--Winnipeg Vstr Cntrlr Hrs-->
-                                @if (Auth::user()->rosterProfile->status == "visit")
-                                    @if (!Auth::user()->rosterProfile->currency == 0)
-                                        @if (Auth::user()->rosterProfile->currency < 1.0)
-                                            <h3><span class="badge rounded shadow-none blue">
-                              {{decimal_to_hm(Auth::user()->rosterProfile->currency)}} hours recorded
-                          </span></h3>
-                                        @elseif (Auth::user()->rosterProfile->currency >= 1.0)
-                                            <h3><span class="badge rounded shadow-none green">
-                              {{decimal_to_hm(Auth::user()->rosterProfile->currency)}} hours recorded
-                          </span></h3>
-                                        @endif
-                                    @endif
-                                    <p class="mb-0">You require <b>1 hour</b> of activity every month!</p>
-                                @endif
-
-                            <!--End Winnipeg Cntrlr Hours-->
-
-                                <!--Winnipeg Cntrlr Hrs-->
-                                @if (Auth::user()->rosterProfile->status == "instructor")
-                                    @if (!Auth::user()->rosterProfile->currency == 0)
-                                        @if (Auth::user()->rosterProfile->currency < 3.0)
-                                            <h3><span class="badge rounded shadow-none blue">
-                                                {{decimal_to_hm(Auth::user()->rosterProfile->currency)}} hours recorded
-                                            </span></h3>
-                                        @elseif (Auth::user()->rosterProfile->currency >= 3.0)
-                                            <h3><span class="badge rounded shadow-none green">
-                                                {{decimal_to_hm(Auth::user()->rosterProfile->currency)}} hours recorded
-                                            </span></h3>
-                                        @endif
-                                    @endif
-                                    <p class="mb-0">You require <b>3 hours</b> of activity every month!</p>
-                                @endif
-                            <!--End Winnipeg Instrctr Hours-->
-                                @if (Auth::user()->rosterProfile->rating == 'S1' || Auth::user()->rosterProfile->rating == 'S2' || Auth::user()->rosterProfile->rating == 'S3')
-                                    <b>Rating:</b>
-
-                                    <h3><span class="badge rounded shadow-none green">
-                                    {{Auth::user()->rosterProfile->rating_hours}} {{Auth::user()->rosterProfile->rating}} hours recorded
-                                </span></h3>
-
-                                @endif
-
+                                    <p class="mb-0">You require <b>3 hours</b> of activity every quarter!</p>
 
                             @endif
                             @elseif ($certification == "not_certified")
