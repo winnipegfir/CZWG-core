@@ -23,10 +23,13 @@ class DiscordClient
 
     function __construct(string $token) {
         $this->token = $token;
-        $this->http = Http::withHeaders([
-            'Authorization' => "Bot " . $this->token,
-            'User-Agent' => 'DiscordBot (winnipegfir.ca, v1.0.0)'
-        ])->baseUrl('https://discord.com/api/v10')->buildClient();
+        $this->http = new Client([
+            'headers' => [
+                'Authorization' => "Bot " . $this->token,
+                'User-Agent' => 'DiscordBot (winnipegfir.ca, v1.0.0)'
+            ],
+            'base_uri' => 'https://discord.com/api/v10'
+        ]);
     }
 
     function AddGuildMember(int $user_id, string $access_token, string $nickname, array $roles) : void {
