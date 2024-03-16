@@ -72,7 +72,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/privacyaccept', 'Users\UserController@privacyAccept');
     Route::get('/privacydeny', 'Users\UserController@privacyDeny');
 
-    Route::group(['middleware' => ['role:Administrator|Staff']], function () {
+    Route::group(['middleware' => 'executive'], function () {
         Route::prefix('admin')->group(function () {
             //Uploads
             Route::get('/upload', 'Publications\UploadController@upload')->middleware('staff')->name('dashboard.upload');
@@ -121,20 +121,20 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/dashboard/events/view', 'Events\EventController@viewControllers');
 
     //Staff Events
-    Route::group(['prefix' => 'admin/events', 'middleware' => ['role:Administrator|Staff']], function () {
+    Route::group(['prefix' => 'admin/events', 'middleware' => 'staff'], function () {
         Route::get('/', 'Events\EventController@adminIndex')->name('events.admin.index');
-        Route::get('/create', 'Events\EventController@adminCreateEvent')->middleware(['role:Administrator|Events-Coordinator'])->name('events.admin.create');
-        Route::post('/create', 'Events\EventController@adminCreateEventPost')->middleware(['role:Administrator|Events-Coordinator'])->name('events.admin.create.post');
-        Route::post('/{slug}/edit', 'Events\EventController@adminEditEventPost')->middleware(['role:Administrator|Events-Coordinator'])->name('events.admin.edit.post');
-        Route::post('/{slug}/update/create', 'Events\EventController@adminCreateUpdatePost')->middleware(['role:Administrator|Events-Coordinator'])->name('events.admin.update.post');
+        Route::get('/create', 'Events\EventController@adminCreateEvent')->name('events.admin.create');
+        Route::post('/create', 'Events\EventController@adminCreateEventPost')->name('events.admin.create.post');
+        Route::post('/{slug}/edit', 'Events\EventController@adminEditEventPost')->name('events.admin.edit.post');
+        Route::post('/{slug}/update/create', 'Events\EventController@adminCreateUpdatePost')->name('events.admin.update.post');
         Route::get('/{slug}', 'Events\EventController@adminViewEvent')->name('events.admin.view');
-        Route::get('/{slug}/delete', 'Events\EventController@adminDeleteEvent')->middleware(['role:Administrator|Events-Coordinator'])->name('events.admin.delete');
-        Route::get('/{slug}/controllerapps/{cid}/delete', 'Events\EventController@adminDeleteControllerApp')->middleware(['role:Administrator|Chief-Instructor|Events-Coordinator'])->name('events.admin.controllerapps.delete');
-        Route::get('/{slug}/updates/{id}/delete', 'Events\EventController@adminDeleteUpdate')->middleware(['role:Administrator|Events-Coordinator'])->name('events.admin.update.delete');
-        Route::get('/applications/{id}', 'Events\EventController@viewApplications')->middleware(['role:Administrator|Chief-Instructor|Events-Coordinator'])->name('event.viewapplications');
-        Route::post('/applications/confirm/{id}', 'Events\EventController@confirmController')->middleware(['role:Administrator|Chief-Instructor|Events-Coordinator'])->name('event.confirmapplication');
-        Route::post('/applications/manualconfirm/{id}', 'Events\EventController@addController')->middleware(['role:Administrator|Chief-Instructor|Events-Coordinator'])->name('event.addcontroller');
-        Route::post('/applications/manualconfirm/delete/{id}', 'Events\EventController@deleteController')->middleware(['role:Administrator|Chief-Instructor|Events-Coordinator'])->name('event.deletecontroller');
+        Route::get('/{slug}/delete', 'Events\EventController@adminDeleteEvent')->name('events.admin.delete');
+        Route::get('/{slug}/controllerapps/{cid}/delete', 'Events\EventController@adminDeleteControllerApp')->name('events.admin.controllerapps.delete');
+        Route::get('/{slug}/updates/{id}/delete', 'Events\EventController@adminDeleteUpdate')->name('events.admin.update.delete');
+        Route::get('/applications/{id}', 'Events\EventController@viewApplications')->name('event.viewapplications');
+        Route::post('/applications/confirm/{id}', 'Events\EventController@confirmController')->name('event.confirmapplication');
+        Route::post('/applications/manualconfirm/{id}', 'Events\EventController@addController')->name('event.addcontroller');
+        Route::post('/applications/manualconfirm/delete/{id}', 'Events\EventController@deleteController')->name('event.deletecontroller');
     });
 
     //Dashboard
@@ -155,7 +155,7 @@ Route::group(['middleware' => 'auth'], function () {
         });
 
         //Roster
-        Route::group(['middleware' => ['role:Administrator|Instructor']], function () {
+        Route::group(['middleware' => 'instructor'], function () {
             Route::get('/roster', 'AtcTraining\RosterController@index')->name('roster.index');
             Route::post('/roster/controller/add/', 'AtcTraining\RosterController@addController')->name('roster.addcontroller');
             Route::post('/roster/controller/addv/', 'AtcTraining\RosterController@addVisitController')->name('roster.addvisitcontroller');
@@ -171,7 +171,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/emailpref/unsubscribe', 'Users\DataController@unsubscribeEmails');
 
         //Applications View/Accept/Deny
-        Route::group(['middleware' => ['role:Administrator|Chief-Instructor']], function () {
+        Route::group(['middleware' => 'executive'], function () {
             Route::get('/training/applications', 'AtcTraining\ApplicationsController@viewAllApplications')->name('training.applications');
             Route::get('/training/applications/{id}', 'AtcTraining\TrainingController@viewApplication')->name('training.viewapplication');
             Route::get('/training/applications/{id}/accept', 'AtcTraining\TrainingController@acceptApplication')->name('training.application.accept');
@@ -210,7 +210,7 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     //Users View/Edit
-    Route::group(['prefix' => 'admin/users', 'middleware' => ['role:Administrator|Staff']], function () {
+    Route::group(['prefix' => 'admin/users', 'middleware' => 'staff'], function () {
         Route::get('/', 'Users\UserController@viewAllUsers')->name('users.viewall');
         Route::post('/search/ajax', 'Users\UserController@searchUsers')->name('users.search.ajax');
         Route::get('{id}', 'Users\UserController@adminViewUserProfile')->name('users.viewprofile');
@@ -234,17 +234,17 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/feedback', 'Feedback\FeedbackController@createPost')->name('feedback.create.post');
 
     //ATC Resources View
-    Route::get('/atcresources', 'Publications\AtcResourcesController@index')->middleware(['role:Controller'])->name('atcresources.index');
+    Route::get('/atcresources', 'Publications\AtcResourcesController@index')->middleware('certified')->name('atcresources.index');
 
     //Upload and Delete ATC Resources
-    Route::group(['middleware' => ['role:Administrator|Staff']], function () {
+    Route::group(['middleware' => 'staff'], function () {
         Route::post('/atcresources', 'Publications\AtcResourcesController@uploadResource')->name('atcresources.upload');
         Route::get('/atcresources/delete/{id}', 'Publications\AtcResourcesController@deleteResource')->name('atcresources.delete');
     });
 
     //ADMIN ONLY
     //Minutes
-    Route::group(['middleware' => ['role:Administrator']], function () {
+    Route::group(['middleware' => 'executive'], function () {
         Route::get('/meetingminutes/{id}', 'News\NewsController@minutesDelete')->name('meetingminutes.delete');
         Route::post('/meetingminutes', 'News\NewsController@minutesUpload')->name('meetingminutes.upload');
 
