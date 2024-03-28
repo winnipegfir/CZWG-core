@@ -264,11 +264,6 @@ Route::group(['middleware' => 'auth'], function () {
         //Settings
         Route::prefix('admin/settings')->group(function () {
             Route::get('/', 'Settings\SettingsController@index')->name('settings.index');
-            Route::get('/roles', 'Settings\SettingsController@viewRoles')->name('roles.view');
-            Route::post('/addrole', 'Settings\SettingsController@addRole')->name('roles.add');
-            Route::get('/deleterole/{id}', 'Settings\SettingsController@deleteRole')->name('roles.delete');
-            Route::post('/userrole/add', 'Users\UserController@addRole')->name('user.role.add');
-            Route::get('/deleteuserrole/{id}/{user}', 'Users\UserController@deleterole')->name('user.role.delete');
             Route::get('/site-information', 'Settings\SettingsController@siteInformation')->name('settings.siteinformation');
             Route::post('/site-information', 'Settings\SettingsController@saveSiteInformation')->name('settings.siteinformation.post');
             Route::get('/emails', 'Settings\SettingsController@emails')->name('settings.emails');

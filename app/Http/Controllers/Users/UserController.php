@@ -27,7 +27,6 @@ use mofodojodino\ProfanityFilter\Check;
 use NotificationChannels\Discord\Discord;
 use NotificationChannels\Discord\Exceptions\CouldNotSendNotification;
 use SocialiteProviders\Manager\Config;
-use Spatie\Permission\Models\Role;
 
 use App\Classes\DiscordClient;
 
@@ -170,53 +169,8 @@ class UserController extends Controller
         $userNotes = UserNote::where('user_id', $user->id)->orderBy('timestamp', 'desc')->get();
         //$xml['return'] = file_get_contents('https://cert.vatsim.net/cert/vatsimnet/idstatus.php?cid=' . $user->id);
         $auditLog = AuditLogEntry::where('affected_id', $id)->get();
-        $allroles = Role::all();
-        $roles = $user->getRoleNames();
 
-        return view('admin.users.profile', compact('user', 'xml', 'certification', 'active', 'auditLog', 'userNotes', 'roles', 'allroles'));
-    }
-
-    public function addRole(Request $request)
-    {
-        $u = User::whereId($request->input('id'))->first();
-        $r = $request->input('role');
-        $role = Role::where('name', $r)->first();
-        if ($u->hasRole($role->name)) {
-            return back()->withError('This user is already assigned the '.$role->name.' role!');
-        }
-        $u->assignRole($role->name);
-        $audit = new AuditLogEntry();
-        $audit->user_id = Auth::user()->id;
-        $audit->action = 'Added the '.$role->name.' Role.';
-        $audit->affected_id = $u->id;
-        $audit->time = Carbon::now()->toDateTimeString();
-        $audit->private = '0';
-        $audit->save();
-
-        return back()->withSuccess('Added the '.$role->name.' role!');
-    }
-
-    public function deleteRole($id, $user)
-    {
-        $role = Role::where('name', $id)->first();
-        $m = $role->name;
-        $u = User::whereId($user)->first();
-        if ($role->protected == '2' && ! Auth::user()->hasRole('Administrator')) {
-            return back()->withError('You do not have the permissions to delete this role!');
-        }
-        if ($role->protected == '1' && ! Auth::user()->hasAnyRole('Administrator|Staff')) {
-            return back()->withError('You do not have the permissions to delete this role!');
-        }
-        $u->removeRole($id);
-        $audit = new AuditLogEntry();
-        $audit->user_id = Auth::user()->id;
-        $audit->action = 'Removed the '.$m.' Role.';
-        $audit->affected_id = $u->id;
-        $audit->time = Carbon::now()->toDateTimeString();
-        $audit->private = '0';
-        $audit->save();
-
-        return back()->withSuccess('Deleted the '.$m.' role!');
+        return view('admin.users.profile', compact('user', 'xml', 'certification', 'active', 'auditLog', 'userNotes'));
     }
 
     public function editPermissions(Request $request, $id)
