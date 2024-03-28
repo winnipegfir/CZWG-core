@@ -89,7 +89,7 @@
                                     {{ Auth::user()->fullName('FLC') }}
                                 </h5>
                                 <h6 class="card-subtitle mb-2 text-muted">
-                                    {{Auth::user()->rating_GRP}} ({{Auth::user()->rating_short}})
+                                    {{Auth::user()->rating->getLongName()}} ({{Auth::user()->rating->getShortName()}})
                                 </h6>
                                 <p><a class="font-italic" style="color: blue;" data-toggle="modal" data-target="#ratingChange">Rating incorrect?</a></p>
                                 Role: {{Auth::user()->permissions()}}<br/>
@@ -482,20 +482,6 @@
                                                 </h3></div>
                                         </div>
 
-                                    @endif
-
-                                    @if ((isset($potentialRosterMember)) &&
-                                    $potentialRosterMember->rating_hours >= 25.0)
-                                        <span class="text-success">
-                                          You have the required <b>25 hours</b> to begin the training for your next rating!
-                                      </span>
-                                    @endif
-                                    @if (isset(Auth::user()->rosterProfile->rating))
-                                        @if (Auth::user()->rosterProfile->rating == 'S1' || Auth::user()->rosterProfile->rating == 'S2' || Auth::user()->rosterProfile->rating == 'S3')
-                                            @if ($potentialRosterMember->rating_hours < 25.0)
-                                                You require <b>25 hours</b> to begin the training for your next rating!
-                                            @endif
-                                        @endif
                                     @endif
 
 

@@ -17,7 +17,7 @@
                                     {{ Auth::user()->fullName('FLC') }}
                                 </h5>
                                 <h6 class="card-subtitle mb-2 text-muted">
-                                    {{Auth::user()->rating_GRP}} ({{Auth::user()->rating_short}})
+                                    {{Auth::user()->rating->getLongName()}} ({{Auth::user()->rating->getShortName()}})
                                 </h6>
                                 <p><a class="font-italic" style="color: blue;" data-toggle="modal" data-target="#ratingChange">Rating incorrect?</a></p>
                                 Role: {{Auth::user()->permissions()}}<br/>

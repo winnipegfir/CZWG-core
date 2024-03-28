@@ -17,7 +17,7 @@
             <div class="col-lg-4 mb-3" style="padding-right: 1%">
                 <div class="card" style="min-height: 100%">
                     <div class="card-header">
-                        {{$a->user->fullName('FLC')}} ({{$a->user->rating_short}})
+                        {{$a->user->fullName('FLC')}} ({{$a->user->rating->getShortName()}})
                     </div>
                     <div class="card-body">
                         <b>Position Requested: </b>
@@ -50,7 +50,7 @@
                             data-target="#confirmApp{{$a->id}}">Confirm Controller</a>
                         <a href="{{route('events.admin.controllerapps.delete', [$event->slug, $a->user_id])}}"
                             class="btn btn-sm btn-danger">Delete</a>
-                    </div>                       
+                    </div>
                 </div>
             </div>
 

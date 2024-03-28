@@ -47,7 +47,7 @@
           @endswitch</h4>
         <br>
         <div class="row">
-            <div class="col">     
+            <div class="col">
                 <div class="card">
                     <div class="card-body">
                         <h3 class="font-weight-bold blue-text">Training Notes</h3>
@@ -68,7 +68,7 @@
                                       <td>
                                         {{$notes->created_at}}
                                       </td>
-                                      <td>                     
+                                      <td>
                                         {{$notes->instructor->user->fullName('FLC')}}
                                       </td>
                                   </tr>
@@ -230,7 +230,7 @@
                 </div>
             </div>
             <br>
-            
+
                 <div class="card">
                     <div class="card-body">
                         <h3 class="font-weight-bold blue-text pb-2">Actions</h3>
@@ -345,16 +345,16 @@
                     <form method="POST" action="{{route('training.solo.request', $student->id)}}">
                         <p>This will generate a request to the CI for a solo certification.</p>
                             <select class="custom-select" name="position">
-                            @if ($student->user->rating_short >= '1')
+                            @if ($student->user->rating_id >= 1)
                                 <option value="Delivery">Delivery Solo</option>
                                 <option value="Ground">Ground Solo</option>
                                 <option value="Tower">Tower Solo</option>
                             @endif
-                            @if ($student->user->rating_short  >= '5')
+                            @if ($student->user->rating_id >= 5)
                                 <option value="Departure">Departure Solo</option>
                                 <option value="Arrival">Arrival Solo</option>
                             @endif
-                            @if ($student->user->rating_short  >= '6')
+                            @if ($student->user->rating_id  >= 6)
                                 <option value="Centre">Centre Solo</option>
                             @endif
                         </select>

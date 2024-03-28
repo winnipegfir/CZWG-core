@@ -50,7 +50,7 @@
                         {{$controller->user->fname}} {{$controller->user->lname}}
                     </td>
                     <td align="center">
-                        {{$controller->user->rating_short}}
+                        {{$controller->user->rating->getShortName()}}
                     </td>
 
 <!--WINNIPEG Controller Position Ratings from Db -->

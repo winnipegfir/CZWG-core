@@ -2,12 +2,14 @@
 
 namespace App\Models\Users;
 
+use App\Classes\VatsimRating;
 use App\Models\AtcTraining;
 use App\Models\ControllerBookings;
 use App\Models\Events;
 use App\Models\News;
 use App\Models\Tickets;
 use Exception;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
@@ -27,7 +29,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'id', 'fname', 'lname', 'email', 'rating_id', 'rating_short', 'rating_long', 'rating_GRP',
+        'id', 'fname', 'lname', 'email', 'rating_id',
         'reg_date', 'permissions', 'init', 'gdpr_subscribed_emails', 'avatar', 'bio', 'display_cid_only', 'display_fname', 'display_last_name',
         'discord_user_id', 'discord_dm_channel_id', 'avatar_mode'
     ];
@@ -267,5 +269,12 @@ class User extends Authenticatable
     public function preferences()
     {
         return $this->hasOne(UserPreferences::class);
+    }
+
+    protected function rating(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => VatsimRating::from($this->rating_id)
+        );
     }
 }

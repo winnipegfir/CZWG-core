@@ -31,7 +31,7 @@
                         <li>CERT Last Name: {{$user->lname}}</li>
                         @endif
                         <li>Display Name: {{$user->fullName('FLC')}}</li>
-                        <li>Rating: {{$user->rating_GRP}} ({{$user->rating_short}})</li>
+                        <li>Rating: {{$user->rating->getLongName()}} ({{$user->rating->getShortName()}})</li>
 
                     </ul>
                     <h5>Email</h5>

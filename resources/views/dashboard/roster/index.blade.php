@@ -85,7 +85,7 @@
                                     {{$controller->user->fullName('FL')}}
                                 </td>
                                 <td align="center">
-                                    {{$controller->user->rating_short}}
+                                    {{$controller->user->rating->getShortName()}}
                                 </td>
 
                                 <!--WINNIPEG Controller Position Ratings from Db -->
@@ -276,7 +276,7 @@
                                 {{$visitcontroller->user->fullName('FL')}}
                             </td>
                             <td align="center">
-                                {{$visitcontroller->user->rating_short}}
+                                {{$visitcontroller->user->rating->getShortName()}}
                             </td>
 
                             <!--WINNIPEG Controller Position Ratings from Db -->
@@ -648,7 +648,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body"> 
+                <div class="modal-body">
                     <p>Joining the Winnipeg FIR Discord server allows you to join the Winnipeg FIR controller and pilot
                         community.</p>
                     <h5>Rules</h5>
@@ -661,7 +661,7 @@
                         <li>4. Do not send spam in the server, including images, text, or emotes.</li>
                     </ul>
                     <p>Clicking the 'Join' button will redirect you to Discord. We require the Join Server permission to
-                        add your Discord account to the server.</p> 
+                        add your Discord account to the server.</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-light" data-dismiss="modal">Dismiss</button>
