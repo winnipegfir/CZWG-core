@@ -48,13 +48,6 @@
                     <a class="white-text font-weight-bold" href="{{route('settings.banner')}}">Go <i class="fas fa-arrow-right"></i></a>
                 </div>
             </div>
-            <div class="col-md-3 mb-3">
-                <div class="card h-100 p-4 btn-primary shadow-none">
-                    <h3>User Roles</h3>
-                    <p>Edit User Roles for site permissions<br>&nbsp;</p>
-                    <a class="white-text font-weight-bold" href="{{route('roles.view')}}">Go <i class="fas fa-arrow-right"></i></a>
-                </div>
-            </div>
         </div>
     </div>
 @stop
