@@ -22,7 +22,7 @@
             <div class="col-md-8">
                 <div class="row" style="padding-left: 20px">
                     <h2>
-                        <img src="{{$user->avatar()}}" style="height: 85px; width: 85px; margin-right: 10px; margin-bottom: 3px; border-radius: 50%;">{{$user->fullName('FLC')}} ({{$user->rating_short}})
+                        <img src="{{$user->avatar()}}" style="height: 85px; width: 85px; margin-right: 10px; margin-bottom: 3px; border-radius: 50%;">{{$user->fullName('FLC')}} ({{$user->rating->getShortName()}})
                         @if($user->staffProfile)
                             - {{$user->staffProfile->position}}
                         @endif
