@@ -68,7 +68,7 @@
                 <div class="col-md-6" style="padding-top: 2%">
                     <div class="card card-background" style="min-height: 100%">
                         <div class="card-header" style="color: #122b44;">
-                            <h2 class="font-weight-bold" style="text-align: center; padding-top:1%"><i class="fas fa-award"></i>&nbsp;&nbsp;Top Controllers this Month</h2>
+                            <h2 class="font-weight-bold" style="text-align: center; padding-top:1%"><i class="fas fa-award"></i>&nbsp;&nbsp;Top Controllers this Quarter</h2>
                         </div>
                         <div class="card-body" style="padding-bottom:2%">
                             @if(count($topControllersArray) == 0)
