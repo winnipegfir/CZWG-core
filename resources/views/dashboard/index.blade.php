@@ -444,11 +444,11 @@
 
                             <!--Winnipeg Training Hrs-->
                                     @if (!Auth::user()->rosterProfile->currency == 0)
-                                        @if (Auth::user()->rosterProfile->currency < 2.0)
+                                        @if (Auth::user()->rosterProfile->currency < 3.0)
                                             <h3><span class="badge rounded shadow-none blue">
                             {{decimal_to_hm(Auth::user()->rosterProfile->currency)}} hours recorded
                           </span></h3>
-                                        @elseif (Auth::user()->rosterProfile->currency >= 2.0)
+                                        @elseif (Auth::user()->rosterProfile->currency >= 3.0)
                                             <h3><span class="badge rounded shadow-none green">
                             {{decimal_to_hm(Auth::user()->rosterProfile->currency)}} hours recorded
                           </span></h3>
