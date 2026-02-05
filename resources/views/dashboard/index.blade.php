@@ -619,10 +619,10 @@
                                 <h3 class="font-weight-bold blue-text pb-2">Staff</h3>
                                 <ul class="list-unstyled mt-2 mb-0">
                                     <li class="mb-2">
-                                        <a href="{{route('training.index')}}" style="text-decoration:none;"><span
+                                        <a href="https://training.winnipegfir.ca" style="text-decoration:none;"><span
                                                 class="blue-text"><i class="fas fa-chevron-right"></i></span> &nbsp;
                                             <span
-                                                class="black-text">Online Training System</span></a>
+                                                class="black-text">Winnipeg365</span></a>
                                     </li>
                                     <li class="mb-2">
                                         <a href="{{route('roster.index')}}" style="text-decoration:none;"><span
