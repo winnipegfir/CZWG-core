@@ -18,7 +18,7 @@ class HomeController extends Controller
     {
         //Winnipeg online controllers
         $client = new Client();
-        $response = $client->request('GET', VatsimHelper::getDatafeedUrl());
+        $response = $client->request('GET', VatsimHelper::getDatafeedUrl(), ['verify' => false]);
         $controllers = json_decode($response->getBody()->getContents())->controllers;
 
         $finalPositions = [];
@@ -86,7 +86,7 @@ class HomeController extends Controller
 
             $weatherArray = [];
 
-            if ($resp) {
+            if ($resp && isset($resp->data)) {
                 foreach ($resp->data as $w) {
                     switch ($w->icao) {
                         case 'CYWG':

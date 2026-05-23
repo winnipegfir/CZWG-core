@@ -1,183 +1,121 @@
 @extends('layouts.master')
 
 @section('navbarprim')
-
     @parent
-
 @stop
 
-@section('title', 'Edit User')
+@section('title', 'Edit Controller - Winnipeg FIR')
 @section('description', "Winnipeg FIR's Controller Roster")
 
 @section('content')
-
-<div class="container" style="margin-top: 20px;">
-    <a href="{{route('roster.index')}}" class="blue-text" style="font-size: 1.2em;"> <i class="fas fa-arrow-left"></i> Roster</a>
-<br>
-<head>
 <style>
-* {
-  box-sizing: border-box;
+.edit-form select.form-control {
+    display: block !important;
+    width: 100% !important;
+    height: calc(1.5em + .75rem + 2px) !important;
+    padding: .375rem .75rem !important;
+    font-size: .875rem !important;
+    font-weight: 400 !important;
+    line-height: 1.5 !important;
+    color: #495057 !important;
+    background-color: #fff !important;
+    background-clip: padding-box !important;
+    border: 1px solid #ced4da !important;
+    border-radius: .25rem !important;
+    box-shadow: none !important;
+    -webkit-appearance: auto !important;
+    appearance: auto !important;
+    border-bottom: 1px solid #ced4da !important;
+    margin-bottom: 0 !important;
 }
-
-/* Create two equal columns that floats next to each other */
-.column {
-  float: left;
-  width: 50%;
-  padding: 10px;
+.edit-form select.form-control:focus {
+    border-color: #80bdff !important;
+    outline: 0 !important;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25) !important;
 }
-
-/* Clear floats after the columns */
-.row:after {
-  content: "";
-  display: table;
-  clear: both;
+.edit-form .form-group label {
+    margin-bottom: .4rem !important;
+    font-size: .875rem !important;
 }
 </style>
-</head>
+<div class="container" style="margin-top: 28px; max-width: 720px;">
+    <a href="{{route('roster.index')}}" class="blue-text" style="font-size: 1.1em;">
+        <i class="fas fa-arrow-left"></i> Roster
+    </a>
 
-<div align="center">
-<form method="post" action="{{route('roster.editcontroller', [$cid]) }}"<br>
-  <form class="form-horizontal">
-<fieldset>
+    <h1 class="blue-text font-weight-bold mt-3 mb-1">Edit Controller</h1>
+    <p class="text-muted mb-4">
+        <strong>{{$roster->full_name}}</strong> &mdash; CID {{$cid}}
+    </p>
 
-<!-- Form Name -->
-<legend>Edit Controller on Roster</legend>
+    <form method="POST" action="{{route('roster.editcontroller', [$cid])}}" class="edit-form">
+        @csrf
+        <input type="hidden" name="cid" value="{{ $cid }}">
 
-
-<div class="form-group">
-  <label>Controller CID:</label><br>
-  {{$roster->full_name." ".$cid}}<br><br>
-
-  <!--Delivery-->
-
-    <input type="hidden" name="cid" value="{{ $cid }}">
-</div>
-<div class="form-row">
-  <div class="col-md-3">
-  </div>
-<div class="form-group col-md-2">
-  <div align="center">
-  <label class="control-label" for="del">Delivery</label>
-    <select name="del" class="form-control">
-      <option value="1"{{ $roster->del == "1" ? "selected=selected" : ""}}>Not Certified</option>
-      <option value="2"{{ $roster->del == "2" ? "selected=selected" : ""}}>Training</option>
-      <option value="3"{{ $roster->del == "3" ? "selected=selected" : ""}}>Solo</option>
-      <option value="4"{{ $roster->del == "4" ? "selected=selected" : ""}}>Certified</option>
-    </select>
-</div>
-</div>
-
-
-<!-- Ground -->
-<div class="form-group col-md-2">
-  <label class="control-label" for="gnd">Ground</label>
-
-    <select name="gnd" class="form-control">
-      <option value="1"{{ $roster->gnd == "1" ? "selected=selected" : ""}}>Not Certified</option>
-      <option value="2"{{ $roster->gnd == "2" ? "selected=selected" : ""}}>Training</option>
-      <option value="3"{{ $roster->gnd == "3" ? "selected=selected" : ""}}>Solo</option>
-      <option value="4"{{ $roster->gnd == "4" ? "selected=selected" : ""}}>Certified</option>
-    </select>
-</div>
-
-
-<!-- Tower -->
-
-<div class="form-group col-md-2">
-  <label class="control-label" for="twr">Tower</label>
-    <select name="twr" class="form-control">
-      <option value="1"{{ $roster->twr == "1" ? "selected=selected" : ""}}>Not Certified</option>
-      <option value="2"{{ $roster->twr == "2" ? "selected=selected" : ""}}>Training</option>
-      <option value="3"{{ $roster->twr == "3" ? "selected=selected" : ""}}>Solo</option>
-      <option value="4"{{ $roster->twr == "4" ? "selected=selected" : ""}}>Certified</option>
-    </select>
-
-</div>
-</div>
-
-<br><br>
-
-<!-- Departure -->
-<div class="form-row">
-  <div class="col-md-3">
-  </div>
-<div class="form-group col-md-2">
-  <label class="control-label" for="dep">Departure</label>
-    <select name="dep" class="form-control">
-      <option value="1"{{ $roster->dep == "1" ? "selected=selected" : ""}}>Not Certified</option>
-      <option value="2"{{ $roster->dep == "2" ? "selected=selected" : ""}}>Training</option>
-      <option value="3"{{ $roster->dep == "3" ? "selected=selected" : ""}}>Solo</option>
-      <option value="4"{{ $roster->dep == "4" ? "selected=selected" : ""}}>Certified</option>
-    </select>
-  </div>
-
-<br><br>
-<!-- Approach -->
-<div class="form-group col-md-2">
-  <label class="control-label" for="app">Arrival</label>
-    <select name="app" class="form-control">
-      <option value="1"{{ $roster->app == "1" ? "selected=selected" : ""}}>Not Certified</option>
-      <option value="2"{{ $roster->app == "2" ? "selected=selected" : ""}}>Training</option>
-      <option value="3"{{ $roster->app == "3" ? "selected=selected" : ""}}>Solo</option>
-      <option value="4"{{ $roster->app == "4" ? "selected=selected" : ""}}>Certified</option>
-    </select>
-  </div>
-
-<br><br>
-<!-- Center -->
-<div class="form-group col-md-2">
-  <label class="control-label" for="ctr">Centre</label>
-    <select name="ctr" class="form-control">
-      <option value="1"{{ $roster->ctr == "1" ? "selected=selected" : ""}}>Not Certified</option>
-      <option value="2"{{ $roster->ctr == "2" ? "selected=selected" : ""}}>Training</option>
-      <option value="3"{{ $roster->ctr == "3" ? "selected=selected" : ""}}>Solo</option>
-      <option value="4"{{ $roster->ctr == "4" ? "selected=selected" : ""}}>Certified</option>
-
-    </select>
-  </div>
-</div>
-
-
-<!--Remarks-->
-<div class="form-group">
-  <label class="control-label" for="remarks">Remarks</label><br>
-  <textarea name="remarks" rows="1" cols="5" class="form-control">{{ $roster->remarks }}
-  </textarea>
-</div>
-
-
-
-  <!--Active Status-->
-    <div class="form-row">
-        <div class="col-md-4">
+        {{-- Cert levels --}}
+        <div class="card mb-4">
+            <div class="card-header font-weight-bold">Position Certifications</div>
+            <div class="card-body">
+                <div class="form-row">
+                    @foreach([
+                        'del' => 'Delivery',
+                        'gnd' => 'Ground',
+                        'twr' => 'Tower',
+                        'dep' => 'Departure',
+                        'app' => 'Approach',
+                        'ctr' => 'Centre',
+                    ] as $field => $label)
+                    <div class="form-group col-6 col-md-4">
+                        <label class="font-weight-500 text-dark" for="{{$field}}">{{$label}}</label>
+                        <select name="{{$field}}" id="{{$field}}" class="form-control form-control-sm">
+                            <option value="1" {{ $roster->$field == "1" ? "selected" : "" }}>Not Certified</option>
+                            <option value="2" {{ $roster->$field == "2" ? "selected" : "" }}>Training</option>
+                            <option value="3" {{ $roster->$field == "3" ? "selected" : "" }}>Solo</option>
+                            <option value="4" {{ $roster->$field == "4" ? "selected" : "" }}>Certified</option>
+                        </select>
+                    </div>
+                    @endforeach
+                </div>
+            </div>
         </div>
-        <div class="form-group col-md-2">
-            <label class="control-label" for"active">Active</label><br>
-            <select name="active" class="form-control" style="width:75px">
-                <option value="1"{{ $roster->active == "1" ? "selected=selected" : ""}}>Active</option>
-                <option value="0"{{ $roster->active == "0" ? "selected=selected" : ""}}>Not Active</option>
-            </select>
-        </div>
-        <!-- Rating Hours-->
-        <div class="form-group col-md-2">
-            <label class="control-label" for "rating_hours">Reset rating hours?</label><br>
-            <select style="width:75px" name="rating_hours" class="form-control">
-                <option value="false">No</option>
-                <option value="true">Yes</option>
-            </select>
-        </div>
-    </div>
-@csrf
-<!-- Button -->
-    <div class="form-group">
-        <label class="col-md-4 control-label" for="submit"></label>
-        <div class="col-md-4">
-            <button name="submit" class="btn btn-success">Submit</button>
-        </div>
-    </div>
-    </fieldset>
-  </form>
-</div>
 
+        {{-- Remarks --}}
+        <div class="card mb-4">
+            <div class="card-header font-weight-bold">Remarks</div>
+            <div class="card-body">
+                <div class="form-group mb-0">
+                    <textarea name="remarks" id="remarks" rows="3" class="form-control" placeholder="Optional notes...">{{ $roster->remarks }}</textarea>
+                </div>
+            </div>
+        </div>
+
+        {{-- Status & admin options --}}
+        <div class="card mb-4">
+            <div class="card-header font-weight-bold">Settings</div>
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="form-group col-6 col-md-4">
+                        <label class="font-weight-500 text-dark" for="active">Active Status</label>
+                        <select name="active" id="active" class="form-control form-control-sm">
+                            <option value="1" {{ $roster->active == "1" ? "selected" : "" }}>Active</option>
+                            <option value="0" {{ $roster->active == "0" ? "selected" : "" }}>Not Active</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-6 col-md-4">
+                        <label class="font-weight-500 text-dark" for="rating_hours">Reset Rating Hours?</label>
+                        <select name="rating_hours" id="rating_hours" class="form-control form-control-sm">
+                            <option value="false">No</option>
+                            <option value="true">Yes</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-5">
+            <button type="submit" class="btn btn-success px-4">Save Changes</button>
+            <a href="{{route('roster.index')}}" class="btn btn-light ml-2">Cancel</a>
+        </div>
+    </form>
+</div>
 @stop

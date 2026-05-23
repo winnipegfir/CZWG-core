@@ -95,122 +95,141 @@
         </div>
     @endif
     <header>
-        <nav id="czwgHeader" class="navbar navbar-expand-lg navbar-dark p-0" style="min-height:59px; background-color:#122b44">
+        <nav id="czwgHeader" class="navbar navbar-expand-lg navbar-dark">
             <div class="container">
-                <a class="navbar-brand" href="{{route('index')}}"><img style="height: 37px; width:auto;" src="https://winnipegfir.ca/storage/files/uploads/1667525192.png" alt=""></a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                <a class="navbar-brand" href="{{route('index')}}">
+                    <img src="https://winnipegfir.ca/storage/files/uploads/1667525192.png" alt="Winnipeg FIR">
+                </a>
+                <button class="navbar-toggler border-0" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
                         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mr-auto">
-                        {{-- <li class="nav-item">
-                            <a href="{{route('controllerbookings.public')}}" class="nav-link {{ Request::is('bookings/*') || Request::is('bookings') ? 'active' : '' }}">Bookings</a>
-                        </li> --}}
-                        <li class="nav-item {{ Request::is('news/*') || Request::is('news') ? 'active' : '' }}">
-                            @if(Auth::check() && Auth::user()->permissions >= 4)
-                            <li class="nav-item dropdown {{ Request::is('news') || Request::is('news/*') || Request::is('news') ? 'active' : '' }}">
-                            <a class="nav-link dropdown-toggle" style="cursor:pointer" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">News</a>
-                            <div class="dropdown-menu" aria-labelledby="dropdown01">
-                            <a class="dropdown-item" href="{{route('news')}}">News</a>
-                                <a class="dropdown-item {{ Request::is('news') ? 'active white-text' : '' }}" href="{{route('news.index')}}">Manage News</a>
-                            @else
+                        {{-- News --}}
+                        @if(Auth::check() && Auth::user()->permissions >= 4)
+                            <li class="nav-item dropdown {{ Request::is('news') || Request::is('news/*') ? 'active' : '' }}">
+                                <a class="nav-link dropdown-toggle" id="navDropNews" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">News</a>
+                                <div class="dropdown-menu" aria-labelledby="navDropNews">
+                                    <a class="dropdown-item" href="{{route('news')}}">View News</a>
+                                    <a class="dropdown-item" href="{{route('news.index')}}">Manage News</a>
+                                </div>
+                            </li>
+                        @else
+                            <li class="nav-item {{ Request::is('news/*') || Request::is('news') ? 'active' : '' }}">
                                 <a href="{{route('news')}}" class="nav-link">News</a>
-                            @endif
-                        </li>
-                        <li class="nav-item {{ Request::is('events/*') || Request::is('events') ? 'active' : '' }}">
-                            @if(Auth::check() && Auth::user()->permissions >= 4)
-                            <li class="nav-item dropdown {{ Request::is('events') || Request::is('events/*') || Request::is('events') ? 'active' : '' }}">
-                            <a class="nav-link dropdown-toggle" style="cursor:pointer" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Events</a>
-                            <div class="dropdown-menu" aria-labelledby="dropdown01">
-                            <a class="dropdown-item" href="{{route('events.index')}}">Events</a>
-                                <a class="dropdown-item {{ Request::is('events') ? 'active white-text' : '' }}" href="{{route('events.admin.index')}}">Manage Events</a>
-                            @else
+                            </li>
+                        @endif
+
+                        {{-- Events --}}
+                        @if(Auth::check() && Auth::user()->permissions >= 4)
+                            <li class="nav-item dropdown {{ Request::is('events') || Request::is('events/*') ? 'active' : '' }}">
+                                <a class="nav-link dropdown-toggle" id="navDropEvents" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Events</a>
+                                <div class="dropdown-menu" aria-labelledby="navDropEvents">
+                                    <a class="dropdown-item" href="{{route('events.index')}}">Events</a>
+                                    <a class="dropdown-item" href="{{route('events.admin.index')}}">Manage Events</a>
+                                </div>
+                            </li>
+                        @else
+                            <li class="nav-item {{ Request::is('events/*') || Request::is('events') ? 'active' : '' }}">
                                 <a href="{{route('events.index')}}" class="nav-link">Events</a>
-                            @endif
-                        </li>
-                        <li class="nav-item dropdown {{ Request::is('dashboard/applicationdashboard/application') || Request::is('dashboard/application/*') || Request::is('atcresources') ? 'active' : '' }}">
-                            <a class="nav-link dropdown-toggle" style="cursor:pointer" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">ATC</a>
-                            <div class="dropdown-menu" aria-labelledby="dropdown01">
-                            <a class="dropdown-item" href="{{route('roster.public')}}">Roster</a>
-                            @if(Auth::check() && Auth::user()->permissions >= 4)
-                                <a class="dropdown-item {{ Request::is('roster') ? 'active white-text' : '' }}" href="{{route('roster.index')}}">Manage Roster</a>
-                            @endif
-                            @if(!Auth::check() || Auth::user()->permissions == 0)
-                                <a class="dropdown-item {{ Request::is('join') ? 'active white-text' : '' }}" href="{{url ('/join')}}">How to Become a Winnipeg Controller</a>
-                                <a class="dropdown-item" href="{{route('training')}}">Training</a>
-                            @endif
+                            </li>
+                        @endif
+
+                        {{-- ATC --}}
+                        <li class="nav-item dropdown {{ Request::is('roster') || Request::is('atcresources') || Request::is('join') || Request::is('training') ? 'active' : '' }}">
+                            <a class="nav-link dropdown-toggle" id="navDropATC" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">ATC</a>
+                            <div class="dropdown-menu" aria-labelledby="navDropATC">
+                                <a class="dropdown-item" href="{{route('roster.public')}}">Roster</a>
+                                @if(Auth::check() && Auth::user()->permissions >= 4)
+                                    <a class="dropdown-item" href="{{route('roster.index')}}">Manage Roster</a>
+                                @endif
+                                @if(!Auth::check() || Auth::user()->permissions == 0)
+                                    <a class="dropdown-item" href="{{url('/join')}}">How to Become a Controller</a>
+                                    <a class="dropdown-item" href="{{route('training')}}">Training</a>
+                                @endif
                             </div>
                         </li>
-                        <li class="nav-item dropdown {{ Request::is('airports') ? 'active' : '' }}">
-                            <a class="nav-link dropdown-toggle" style="cursor:pointer" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pilots</a>
-                            <div class="dropdown-menu" aria-labelledby="dropdown01">
+
+                        {{-- Pilots --}}
+                        <li class="nav-item dropdown {{ Request::is('airports') || Request::is('pdc') ? 'active' : '' }}">
+                            <a class="nav-link dropdown-toggle" id="navDropPilots" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pilots</a>
+                            <div class="dropdown-menu" aria-labelledby="navDropPilots">
                                 <a class="dropdown-item" href="{{route('airports')}}">Airports</a>
                                 <a class="dropdown-item" href="{{route('pdc')}}">Pre-Departure Clearance</a>
                                 <a class="dropdown-item" href="https://simaware.ca" target="_blank">Live Map</a>
                             </div>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" style="cursor:pointer" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Publications</a>
-                            <div class="dropdown-menu" aria-labelledby="dropdown01">
-                                <a class="dropdown-item {{ Request::is('policies') ? 'active white-text' : '' }}" href="{{route('policies')}}">Policies</a>
-                                <a class="dropdown-item {{ Request::is('meetingminutes') ? 'active white-text' : '' }}" href="{{route('meetingminutes')}}">Meeting Minutes</a>
-                                <a class="dropdown-item {{ Request::is('privacy') ? 'active white-text' : '' }}" href="{{route('privacy')}}">Privacy Policy</a>
+
+                        {{-- Publications --}}
+                        <li class="nav-item dropdown {{ Request::is('policies') || Request::is('meetingminutes') || Request::is('privacy') ? 'active' : '' }}">
+                            <a class="nav-link dropdown-toggle" id="navDropPubs" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Publications</a>
+                            <div class="dropdown-menu" aria-labelledby="navDropPubs">
+                                <a class="dropdown-item" href="{{route('policies')}}">Policies</a>
+                                <a class="dropdown-item" href="{{route('meetingminutes')}}">Meeting Minutes</a>
+                                <a class="dropdown-item" href="{{route('privacy')}}">Privacy Policy</a>
                             </div>
                         </li>
-                        <li class="nav-item  {{ Request::is('staff') ? 'active' : '' }}">
-                            <a class="nav-link" href="{{url ('/staff')}}" aria-expanded="false">Staff</a>
+
+                        {{-- Staff --}}
+                        <li class="nav-item {{ Request::is('staff') ? 'active' : '' }}">
+                            <a class="nav-link" href="{{url('/staff')}}">Staff</a>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" style="cursor:pointer" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Feedback</a>
-                            <div class="dropdown-menu" aria-labelledby="dropdown01">
-                                <a class="dropdown-item {{ Request::is('feedback') ? 'active white-text' : '' }}" href="{{route('feedback.create')}}">Submit Feedback</a>
-                                <a class="dropdown-item {{ Request::is('yourfeedback') ? 'active white-text' : '' }}" href="{{route('yourfeedback')}}">Your Feedback</a>
+
+                        {{-- Feedback --}}
+                        <li class="nav-item dropdown {{ Request::is('feedback') || Request::is('yourfeedback') ? 'active' : '' }}">
+                            <a class="nav-link dropdown-toggle" id="navDropFeedback" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Feedback</a>
+                            <div class="dropdown-menu" aria-labelledby="navDropFeedback">
+                                <a class="dropdown-item" href="{{route('feedback.create')}}">Submit Feedback</a>
+                                <a class="dropdown-item" href="{{route('yourfeedback')}}">Your Feedback</a>
                             </div>
                         </li>
                     </ul>
-                    <ul class="navbar-nav ml-auto nav-flex-icons">
+
+                    <ul class="navbar-nav ml-auto align-items-center">
                         @unless (Auth::check())
-                        <li class="nav-item d-flex align-items-center">
-                            <a href="{{route('auth.connect.login')}}" class="nav-link waves-effect waves-light">
-                                <i class="fas fa-sign-in-alt"></i>&nbsp;Login
-                            </a>
-                        </li>
+                            <li class="nav-item nav-social">
+                                <a href="{{route('auth.connect.login')}}" class="nav-link" title="Login">
+                                    <i class="fas fa-sign-in-alt"></i>
+                                </a>
+                            </li>
                         @endunless
                         @auth
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-333" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <img src="{{Auth::user()->avatar()}}" style="height: 27px; width: 27px; margin-right: 7px; margin-bottom: 3px; border-radius: 50%;">&nbsp;<span class="font-weight-bold">{{Auth::user()->fullName("F")}}</span>
-                            </a>
-
-                            <div class="dropdown-menu dropdown-menu-right dropdown-default py-0" aria-labelledby="navbarDropdownMenuLink-333">
-                                <a class="dropdown-item {{ Request::is('dashboard') || Request::is('dashboard/*')}}" href="{{route('dashboard.index')}}">
-                                    <i class="fa fa-tachometer-alt mr-2"></i>Dashboard
+                            <li class="nav-item dropdown mr-1">
+                                <a class="nav-link nav-user-toggle dropdown-toggle" id="navUserDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <img src="{{Auth::user()->avatar()}}" class="nav-avatar" alt="">
+                                    <span class="font-weight-bold ml-1">{{Auth::user()->fullName("F")}}</span>
                                 </a>
-                                <a class="dropdown-item red-text" href="{{route('auth.logout')}}">
-                                    <i class="fa fa-sign-out-alt mr-2"></i>&nbsp;Logout
-                                </a>
-                            </div>
-                        </li>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navUserDrop">
+                                    <a class="dropdown-item" href="{{route('dashboard.index')}}">
+                                        <i class="fa fa-tachometer-alt mr-2"></i>Dashboard
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item nav-logout-item" href="{{route('auth.logout')}}">
+                                        <i class="fa fa-sign-out-alt mr-2"></i>Logout
+                                    </a>
+                                </div>
+                            </li>
                         @endauth
-                        <li class="nav-item d-flex align-items-center">
-                            <a href="https://www.facebook.com/CZWGFIR" class="nav-link waves-effect waves-light" target="_BLANK" >
-                                <i style="font-size: 1.7em;" class="fab fa-facebook"></i>
+
+                        <li class="nav-item nav-social">
+                            <a href="https://www.facebook.com/CZWGFIR" class="nav-link" target="_blank" title="Facebook">
+                                <i class="fab fa-facebook-f"></i>
                             </a>
                         </li>
-                        <li class="nav-item d-flex align-items-center">
-                            <a href="https://twitter.com/CZWGFIR" class="nav-link waves-effect waves-light" target="_BLANK" >
-                                <i style="font-size: 1.7em;" class="fab fa-twitter"></i>
+                        <li class="nav-item nav-social">
+                            <a href="https://twitter.com/CZWGFIR" class="nav-link" target="_blank" title="Twitter">
+                                <i class="fab fa-twitter"></i>
                             </a>
                         </li>
-                        <li class="nav-item d-flex align-items-center">
-                            <a href="https://www.instagram.com/CZWGFIR" class="nav-link waves-effect waves-light" target="_BLANK" >
-                                <i style="font-size: 1.7em;" class="fab fa-instagram"></i>
+                        <li class="nav-item nav-social">
+                            <a href="https://www.instagram.com/CZWGFIR" class="nav-link" target="_blank" title="Instagram">
+                                <i class="fab fa-instagram"></i>
                             </a>
                         </li>
-                        <li class="nav-item d-flex align-items-center">
-                            <a class="nav-link waves-effect waves-light" data-toggle="modal" data-target="#discordTopModal" target="_BLANK" >
-                                <i style="height: 22px; font-size: 1.7em;width: 28px;padding-left: 5px;padding-top: 2px;" class="fab fa-discord"></i>
+                        <li class="nav-item nav-social">
+                            <a class="nav-link" data-toggle="modal" data-target="#discordTopModal" title="Discord" style="cursor:pointer;">
+                                <i class="fab fa-discord"></i>
                             </a>
                         </li>
                     </ul>

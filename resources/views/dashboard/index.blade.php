@@ -1,1017 +1,741 @@
-@extends('layouts.dashboard')
+﻿@extends('layouts.dashboard')
 @section('content')
 @section('title', 'Dashboard - Winnipeg FIR')
 
 <style>
-.accordion {
-  background-color: white;
-  color: #122b44;
-  cursor: pointer;
-  padding: 2%;
-  width: 100%;
-  border: none;
-  text-align: left;
-  outline: none !important;
-  font-size: 12px;
-  transition: 0.4s;
+.dash-accordion-group {
+    border: 1px solid #dee2e6;
+    border-radius: 0.35rem;
+    overflow: hidden;
 }
-
-.accordion:hover {
-  background-color: #272727;
-  color: #fff;
+.dash-accordion-btn {
+    background-color: white;
+    color: #122b44;
+    cursor: pointer;
+    padding: 0.65rem 0.85rem;
+    width: 100%;
+    border: none;
+    border-top: 1px solid #dee2e6;
+    text-align: left;
+    outline: none !important;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: background-color 0.15s;
+    margin: 0;
+    display: block;
 }
-
-.active {
-  background-color: #122b44;
-  color: #fff;
+.dash-accordion-btn:first-child {
+    border-top: none;
 }
-
-.accordion:after {
-  font-family: "Font Awesome 5 Free";
-  content: '\f104';
-  float: right;
-  font-weight: 900;
+.dash-accordion-btn:hover,
+.dash-accordion-btn.is-open {
+    background-color: #f0f4f8;
 }
-
-.active:after {
-  font-family: "Font Awesome 5 Free";
-  content: "\f107";
-  font-weight: 900;
+.dash-accordion-btn::after {
+    font-family: "Font Awesome 5 Free";
+    content: '\f107';
+    float: right;
+    font-weight: 900;
+    color: #64748b;
 }
-
-.panel {
-  background-color: white;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.1s ease-out;
+.dash-accordion-btn.is-open::after {
+    content: '\f106';
+}
+.dash-panel {
+    background-color: #f8fafc;
+    border-top: 1px solid #dee2e6;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.15s ease-out;
+    margin: 0;
+}
+.dash-card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+.dash-card-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 800 !important;
+    color: #122b44;
+}
+.dash-card-header i {
+    color: #122b44;
+    font-size: 1rem;
+    width: 18px;
+    text-align: center;
+}
+.dash-cert-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.3em 0.75em;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+.dash-cert-badge i { font-size: 0.75rem; }
+.dash-cert-certified  { background: #dcfce7; color: #15803d; }
+.dash-cert-training   { background: #fef3c7; color: #92400e; }
+.dash-cert-danger     { background: #fee2e2; color: #b91c1c; }
+.dash-cert-home       { background: #dbeafe; color: #1d4ed8; }
+.dash-cert-visit      { background: #e0f2fe; color: #0369a1; }
+.dash-cert-instructor { background: #f3e8ff; color: #7e22ce; }
+.dash-cert-unknown    { background: #f1f5f9; color: #64748b; }
+.dash-active-badge    { background: #dcfce7; color: #15803d; padding: 0.25em 0.65em; border-radius: 999px; font-size: 0.75rem; font-weight: 600; }
+.dash-inactive-badge  { background: #fee2e2; color: #b91c1c; padding: 0.25em 0.65em; border-radius: 999px; font-size: 0.75rem; font-weight: 600; }
+.dash-nav-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0;
+    color: #122b44;
+    font-size: 0.9rem;
+    text-decoration: none !important;
+    border-bottom: 1px solid #f1f5f9;
+}
+.dash-nav-link:last-child { border-bottom: none; }
+.dash-nav-link:hover { color: #2980b9; }
+.dash-nav-link i { color: #122b44; width: 14px; font-size: 0.75rem; }
+.dash-ticket-item {
+    display: block;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.35rem;
+    margin-bottom: 0.4rem;
+    color: #122b44;
+    font-size: 0.875rem;
+    text-decoration: none !important;
+    background: #f8fafc;
+}
+.dash-ticket-item:hover { background: #f0f4f8; color: #122b44; }
+.dash-hours-bar {
+    height: 8px;
+    border-radius: 999px;
+    background: #e2e8f0;
+    margin: 0.5rem 0;
+    overflow: hidden;
+}
+.dash-hours-fill {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.4s ease;
+}
+.dash-panel input.form-control,
+.dash-panel select.form-control,
+.dash-panel textarea.form-control {
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: calc(1.5em + .75rem + 2px) !important;
+    padding: .375rem .75rem !important;
+    font-size: .875rem !important;
+    font-weight: 400 !important;
+    line-height: 1.5 !important;
+    color: #495057 !important;
+    background-color: #fff !important;
+    border-top: 1px solid #ced4da !important;
+    border-right: 1px solid #ced4da !important;
+    border-left: 1px solid #ced4da !important;
+    border-bottom: 1px solid #ced4da !important;
+    border-radius: .25rem !important;
+    box-shadow: none !important;
+    -webkit-appearance: auto !important;
+    appearance: auto !important;
+    margin-bottom: 0 !important;
+    background-image: none !important;
+}
+.dash-panel input.form-control:focus,
+.dash-panel select.form-control:focus,
+.dash-panel textarea.form-control:focus {
+    border-top: 1px solid #80bdff !important;
+    border-right: 1px solid #80bdff !important;
+    border-left: 1px solid #80bdff !important;
+    border-bottom: 1px solid #80bdff !important;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25) !important;
+    outline: 0 !important;
+}
+.dash-panel .btn-outline-secondary {
+    color: #6c757d !important;
+    border-color: #6c757d !important;
+    background: transparent !important;
+    box-shadow: none !important;
 }
 </style>
 
-<div style="background-color: #122b44">
-    <div class="container py-4">
-        <h1 data-step="1"
-            data-intro="Welcome to your Dashboard! This is your central hub for all things Winnipeg. Here you can interact with our FIR, and manage your account."
-            class="font-weight-bold white-text">Dashboard</h1>
-        <br class="my-2">
-        <div class="row">
-            <div class="col">
-                @if (Auth::user()->permissions >= 1 | $certification == "training")
-                    <div class="card">
-                        <div class="card-body">
-                            @if(Auth::user()->permissions >= 4)
-                            <h3 class="font-weight-bold blue-text pb-0">ATC Resources</h3>
-                            <a href="{{route('atcresources.index')}}"><i class="fa fa-edit"></i> Manage Resources</a><br></br>
-                            @else
-                            <h3 class="font-weight-bold blue-text pb-2">ATC Resources</h3>
-                            @endif
-                            <div class="list-group" style="border-radius: 0.5em !important">
-                                @foreach($atcResources as $resource)
-                                    @if($resource->atc_only && Auth::user()->permissions < 1)
-                                        @continue
-                                    @else
-                                        <a href="{{$resource->url}}" target="_new"
-                                           class="list-group-item list-group-item-action">
-                                            {{$resource->title}}
-                                        </a>
-                                    @endif
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
-                @endif
-                <br>
-                <div data-step="2" data-intro="Here is where you manage and view the data we store on you and your Winnipeg FIR Profile." class="card ">
-                    <div class="card-body pb-0">
-                        <h3 class="font-weight-bold blue-text pb-2">Profile</h3>
-                        <div class="row">
-                            <div class="col" data-step="3" data-intro="Here is an overview of your profile, including your CZWG roles. You can change the way your name is displayed by clicking on the 'Change display name' button. (CoC A4(b))">
-                                <h5 class="font-weight-bold card-title">
-                                    {{ Auth::user()->fullName('FLC') }}
-                                </h5>
-                                <h6 class="card-subtitle mb-2 text-muted">
-                                    {{Auth::user()->rating->getLongName()}} ({{Auth::user()->rating->getShortName()}})
-                                </h6>
-                                <p><a class="font-italic" style="color: blue;" data-toggle="modal" data-target="#ratingChange">Rating incorrect?</a></p>
-                                Role: {{Auth::user()->permissions()}}<br/>
-                                @if(Auth::user()->staffProfile)
-                                    Staff Role: {{Auth::user()->staffProfile->position}}
-                                @endif
-                                <hr>
-                                <div data-step="4" data-intro="Here you can link your Discord account to receive reminders for training sessions, and gain access to the CZWG Discord.">
-                                    <h5 class="mt-2 font-weight-bold blue-text">Discord</h5>
-                                    @if (!Auth::user()->hasDiscord())
-                                        <p class="mt-1"><i class="fa fa-times-circle" style="color:red"></i> You don't have a linked Discord account.</p>
-                                        <a href="#" class="btn-sm btn-primary m-0" data-toggle="modal" data-target="#discordModal" class="mt-1">Link Discord account</a>
-                                        <hr>
-                                    @else
-                                        <p class="mt-1"><i class="fa fa-check-circle" style="color:green"> </i> <img style="border-radius:50%; height: 30px;" class="img-fluid"
-                                            src="{{Auth::user()->getDiscordAvatar()}}" alt="">&nbsp;&nbsp;{{Auth::user()->getDiscordUser()->username}}
-                                        </p>
-                                        @if(!Auth::user()->memberOfCZWGGuild())
-                                            <a href="#" data-toggle="modal" data-target="#joinDiscordServerModal"
-                                               class="btn-sm btn-primary mt-1">Join The CZWG Discord</a>
-                                        @endif
-                                        <a href="#" class="btn-sm btn-danger m-0" data-toggle="modal" data-target="#discordModal" class="mt-1">Unlink</a>
-                                        <hr>
-                                    @endif
-                                </div>
-                            </div>
-
-                            <div data-step="5" data-intro="You can change your avatar here. Your avatar is available when people view your account. This will likely only be staff members, unless you sign up for an event or similar activity."
-                                 class="col">
-                                <h4 class="blue-text font-weight-bold card-title; text-center" style="padding-bottom: 2%">Avatar</h5>
-                                    <div class="text-center">
-                                        <img src="{{Auth::user()->avatar()}}"
-                                             style="width: 125px; height: 125px; margin-bottom: 10px; border-radius: 50%;">
-                                    </div>
-
-                                    <center><a role="button" data-toggle="modal" data-target="#changeAvatar"
-                                               class="btn btn-sm btn-primary mb-0" href="#">Change</a></center>
-                                    @if (!Auth::user()->isAvatarDefault())
-                                        <center><a role="button" class="btn btn-sm btn-danger"
-                                                   href="{{route('users.resetavatar')}}">Reset</a></center>
-                                @endif
-                            </div>
-                        </div>
-                        <ul class="list-unstyled">
-                            <li class="mb-1">
-                                &nbsp;
-                                <button class="accordion">Change Display Name</button>
-                                    <div class="panel">
-                                        <form method="POST" action="{{route('users.changedisplayname')}}">
-                                            <div class="card-body pb-0">
-                                                @csrf
-                                                <div class="form-group">
-                                                    <h5 class="font-weight-bold blue-text">First Name</h5>
-                                                    <input type="text" class="form-control" value="{{Auth::user()->display_fname}}"
-                                                        name="display_fname" id="input_display_fname">
-                                                    <br>
-                                                    <script>
-                                                        function resetToCertFirstName() {
-                                                            $("#input_display_fname").val("{{Auth::user()->fname}}")
-                                                        }
-                                                    </script>
-                                                </div>
-                                                <div class="form-group">
-                                                    <h5 class="font-weight-bold blue-text">Display Options</h5>
-                                                    <select name="format" class="custom-select">
-                                                        <option value="showall">Show first name, last name, and CID
-                                                            (e.g. {{Auth::user()->display_fname}} {{Auth::user()->lname}} {{Auth::id()}})
-                                                        </option>
-                                                        <option value="showfirstcid">Show first name and CID
-                                                            (e.g. {{Auth::user()->display_fname}} {{Auth::id()}})
-                                                        </option>
-                                                        <option value="showcid">Show CID only (e.g. {{Auth::id()}})</option>
-                                                    </select>
-                                                    <br>
-                                                    <input type="submit" class="ml-0 mt-4 btn btn-sm btn-success" value="Save">
-                                                    <a class="mt-4 btn btn-sm btn-primary" role="button"
-                                                    onclick="resetToCertFirstName()"><span>
-                                                            Reset to CERT first name</span></a>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                    <button class="accordion">Biography Editor</button>
-                                    <div class="panel">
-                                        <div class="card-body pb-0">
-                                            <h5 class="font-weight-bold blue-text">Your Biography</h5>
-                                                <form method="post" action="{{route('me.editbio')}}">
-                                                    @csrf
-                                                    <textarea name="bio" style="height: 100%;" class="form-control">{{Auth::user()->bio}}</textarea>
-                                                    <br>
-                                                    <p>Please ensure this complies with the VATSIM Code of Conduct.</p>
-                                                    <input type="submit" class="btn btn-sm btn-success ml-0" value="Save">
-                                                </form><br>
-                                        </div>
-                                    </div>
-                                    <button class="accordion">Your Preferences</button>
-                                        <div class="panel">
-                                            <div class="card-body pb-0">
-                                                <h5 class="font-weight-bold blue-text">Current Subscription Status</h5>
-                                                @if (Auth::user()->gdpr_subscribed_emails == 0)
-                                                    <h3>
-                                                        <span class="p-2 badge badge-danger">Not subscribed</span>
-                                                    </h3>
-                                                @else
-                                                    <h3>
-                                                        <span class="p-2 badge badge-success">Subscribed</span>
-                                                    </h3>
-                                                @endif
-                                                <hr>
-                                                <h5 class="font-weight-bold">What Does This Mean?</h5>
-                                                <p>
-                                                    When you subscribe to our email service, you allow the Winnipeg FIR to send you 'promotional' emails as defined by the European Union GDPR.
-                                                    These emails are typically not necessary to your continued participation in the FIR or holding an account with us on our system.<br/>
-                                                    Some examples would include:
-                                                </p>
-                                                <ul style="list-style: square">
-                                                    <li>Controller certifications for the month</li>
-                                                    <li>News from the FIR Chief about non-critical matters</li>
-                                                    <li>Updates from other staff members</li>
-                                                    <li>Event notifications</li>
-                                                </ul>
-                                                <br>
-                                                <p>To learn more about how we manage your data, please read our <a href="{{url('/privacy')}}">privacy policy!</a>
-                                                <br>
-                                                @if (Auth::user()->gdpr_subscribed_emails == 0)
-                                                <a role="button" class="ml-0 mt-3 btn btn-sm btn-success" href="{{url('/dashboard/emailpref/subscribe')}}">Subscribe to Winnipeg Emails Now!</a>
-                                                @else
-                                                <a role="button" class="ml-0 mt-3 btn btn-sm btn-danger" href="{{url('/dashboard/emailpref/unsubscribe')}}">Unsubscribe</a>
-                                                @endif
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
-                    </div>
-                </div>
-                <br/>
-                @if (Auth::user()->permissions >= 1)
-
-                    <div class="card">
-                        <div class="card-body">
-                            <h3 class="font-weight-bold blue-text pb-2">Upcoming Events</h3>
-                            <div class="list-group">
-                                @if (count($confirmedevent) < 1)
-                                    <h5>There are no scheduled events!</h5>
-                                @else
-
-                                    @foreach ($confirmedevent as $cevent)
-                                        <h5><u><b>{{$cevent->name}}</b> on {{$cevent->start_timestamp_pretty()}}</h5></u>
-                                        @foreach ($confirmedapp as $capp)
-                                            @if ($cevent->id == $capp->event->id)
-                                                <li>
-                                                    <b>Slot:</b> {{$capp->airport}}
-                                                    @if($capp->position != "Relief"){{$capp->position}} from @endif
-                                                    @if($capp->position == "Relief")
-                                                        <text class="text-danger">{{$capp->position}}</text>
-                                                        from @endif
-                                                    {{$capp->start_timestamp}}z - {{$capp->end_timestamp}}z
-                                                </li>
-
-                                            @endif
-                                        @endforeach
-                                        <br>
-                                    @endforeach
-                                @endif
-                                @if (count($unconfirmedapp) < 1)
-                                    <p class="mb-0">
-                                        You have
-                                        <text class="text-primary"><b>no</b></text>
-                                        active event applications
-                                    </p>
-                                @elseif (count($unconfirmedapp) == 1)
-                                    <a href="" data-target="#unconfirmedEvents" data-toggle="modal"
-                                       style="text-decoration:none;">
-                                                <span class="blue-text">
-                                                    <i class="fas fa-chevron-right"></i>
-                                                </span>
-                                        <span style="color: #122b44">
-                                                    You have <text
-                                                class="text-success"><b>{{count($unconfirmedapp)}}</b></text> active event application
-                                                </span>
-                                    </a>
-                                @else
-                                    <a href="" data-target="#unconfirmedEvents" data-toggle="modal"
-                                       style="text-decoration:none;">
-                                             <span class="blue-text">
-                                                 <i class="fas fa-chevron-right"></i>
-                                             </span>
-                                        <span style="color: #122b44">You have <text
-                                                class="text-success"><b>{{count($unconfirmedapp)}}</b></text> active event applications</span>
-                                    </a>
-                                @endif
-
-                                @if(count($confirmedevent) != 0)
-                                    <a href="{{url('/dashboard/events/view')}}" style="text-align: center">View Event Rosters</a>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                @endif
-                {{--
-                @if(Auth::user()->permissions >= 3)
-                    <div class="card">
-                        <div class="card-body">
-                            <h3 class="font-weight-bold blue-text pb-2">Instructor Panel</h3>
-                            @if(Auth::user()->permissions >= 4)
-
-                                <!--All Students Admin View-->
-                                @foreach($allinstructors as $instructor)
-                                    <b><u>{{$instructor->full_name}}</u></b><br>
-
-
-                                    @foreach ($pairs as $p)
-                                        @if($instructor->cid == $p->instructor_id)
-
-                                            {{$p->student_name}} -
-                                            <a href="{{route('instructor.student.delete', [$p->student_id])}}">Delete</a>
-                                            <br>
-
-                                        @endif
-                                    @endforeach<br>
-
-                                @endforeach
-                            @endif
-                            <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#newStudent" style="float: left;">Add New Student</button>
-                        <!--Instructor Specific Student List-->
-                            @if(Auth::user()->permissions == 3)
-                                <h5>List of your Students</h5><br>
-                                @if (count($checkstudents) < 1)
-                                    You have no students currently!
-                                    <br>
-                                @else
-                                @foreach($pairs as $p)
-                                    @if(Auth::user()->id == $p->instructor_id)
-                                        {{$p->student_name}}<br>
-
-                                    @endif
-                                @endforeach
-                            @endif
-                            @endif
-
-
-                            <ul class="list-unstyled mt-2 mb-0">
-
-                            </ul>
-
-
-                        </div>
-                    </div>
-
-                @endif
-                --}}
-            </div>
-            @if(Auth::user()->permissions >= 1)
-                <div class="col">
-                    <div class="card" data-step="6"
-                         data-intro="Here you can view your certification status within CZWG.">
-                        <div class="card-body">
-                            <h3 class="font-weight-bold blue-text pb-2">Certification and Training</h3>
-                            <h5 class="card-title">Status</h5>
-                            <div class="card-text">
-                                <div class="d-flex flex-row justify-content-left">
-                                    @if ($certification == "certified")
-                                        <h3>
-                            <span class="badge  badge-success rounded shadow-none">
-                                <i class="fa fa-check"></i>&nbsp;
-                                CZWG Certified
-                            </span>
-                                        </h3>
-                                    @elseif ($certification == "not_certified")
-                                        <h3>
-                            <span class="badge badge-danger rounded shadow-none">
-                                <i class="fa fa-times"></i>&nbsp;
-                                Not Certified to Control
-                            </span>
-                                        </h3>
-                                    @elseif ($certification == "training")
-                                        <h3>
-                            <span class="badge badge-warning rounded shadow-none">
-                                <i class="fa fa-book-open"></i>&nbsp;
-                                In Training
-                            </span>
-                                        </h3>
-                                    @elseif ($certification == "home")
-                                        <h3>
-                            <span class="badge rounded shadow-none" style="background-color:#122b44">
-                                <i class="fa fa-user-check"></i>&nbsp;
-                                CZWG Controller
-                            </span>
-                                        </h3>
-                                    @elseif ($certification == "visit")
-                                        <h3>
-                            <span class="badge badge-info rounded shadow-none">
-                                <i class="fa fa-plane"></i>&nbsp;
-                                    CZWG Visiting Controller
-                            </span>
-                                        </h3>
-                                    @elseif ($certification == "instructor")
-                                        <h3>
-                            <span class="badge badge-info rounded shadow-none">
-                                <i class="fa fa-chalkboard-teacher"></i>&nbsp;
-                                        CZWG Instructor
-                            </span>
-                                        </h3>
-                                    @else
-                                        <h3>
-                            <span class="badge badge-dark rounded shadow-none">
-                                <i class="fa fa-question"></i>&nbsp;
-                                Unknown
-                            </span>
-                                        </h3>
-                                    @endif
-                                    @if ($active == 0)
-                                        <h3>
-                            <span class="badge ml-2 badge-danger rounded shadow-none">
-                                <i class="fa fa-times"></i>&nbsp;
-                                Inactive
-                            </span>
-                                        </h3>
-                                    @elseif ($active == 1)
-                                        <h3>
-                            <span class="badge ml-2 badge-success rounded shadow-none">
-                                <i class="fa fa-check"></i>&nbsp;
-                                Active
-                            </span>
-                                        </h3>
-                                    @endif
-                                </div>
-                                <span class="text-danger">
-                                    @if ($certification == "not_certified")
-                                        <h5 class="mb-0">You are not a certified controller! Please contact an instructor to begin training!</h5>
-                                    @endif
-                                    @if ($active == 0)
-                                        <p class="mb-0">You are currently listed as inactive! please contact staff to be added to the active roster.</p>
-                                    @endif
-                                  </span>
-                            </div>
-                            <!--All users, no hours-->
-                            @if (Auth::user()->rosterProfile)
-                                <hr>
-
-                                @if (Auth::user()->rosterProfile->status == "not_certified")
-                                @else
-                                    <h3 class="font-weight-bold blue-text pb-2">Activity</h3>
-
-                                    <b>This Quarter:</b>
-                                    @if (Auth::user()->rosterProfile->currency < 0.1)
-                                        <h3><span class="badge rounded shadow-none red">
-                            No hours recorded
-                        </span></h3>
-                                    @endif
-                                @endif
-
-                            <!--Winnipeg Training Hrs-->
-                                    @if (!Auth::user()->rosterProfile->currency == 0)
-                                        @if (Auth::user()->rosterProfile->currency < 3.0)
-                                            <h3><span class="badge rounded shadow-none blue">
-                            {{decimal_to_hm(Auth::user()->rosterProfile->currency)}} hours recorded
-                          </span></h3>
-                                        @elseif (Auth::user()->rosterProfile->currency >= 3.0)
-                                            <h3><span class="badge rounded shadow-none green">
-                            {{decimal_to_hm(Auth::user()->rosterProfile->currency)}} hours recorded
-                          </span></h3>
-                                        @endif
-                                    @endif
-                                    <p class="mb-0">You require <b>3 hours</b> of activity every quarter!</p>
-
-                            @endif
-                            @elseif ($certification == "not_certified")
-                                <ul class="list-unstyled mt-2 mb-0">
-                                    <li class="mb-2">
-                                        <a href="{{route('application.list')}}" style="text-decoration:none;"><span
-                                                class="blue-text"><i class="fas fa-chevron-right"></i></span> &nbsp;
-                                            <span
-                                                class="black-text">View Your Applications</span></a>
-                                    </li>{{--
-                            <li class="mb-2">
-                                <a href="{{route('application.list')}}" style="text-decoration:none;"><span class="blue-text"><i class="fas fa-chevron-right"></i></span> &nbsp; <span class="black-text">Training Centre</span></a>
-                            </li> --}}
-                                    @endif
-                                    @if ($certification == "training")
-                                        <h5 class="card-title">Status</h5>
-                                        <div class="card-text">
-                                            <div class="d-flex flex-row justify-content-left">
-
-                                                <h3>
-                          <span class="badge badge-warning rounded shadow-none">
-                              <i class="fa fa-book-open"></i>&nbsp;
-                              In Training
-                          </span>
-                                                </h3></div>
-                                        </div>
-
-                                    @endif
-
-
-                                </ul>
-                        </div>
-                    </div>
-                    <br/>
-                    <div class="card" data-step="7"
-                         data-intro="This is where you'll see any training-related notifications - exams, modules and more will appear here!">
-                        <div class="card-body">
-                            <h3 class="font-weight-bold blue-text">Training</h3>
-                            <ul class="list-unstyled mt-2 mb-0">
-                                <li class="mb-2">
-                                    <a href="https://training.winnipegfir.ca" style="text-decoration:none;"><span class="blue-text"><text><h5 class="font-weight-bold blue-text"><i class="fas fa-arrow-right"></i></span> &nbsp; Winnipeg365</h5></text></a>
-                                </li>
-                            </ul>
-                            <hr>
-                            @if($yourinstructor != null && $yourinstructor->instructor != null)
-                                <p class="mb-0"><b>Your Instructor:</b> {{$yourinstructor->instructor->user->fullName('FL')}}
-                                    <br>
-                                <b>Email:</b> <a href="mailto:{{$yourinstructor->instructor_email}}">{{$yourinstructor->instructor->email}}</a>
-                                </p>
-                            @else
-                                @if ($certification == "training")
-                                <p class="mb-0">You do not have an Instructor assigned! If you have any questions, please contact staff.</p>
-                                @endif
-                                <p class="mb-0">You do not have an Instructor assigned! If you have any questions, please contact staff.</p>
-                            @endif
-                        </div>
-                    </div>
-                <br/>
-                    <div data-step="8"
-                         data-intro="If you have any enquires or issues for the staff, feel free to make a ticket via the ticketing system."
-                         class="card">
-                        <div class="card-body">
-                            <h3 class="font-weight-bold blue-text pb-0">Support</h3>
-                            @if (count($openTickets) < 1)
-                            <p>You have no open support tickets!</p>
-                            <hr class="mb-0">
-                            @else
-                                <h5 class="font-weight-bold blue-text">Tickets</h5>
-                                <h5 class="black-text" style="font-weight: bold">
-                                    @if (count($openTickets) == 1)
-                                        1 open ticket
-                                    @else
-                                        {{count($openTickets)}} open tickets
-                                    @endif
-                                </h5>
-                                <div class="list-group">
-                                    @foreach ($openTickets as $ticket)
-                                        <a href="{{url('/dashboard/tickets/'.$ticket->ticket_id)}}"
-                                           class="list-group-item list-group-item-action black-text rounded-0 "
-                                           style="background-color:#d9d9d9">{{$ticket->title}}<br/>
-                                            <small title="{{$ticket->updated_at}} (GMT+0, Zulu)">Last
-                                                updated {{$ticket->updated_at_pretty()}}</small>
-                                        </a>
-                                    @endforeach
-                                </div>
-                                <br>
-                            @endif
-                            @if(Auth::user()->permissions >= 4)
-                                <br>
-                                <h5 class="font-weight-bold blue-text">Staff Tickets</h5>
-
-                                @if (count($staffTickets) < 1)
-                                    You have no open <b>staff</b> tickets
-                                    <br>
-                                @else
-                                    <h5 class="black-text" style="font-weight: bold">
-                                        @if (count($staffTickets) == 1)
-                                            1 open staff ticket
-                                        @else
-                                            {{count($staffTickets)}} open staff tickets
-                                        @endif
-                                    </h5>
-                                    <div class="list-group">
-                                        @foreach ($staffTickets as $ticket)
-                                            <a href="{{url('/dashboard/tickets/'.$ticket->ticket_id)}}"
-                                               class="list-group-item list-group-item-action black-text rounded-0 "
-                                               style="background-color:#d9d9d9">{{$ticket->title}}<br/>
-                                                <small title="{{$ticket->updated_at}} (GMT+0, Zulu)">Last
-                                                    updated {{$ticket->updated_at_pretty()}}</small>
-                                            </a>
-                                        @endforeach
-                                    </div>
-                                @endif
-                                <hr>
-                            @endif
-                            <ul class="list-unstyled mt-2 mb-0">
-                                <li class="mb-2">
-                                    <a href="{{route('feedback.create')}}" style="text-decoration:none;"><span
-                                            class="blue-text"><i class="fas fa-chevron-right"></i></span> &nbsp; <span
-                                            class="black-text">Send feedback</span></a>
-                                </li>
-                                <li class="mb-2">
-                                    <a href="{{route('tickets.index', ['create' => 'yes'])}}"
-                                       style="text-decoration:none;"><span
-                                            class="blue-text"><i class="fas fa-chevron-right"></i></span> &nbsp; <span
-                                            class="black-text">Start a support ticket</span></a>
-                                </li>
-                                <li class="mb-2">
-                                    <a href="{{route('tickets.index')}}" style="text-decoration:none;"><span
-                                            class="blue-text"><i class="fas fa-chevron-right"></i></span> &nbsp; <span
-                                            class="black-text">View previous support tickets</span></a>
-                                </li>
-                                <li class="mb-2">
-                                    <a href="{{route('me.data')}}" style="text-decoration:none;">
-                                        <span class="blue-text">
-                                            <i class="fas fa-chevron-right"></i>
-                                        </span>
-                                    &nbsp;
-                                    <span class="black-text">
-                                    Manage your data
-                                </span>
-                                </a>
-                            </li>
-                                @if(Auth::user()->permissions >= 4)
-                                    <li class="mb-0">
-                                        <a href="{{route('tickets.staff')}}" style="text-decoration:none;"><span
-                                                class="blue-text"><i class="fas fa-chevron-right"></i></span> &nbsp;
-                                            <span
-                                                class="black-text">View staff ticket inbox</span></a>
-                                    </li>
-                            @endif
-                            <!--<li class="mb-2">
-                            <a href="https://kb.ganderoceanic.com" target="_blank" style="text-decoration:none;"><span class="blue-text"><i class="fas fa-chevron-right"></i></span> &nbsp; <span class="black-text">CZWG Knowledge Base</span></a>
-                        </li>-->
-                            </ul>
-                        </div>
-                    </div>
-                    <br/>
-                    @if (Auth::user()->permissions >= 4)
-                        <div class="card">
-                            <div class="card-body">
-                                <h3 class="font-weight-bold blue-text pb-2">Staff</h3>
-                                <ul class="list-unstyled mt-2 mb-0">
-                                    <li class="mb-2">
-                                        <a href="https://training.winnipegfir.ca" style="text-decoration:none;"><span
-                                                class="blue-text"><i class="fas fa-chevron-right"></i></span> &nbsp;
-                                            <span
-                                                class="black-text">Winnipeg365</span></a>
-                                    </li>
-                                    <li class="mb-2">
-                                        <a href="{{route('roster.index')}}" style="text-decoration:none;"><span
-                                                class="blue-text"><i class="fas fa-chevron-right"></i></span> &nbsp;
-                                            <span
-                                                class="black-text">Manage Controller Roster</span></a>
-                                    </li>
-                                    <li class="mb-2">
-                                        <a href="{{route('events.admin.index')}}" style="text-decoration:none;"><span
-                                                class="blue-text"><i class="fas fa-chevron-right"></i></span> &nbsp;
-                                            <span
-                                                class="black-text">Manage Events</span></a>
-                                    </li>
-                                    <li class="mb-2">
-                                        <a href="{{route('news.index')}}" style="text-decoration:none;"><span
-                                                class="blue-text"><i class="fas fa-chevron-right"></i></span> &nbsp;
-                                            <span
-                                                class="black-text">Manage News</span></a>
-                                    </li>
-                                    <li class="mb-2">
-                                        <a href="{{route('staff.feedback.index')}}" style="text-decoration:none;"><span
-                                                class="blue-text"><i class="fas fa-chevron-right"></i></span> &nbsp;
-                                            <span
-                                                class="black-text">Manage Feedback</span></a>
-                                    </li>
-                                    <li class="mb-2">
-                                        <a href="{{(route('users.viewall'))}}" style="text-decoration:none;">
-                                    <span class="blue-text">
-                                        <i class="fas fa-chevron-right"></i>
-                                    </span>
-                                            &nbsp;
-                                            <span class="black-text">Manage Users</span>
-                                        </a>
-                                    </li>
-                                    <li class="mb-0">
-                                        <a href="{{(route('dashboard.upload'))}}" style="text-decoration:none;">
-                                    <span class="blue-text">
-                                        <i class="fas fa-chevron-right"></i>
-                                    </span>
-                                            &nbsp;
-                                            <span class="black-text">File Uploader</span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <br/>
-                    @endif
-                    @if (Auth::user()->permissions >= 5)
-                        <div class="card">
-                            <div class="card-body">
-                                <h3 class="font-weight-bold blue-text pb-2">Site Admin</h3>
-                                <ul class="list-unstyled mt-2 mb-0">
-                                    <li class="mb-2">
-                                        <a href="{{route('settings.index')}}" style="text-decoration:none;"><span
-                                                class="blue-text"><i class="fas fa-chevron-right"></i></span> &nbsp;
-                                            <span
-                                                class="black-text">Settings</span></a>
-                                    </li>
-                                    <li class="mb-0">
-                                        <a href="{{route('network.index')}}" style="text-decoration:none;">
-                                <span class="blue-text">
-                                    <i class="fas fa-chevron-right"></i>
-                                </span>
-                                            &nbsp;
-                                            <span class="black-text">
-                                    View network data
-                                </span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    @endif
-                </div>
-            </div>
-        <br/>
-        <a style="color: white" href="javascript:void(0);" onclick="javascript:introJs().setOption('showProgress', true).start();">Dashboard Tutorial</a>
+{{-- Page header + background --}}
+<div style="background: linear-gradient(135deg, #0d2035 0%, #122b44 100%); min-height: calc(100vh - 60px); padding-bottom: 3rem;">
+    <div style="padding: 1.75rem 0 1.25rem;">
+        <div class="container">
+            <h1 class="font-weight-bold white-text mb-0">
+                Dashboard
+            </h1>
+            <p class="mb-0" style="color: rgba(255,255,255,0.55); font-size: 0.9rem;">
+                Welcome back, {{ Auth::user()->fullName('F') }}
+            </p>
+        </div>
     </div>
 
-    <script>
-    var acc = document.getElementsByClassName("accordion");
-    var i;
+<div class="container py-3">
+    <div class="row">
 
-    for (i = 0; i < acc.length; i++) {
-    acc[i].addEventListener("click", function() {
-        this.classList.toggle("active");
-        var panel = this.nextElementSibling;
-        if (panel.style.maxHeight) {
-        panel.style.maxHeight = null;
-        } else {
-        panel.style.maxHeight = panel.scrollHeight + "px";
-        }
-    });
-    }
-    </script>
+        {{-- LEFT COLUMN --}}
+        <div class="col-md-6">
 
-    <!--Change avatar modal-->
-    <div class="modal fade" id="changeAvatar" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-         aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Change avatar</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form method="post" action="{{route('users.changeavatar')}}" enctype="multipart/form-data" class=""
-                      id="">
-                    <div class="modal-body">
-                        <p>Please ensure your avatar complies with the VATSIM Code of Conduct. This avatar will be
-                            visible to staff members, if you place a controller booking, and if you're a staff member
-                            yourself, on the staff page.</p>
-                        @csrf
-                        <div class="input-group pb-3">
-                            <div class="custom-file">
-                                <input type="file" class="custom-file-input" name="file">
-                                <label class="custom-file-label">Choose file</label>
-                            </div>
-                        </div>
-                        @if(Auth::user()->hasDiscord())
-                            or use your Discord avatar (refreshes every 6 hours)<br/>
-                            <p class="mt-1"><img style="border-radius:50%; height: 60px;" class="img-fluid"
-                                                 src="{{Auth::user()->getDiscordAvatar()}}" alt=""><a
-                                    href="{{route('users.changeavatar.discord')}}"
-                                    class="btn btn-outline-success bg-CZQO-blue-light mt-3">Use Discord Avatar</a>
+            {{-- ATC Resources --}}
+            @if (Auth::user()->permissions >= 1 || $certification == "training")
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="dash-card-header">
+                        <i class="fas fa-book-open"></i>
+                        <h3>ATC Resources</h3>
+                        @if(Auth::user()->permissions >= 4)
+                            <a href="{{route('atcresources.index')}}" class="ml-auto" style="font-size:0.8rem;">
+                                <i class="fa fa-edit"></i> Manage
+                            </a>
                         @endif
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-light" data-dismiss="modal">Dismiss</button>
-                        <input type="submit" class="btn btn-success" value="Upload">
+                    <div class="list-group list-group-flush">
+                        @foreach($atcResources as $resource)
+                            @if($resource->atc_only && Auth::user()->permissions < 1)
+                                @continue
+                            @endif
+                            <div class="list-group-item px-0 py-2 d-flex align-items-center" style="font-size:0.875rem;">
+                                <span class="mr-auto">{{$resource->title}}</span>
+                                <a href="{{$resource->url}}" target="_blank"
+                                   class="ml-3 flex-shrink-0"
+                                   title="Open resource"
+                                   style="color:#64748b; font-size:1rem;">
+                                    <i class="fas fa-download"></i>
+                                </a>
+                            </div>
+                        @endforeach
                     </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <!--End change avatar modal-->
-
-    <!--Biography modal-->
-
-    <!--End biography modal-->
-
-    <!-- Start Rating Change modal -->
-    <div class="modal fade" id="ratingChange" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">How We Update VATSIM Ratings</h5>
-                </div>
-                <div class="modal-body">
-                    <h5>Our website updates your VATSIM rating 2 ways:</h5>
-                    The first way is on login. Everytime you login to the website, we get your rating from VATSIM connect.
-                    <br><br>
-                    The second way is everyday, at 00:00 Eastern, we go through our list of users and compare your rating on our website with the VATSIM API.
-                    <hr>
-                    <h5>How can I fix my rating?</h5>
-                    <p>If you would like to fix your rating on our website, you may <a href="/logout">logout</a> and log back in, or wait until our check happens at 00:00 Eastern Time.</p>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-sm btn-primary" data-dismiss="modal">Dismiss</button>
                 </div>
             </div>
-        </div>
-    </div>
-    <!-- End Rating Change modal -->
-    <!--Change display name modal-->
-
-    <!--End change display name modal-->
-
-    <!--Link/unlink Discord modal-->
-    <div class="modal fade" id="discordModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-         aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            @if (!Auth::user()->hasDiscord())
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Link your Discord account</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <img style="height: 50px;" src="{{asset('/img/discord/CZWGplusdiscord.png')}}"
-                             class="img-fluid mb-2" alt="">
-                        <p>Linking your Discord account with Winnipeg FIR allows you to:</p>
-                        <ul>
-                            <li>Join our Discord community</li>
-                            <li>Receive notifications for ticket replies, training updates, and more</li>
-                            <li>Use your Discord avatar on the website</li>
-                        </ul>
-                        <p>To link your account, click the button below. You will be redirected to Discord to approve
-                            the link. Information on data stored through Discord OAuth is available in the <a
-                                href="{{route('privacy')}}">privacy policy.</a></p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-light" data-dismiss="modal">Dismiss</button>
-                        <a role="button" type="submit" href="{{route('me.discord.link')}}" class="btn btn-primary">Link
-                            Account</a>
-                    </div>
-                </div>
-            @else
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Unlink your Discord account</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <p>Fair Warning: Unlinking your account will:</p>
-                        <ul>
-                            <li>Remove you from the CZWG Discord, if you're a member</li>
-                            <li>Remove a Discord avatar if you have it selected</li>
-                            <li>Stop sending you notifications via Discord</li>
-                        </ul>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-light" data-dismiss="modal">Dismiss</button>
-                        <a role="button" type="submit" href="{{route('me.discord.unlink')}}" class="btn btn-danger">Unlink
-                            Account</a>
-                    </div>
-                </div>
             @endif
-        </div>
-    </div>
-    <script>
-        //$("#discordModal").modal();
-    </script>
-    <!--End Discord modal-->
-    <!--Join guild modal-->
-    <div class="modal fade" id="joinDiscordServerModal" tabindex="-1" role="dialog"
-         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Join the Winnipeg FIR Discord server</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>Joining the Winnipeg FIR Discord server allows you to join the Winnipeg FIR controller and pilot
-                        community.</p>
-                    <h5>Rules</h5>
-                    <ul>
-                        <li>1. The VATSIM Code of Conduct applies.</li>
-                        <li>2. Always show respect and common decency to fellow members.</li>
-                        <li>3. Do not send server invites to servers unrelated to VATSIM without staff permission. Do
-                            not send ANY invites via DMs unless asked to.
-                        </li>
-                        <li>4. Do not send spam in the server, including images, text, or emotes.</li>
-                    </ul>
-                    <p>Clicking the 'Join' button will redirect you to Discord. We require the Join Server permission to
-                        add your Discord account to the server.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-light" data-dismiss="modal">Dismiss</button>
-                    <a role="button" type="submit" href="{{route('me.discord.join')}}" class="btn btn-primary">Join</a>
+
+            {{-- Profile --}}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="dash-card-header">
+                        <i class="fas fa-user"></i>
+                        <h3>Profile</h3>
+                    </div>
+
+                    <div class="row align-items-start">
+                        <div class="col">
+                            <p class="font-weight-bold mb-1" style="font-size: 1rem;">{{ Auth::user()->fullName('FLC') }}</p>
+                            <p class="text-muted mb-1" style="font-size: 0.875rem;">
+                                {{Auth::user()->rating->getLongName()}} ({{Auth::user()->rating->getShortName()}})
+                            </p>
+                            <p class="mb-1" style="font-size:0.875rem;">
+                                <a class="font-italic" style="color:#2980b9; font-size:0.8rem;" data-toggle="modal" data-target="#ratingChange">Rating incorrect?</a>
+                            </p>
+                            <p class="mb-1" style="font-size:0.875rem;">Role: {{Auth::user()->permissions()}}</p>
+                            @if(Auth::user()->staffProfile)
+                                <p class="mb-1" style="font-size:0.875rem;">Staff: {{Auth::user()->staffProfile->position}}</p>
+                            @endif
+                            <hr class="my-2">
+                            <div>
+                                <p class="font-weight-600 mb-1" style="font-size:0.85rem; color:#122b44;"><i class="fab fa-discord" style="color:#7289da;"></i> Discord</p>
+                                @if (!Auth::user()->hasDiscord())
+                                    <p class="mb-1 text-muted" style="font-size:0.8rem;"><i class="fa fa-times-circle text-danger"></i> No linked Discord account</p>
+                                    <a href="#" class="btn btn-sm btn-primary py-0 px-2" style="font-size:0.8rem;" data-toggle="modal" data-target="#discordModal">Link Discord</a>
+                                @else
+                                    <p class="mb-1" style="font-size:0.8rem;">
+                                        <i class="fa fa-check-circle text-success"></i>
+                                        <img style="border-radius:50%; height:22px;" src="{{Auth::user()->getDiscordAvatar()}}" alt="">
+                                        &nbsp;{{Auth::user()->getDiscordUser()->username}}
+                                    </p>
+                                    @if(!Auth::user()->memberOfCZWGGuild())
+                                        <a href="#" data-toggle="modal" data-target="#joinDiscordServerModal" class="btn btn-sm btn-primary py-0 px-2 mr-1" style="font-size:0.8rem;">Join Server</a>
+                                    @endif
+                                    <a href="#" class="btn btn-sm btn-outline-danger py-0 px-2" style="font-size:0.8rem;" data-toggle="modal" data-target="#discordModal">Unlink</a>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="col-auto text-center">
+                            <img src="{{Auth::user()->avatar()}}" style="width:90px; height:90px; border-radius:50%; object-fit:cover; margin-bottom:8px; border:2px solid #e2e8f0;">
+                            <br>
+                            <a role="button" data-toggle="modal" data-target="#changeAvatar" class="btn btn-sm btn-primary py-0 px-2 mb-1" style="font-size:0.8rem;">Change</a>
+                            @if (!Auth::user()->isAvatarDefault())
+                                <br><a role="button" class="btn btn-sm btn-outline-danger py-0 px-2" style="font-size:0.8rem;" href="{{route('users.resetavatar')}}">Reset</a>
+                            @endif
+                        </div>
+                    </div>
+
+                    <hr class="my-3">
+
+                    <div class="dash-accordion-group">
+                        <button class="dash-accordion-btn">
+                            <i class="fas fa-pen fa-xs mr-2" style="color:#94a3b8;"></i> Change Display Name
+                        </button>
+                        <div class="dash-panel">
+                            <div class="p-3">
+                                <form method="POST" action="{{route('users.changedisplayname')}}">
+                                    @csrf
+                                    <div class="form-group mb-2">
+                                        <label class="small font-weight-bold">First Name</label>
+                                        <input type="text" class="form-control form-control-sm" value="{{Auth::user()->display_fname}}" name="display_fname" id="input_display_fname">
+                                        <script>function resetToCertFirstName() { $("#input_display_fname").val("{{Auth::user()->fname}}") }</script>
+                                    </div>
+                                    <div class="form-group mb-2">
+                                        <label class="small font-weight-bold">Display Format</label>
+                                        <select name="format" class="form-control form-control-sm">
+                                            <option value="showall">First name, last name, and CID</option>
+                                            <option value="showfirstcid">First name and CID</option>
+                                            <option value="showcid">CID only</option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="btn btn-sm btn-success mr-1">Save</button>
+                                    <a class="btn btn-sm btn-outline-secondary" role="button" onclick="resetToCertFirstName()">Reset to CERT name</a>
+                                </form>
+                            </div>
+                        </div>
+
+                        <button class="dash-accordion-btn">
+                            <i class="fas fa-align-left fa-xs mr-2" style="color:#94a3b8;"></i> Biography
+                        </button>
+                        <div class="dash-panel">
+                            <div class="p-3">
+                                <form method="post" action="{{route('me.editbio')}}">
+                                    @csrf
+                                    <textarea name="bio" class="form-control form-control-sm mb-2" rows="3">{{Auth::user()->bio}}</textarea>
+                                    <p class="small text-muted mb-2">Please ensure this complies with the VATSIM Code of Conduct.</p>
+                                    <button type="submit" class="btn btn-sm btn-success">Save</button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <button class="dash-accordion-btn">
+                            <i class="fas fa-envelope fa-xs mr-2" style="color:#94a3b8;"></i> Email Preferences
+                        </button>
+                        <div class="dash-panel">
+                            <div class="p-3">
+                                @if (Auth::user()->gdpr_subscribed_emails == 0)
+                                    <span class="dash-cert-badge dash-cert-danger mb-2 d-inline-block">Not subscribed</span>
+                                @else
+                                    <span class="dash-cert-badge dash-cert-certified mb-2 d-inline-block">Subscribed</span>
+                                @endif
+                                <p class="small text-muted mb-2">Promotional emails include event notifications, controller certifications, and FIR news. <a href="{{url('/privacy')}}">Privacy policy.</a></p>
+                                @if (Auth::user()->gdpr_subscribed_emails == 0)
+                                    <a class="btn btn-sm btn-success" href="{{url('/dashboard/emailpref/subscribe')}}">Subscribe</a>
+                                @else
+                                    <a class="btn btn-sm btn-outline-danger" href="{{url('/dashboard/emailpref/unsubscribe')}}">Unsubscribe</a>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <!--Confirm Delete visitor button-->
-    {{--
-    <div class="modal fade" id="newStudent" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-         aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Assign Student to Instructor</h5><br>
-                </div>
-                <div class="modal-body">
-                    <form method="POST"  class="form-group">
-                    <!--deleted action="{{route('instructor.student.add.new')}}" from the form to view dashboard.-->
-                        @csrf
-                        <label class="form-control">Choose a Student</label>
-                        <select name="student_id" id-"student_id" class="form-control">
-                        @foreach ($allusers as $u)
-                            <option value="{{$u->id}}">{{$u->id}} - {{$u->fullName('FL')}}</option>
+
+            {{-- Upcoming Events --}}
+            @if (Auth::user()->permissions >= 1)
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="dash-card-header">
+                        <i class="fas fa-calendar-alt"></i>
+                        <h3>Upcoming Events</h3>
+                    </div>
+                    @if (count($confirmedevent) < 1)
+                        <p class="text-muted mb-0" style="font-size:0.875rem;">No scheduled events.</p>
+                    @else
+                        @foreach ($confirmedevent as $cevent)
+                            <p class="font-weight-bold mb-1" style="font-size:0.9rem;">{{$cevent->name}} <span class="text-muted font-weight-normal" style="font-size:0.8rem;">â€” {{$cevent->start_timestamp_pretty()}}</span></p>
+                            @foreach ($confirmedapp as $capp)
+                                @if ($cevent->id == $capp->event->id)
+                                    <p class="mb-1 ml-2" style="font-size:0.8rem;">
+                                        <i class="fas fa-map-marker-alt fa-xs text-muted"></i>
+                                        {{$capp->airport}}
+                                        @if($capp->position != "Relief") {{$capp->position}} @endif
+                                        from
+                                        @if($capp->position == "Relief")<span class="text-danger">{{$capp->position}}</span> from @endif
+                                        {{$capp->start_timestamp}}z â€“ {{$capp->end_timestamp}}z
+                                    </p>
+                                @endif
                             @endforeach
-                            </select>
-                            <label class="form-control">Choose an Instructor</label>
-                            <select name="instructor_id" id="instructor_id" class="form-control">
-                                @foreach ($allinstructors as $i)
-                                    <option value="{{$i->cid}}">{{$i->cid}} - {{$i->full_name}}</option>
-                                @endforeach
-                            </select>
-                            <button class="btn btn-success form-control" type="submit" href="#">Add Student</button>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-light" data-dismiss="modal" style="width:375px">Dismiss</button>
-                </div>
-            </div>
-        </div>
-    </div> --}}
-    <!--end delete visitor-->
+                        @endforeach
+                    @endif
 
-    <!--unconfirmed events modal-->
-    <div class="modal fade" id="unconfirmedEvents" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-         aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Events You've Applied For</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                  @foreach ($confirmedevent as $cevent)
+                    @if (count($unconfirmedapp) >= 1)
+                        <a href="" data-target="#unconfirmedEvents" data-toggle="modal" class="dash-nav-link mt-2">
+                            <i class="fas fa-chevron-right"></i>
+                            You have <strong class="mx-1 text-success">{{count($unconfirmedapp)}}</strong> pending event application{{ count($unconfirmedapp) != 1 ? 's' : '' }}
+                        </a>
+                    @else
+                        <p class="mb-0 mt-2 text-muted" style="font-size:0.8rem;">No active event applications.</p>
+                    @endif
 
-                  <h5><text class="font-weight-bold">{{$cevent->name}}</text> on {{$cevent->start_timestamp_pretty()}}</h5>
-
-
-                              @foreach ($unconfirmedapp as $uapp)
-                            @if ($cevent->name == $uapp->event->name)
-
-
-                              <li>
-
-                                            <text class="font-weight-bold"> Position Requested:</text> {{$uapp->position}}
-                                            from {{$uapp->start_availability_timestamp}}z - {{$uapp->end_availability_timestamp}}z
-
-
-
-                                      </li><br>
-
-
-                                          @endif
-
-                      @endforeach
-                      @endforeach
-
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-light" data-dismiss="modal">Dismiss</button>
-
+                    @if(count($confirmedevent) != 0)
+                        <a href="{{url('/dashboard/events/view')}}" class="dash-nav-link mt-1">
+                            <i class="fas fa-chevron-right"></i> View Event Rosters
+                        </a>
+                    @endif
                 </div>
             </div>
+            @endif
+
         </div>
+
+        {{-- RIGHT COLUMN --}}
+        @if(Auth::user()->permissions >= 1)
+        <div class="col-md-6">
+
+            {{-- Certification & Training Status --}}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="dash-card-header">
+                        <i class="fas fa-id-badge"></i>
+                        <h3>Certification &amp; Training</h3>
+                    </div>
+
+                    <div class="d-flex flex-wrap gap-1 mb-2" style="gap:0.4rem;">
+                        @if ($certification == "certified")
+                            <span class="dash-cert-badge dash-cert-certified"><i class="fa fa-check"></i> CZWG Certified</span>
+                        @elseif ($certification == "not_certified")
+                            <span class="dash-cert-badge dash-cert-danger"><i class="fa fa-times"></i> Not Certified</span>
+                        @elseif ($certification == "training")
+                            <span class="dash-cert-badge dash-cert-training"><i class="fa fa-book-open"></i> In Training</span>
+                        @elseif ($certification == "home")
+                            <span class="dash-cert-badge dash-cert-home"><i class="fa fa-user-check"></i> CZWG Controller</span>
+                        @elseif ($certification == "visit")
+                            <span class="dash-cert-badge dash-cert-visit"><i class="fa fa-plane"></i> Visiting Controller</span>
+                        @elseif ($certification == "instructor")
+                            <span class="dash-cert-badge dash-cert-instructor"><i class="fa fa-chalkboard-teacher"></i> Instructor</span>
+                        @else
+                            <span class="dash-cert-badge dash-cert-unknown"><i class="fa fa-question"></i> Unknown</span>
+                        @endif
+
+                        @if ($active == 0)
+                            <span class="dash-inactive-badge"><i class="fa fa-times"></i> Inactive</span>
+                        @elseif ($active == 1)
+                            <span class="dash-active-badge"><i class="fa fa-check"></i> Active</span>
+                        @endif
+                    </div>
+
+                    @if ($certification == "not_certified")
+                        <p class="text-danger mb-1" style="font-size:0.85rem;">You are not certified to control. Contact an instructor to begin training.</p>
+                    @endif
+                    @if ($active == 0)
+                        <p class="text-danger mb-1" style="font-size:0.85rem;">You are listed as inactive. Contact staff to be added to the active roster.</p>
+                    @endif
+
+                    @if (Auth::user()->rosterProfile && Auth::user()->rosterProfile->status != "not_certified")
+                        @php
+                            $hours = Auth::user()->rosterProfile->currency ?? 0;
+                            $pct = min(100, ($hours / 3.0) * 100);
+                            if ($hours >= 3.0) {
+                                $barColor = '#22c55e'; $bgColor = '#dcfce7'; $textColor = '#15803d'; $label = 'Requirement met';
+                            } elseif ($hours < 0.1) {
+                                $barColor = '#ef4444'; $bgColor = '#fee2e2'; $textColor = '#b91c1c'; $label = 'No hours recorded';
+                            } else {
+                                $barColor = '#f59e0b'; $bgColor = '#fef3c7'; $textColor = '#92400e'; $label = decimal_to_hm($hours).' recorded';
+                            }
+                        @endphp
+                        <div style="background:{{$bgColor}}; border-radius:0.5rem; padding:0.75rem 1rem; margin-top:0.75rem;">
+                            <div class="d-flex align-items-baseline justify-content-between mb-2">
+                                <span style="font-size:0.78rem; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; color:{{$textColor}};">Activity This Quarter</span>
+                            </div>
+                            <div class="d-flex align-items-baseline" style="gap:0.35rem; margin-bottom:0.5rem;">
+                                <span style="font-size:1.5rem; font-weight:700; color:{{$textColor}}; line-height:1;">
+                                    {{ $hours < 0.1 ? '0:00' : decimal_to_hm($hours) }}
+                                </span>
+                                <span style="font-size:0.8rem; color:{{$textColor}}; opacity:0.7;">/ 3:00</span>
+                            </div>
+                            <div style="height:6px; border-radius:999px; background:rgba(0,0,0,0.1); overflow:hidden;">
+                                <div style="height:100%; width:{{$pct}}%; background:{{$barColor}}; border-radius:999px; transition:width 0.4s ease;"></div>
+                            </div>
+                            @if($hours >= 3.0)
+                                <p class="mb-0 mt-1" style="font-size:0.75rem; color:{{$textColor}};">
+                                    <i class="fas fa-check-circle"></i> Currency requirement met
+                                </p>
+                            @endif
+                        </div>
+                    @endif
+
+                    @if ($certification == "not_certified")
+                        <a href="{{route('application.list')}}" class="dash-nav-link mt-2">
+                            <i class="fas fa-chevron-right"></i> View Your Applications
+                        </a>
+                    @endif
+                </div>
+            </div>
+
+            {{-- Training --}}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="dash-card-header">
+                        <i class="fas fa-graduation-cap"></i>
+                        <h3>Training</h3>
+                    </div>
+                    <a href="https://training.winnipegfir.ca" target="_blank" class="dash-nav-link">
+                        <i class="fas fa-arrow-right"></i>
+                        <strong>Winnipeg365</strong> &mdash; Training Portal
+                    </a>
+                    @if($yourinstructor != null && $yourinstructor->instructor != null)
+                        <hr class="my-2">
+                        <p class="mb-0" style="font-size:0.875rem;">
+                            <strong>Your Instructor:</strong> {{$yourinstructor->instructor->user->fullName('FL')}}<br>
+                            <strong>Email:</strong> <a href="mailto:{{$yourinstructor->instructor->email}}">{{$yourinstructor->instructor->email}}</a>
+                        </p>
+                    @elseif ($certification == "training")
+                        <p class="text-muted mb-0 mt-2" style="font-size:0.875rem;">No instructor assigned yet. Contact staff if you have questions.</p>
+                    @endif
+                </div>
+            </div>
+
+            {{-- Support --}}
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="dash-card-header">
+                        <i class="fas fa-life-ring"></i>
+                        <h3>Support</h3>
+                    </div>
+
+                    @if (count($openTickets) >= 1)
+                        <p class="font-weight-bold mb-2" style="font-size:0.85rem; color:#122b44;">
+                            {{count($openTickets)}} open ticket{{ count($openTickets) != 1 ? 's' : '' }}
+                        </p>
+                        @foreach ($openTickets as $ticket)
+                            <a href="{{url('/dashboard/tickets/'.$ticket->ticket_id)}}" class="dash-ticket-item">
+                                {{$ticket->title}}
+                                <br><small class="text-muted">Updated {{$ticket->updated_at_pretty()}}</small>
+                            </a>
+                        @endforeach
+                        <hr class="my-2">
+                    @endif
+
+                    @if(Auth::user()->permissions >= 4 && count($staffTickets) >= 1)
+                        <p class="font-weight-bold mb-2" style="font-size:0.85rem; color:#122b44;">
+                            {{count($staffTickets)}} open staff ticket{{ count($staffTickets) != 1 ? 's' : '' }}
+                        </p>
+                        @foreach ($staffTickets as $ticket)
+                            <a href="{{url('/dashboard/tickets/'.$ticket->ticket_id)}}" class="dash-ticket-item">
+                                {{$ticket->title}}
+                                <br><small class="text-muted">Updated {{$ticket->updated_at_pretty()}}</small>
+                            </a>
+                        @endforeach
+                        <hr class="my-2">
+                    @endif
+
+                    <a href="{{route('feedback.create')}}" class="dash-nav-link"><i class="fas fa-chevron-right"></i> Send feedback</a>
+                    <a href="{{route('tickets.index', ['create' => 'yes'])}}" class="dash-nav-link"><i class="fas fa-chevron-right"></i> Start a support ticket</a>
+                    <a href="{{route('tickets.index')}}" class="dash-nav-link"><i class="fas fa-chevron-right"></i> View previous tickets</a>
+                    <a href="{{route('me.data')}}" class="dash-nav-link"><i class="fas fa-chevron-right"></i> Manage your data</a>
+                    @if(Auth::user()->permissions >= 4)
+                        <a href="{{route('tickets.staff')}}" class="dash-nav-link"><i class="fas fa-chevron-right"></i> Staff ticket inbox</a>
+                    @endif
+                </div>
+            </div>
+
+            {{-- Staff --}}
+            @if (Auth::user()->permissions >= 4)
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="dash-card-header">
+                        <i class="fas fa-tools"></i>
+                        <h3>Staff</h3>
+                    </div>
+                    <a href="https://training.winnipegfir.ca" target="_blank" class="dash-nav-link"><i class="fas fa-chevron-right"></i> Winnipeg365</a>
+                    <a href="{{route('roster.index')}}" class="dash-nav-link"><i class="fas fa-chevron-right"></i> Manage Controller Roster</a>
+                    <a href="{{route('events.admin.index')}}" class="dash-nav-link"><i class="fas fa-chevron-right"></i> Manage Events</a>
+                    <a href="{{route('news.index')}}" class="dash-nav-link"><i class="fas fa-chevron-right"></i> Manage News</a>
+                    <a href="{{route('staff.feedback.index')}}" class="dash-nav-link"><i class="fas fa-chevron-right"></i> Manage Feedback</a>
+                    <a href="{{route('users.viewall')}}" class="dash-nav-link"><i class="fas fa-chevron-right"></i> Manage Users</a>
+                    <a href="{{route('dashboard.upload')}}" class="dash-nav-link"><i class="fas fa-chevron-right"></i> File Uploader</a>
+                </div>
+            </div>
+            @endif
+
+            {{-- Site Admin --}}
+            @if (Auth::user()->permissions >= 5)
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="dash-card-header">
+                        <i class="fas fa-cog"></i>
+                        <h3>Site Admin</h3>
+                    </div>
+                    <a href="{{route('settings.index')}}" class="dash-nav-link"><i class="fas fa-chevron-right"></i> Settings</a>
+                    <a href="{{route('network.index')}}" class="dash-nav-link"><i class="fas fa-chevron-right"></i> View network data</a>
+                </div>
+            </div>
+            @endif
+
+        </div>
+        @endif
+
     </div>
-    <!--End biography modal-->
 
-    <!--End join guild modal
+</div>
+</div>{{-- end blue background --}}
 
-{{-- <div class="modal fade" id="ctpSignUpModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<script>
+document.querySelectorAll('.dash-accordion-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+        var group = this.closest('.dash-accordion-group');
+        var panel = this.nextElementSibling;
+        var isOpen = this.classList.contains('is-open');
+
+        // Close all in this group
+        group.querySelectorAll('.dash-accordion-btn').forEach(function(b) {
+            b.classList.remove('is-open');
+            b.nextElementSibling.style.maxHeight = null;
+        });
+
+        // Open clicked one if it was closed
+        if (!isOpen) {
+            this.classList.add('is-open');
+            panel.style.maxHeight = panel.scrollHeight + 'px';
+        }
+    });
+});
+</script>
+
+{{-- Modals (unchanged) --}}
+
+<div class="modal fade" id="changeAvatar" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Cross the Pond October 2019 Sign-up</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <h5 class="modal-title">Change avatar</h5>
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
             </div>
-            <form action="{{route('ctp.signup.post')}}" method="POST">
-                @csrf
-            <div class="modal-body">
-                <p>
-                    If you wish to control Gander/Shanwick Oceanic for <a href="https://ctp.vatsim.net/">Cross the Pond Eastbound 2019</a>, you can sign up here!
-                </p>
-                <h5 class="font-weight-bold">Requirements</h5>
-                <ul class="ml-3" style="list-style: disc">
-                    <li>Be a C1 rated controller or above</li>
-                    <li>A suitable amount of hours as a C1 (50+)</li>
-                    <li>You <b>do not</b> have to be a Gander or Shanwick certified controller</li>
-                </ul>
-                <h5 class="font-weight-bold">Availability</h5>
-                <p>Are you available to control CTP Eastbound on 26 October?</p>
-                <select name="availability" id="" class="form-control">
-                    <option value="yes">Yes</option>
-                    <option value="no">No</option>
-                    <option value="standby">As a standby controller</option>
-                </select>
-                <h5 class="mt-2 font-weight-bold">Times</h5>
-                <p>What times are you available (in zulu)? If left blank, we will assume you are available for the entire event.</p>
-                <input maxlength="191" name="times" class="form-control" type="text" placeholder="e.g. Between 1100z and 2000z">
-                <p class="mt-2">By pressing the "Confirm" button below, you agree to be available to control for the periods you have typed above. If you are no longer available, please contact the FIR Chief ASAP.</p>
-            </div>
-            <div class="modal-footer">
-                <input type="submit" class="btn btn-primary" value="Confirm">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Dismiss</button>
-            </div>
+            <form method="post" action="{{route('users.changeavatar')}}" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <p>Please ensure your avatar complies with the VATSIM Code of Conduct.</p>
+                    @csrf
+                    <div class="input-group pb-3">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" name="file">
+                            <label class="custom-file-label">Choose file</label>
+                        </div>
+                    </div>
+                    @if(Auth::user()->hasDiscord())
+                        or use your Discord avatar (refreshes every 6 hours)<br/>
+                        <p class="mt-1">
+                            <img style="border-radius:50%; height:60px;" src="{{Auth::user()->getDiscordAvatar()}}" alt="">
+                            <a href="{{route('users.changeavatar.discord')}}" class="btn btn-outline-success mt-3">Use Discord Avatar</a>
+                        </p>
+                    @endif
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Dismiss</button>
+                    <input type="submit" class="btn btn-success" value="Upload">
+                </div>
             </form>
         </div>
     </div>
+</div>
 
-</div> --}}
+<div class="modal fade" id="ratingChange" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">How We Update VATSIM Ratings</h5>
+            </div>
+            <div class="modal-body">
+                <h5>Our website updates your VATSIM rating 2 ways:</h5>
+                On login, and daily at 00:00 Eastern via the VATSIM API.
+                <hr>
+                <h5>How can I fix my rating?</h5>
+                <p><a href="/logout">Logout</a> and log back in, or wait until 00:00 Eastern.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-sm btn-primary" data-dismiss="modal">Dismiss</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="discordModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        @if (!Auth::user()->hasDiscord())
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Link your Discord account</h5>
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <img style="height:50px;" src="{{asset('/img/discord/CZWGplusdiscord.png')}}" class="img-fluid mb-2" alt="">
+                    <p>Linking your Discord account allows you to join our community, receive notifications, and use your Discord avatar.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Dismiss</button>
+                    <a href="{{route('me.discord.link')}}" class="btn btn-primary">Link Account</a>
+                </div>
+            </div>
+        @else
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Unlink your Discord account</h5>
+                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                </div>
+                <div class="modal-body">
+                    <p>Unlinking will remove you from the CZWG Discord, remove your Discord avatar, and stop Discord notifications.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Dismiss</button>
+                    <a href="{{route('me.discord.unlink')}}" class="btn btn-danger">Unlink Account</a>
+                </div>
+            </div>
+        @endif
+    </div>
+</div>
+
+<div class="modal fade" id="joinDiscordServerModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Join the Winnipeg FIR Discord server</h5>
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <p>Joining allows you to connect with the CZWG controller and pilot community.</p>
+                <h5>Rules</h5>
+                <ul>
+                    <li>The VATSIM Code of Conduct applies.</li>
+                    <li>Always show respect and common decency.</li>
+                    <li>No unsolicited server invites or DMs.</li>
+                    <li>No spam.</li>
+                </ul>
+                <p>Clicking 'Join' will redirect you to Discord.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-dismiss="modal">Dismiss</button>
+                <a href="{{route('me.discord.join')}}" class="btn btn-primary">Join</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="unconfirmedEvents" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Events You've Applied For</h5>
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+            </div>
+            <div class="modal-body">
+                @foreach ($confirmedevent as $cevent)
+                    <p class="font-weight-bold mb-1">{{$cevent->name}} <span class="font-weight-normal text-muted">â€” {{$cevent->start_timestamp_pretty()}}</span></p>
+                    @foreach ($unconfirmedapp as $uapp)
+                        @if ($cevent->name == $uapp->event->name)
+                            <p class="mb-1 ml-2" style="font-size:0.875rem;">
+                                <strong>Position Requested:</strong> {{$uapp->position}}
+                                from {{$uapp->start_availability_timestamp}}z â€“ {{$uapp->end_availability_timestamp}}z
+                            </p>
+                        @endif
+                    @endforeach
+                @endforeach
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-dismiss="modal">Dismiss</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @stop
