@@ -4,6 +4,8 @@
 
 @section('content')
 <link rel="stylesheet" type="text/css" href="{{ asset('/css/home.css') }}" />
+
+    {{-- Hero --}}
     <div class="winnipeg-blue">
         <div style="height: calc(100vh - 59px); position:relative; overflow:hidden;">
             {{-- Parallax background --}}
@@ -68,134 +70,208 @@
                 </div>
             </div>
         </div>
-        <div class="container" id="mid">
-            <div class="row py-3" style="padding-bottom: 0px !important;">
-                <div class="col-md-6" style="padding-top: 2%">
-                    <div class="card card-background" style="min-height: 100%">
-                        <div class="card-header" style="color: #122b44;">
-                            <h2 class="font-weight-bold" style="text-align: center; padding-top:1%"><i class="fas fa-newspaper"></i>&nbsp;&nbsp;Recent News</h2>
-                        </div>
-                        <div class="card-body" style="padding-bottom:2%">
-                            @foreach($news as $n)
-                                <h5><span class="badge winnipeg-blue">{{$n->posted_on_pretty()}}</span>&nbsp;&nbsp;<a href="{{url('/news').'/'.$n->slug}}" style="color: black;"><text class="align-middle">{{$n->title}}</text></h5></a>
-                            @endforeach
-                        </div>
-                        <div class="card-footer pb-1">
-                            <a href="{{url('/news')}}"><h6 style="text-align: center; color: #122b44"><i class="fas fa-eye"></i>&nbsp;View all news</h6></a>
-                        </div>
-                    </div>
-                </div>
-                <br>
-                <div class="col-md-6" style="padding-top: 2%">
-                    <div class="card card-background" style="min-height: 100%">
-                        <div class="card-header" style="color: #122b44;">
-                            <h2 class="font-weight-bold" style="text-align: center; padding-top:1%"><i class="fas fa-calendar"></i>&nbsp;&nbsp;Upcoming Events</h2>
-                        </div>
-                        <div class="card-body" style="padding-bottom:2%">
-                            @if(count($nextEvents) == 0)
-                                <h5 style="text-align: center;">Stay tuned here for upcoming events!</h5>
-                            @endif
-                            @foreach($nextEvents as $e)
-                                <h5><a href="{{url('/events').'/'.$e->slug}}" style="color: black;"><text class="align-middle">{{$e->name}}</text></a>&nbsp;&nbsp;<span class="float-right badge winnipeg-blue">{{$e->start_timestamp_pretty()}}</span></h5>
-                            @endforeach
-                        </div>
-                        <div class="card-footer pb-1">
-                            <a href="{{url('/events')}}"><h6 style="text-align: center; color: #122b44"><i class="fas fa-eye"></i>&nbsp;View all events</h6></a>
-                        </div>
-                    </div>
-                </div>
+    </div>
+
+    {{-- Build strip data --}}
+    @php
+    $stripSections = [];
+
+    // Weather
+    $wItems = [];
+    foreach ($weather as $w) {
+        $wItems[] = ['text' => $w->raw_text ?? $w->icao, 'cat' => $w->flight_category ?? null];
+    }
+    if (!empty($wItems)) {
+        $stripSections[] = ['key' => 'weather', 'icon' => 'fa-cloud-sun', 'label' => 'WEATHER', 'items' => $wItems];
+    }
+
+    // Online controllers
+    $cItems = [];
+    foreach ($finalPositions as $p) {
+        $name = ($p->name != $p->cid) ? $p->name : (string)$p->cid;
+        $cItems[] = ['text' => $name . ' · ' . $p->callsign . ' · ' . $p->frequency, 'cat' => null];
+    }
+    if (empty($cItems)) $cItems = [['text' => 'No controllers currently online', 'cat' => null]];
+    $stripSections[] = ['key' => 'online', 'icon' => 'fa-headset', 'label' => 'ONLINE NOW', 'items' => $cItems];
+
+    // Events
+    $eItems = [];
+    foreach ($nextEvents as $e) {
+        $eItems[] = ['text' => $e->name . ' · ' . $e->start_timestamp_pretty(), 'cat' => null, 'url' => url('/events/' . $e->slug)];
+    }
+    if (empty($eItems)) $eItems = [['text' => 'No upcoming events scheduled', 'cat' => null, 'url' => null]];
+    $stripSections[] = ['key' => 'events', 'icon' => 'fa-calendar', 'label' => 'EVENTS', 'items' => $eItems];
+
+    // News
+    $nItems = [];
+    foreach ($news as $n) {
+        $nItems[] = ['text' => $n->title . ' · ' . $n->posted_on_pretty(), 'cat' => null, 'url' => url('/news/' . $n->slug)];
+    }
+    if (!empty($nItems)) {
+        $stripSections[] = ['key' => 'news', 'icon' => 'fa-newspaper', 'label' => 'NEWS', 'items' => $nItems];
+    }
+
+    // Top controllers
+    $tItems = [];
+    foreach ($topControllersArray as $i => $t) {
+        $u = User::where('id', $t['cid'])->first();
+        if ($u) $tItems[] = ['text' => ($i + 1) . '. ' . $u->fullName('FLC') . ' · ' . $t['time'], 'cat' => null];
+    }
+    if (!empty($tItems)) {
+        $stripSections[] = ['key' => 'top', 'icon' => 'fa-award', 'label' => 'TOP THIS QUARTER', 'items' => $tItems];
+    }
+    @endphp
+
+    {{-- Scroll anchor --}}
+    <div id="mid" style="height:0;overflow:hidden;"></div>
+
+    {{-- Info strip — sticky so it stops naturally at the footer --}}
+    <div id="info-strip-wrap">
+        <div id="is-panel">
+            <div class="info-strip-inner" style="height:auto; padding-top:0.6rem; padding-bottom:0.6rem;">
+                <ul id="is-panel-list"></ul>
             </div>
-            <div class="row py-3" style="padding-bottom: 0px !important; min-height: 100%">
-                <div class="col-md-6" style="padding-top: 2%">
-                    <div class="card card-background" style="min-height: 100%">
-                        <div class="card-header" style="color: #122b44;">
-                            <h2 class="font-weight-bold" style="text-align: center; padding-top:1%"><i class="fas fa-award"></i>&nbsp;&nbsp;Top Controllers this Quarter</h2>
-                        </div>
-                        <div class="card-body" style="padding-bottom:2%">
-                            @if(count($topControllersArray) == 0)
-                                <h5 style="text-align: center;">No data yet.</h5>
-                            @endif
-                            @foreach($topControllersArray as $t)
-                                @if($t['time'] != 0)
-                                    <h2>
-                                        <span class="badge badge-light w-100" style="background-color: {{$t['colour']}} !important;">
-                                            <div style="float: left;">
-                                                {{User::where('id', $t['cid'])->first()->fullName('FLC')}}
-                                            </div>
-                                            <div style="float: right;">
-                                                {{$t['time']}}
-                                            </div>
-                                        </span>
-                                    </h2>
-                                @endif
-                            @endforeach
-                        </div>
-                        <div class="card-footer">
-                        </div>
-                    </div>
+        </div>
+        <div id="info-strip">
+            <div class="info-strip-inner">
+                <div id="is-badge">
+                    <i class="fas" id="is-icon"></i>
+                    <span id="is-label"></span>
                 </div>
-                <div class="col-md-6" style="padding-top: 2%">
-                    <div class="card card-background" style="min-height: 100%">
-                        <div class="card-header" style="color: #122b44;">
-                            <h2 class="font-weight-bold" style="text-align: center; padding-top:1%"><i class="fas fa-user"></i>&nbsp;&nbsp;Online Controllers</h2>
-                        </div>
-                        <div class="card-body" style="padding-bottom:2%">
-                            @if(count($finalPositions) == 0)
-                                <h5 style="text-align: center;">No controllers online.</h5>
-                            @endif
-                            @foreach($finalPositions as $p)
-                                <h5>
-                                    <div style="float: left;">
-                                        <a href="https://stats.vatsim.net/search_id.php?id={{$p->cid}}" target="_blank" style="color: black;">
-                                            @if($p->name == $p->cid)
-                                                <i class="fas fa-user-circle"></i>&nbsp;{{$p->name}}
-                                            @else
-                                                <i class="fas fa-user-circle"></i>&nbsp;{{$p->name}} {{$p->cid}}
-                                            @endif
-                                        </a>
-                                    </div>
-                                    <div style="float: right;">
-                                    <span class="badge winnipeg-blue">
-                                        {{$p->callsign}} on {{$p->frequency}}
-                                    </span>
-                                    </div>
-                                </h5>
-                                <br>
-                            @endforeach
-                        </div>
-                        <div class="card-footer pb-1">
-                            <a href="https://map.vatsim.net" target="_blank"><h6 style="text-align: center; color: #122b44"><i class="fas fa-map"></i>&nbsp;Live VATSIM Map</h6></a>
-                        </div>
-                    </div>
+                <div class="is-sep"></div>
+                <div id="is-content">
+                    <span class="is-cat-dot" id="is-dot"></span>
+                    <a id="is-text"></a>
                 </div>
+                <div id="is-dots"></div>
+                <button id="is-expand" aria-label="Expand section">
+                    <i class="fas fa-chevron-down" id="is-chevron"></i>
+                </button>
             </div>
-            <div class="row py-3">
-                <div class="col-md-12" style="padding-top: 2%">
-                    <div class="card card-background" style="width: 100%">
-                        <div class="card-header" style="color: #122b44;">
-                            <h2 class="font-weight-bold" style="text-align: center; padding-top:1%"><i class="fas fa-sun"></i>&nbsp;&nbsp;Weather</h2>
-                        </div>
-                        <div class="card-body" style="padding-bottom:0%">
-                            <div style="float: left;">
-                                @foreach($weather as $w)
-                                    <h5><text class="align-middle font-weight-bold">{{$w->icao}} - {{$w->station->name}}&nbsp;&nbsp;</text>
-                                        <span class="badge {{$w->flight_category}}">{{$w->flight_category}}</span>
-                                    @if(Carbon\Carbon::make($w->observed) < Carbon\Carbon::now()->subHours(2))
-                                        <span class="badge grey">OUTDATED</span>
-                                    @endif
-                                    </h5>
-                                    {{$w->raw_text}}                                  
-                                    <br><br>
-                                @endforeach
-                            </div>
-                        </div>
-                        <div class="card-footer">
-                        </div>
-                    </div>
-                </div>
-            </div>
-                            
-            <br>
         </div>
     </div>
+
+    <script>
+    (function () {
+        var sections = @json($stripSections);
+        var ITEM_MS  = 4500;
+        var catColors = { VFR: '#22c55e', MVFR: '#60a5fa', IFR: '#f87171', LIFR: '#c084fc' };
+
+        var elBadge   = document.getElementById('is-badge');
+        var elIcon    = document.getElementById('is-icon');
+        var elLabel   = document.getElementById('is-label');
+        var elContent = document.getElementById('is-content');
+        var elDot     = document.getElementById('is-dot');
+        var elText    = document.getElementById('is-text');
+        var elDots      = document.getElementById('is-dots');
+        var elExpand    = document.getElementById('is-expand');
+        var elChevron   = document.getElementById('is-chevron');
+        var elPanel     = document.getElementById('is-panel');
+        var elPanelList = document.getElementById('is-panel-list');
+
+        if (!sections.length) return;
+
+        sections.forEach(function (s, i) {
+            var btn = document.createElement('button');
+            btn.className = 'is-nav-dot';
+            btn.addEventListener('click', function () { jumpTo(i, 0); });
+            elDots.appendChild(btn);
+        });
+
+        var sIdx = 0, iIdx = 0, timer = null, expanded = false;
+
+        function buildPanel() {
+            var items = sections[sIdx].items;
+            elPanelList.innerHTML = '';
+            items.forEach(function (item) {
+                var li = document.createElement('li');
+                li.className = 'is-panel-item';
+                if (item.cat && catColors[item.cat]) {
+                    var pill = document.createElement('span');
+                    pill.className = 'is-panel-cat';
+                    pill.textContent = item.cat;
+                    pill.style.background = catColors[item.cat];
+                    li.appendChild(pill);
+                }
+                var node = item.url ? document.createElement('a') : document.createElement('span');
+                if (item.url) { node.href = item.url; node.className = 'is-panel-link'; }
+                node.textContent = item.text;
+                li.appendChild(node);
+                elPanelList.appendChild(li);
+            });
+        }
+
+        elExpand.addEventListener('click', function () {
+            expanded = !expanded;
+            if (expanded) { buildPanel(); }
+            elPanel.classList.toggle('open', expanded);
+            elChevron.style.transform = expanded ? 'rotate(180deg)' : '';
+        });
+
+        function updateDots() {
+            elDots.querySelectorAll('.is-nav-dot').forEach(function (d, i) {
+                d.classList.toggle('active', i === sIdx);
+            });
+        }
+
+        function applyItem(si, ii) {
+            sIdx = si; iIdx = ii;
+            var sec  = sections[si];
+            var item = sec.items[ii];
+            elIcon.className  = 'fas ' + sec.icon;
+            elLabel.textContent = sec.label;
+            elText.textContent = item.text;
+            if (item.url) {
+                elText.href = item.url;
+                elText.style.cursor = 'pointer';
+                elText.style.textDecoration = 'underline';
+                elText.style.textUnderlineOffset = '3px';
+            } else {
+                elText.removeAttribute('href');
+                elText.style.cursor = 'default';
+                elText.style.textDecoration = 'none';
+            }
+            var color = item.cat && catColors[item.cat];
+            if (color) {
+                elDot.style.background = color;
+                elDot.textContent = item.cat;
+                elDot.style.display = 'inline-block';
+            } else {
+                elDot.style.display = 'none';
+            }
+            updateDots();
+            if (expanded) buildPanel();
+        }
+
+        function show(si, ii, animate) {
+            if (!animate) { applyItem(si, ii); return; }
+            var sectionChanging = si !== sIdx;
+            if (sectionChanging) elBadge.classList.add('is-fade-out');
+            elContent.classList.add('is-fade-out');
+            setTimeout(function () {
+                applyItem(si, ii);
+                if (sectionChanging) elBadge.classList.remove('is-fade-out');
+                elContent.classList.remove('is-fade-out');
+            }, 200);
+        }
+
+        function advance() {
+            var next = iIdx + 1;
+            if (next >= sections[sIdx].items.length) {
+                show((sIdx + 1) % sections.length, 0, true);
+            } else {
+                show(sIdx, next, true);
+            }
+        }
+
+        function jumpTo(si, ii) {
+            clearInterval(timer);
+            show(si, ii, true);
+            timer = setInterval(advance, ITEM_MS);
+        }
+
+        show(0, 0, false);
+        timer = setInterval(advance, ITEM_MS);
+    })();
+    </script>
 @stop
