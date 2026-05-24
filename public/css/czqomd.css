@@ -717,20 +717,82 @@ div.notes{
 
 /* Mobile */
 @media (max-width: 991px) {
+    #czwgHeader .navbar-collapse {
+        background: #0d2035;
+        border-top: 1px solid rgba(255,255,255,0.08);
+        margin: 0 -15px;
+        padding: 0.5rem 1rem 1rem;
+    }
+
     #czwgHeader .navbar-nav .nav-link {
         height: auto;
-        padding: 0.65rem 0.75rem !important;
+        padding: 0.6rem 0.5rem !important;
+        color: rgba(255,255,255,0.82) !important;
+        font-size: 0.9rem !important;
+    }
+
+    #czwgHeader .navbar-nav .nav-link:hover {
+        color: #fff !important;
     }
 
     #czwgHeader .navbar-nav > .nav-item > .nav-link::before {
         display: none;
     }
 
+    #czwgHeader .navbar-nav > .nav-item {
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    #czwgHeader .navbar-nav > .nav-item:last-child {
+        border-bottom: none;
+    }
+
     #czwgHeader .dropdown-menu {
-        background: rgba(255,255,255,0.05) !important;
+        background: rgba(255,255,255,0.04) !important;
         border: none !important;
         box-shadow: none !important;
-        margin-left: 0.5rem;
+        padding: 0 0 0.25rem 0.75rem !important;
+        margin: 0 !important;
+    }
+
+    #czwgHeader .dropdown-menu .dropdown-item {
+        font-size: 0.84rem !important;
+        padding: 0.45rem 0.5rem !important;
+        color: rgba(255,255,255,0.65) !important;
+    }
+
+    #czwgHeader .dropdown-menu .dropdown-item:hover {
+        color: #fff !important;
+        background: transparent !important;
+    }
+
+    /* Tuck socials into a compact row at the bottom */
+    #czwgHeader .nav-social {
+        display: inline-flex !important;
+    }
+
+    #czwgHeader .navbar-nav.ml-auto {
+        flex-direction: row !important;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0;
+        border-top: 1px solid rgba(255,255,255,0.08);
+        padding-top: 0.75rem;
+        margin-top: 0.25rem;
+    }
+
+    #czwgHeader .navbar-nav.ml-auto .nav-item.dropdown {
+        width: 100%;
+        border-bottom: none;
+    }
+
+    #czwgHeader .navbar-nav.ml-auto > .nav-item {
+        border-bottom: none;
+    }
+
+    #czwgHeader .nav-social .nav-link {
+        padding: 0.35rem 0.6rem !important;
+        font-size: 1rem !important;
     }
 }
 
