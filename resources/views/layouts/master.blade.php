@@ -87,11 +87,23 @@
     </head>
     <body>
     <!--Header-->
-    @if (\App\Models\Settings\CoreSettings::where('id', 1)->firstOrFail()->banner)
-        <div class="alert alert-{{\App\Models\Settings\CoreSettings::where('id', 1)->firstOrFail()->bannerMode}}" style="margin: 0; border-radius: 0; border: none;">
-            <div class="text-center align-self-center">
-                <a href="{{\App\Models\Settings\CoreSettings::where('id', 1)->firstOrFail()->bannerLink}}" target="_blank"><span style="margin: 0;">{{\App\Models\Settings\CoreSettings::where('id', 1)->firstOrFail()->banner}}</span></a>
-            </div>
+    @php $__cs = \App\Models\Settings\CoreSettings::where('id', 1)->firstOrFail(); @endphp
+    @if($__cs->banner)
+        @php
+            $__colors = [
+                'success' => ['bg'=>'#d4edda','color'=>'#155724','border'=>'#c3e6cb'],
+                'danger'  => ['bg'=>'#f8d7da','color'=>'#721c24','border'=>'#f5c6cb'],
+                'warning' => ['bg'=>'#fff3cd','color'=>'#856404','border'=>'#ffeeba'],
+                'info'    => ['bg'=>'#d1ecf1','color'=>'#0c5460','border'=>'#bee5eb'],
+            ];
+            $__c = $__colors[$__cs->bannerMode] ?? $__colors['info'];
+        @endphp
+        <div style="background:{{ $__c['bg'] }}; border-bottom:1px solid {{ $__c['border'] }}; padding:0.55rem 1rem; text-align:center; font-size:0.85rem; font-weight:600; color:{{ $__c['color'] }};">
+            @if($__cs->bannerLink)
+                <a href="{{ $__cs->bannerLink }}" target="_blank" style="color:{{ $__c['color'] }}; text-decoration:underline;">{{ $__cs->banner }}</a>
+            @else
+                {{ $__cs->banner }}
+            @endif
         </div>
     @endif
     <header>

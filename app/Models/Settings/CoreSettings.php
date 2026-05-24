@@ -9,7 +9,8 @@ class CoreSettings extends Model
     protected $table = 'core_info';
 
     protected $fillable = [
-        'sys_name', 'release', 'sys_build', 'copyright_year', 'banner',
+        'sys_name', 'release', 'sys_build', 'copyright_year',
+        'banner', 'bannerMode', 'bannerLink',
         'emailfirchief', 'emaildepfirchief', 'emailcinstructor',
         'emaileventc', 'emailfacilitye', 'emailwebmaster',
     ];
