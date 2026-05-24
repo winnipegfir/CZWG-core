@@ -733,3 +733,31 @@ div.notes{
         margin-left: 0.5rem;
     }
 }
+
+/* === SimpleMDE editor toolbar fix === */
+.editor-toolbar .fa {
+    font-family: "Font Awesome 5 Free" !important;
+    font-weight: 900 !important;
+}
+.editor-toolbar {
+    background: #f8f9fa !important;
+    border-color: #ced4da !important;
+    opacity: 1 !important;
+}
+.editor-toolbar a {
+    color: #343a40 !important;
+    transition: none !important;
+}
+.editor-toolbar a:hover,
+.editor-toolbar a.active {
+    color: #122b44 !important;
+    background: #e9ecef !important;
+}
+.editor-toolbar i.separator {
+    border-color: #ced4da !important;
+}
+.CodeMirror {
+    background: #fff !important;
+    color: #343a40 !important;
+    border-color: #ced4da !important;
+}

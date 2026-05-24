@@ -15,12 +15,13 @@ return new class extends Migration
         $tables = DB::select("SHOW TABLES");
         $tables = array_map('current',$tables);
 
-        // Remove all tables starting with 'cbt_'
+        Schema::disableForeignKeyConstraints();
         foreach ($tables as $table)
         {
             if (\Illuminate\Support\Str::startsWith($table, 'cbt_'))
                 Schema::dropIfExists($table);
         }
+        Schema::enableForeignKeyConstraints();
     }
 
     /**

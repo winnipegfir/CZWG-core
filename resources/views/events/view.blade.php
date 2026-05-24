@@ -3,149 +3,155 @@
 @section('title', $event->name.' - Winnipeg FIR')
 @section('description', 'View the upcoming event: '.$event->name)
 @if($event->image_url)
-@section('image')
-{{$event->image_url}}
-@endsection
+    @section('image', $event->image_url)
 @endif
 
 @section('content')
-    <div class="text-white text-left py-1 px-4" style="background-color:#122b44">
-          <div class="container">
-              <div align="center" class="py-5">
-                  <h1 align="center" class="h1 font-weight-bold" style="font-size: 4em;">{{$event->name}}</h1>
-                  <h4>{{$event->start_timestamp_pretty()}} - {{$event->end_timestamp_pretty()}}</h4>
-                  @if ($event->departure_icao && $event->arrival_icao)
-                  <h3>{{$event->departure_icao_data()['name']}} ({{$event->departure_icao}})&nbsp;&nbsp;<i class="fas fa-plane"></i>&nbsp;&nbsp;{{$event->arrival_icao_data()['name']}} ({{$event->arrival_icao}})</h3>
-                  @endif
-              </div>
-          </div>
-      </div>
+<style>
+    .event-prose h1, .event-prose h2, .event-prose h3,
+    .event-prose h4, .event-prose h5, .event-prose h6 {
+        color: #122b44; font-weight: 700; margin-top: 1.5rem; margin-bottom: 0.5rem;
+    }
+    .event-prose p { color: #343a40; line-height: 1.8; margin-bottom: 1rem; }
+    .event-prose ul, .event-prose ol { color: #343a40; line-height: 1.8; margin-bottom: 1rem; padding-left: 1.5rem; }
+    .event-prose li { margin-bottom: 0.3rem; }
+    .event-prose a { color: #122b44; text-decoration: underline; }
+    .event-prose hr { border-color: #e9ecef; margin: 1.5rem 0; }
+</style>
 
-      <div class="container py-4">
-        @if ($event->image_url != null)
-      <img src="{{$event->image_url}}" alt="" title="" width="100%" height="50%" style="background-color: rgb(0, 0, 0, 0.5)">
-
-      @else
-      &nbsp
-      @endif
-
-      </div>
-    <div class="container py-4">
-        <div class="row">
-            <div class="col-md-3">
-                <h4>Share This</h4>
-                <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u{{Request::url()}}"><i class="fab blue-text fa-facebook fa-3x"></i></a>
-                &nbsp;
-                <a target="_blank" href="https://twitter.com/intent/tweet?text={{$event->name}} - Winnipeg FIR VATSIM {{Request::url()}}"><i class="fab blue-text fa-twitter fa-3x"></i></a>
-                &nbsp;
-                <a target="_blank" href="http://www.reddit.com/submit?url={{Request::url()}}&title={{$event->name}} - Winnipeg FIR VATSIM"><i class="fab blue-text fa-reddit fa-3x"></i></a>
-                <hr>
-                <h4 class="mt-2">Start Time</h4>
-                <p>{{$event->start_timestamp_pretty()}}</p>
-                <hr>
-                <h4>End Time</h4>
-                <p>{{$event->end_timestamp_pretty()}}</p>
-                <hr>
-                @if (!$event->departure_icao)
-                @else
-                <h4>Departure Airport</h4>
-                <ul class="list-unstyled">
-                    <li>{{$event->departure_icao_data()['name']}}</li>
-                    <li>{{$event->departure_icao}}</li>
-                </ul>
-
-                <hr>
-                @endif
-                @if (!$event->arrival_icao)
-                @else
-                <h4>Arrival Airport</h4>
-                <ul class="list-unstyled">
-                    <li>{{$event->arrival_icao_data()['name']}}</li>
-                    <li>{{$event->arrival_icao}}</li>
-
-                </ul>
-                @endif
-            </div>
-            <div class="col-md-9">
-                {{$event->html()}}
-                @if($event->start_timestamp > $timeNow)
-                @if (Auth::check() && $event->controller_applications_open && Auth::user()->rosterProfile)
-                <hr>
-                <h3>Apply to Control</h3>
-                @if (Auth::check() && $event->userHasApplied())
-                    <h5 class="font-weight-bold">You have already applied for this event. Check your <a href="{{route('dashboard.index')}}">dashboard</a> for more info regarding your application!</h5>
-                @endif
-                @if(Auth::check() && !$event->userHasApplied())
-                <br>
-                <div class="card p-3">
-                    <form id="app-form" method="POST" action="{{route('events.controllerapplication.ajax')}}">
-                        @csrf
-                        <input type="hidden" name="event_id" value="{{$event->id}}">
-                        <input type="hidden" name="event_name" value="{{$event->name}}">
-                        <input type="hidden" name="event_date" value="{{$event->start_timestamp}}">
-                        <p>Submit an application to the Events Coordinator to control during this event through this form.</p>
-                        <label for="">Availability start time (zulu)</label>
-                        <input type="datetime" name="availability_start" class="form-control flatpickr" id="availability_start">
-                        <label class="mt-2" for="">Availability end time (zulu)</label>
-                        <input type="datetime" name="availability_end" class="form-control flatpickr" id="availability_end">
-                        <label class="mt-2" for="">Position Requested</label>
-                        <select name="position" class="form-control" id="position">
-                          @if(Auth::user()->rating_id > 1)
-                          <option value="Delivery">Delivery</option>
-                          <option value="Ground">Ground</option>
-                          <option value="Tower">Tower</option>
-                          @endif
-                          @if(Auth::user()->rating_id > 3)
-                          <option value="Departure">Departure</option>
-                          <option value="Arrival">Arrival</option>
-                          @endif
-                          @if(Auth::user()->rating_id > 4)
-                          <option value="Centre">Centre</option>
-                          @endif
-                        </select>
-                        <label for="" class="mt-2">Comments</label>
-                        <textarea name="comments" id="comments" rows="2" class="md-textarea form-control"></textarea>
-                        <input type="submit" id="app-form-submit" class="btn btn-outline-submit mt-3" value="Submit">
-                    </form>
-                    <script>
-                        flatpickr('#availability_start', {
-                            enableTime: true,
-                            noCalendar: true,
-                            dateFormat: "H:i",
-                            time_24hr: true,
-                            defaultDate: "{{$event->flatpickr_limits()[0]}}"
-                        });
-                        flatpickr('#availability_end', {
-                            enableTime: true,
-                            noCalendar: true,
-                            dateFormat: "H:i",
-                            time_24hr: true,
-                            defaultDate: "{{$event->flatpickr_limits()[1]}}"
-                        });
-                    </script>
-                </div>
-                @endif
-                @endif
-                @endif
-
-
-                <hr>
-                @if (count($updates) == 0)
-                @elseif (count($updates) >0 )
-                    <h4 class="font-weight-bold blue-text">Updates</h4>
-                        @foreach($updates as $u)
-                            <div class="card p-3">
-                                <a href="{{Request::url()}}#{{$u->slug}}" name={{$u->slug}}> <h4>{{$u->title}}</h4></a>
-                                    <div class="d-flex flex-row align-items-center">
-                                        <i class="far fa-clock"></i>&nbsp;&nbsp;Posted {{$u->created_pretty()}}</span>&nbsp;&nbsp;•&nbsp;&nbsp;<i class="far fa-user-circle"></i>&nbsp;&nbsp;{{$u->author_pretty()}}
-                                    </div>
-                                <hr>
-                                {{$u->html()}}
-                            </div>
-                        <br>
-                @endforeach
-                @endif
-            </div>
+{{-- Hero header --}}
+<div style="background:#122b44; padding:2.75rem 0 2.25rem;">
+    <div class="container">
+        <a href="{{ route('events.index') }}" style="font-size:0.82rem; color:rgba(255,255,255,0.6); text-decoration:none; display:inline-flex; align-items:center; gap:0.35rem; margin-bottom:0.25rem;">
+            <i class="fas fa-arrow-left fa-xs"></i> Events
+        </a>
+        <h1 style="color:#fff; font-weight:700; font-size:2rem; line-height:1.25; margin-bottom:0.75rem;">
+            {{ $event->name }}
+        </h1>
+        <div style="display:flex; gap:1.25rem; flex-wrap:wrap; align-items:center; color:rgba(255,255,255,0.65); font-size:0.85rem;">
+            <span><i class="far fa-clock mr-1"></i>{{ $event->start_timestamp_pretty() }} – {{ $event->end_timestamp_pretty() }}</span>
+            @if($event->departure_icao && $event->arrival_icao)
+                <span style="opacity:0.4;">•</span>
+                <span><i class="fas fa-plane mr-1" style="font-size:0.75rem;"></i>{{ $event->departure_icao }} → {{ $event->arrival_icao }}</span>
+            @endif
+            @if(!$event->event_in_past())
+                <span style="opacity:0.4;">•</span>
+                <span style="color:#7dd3a8; font-weight:600;">{{ $event->starts_in_pretty() }}</span>
+            @else
+                <span style="opacity:0.4;">•</span>
+                <span style="background:rgba(255,255,255,0.12); padding:0.15rem 0.55rem; border-radius:999px; font-size:0.75rem;">Past event</span>
+            @endif
         </div>
     </div>
+</div>
+
+{{-- Body --}}
+<div style="background:#fff; min-height:calc(100vh - 220px); padding:2.5rem 0;">
+    <div class="container">
+        <div class="row">
+
+            {{-- Main content --}}
+            <div class="col-md-12">
+
+                @if($event->image_url)
+                    <img src="{{ $event->image_url }}" alt="{{ $event->name }}"
+                         style="width:100%; border-radius:0.5rem; margin-bottom:2rem; max-height:380px; object-fit:cover; display:block;">
+                @endif
+
+                <div class="event-prose">
+                    {{ $event->html() }}
+                </div>
+
+                {{-- Controller application form --}}
+                @if($event->start_timestamp > $timeNow && Auth::check() && $event->controller_applications_open && Auth::user()->rosterProfile)
+                    <hr style="border-color:#e9ecef; margin:2rem 0;">
+                    <h5 style="color:#122b44; font-weight:700; margin-bottom:1rem;">Apply to Control</h5>
+
+                    @if($event->userHasApplied())
+                        <div style="background:#d4edda; border:1px solid #c3e6cb; border-radius:0.375rem; padding:0.875rem 1rem; font-size:0.875rem; color:#155724;">
+                            <i class="fas fa-check-circle mr-2"></i>You've already applied for this event. Check your <a href="{{ route('dashboard.index') }}" style="color:#155724; font-weight:600;">dashboard</a> for updates.
+                        </div>
+                    @else
+                        <div style="background:#f8f9fa; border:1px solid #e9ecef; border-radius:0.5rem; padding:1.5rem;">
+                            <p style="font-size:0.875rem; color:#6c757d; margin-bottom:1.25rem;">Submit an application to the Events Coordinator to control during this event.</p>
+                            <form id="app-form" method="POST" action="{{ route('events.controllerapplication.ajax') }}">
+                                @csrf
+                                <input type="hidden" name="event_id" value="{{ $event->id }}">
+                                <input type="hidden" name="event_name" value="{{ $event->name }}">
+                                <input type="hidden" name="event_date" value="{{ $event->start_timestamp }}">
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label style="font-size:0.85rem; font-weight:600; color:#343a40;">Availability start (zulu)</label>
+                                            <input type="text" name="availability_start" class="form-control" id="availability_start">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label style="font-size:0.85rem; font-weight:600; color:#343a40;">Availability end (zulu)</label>
+                                            <input type="text" name="availability_end" class="form-control" id="availability_end">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label style="font-size:0.85rem; font-weight:600; color:#343a40;">Position requested</label>
+                                    <select name="position" class="form-control custom-select" id="position">
+                                        @if(Auth::user()->rating_id > 1)
+                                            <option value="Delivery">Delivery</option>
+                                            <option value="Ground">Ground</option>
+                                            <option value="Tower">Tower</option>
+                                        @endif
+                                        @if(Auth::user()->rating_id > 3)
+                                            <option value="Departure">Departure</option>
+                                            <option value="Arrival">Arrival</option>
+                                        @endif
+                                        @if(Auth::user()->rating_id > 4)
+                                            <option value="Centre">Centre</option>
+                                        @endif
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label style="font-size:0.85rem; font-weight:600; color:#343a40;">Comments</label>
+                                    <textarea name="comments" id="comments" rows="2" class="form-control" placeholder="Any additional information for the Events Coordinator"></textarea>
+                                </div>
+
+                                <button type="submit" class="btn" style="background:#122b44; color:#fff; border-radius:0.375rem; font-size:0.875rem; padding:0.5rem 1.5rem;">
+                                    Submit Application
+                                </button>
+                            </form>
+                            <script>
+                                flatpickr('#availability_start', { enableTime: true, noCalendar: true, dateFormat: "H:i", time_24hr: true, defaultDate: "{{ $event->flatpickr_limits()[0] }}" });
+                                flatpickr('#availability_end',   { enableTime: true, noCalendar: true, dateFormat: "H:i", time_24hr: true, defaultDate: "{{ $event->flatpickr_limits()[1] }}" });
+                            </script>
+                        </div>
+                    @endif
+                @endif
+
+                {{-- Updates --}}
+                @if(count($updates) > 0)
+                    <hr style="border-color:#e9ecef; margin:2rem 0;">
+                    <h5 style="color:#122b44; font-weight:700; margin-bottom:1rem;">Updates</h5>
+                    @foreach($updates as $u)
+                        <div style="border:1px solid #e9ecef; border-radius:0.5rem; padding:1.25rem; margin-bottom:0.75rem;">
+                            <a href="{{ Request::url() }}#{{ $u->slug }}" name="{{ $u->slug }}"
+                               style="font-weight:700; color:#122b44; font-size:0.95rem; text-decoration:none;">{{ $u->title }}</a>
+                            <div style="font-size:0.78rem; color:#6c757d; margin:0.25rem 0 0.75rem;">
+                                <i class="far fa-clock mr-1"></i>{{ $u->created_pretty() }}
+                                &nbsp;·&nbsp;
+                                <i class="far fa-user-circle mr-1"></i>{{ $u->author_pretty() }}
+                            </div>
+                            <div style="font-size:0.875rem; color:#343a40; line-height:1.7;">{{ $u->html() }}</div>
+                        </div>
+                    @endforeach
+                @endif
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
 @stop

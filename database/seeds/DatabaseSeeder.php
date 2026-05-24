@@ -50,7 +50,6 @@ class DatabaseSeeder extends Seeder
             'id' => 1,
             'name' => 'Executive Team',
             'slug' => 'executive',
-            'description' => 'CZWG\'s executive team oversees FIR operations',
             'can_receive_tickets' => true,
         ]);
 
@@ -78,5 +77,8 @@ class DatabaseSeeder extends Seeder
             'url' => 'https://cdn.discordapp.com/attachments/598024548301930496/762594915552985108/unknown.png',
             'credit' => 'Winnipeg FIR',
         ]);
+
+        $this->call(NewsSeeder::class);
+        $this->call(EventsSeeder::class);
     }
 }
