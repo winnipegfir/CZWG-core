@@ -78,7 +78,7 @@ class HomeController extends Controller
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, 'https://api.checkwx.com/metar/CYWG,CYXE,CYQR,CYQT,CYPG,CYMJ/decoded?pretty=1');
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, ['X-API-Key: '.env('AIRPORT_API_KEY')]);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, ['X-API-Key: '.config('services.checkwx.key')]);
 
             $resp = json_decode(curl_exec($ch));
 
