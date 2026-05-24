@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Tickets;
 use App\Http\Controllers\Controller;
 use App\Models\Tickets\Ticket;
 use App\Models\Tickets\TicketReply;
-use App\Models\Users\StaffGroup;
 use App\Models\Users\StaffMember;
 use App\Notifications\NewTicket;
 use App\Notifications\TicketReply as NotificationsTicketReply;
@@ -23,9 +22,8 @@ class TicketsController extends Controller
         $closedTickets = Ticket::where('user_id', Auth::user()->id)->where('status', 1)->get()->sortByDesc('id');
         $onHoldTickets = Ticket::where('user_id', Auth::user()->id)->where('status', 2)->get()->sortByDesc('id');
         $staff_members = StaffMember::where('user_id', '!=', 1)->where('group_id', 1)->with('user')->get()->filter(fn($s) => $s->user !== null);
-        $groups = StaffGroup::where('can_receive_tickets', true)->get();
 
-        return view('dashboard.tickets.index', compact('openTickets', 'closedTickets', 'onHoldTickets', 'staff_members', 'groups'));
+        return view('dashboard.tickets.index', compact('openTickets', 'closedTickets', 'onHoldTickets', 'staff_members'));
     }
 
     public function staffIndex()
