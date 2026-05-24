@@ -767,11 +767,10 @@ div.notes{
         display: none !important;
     }
 
-    /* Dropdown sub-items: inline, not floating */
+    /* Dropdown sub-items: inline, not floating, hidden until tapped */
     #navbarSupportedContent .dropdown-menu {
         position: static !important;
         float: none !important;
-        display: block !important;   /* always visible, no JS toggle needed */
         background: transparent !important;
         border: none !important;
         box-shadow: none !important;
@@ -793,9 +792,10 @@ div.notes{
         background: transparent !important;
     }
 
-    /* Hide the caret on mobile — sub-items always shown */
+    /* Show caret, right-aligned */
     #navbarSupportedContent .dropdown-toggle::after {
-        display: none !important;
+        float: right !important;
+        margin-top: 0.45em !important;
     }
 
     /* ---- Right-side section: user + socials ---- */
