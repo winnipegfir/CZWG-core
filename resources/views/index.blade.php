@@ -3,7 +3,7 @@
 
 
 @section('content')
-<link rel="stylesheet" type="text/css" href="{{ asset('/css/home.css') }}?v=2" />
+<link rel="stylesheet" type="text/css" href="{{ asset('/css/home.css') }}?v=3" />
 
     {{-- Hero --}}
     <div class="winnipeg-blue">
@@ -127,11 +127,6 @@
 
     {{-- Info strip — sticky so it stops naturally at the footer --}}
     <div id="info-strip-wrap">
-        <div id="is-panel">
-            <div class="info-strip-inner" style="height:auto; padding-top:0.6rem; padding-bottom:0.6rem;">
-                <ul id="is-panel-list"></ul>
-            </div>
-        </div>
         <div id="info-strip">
             <div class="info-strip-inner">
                 <div id="is-badge">
@@ -145,8 +140,13 @@
                 </div>
                 <div id="is-dots"></div>
                 <button id="is-expand" aria-label="Expand section">
-                    <i class="fas fa-chevron-down" id="is-chevron"></i>
+                    <i class="fas fa-chevron-down" id="is-chevron" style="transform:rotate(180deg);transition:transform 0.25s ease;"></i>
                 </button>
+            </div>
+        </div>
+        <div id="is-panel">
+            <div class="info-strip-inner" style="height:auto; padding-top:0.6rem; padding-bottom:0.6rem;">
+                <ul id="is-panel-list"></ul>
             </div>
         </div>
     </div>
@@ -205,7 +205,7 @@
             expanded = !expanded;
             if (expanded) { buildPanel(); }
             elPanel.classList.toggle('open', expanded);
-            elChevron.style.transform = expanded ? 'rotate(180deg)' : '';
+            elChevron.style.transform = expanded ? '' : 'rotate(180deg)';
         });
 
         function updateDots() {
