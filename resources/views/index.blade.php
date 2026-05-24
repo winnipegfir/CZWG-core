@@ -18,7 +18,7 @@
                         <i class="fas fa-camera fa-xs"></i>&nbsp; {{$background->credit}}
                     </p>
                     <h1 style="font-size:clamp(2.5rem, 6vw, 5.5rem); color:#fff; font-weight:800; line-height:1.05; margin-bottom:0.5rem; text-shadow:0 1px 6px rgba(0,0,0,0.25);">
-                        We Are <span id="hero-word" style="color:#122b44; font-weight:900; display:inline-block; transition:opacity 0.18s ease, transform 0.18s ease;"><span id="hero-word-text">Winnipeg</span>.</span>
+                        We Are <span id="hero-word" style="color:#122b44; font-weight:900; display:inline-block; transition:opacity 0.18s ease, transform 0.18s ease;"><span id="hero-word-text" style="opacity:0;">Winnipeg</span></span>.
                     </h1>
                     <style>
                     #hero-word.flip-out { opacity:0; transform:translateY(-6px); }
@@ -46,6 +46,7 @@
                         var first = words[Math.floor(Math.random() * words.length)];
 
                         textEl.textContent = first;
+                        textEl.style.opacity = '1';
 
                         function flipTo(word) {
                             el.classList.add('flip-out');
