@@ -30,7 +30,10 @@
       "Bash(curl -s -o /dev/null -w \" %{http_code}\" http://winnipegfir.test/admin/news/article/create)",
       "Bash(grep -n \"^a,\\\\|^a {\" c:/laragon/www/winnipegfir/public/css/czqomd.css)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://winnipegfir.test/admin/events)",
-      "Bash(curl -s -o /dev/null -w \" %{http_code}\" http://winnipegfir.test/admin/events/create)"
+      "Bash(curl -s -o /dev/null -w \" %{http_code}\" http://winnipegfir.test/admin/events/create)",
+      "Bash(npm run *)",
+      "Bash(npm install *)",
+      "Bash(findstr /i \"public/css\\\\|public/js\\\\|mix-manifest\")"
     ]
   }
 }
