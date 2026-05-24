@@ -44,9 +44,6 @@
     display: flex;
     align-items: center;
     height: 54px;
-    padding: 0 1.5rem;
-    max-width: 1400px;
-    margin: 0 auto;
 }
 
 #is-badge {
@@ -211,9 +208,6 @@
 }
 
 @media (max-width: 576px) {
-    .info-strip-inner {
-        padding: 0 1rem;
-    }
     #is-badge {
         font-size: 0.6rem;
         padding: 0.25rem 0.55rem;

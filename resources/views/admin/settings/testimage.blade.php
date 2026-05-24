@@ -13,8 +13,27 @@
                     <p style="color:rgba(255,255,255,0.6); font-size:0.8rem; margin-bottom:0.4rem; letter-spacing:0.5px; text-shadow:0 1px 4px rgba(0,0,0,0.5);">
                         <i class="fas fa-camera fa-xs"></i>&nbsp; {{$image->credit}}
                     </p>
+                    <style>
+                    #hero-word-preview {
+                        position: relative;
+                        isolation: isolate;
+                        color: #122b44;
+                        font-weight: 900;
+                        display: inline-block;
+                    }
+                    #hero-word-preview::before {
+                        content: '';
+                        position: absolute;
+                        inset: -15px -25px;
+                        background: white;
+                        border-radius: 55% 45% 38% 62% / 48% 62% 38% 52%;
+                        filter: blur(18px);
+                        opacity: 0.3;
+                        z-index: -1;
+                    }
+                    </style>
                     <h1 style="font-size:clamp(2.5rem, 6vw, 5.5rem); color:#fff; font-weight:800; line-height:1.05; margin-bottom:0.5rem; text-shadow:0 1px 6px rgba(0,0,0,0.25);">
-                        We Are <span style="color:#122b44; font-weight:900;">Winnipeg.</span>
+                        We Are <span id="hero-word-preview">Winnipeg.</span>
                     </h1>
                     <div style="display:inline-flex; gap:1rem; align-items:center; margin-top:0.5rem;">
                         <a href="{{ url('admin/settings/images') }}" style="display:inline-flex; align-items:center; gap:0.4rem; color:rgba(255,255,255,0.7); font-size:0.9rem; text-decoration:none;">
@@ -28,7 +47,7 @@
 
     <div id="info-strip-wrap">
         <div id="info-strip">
-            <div class="info-strip-inner">
+            <div class="container info-strip-inner">
                 <div id="is-badge" style="display:flex; align-items:center; gap:0.45rem; background:rgba(255,255,255,0.1); color:rgba(255,255,255,0.95); padding:0.28rem 0.8rem; border-radius:3px; font-size:0.67rem; font-weight:700; letter-spacing:0.11em; text-transform:uppercase; white-space:nowrap; flex-shrink:0;">
                     <i class="fas fa-image"></i>
                     <span>PREVIEW MODE</span>

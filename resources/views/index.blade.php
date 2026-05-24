@@ -3,7 +3,7 @@
 
 
 @section('content')
-<link rel="stylesheet" type="text/css" href="{{ asset('/css/home.css') }}?v=4" />
+<link rel="stylesheet" type="text/css" href="{{ asset('/css/home.css') }}?v=5" />
 
     {{-- Hero --}}
     <div class="winnipeg-blue">
@@ -128,7 +128,7 @@
     {{-- Info strip — sticky so it stops naturally at the footer --}}
     <div id="info-strip-wrap">
         <div id="info-strip">
-            <div class="info-strip-inner">
+            <div class="container info-strip-inner">
                 <div id="is-badge">
                     <i class="fas" id="is-icon"></i>
                     <span id="is-label"></span>
@@ -145,7 +145,7 @@
             </div>
         </div>
         <div id="is-panel">
-            <div class="info-strip-inner" style="height:auto; padding-top:0.6rem; padding-bottom:0.6rem;">
+            <div class="container info-strip-inner" style="height:auto; padding-top:0.6rem; padding-bottom:0.6rem;">
                 <ul id="is-panel-list"></ul>
             </div>
         </div>
