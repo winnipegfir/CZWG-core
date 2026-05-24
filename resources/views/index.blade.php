@@ -3,7 +3,7 @@
 
 
 @section('content')
-<link rel="stylesheet" type="text/css" href="{{ asset('/css/home.css') }}" />
+<link rel="stylesheet" type="text/css" href="{{ asset('/css/home.css') }}?v=2" />
 
     {{-- Hero --}}
     <div class="winnipeg-blue">
