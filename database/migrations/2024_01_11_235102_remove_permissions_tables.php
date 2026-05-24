@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::disableForeignKeyConstraints();
         Schema::dropIfExists('users_permissions');
         Schema::dropIfExists('users_roles');
         Schema::dropIfExists('roles_permissions');
         Schema::dropIfExists('permissions');
         Schema::dropIfExists('roles');
+        Schema::enableForeignKeyConstraints();
     }
 
     /**
