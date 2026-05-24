@@ -207,6 +207,89 @@
     text-underline-offset: 3px;
 }
 
+/* ── Live event badge ────────────────────────────────────── */
+#info-strip.is-live #is-badge {
+    background: rgba(239,68,68,0.2);
+    color: #fca5a5;
+}
+#info-strip.is-live #is-icon {
+    color: #ef4444;
+    animation: is-pulse 1.4s ease-in-out infinite;
+}
+@keyframes is-pulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.35; }
+}
+
+/* ── Online controllers grid ─────────────────────────────── */
+.is-panel-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    padding: 0.6rem 0;
+    width: 100%;
+}
+
+.is-facility-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 5px;
+    padding: 0.55rem 0.75rem;
+    min-width: 200px;
+    flex: 1 1 200px;
+}
+
+.is-facility-name {
+    color: rgba(255,255,255,0.6);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.4rem;
+}
+
+.is-position-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.2rem 0;
+}
+
+.is-pos-tag {
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 0.12rem 0.4rem;
+    border-radius: 3px;
+    flex-shrink: 0;
+    min-width: 2.8rem;
+    text-align: center;
+    color: #fff;
+    background: rgba(255,255,255,0.15);
+}
+.is-pos-tag--del { background: #6366f1; }
+.is-pos-tag--gnd { background: #16a34a; }
+.is-pos-tag--twr { background: #dc2626; }
+.is-pos-tag--app,
+.is-pos-tag--dep { background: #d97706; }
+.is-pos-tag--ctr { background: #0ea5e9; }
+.is-pos-tag--fss { background: #7c3aed; }
+
+.is-pos-name {
+    flex: 1;
+    color: rgba(255,255,255,0.85);
+    font-size: 0.8rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.is-pos-freq {
+    color: rgba(255,255,255,0.45);
+    font-size: 0.75rem;
+    font-variant-numeric: tabular-nums;
+    flex-shrink: 0;
+}
+
 @media (max-width: 576px) {
     #is-badge {
         font-size: 0.6rem;

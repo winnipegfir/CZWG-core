@@ -4,6 +4,9 @@
 @section('description', 'Check out the Winnipeg FIR events!')
 
 @section('content')
+<style>
+@keyframes live-pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+</style>
 <div style="background:#fff; min-height:calc(100vh - 60px); padding:2.5rem 0;">
     <div class="container">
 
@@ -42,8 +45,17 @@
                         @endif
                         {{-- Details --}}
                         <div style="padding:1rem 1.25rem; flex:1; display:flex; align-items:center; justify-content:space-between; gap:1rem;">
-                            <div>
-                                <div style="font-weight:700; font-size:1.05rem; color:#122b44; line-height:1.3; margin-bottom:0.25rem;">{{ $e->name }}</div>
+                            @php $isLive = $e->start_timestamp <= $now && $e->end_timestamp >= $now; @endphp
+                        <div>
+                                <div style="font-weight:700; font-size:1.05rem; color:#122b44; line-height:1.3; margin-bottom:0.25rem; display:flex; align-items:center; gap:0.5rem;">
+                                    {{ $e->name }}
+                                    @if($isLive)
+                                        <span style="display:inline-flex; align-items:center; gap:0.3rem; background:#fef2f2; color:#dc2626; font-size:0.62rem; font-weight:700; letter-spacing:0.1em; padding:0.15rem 0.5rem; border-radius:999px; white-space:nowrap;">
+                                            <span style="width:5px; height:5px; border-radius:50%; background:#dc2626; display:inline-block; animation:live-pulse 1.4s ease-in-out infinite;"></span>
+                                            LIVE NOW
+                                        </span>
+                                    @endif
+                                </div>
                                 <div style="font-size:0.8rem; color:#6c757d;">
                                     <i class="far fa-clock mr-1"></i>{{ $e->start_timestamp_pretty() }}
                                     @if($e->departure_icao && $e->arrival_icao)
@@ -53,7 +65,11 @@
                                 </div>
                             </div>
                             <div style="flex-shrink:0; font-size:0.8rem; font-weight:600; color:#122b44; white-space:nowrap;">
-                                {{ $e->starts_in_pretty() }} &rarr;
+                                @if($isLive)
+                                    In progress &rarr;
+                                @else
+                                    {{ $e->starts_in_pretty() }} &rarr;
+                                @endif
                             </div>
                         </div>
                     </a>

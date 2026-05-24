@@ -8,6 +8,7 @@
 
 @section('content')
 <style>
+    @keyframes live-pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
     .event-prose h1, .event-prose h2, .event-prose h3,
     .event-prose h4, .event-prose h5, .event-prose h6 {
         color: #122b44; font-weight: 700; margin-top: 1.5rem; margin-bottom: 0.5rem;
@@ -34,7 +35,17 @@
                 <span style="opacity:0.4;">•</span>
                 <span><i class="fas fa-plane mr-1" style="font-size:0.75rem;"></i>{{ $event->departure_icao }} → {{ $event->arrival_icao }}</span>
             @endif
-            @if(!$event->event_in_past())
+            @php
+                $now = \Carbon\Carbon::now();
+                $isLive = $event->start_timestamp <= $now && $event->end_timestamp >= $now;
+            @endphp
+            @if($isLive)
+                <span style="opacity:0.4;">•</span>
+                <span style="display:inline-flex; align-items:center; gap:0.4rem; background:rgba(220,38,38,0.25); color:#fca5a5; font-size:0.75rem; font-weight:700; letter-spacing:0.08em; padding:0.2rem 0.65rem; border-radius:999px;">
+                    <span style="width:6px; height:6px; border-radius:50%; background:#ef4444; display:inline-block; animation:live-pulse 1.4s ease-in-out infinite;"></span>
+                    LIVE NOW
+                </span>
+            @elseif(!$event->event_in_past())
                 <span style="opacity:0.4;">•</span>
                 <span style="color:#7dd3a8; font-weight:600;">{{ $event->starts_in_pretty() }}</span>
             @else

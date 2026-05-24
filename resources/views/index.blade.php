@@ -3,7 +3,7 @@
 
 
 @section('content')
-<link rel="stylesheet" type="text/css" href="{{ asset('/css/home.css') }}?v=5" />
+<link rel="stylesheet" type="text/css" href="{{ asset('/css/home.css') }}?v=8" />
 
     {{-- Hero --}}
     <div class="winnipeg-blue">
@@ -20,11 +20,12 @@
                         <i class="fas fa-camera fa-xs"></i>&nbsp; {{$background->credit}}
                     </p>
                     <h1 style="font-size:clamp(2.5rem, 6vw, 5.5rem); color:#fff; font-weight:800; line-height:1.05; margin-bottom:0.5rem; text-shadow:0 1px 6px rgba(0,0,0,0.25);">
-                        We Are <span id="hero-word" style="color:#122b44; font-weight:900; display:inline-block; transition:opacity 0.18s ease, transform 0.18s ease;"><span id="hero-word-text" style="opacity:0;">Winnipeg</span>.</span>
+                        <span id="hero-prefix">We Are</span> <span id="hero-word" style="color:#122b44; font-weight:900; display:inline-block; transition:opacity 0.18s ease, transform 0.18s ease;"><span id="hero-word-text" style="opacity:0;">Winnipeg</span>.</span>
                     </h1>
                     <style>
                     #hero-word.flip-out { opacity:0; transform:translateY(-6px); }
                     #hero-word.flip-in  { opacity:0; transform:translateY(6px); }
+                    #hero-prefix { transition: opacity 0.18s ease; }
                     #hero-word {
                         position: relative;
                         isolation: isolate;
@@ -45,14 +46,32 @@
                         var words = ['Brandon', 'Portage', 'Steinbach', 'Selkirk', 'Thompson', 'Flin Flon', 'Dauphin', 'Morden', 'Winkler', 'The Pas', 'Saskatoon', 'Regina', 'Moose Jaw', 'Swift Current', 'Prince Albert', 'Yorkton', 'North Battleford', 'Estevan', 'Weyburn', 'Thunder Bay', 'Lloydminster'];
                         var el = document.getElementById('hero-word');
                         var textEl = document.getElementById('hero-word-text');
-                        var first = words[Math.floor(Math.random() * words.length)];
+                        var prefixEl = document.getElementById('hero-prefix');
+
+                        @auth
+                        var easterEgg = Math.random() < 0.01;
+                        @endauth
+                        @guest
+                        var easterEgg = false;
+                        @endguest
+
+                        var first = easterEgg
+                            ? '{{ Auth::check() ? e(Auth::user()->display_fname) : "" }}'
+                            : words[Math.floor(Math.random() * words.length)];
+
+                        if (easterEgg) prefixEl.textContent = 'You Are';
 
                         textEl.textContent = first;
                         textEl.style.opacity = '1';
 
-                        function flipTo(word) {
+                        function flipTo(word, prefix) {
                             el.classList.add('flip-out');
+                            if (prefix !== undefined) prefixEl.style.opacity = '0';
                             setTimeout(function() {
+                                if (prefix !== undefined) {
+                                    prefixEl.textContent = prefix;
+                                    prefixEl.style.opacity = '';
+                                }
                                 textEl.textContent = word;
                                 el.classList.remove('flip-out');
                                 el.classList.add('flip-in');
@@ -61,7 +80,7 @@
                             }, 180);
                         }
 
-                        setTimeout(function() { flipTo('Winnipeg'); }, 1200);
+                        setTimeout(function() { flipTo('Winnipeg', 'We Are'); }, easterEgg ? 500 : 1200);
                     });
                     </script>
                     <a href="#mid" style="display:inline-flex; align-items:center; gap:0.5rem; color:rgba(255,255,255,0.85); font-size:1rem; text-decoration:none; padding-bottom:2px;">
@@ -76,6 +95,15 @@
     @php
     $stripSections = [];
 
+    // Live events
+    $lItems = [];
+    foreach ($liveEvents as $e) {
+        $lItems[] = ['text' => $e->name, 'cat' => null, 'url' => url('/events/' . $e->slug)];
+    }
+    if (!empty($lItems)) {
+        $stripSections[] = ['key' => 'live', 'icon' => 'fa-circle', 'label' => 'LIVE NOW', 'items' => $lItems];
+    }
+
     // Weather
     $wItems = [];
     foreach ($weather as $w) {
@@ -86,10 +114,29 @@
     }
 
     // Online controllers
+    $facilityNames = [
+        'WPG'  => 'CYWG', 'CYWG' => 'CYWG',
+        'CZWG' => 'CYWG', 'ZWG'  => 'CYWG',
+        'CYPG' => 'CYPG', 'CYAV' => 'CYAV',
+        'CYXE' => 'CYXE', 'CYQR' => 'CYQR',
+        'CYQT' => 'CYQT', 'CYMJ' => 'CYMJ',
+        'CYFO' => 'CYFO',
+    ];
     $cItems = [];
     foreach ($finalPositions as $p) {
-        $name = ($p->name != $p->cid) ? $p->name : (string)$p->cid;
-        $cItems[] = ['text' => $name . ' · ' . $p->callsign . ' · ' . $p->frequency, 'cat' => null];
+        $parts    = explode('_', $p->callsign);
+        $prefix   = $parts[0] ?? '';
+        $posType  = $parts[1] ?? '';
+        $facility = $facilityNames[$prefix] ?? $prefix;
+        $name     = ($p->name != $p->cid) ? $p->name : (string)$p->cid;
+        $cItems[] = [
+            'text'     => $name . ' · ' . $p->callsign . ' · ' . $p->frequency,
+            'cat'      => null,
+            'facility' => $facility,
+            'pos'      => $posType,
+            'name'     => $name,
+            'freq'     => $p->frequency,
+        ];
     }
     if (empty($cItems)) $cItems = [['text' => 'No controllers currently online', 'cat' => null]];
     $stripSections[] = ['key' => 'online', 'icon' => 'fa-headset', 'label' => 'ONLINE NOW', 'items' => $cItems];
@@ -196,9 +243,64 @@
 
         var sIdx = 0, iIdx = 0, timer = null, expanded = false;
 
-        function buildPanel() {
-            var items = sections[sIdx].items;
+        var posOrder = ['DEL','GND','TWR','APP','DEP','CTR','FSS','OBS'];
+
+        function buildOnlineGrid(items) {
+            var byFacility = {};
+            items.forEach(function (item) {
+                if (item.text === 'No controllers currently online') return;
+                var f = item.facility || 'Other';
+                if (!byFacility[f]) byFacility[f] = [];
+                byFacility[f].push(item);
+            });
             elPanelList.innerHTML = '';
+            if (Object.keys(byFacility).length === 0) {
+                var li = document.createElement('li');
+                li.className = 'is-panel-item';
+                li.textContent = 'No controllers currently online';
+                elPanelList.appendChild(li);
+                return;
+            }
+            var grid = document.createElement('div');
+            grid.className = 'is-panel-grid';
+            Object.keys(byFacility).sort().forEach(function (fac) {
+                var controllers = byFacility[fac].slice().sort(function (a, b) {
+                    return (posOrder.indexOf(a.pos) === -1 ? 99 : posOrder.indexOf(a.pos)) -
+                           (posOrder.indexOf(b.pos) === -1 ? 99 : posOrder.indexOf(b.pos));
+                });
+                var card = document.createElement('div');
+                card.className = 'is-facility-card';
+                var header = document.createElement('div');
+                header.className = 'is-facility-name';
+                header.textContent = fac;
+                card.appendChild(header);
+                controllers.forEach(function (c) {
+                    var row = document.createElement('div');
+                    row.className = 'is-position-row';
+                    var tag = document.createElement('span');
+                    tag.className = 'is-pos-tag is-pos-tag--' + (c.pos || 'other').toLowerCase();
+                    tag.textContent = c.pos || '—';
+                    var name = document.createElement('span');
+                    name.className = 'is-pos-name';
+                    name.textContent = c.name;
+                    var freq = document.createElement('span');
+                    freq.className = 'is-pos-freq';
+                    freq.textContent = c.freq;
+                    row.appendChild(tag);
+                    row.appendChild(name);
+                    row.appendChild(freq);
+                    card.appendChild(row);
+                });
+                grid.appendChild(card);
+            });
+            elPanelList.appendChild(grid);
+        }
+
+        function buildPanel() {
+            var sec = sections[sIdx];
+            elPanelList.innerHTML = '';
+            if (sec.key === 'online') { buildOnlineGrid(sec.items); return; }
+            var items = sec.items;
             items.forEach(function (item) {
                 var li = document.createElement('li');
                 li.className = 'is-panel-item';
@@ -236,6 +338,7 @@
             var item = sec.items[ii];
             elIcon.className  = 'fas ' + sec.icon;
             elLabel.textContent = sec.label;
+            document.getElementById('info-strip').classList.toggle('is-live', sec.key === 'live');
             elText.textContent = item.text;
             if (item.url) {
                 elText.href = item.url;

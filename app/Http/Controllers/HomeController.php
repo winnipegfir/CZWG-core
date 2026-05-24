@@ -43,8 +43,31 @@ class HomeController extends Controller
             }
         }
 
+        if (app()->environment('local')) {
+            foreach ([
+                ['CYWG_GND', 'John Smith',    '121.900'],
+                ['CYWG_TWR', 'Sarah Johnson', '118.300'],
+                ['WPG_CTR',  'Mike Davis',    '133.750'],
+                ['CYXE_APP', 'Emily Brown',   '119.500'],
+            ] as [$cs, $nm, $fr]) {
+                $fake = new \stdClass();
+                $fake->callsign  = $cs;
+                $fake->name      = $nm;
+                $fake->cid       = $nm;
+                $fake->frequency = $fr;
+                $fake->facility  = 1;
+                $finalPositions[] = $fake;
+            }
+        }
+
         //News
         $news = News::where('visible', true)->get()->sortByDesc('published')->take(3);
+
+        //Live events (happening right now)
+        $now = Carbon::now();
+        $liveEvents = Event::where('start_timestamp', '<=', $now)
+            ->where('end_timestamp', '>=', $now)
+            ->get();
 
         //Event
         $nextEvents = Event::where('start_timestamp', '>', Carbon::now())->get()->sortBy('start_timestamp')->take(3);
@@ -119,7 +142,7 @@ class HomeController extends Controller
         //Background Image
         $background = HomepageImages::all()->random();
 
-        return view('index', compact('finalPositions', 'news', 'nextEvents', 'topControllersArray', 'weather', 'background'));
+        return view('index', compact('finalPositions', 'news', 'nextEvents', 'liveEvents', 'topControllersArray', 'weather', 'background'));
     }
 
     public function nate()
