@@ -45,13 +45,13 @@
         @if (Auth::check())
         @switch (Auth::user()->preferences)
             @case("default")
-            <link href="{{ asset('css/czqomd.css') }}?v=7" rel="stylesheet">
+            <link href="{{ asset('css/czqomd.css') }}?v=8" rel="stylesheet">
             @break
             @default
-            <link href="{{ asset('css/czqomd.css') }}?v=7" rel="stylesheet">
+            <link href="{{ asset('css/czqomd.css') }}?v=8" rel="stylesheet">
         @endswitch
         @else
-        <link href="{{ asset('css/czqomd.css') }}?v=7" rel="stylesheet">
+        <link href="{{ asset('css/czqomd.css') }}?v=8" rel="stylesheet">
         @endif
         <!--Leaflet-->
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin=""/>
@@ -249,6 +249,23 @@
             </div>
         </nav>
     </header>
+    <script>
+    (function() {
+        var nav = document.getElementById('czwgHeader');
+        var menu = document.getElementById('navbarSupportedContent');
+        function positionMenu() {
+            if (window.innerWidth < 992 && menu) {
+                menu.style.top = nav.offsetHeight + 'px';
+            } else if (menu) {
+                menu.style.top = '';
+            }
+        }
+        positionMenu();
+        window.addEventListener('resize', positionMenu);
+        // Re-measure after Bootstrap finishes toggling (font/image load may shift height)
+        document.getElementById('navbarSupportedContent') && document.getElementById('navbarSupportedContent').addEventListener('shown.bs.collapse', positionMenu);
+    })();
+    </script>
     @if ($errors->any())
         <div class="alert alert-danger" style="margin: 0; border-radius: 0; border: none;">
             <div class="container">
