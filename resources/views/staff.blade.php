@@ -45,7 +45,7 @@
 
                         <div class="row">
                             @foreach($g->members as $member)
-                                <div class="{{ $g->slug === 'executive' ? 'col-md-12' : 'col-md-6' }} mb-3">
+                                <div class="col-md-12 mb-3">
                                     <div style="background:#f8f9fa; border:1px solid #e9ecef; border-radius:0.5rem; padding:1.25rem; display:flex; align-items:flex-start; gap:1rem; height:100%;">
                                         {{-- Avatar --}}
                                         @if($member->user_id == 1)

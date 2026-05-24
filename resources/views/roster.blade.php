@@ -61,7 +61,7 @@ function certBadge($level) {
                 @foreach ($roster as $controller)
                     <tr>
                         <td><a href="{{url('/roster/'.$controller->cid)}}" class="roster-cid">{{$controller->cid}}</a></td>
-                        <td class="font-weight-500">{{$controller->user->fname}} {{$controller->user->lname}}</td>
+                        <td class="font-weight-500">{{$controller->user->fullName('FL')}}</td>
                         <td><span class="rating-badge">{{$controller->user->rating->getShortName()}}</span></td>
                         <td>{!! certBadge($controller->del) !!}</td>
                         <td>{!! certBadge($controller->gnd) !!}</td>
@@ -101,7 +101,7 @@ function certBadge($level) {
                 @foreach ($visitroster as $vc)
                     <tr>
                         <td><a href="{{url('/roster/'.$vc->cid)}}" class="roster-cid">{{$vc->cid}}</a></td>
-                        <td class="font-weight-500">{{$vc->user->fname}} {{$vc->user->lname}}</td>
+                        <td class="font-weight-500">{{$vc->user->fullName('FL')}}</td>
                         <td><span class="rating-badge">{{$vc->user->rating_short}}</span></td>
                         <td>{!! certBadge($vc->del) !!}</td>
                         <td>{!! certBadge($vc->gnd) !!}</td>
