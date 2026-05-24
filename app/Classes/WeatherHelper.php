@@ -16,19 +16,21 @@ class WeatherHelper
      */
     public static function getAtisLetter($icao)
     {
-        $atis_letter = null;
+        try {
+            $client = new Client();
+            $response = $client->request('GET', 'https://data.vatsim.net/v3/vatsim-data.json');
+            $atis = json_decode($response->getBody()->getContents())->atis;
 
-        $client = new Client();
-        $response = $client->request('GET', 'https://data.vatsim.net/v3/vatsim-data.json');
-        $atis = json_decode($response->getBody()->getContents())->atis;
-
-        foreach ($atis as $a) {
-            if (Str::startsWith($a->callsign, $icao)) {
-                $atis_letter = $a->atis_code;
+            foreach ($atis as $a) {
+                if (Str::startsWith($a->callsign, $icao)) {
+                    return $a->atis_code;
+                }
             }
+        } catch (\Exception $e) {
+            // VATSIM API unavailable
         }
 
-        return $atis_letter;
+        return null;
     }
 
     /**
@@ -58,20 +60,24 @@ class WeatherHelper
             }
         } else {
             $text = Cache::remember('metar.data.'.$icao, 900, function () use ($icao) {
-                $c = new Client();
-                $res = $c->request('GET', 'https://api.checkwx.com/metar/'.$icao, [
-                    'headers' => [
-                        'X-API-Key' => env('AIRPORT_API_KEY'),
-                    ],
-                ]);
+                try {
+                    $c = new Client();
+                    $res = $c->request('GET', 'https://api.checkwx.com/metar/'.$icao, [
+                        'headers' => [
+                            'X-API-Key' => env('AIRPORT_API_KEY'),
+                        ],
+                    ]);
 
-                $metar = json_decode($res->getBody()->getContents())->data;
+                    $metar = json_decode($res->getBody()->getContents())->data;
 
-                if (! $metar) {
-                    return 'No ATIS/METAR available.';
+                    if (! $metar) {
+                        return 'No METAR available.';
+                    }
+
+                    return $metar[0];
+                } catch (\Exception $e) {
+                    return 'METAR unavailable.';
                 }
-
-                return $metar[0];
             });
         }
 
