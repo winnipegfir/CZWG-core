@@ -40,6 +40,10 @@ return [
             'transactional' => true,
         ],
     ],
+    'checkwx' => [
+        'key' => env('AIRPORT_API_KEY'),
+    ],
+
     'discord' => [
         'token' => env('DISCORD_BOT_TOKEN'),
         'client_id' => env('DISCORD_KEY'),

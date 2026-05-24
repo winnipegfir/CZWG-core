@@ -64,7 +64,7 @@ class WeatherHelper
                     $c = new Client();
                     $res = $c->request('GET', 'https://api.checkwx.com/metar/'.$icao, [
                         'headers' => [
-                            'X-API-Key' => env('AIRPORT_API_KEY'),
+                            'X-API-Key' => config('services.checkwx.key'),
                         ],
                     ]);
 
