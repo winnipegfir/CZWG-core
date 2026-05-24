@@ -748,9 +748,9 @@ div.notes{
     /* Every nav link: big tap target, white text */
     #navbarSupportedContent .nav-link {
         color: rgba(255,255,255,0.85) !important;
-        font-size: 1rem !important;
+        font-size: 1.05rem !important;
         font-weight: 500 !important;
-        padding: 0.8rem 0 !important;
+        padding: 1rem 0 !important;
         height: auto !important;
         line-height: 1.3 !important;
         border-bottom: 1px solid rgba(255,255,255,0.07) !important;
@@ -780,8 +780,8 @@ div.notes{
 
     #navbarSupportedContent .dropdown-menu .dropdown-item {
         color: rgba(255,255,255,0.55) !important;
-        font-size: 0.875rem !important;
-        padding: 0.35rem 0 !important;
+        font-size: 0.9rem !important;
+        padding: 0.55rem 0 !important;
         background: transparent !important;
         border: none !important;
         white-space: normal !important;
