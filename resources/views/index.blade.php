@@ -3,11 +3,11 @@
 
 
 @section('content')
-<link rel="stylesheet" type="text/css" href="{{ asset('/css/home.css') }}?v=3" />
+<link rel="stylesheet" type="text/css" href="{{ asset('/css/home.css') }}?v=4" />
 
     {{-- Hero --}}
     <div class="winnipeg-blue">
-        <div style="height: calc(100vh - 59px); position:relative; overflow:hidden;">
+        <div id="hero-panel" style="height: calc(100vh - 113px); position:relative; overflow:hidden;">
             {{-- Parallax background --}}
             <div data-jarallax data-speed="0.2" class="jarallax" style="position:absolute; top:0; left:0; right:0; bottom:0; background-image: url({{$background->url}}); {{$background->css}}"></div>
             {{-- Gradient overlay: dark left+bottom, open top-right --}}
@@ -150,6 +150,22 @@
             </div>
         </div>
     </div>
+
+    <script>
+    (function () {
+        var STRIP_H = 54;
+        function sizeHero() {
+            var hero = document.getElementById('hero-panel');
+            var content = document.getElementById('czqoContent');
+            if (!hero || !content) return;
+            var topOffset = content.getBoundingClientRect().top;
+            hero.style.height = 'calc(100vh - ' + topOffset + 'px - ' + STRIP_H + 'px)';
+        }
+        document.addEventListener('DOMContentLoaded', sizeHero);
+        window.addEventListener('resize', sizeHero);
+        sizeHero();
+    })();
+    </script>
 
     <script>
     (function () {
