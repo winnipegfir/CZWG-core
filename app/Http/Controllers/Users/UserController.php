@@ -23,7 +23,6 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
-use mofodojodino\ProfanityFilter\Check;
 use NotificationChannels\Discord\Discord;
 use NotificationChannels\Discord\Exceptions\CouldNotSendNotification;
 use SocialiteProviders\Manager\Config;
@@ -445,12 +444,6 @@ class UserController extends Controller
         //Get input
         $input = $request->get('bio');
 
-        //Run through profanity filter
-        $check = new Check();
-        if ($check->hasProfanity($input)) {
-            return redirect()->back()->withInput()->with('error-modal', 'Profanity was detected in your input, please remove it.');
-        }
-
         //No swear words.. give them the new bio
         $user->bio = $input;
         $user->save();
@@ -468,12 +461,6 @@ class UserController extends Controller
 
         //Get user
         $user = Auth::user();
-
-        //Run through profanity filter
-        $check = new Check();
-        if ($check->hasProfanity($request->get('display_fname'))) {
-            return redirect()->back()->withInput()->with('error', 'Profanity was detected in your display name. Please use a more appropriate name, if you believe this is in error, please contact our <a href="/dashboard/tickets?create=yes">Webmaster.</a>');
-        }
 
         //No swear words... give them the new name!
         $user->display_fname = $request->get('display_fname');

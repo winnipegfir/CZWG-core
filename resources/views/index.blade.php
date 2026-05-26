@@ -115,8 +115,8 @@
 
     // Online controllers
     $facilityNames = [
-        'WPG'  => 'CYWG', 'CYWG' => 'CYWG',
-        'CZWG' => 'CYWG', 'ZWG'  => 'CYWG',
+        'WPG'  => 'WPG',  'CYWG' => 'CYWG',
+        'CZWG' => 'WPG',  'ZWG'  => 'WPG',
         'CYPG' => 'CYPG', 'CYAV' => 'CYAV',
         'CYXE' => 'CYXE', 'CYQR' => 'CYQR',
         'CYQT' => 'CYQT', 'CYMJ' => 'CYMJ',
