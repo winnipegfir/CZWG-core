@@ -1,285 +1,321 @@
 @extends('layouts.master')
-
 @section('navbarprim')
-
     @parent
-
 @stop
 
 @section('content')
-    <div class="container py-4">
-        <a href="{{route('users.viewall')}}" class="blue-text" style="font-size: 1.2em;"> <i class="fas fa-arrow-left"></i> Users</a>
-        <h1 class="blue-text font-weight-bold mt-2"><img src="{{$user->avatar()}}" style="height: 50px; width:50px;margin-right: 15px; margin-bottom: 3px; border-radius: 50%;">{{$user->fullName('FL')}}</h1>
-        <hr>
-        @if ($user->fname != $user->display_fname || !$user->display_last_name || $user->display_cid_only)
-            <p>Note: this user's display name does not match their CERT name.</p>
-        @endif
+@php
+$statusMap = [
+    'home'          => ['label' => 'Home Controller',     'icon' => 'fa-user-check',          'color' => '#122b44',  'text' => '#fff'],
+    'visit'         => ['label' => 'Visiting Controller', 'icon' => 'fa-plane',               'color' => '#0ea5e9',  'text' => '#fff'],
+    'training'      => ['label' => 'In Training',         'icon' => 'fa-book-open',           'color' => '#d97706',  'text' => '#fff'],
+    'instructor'    => ['label' => 'Instructor',          'icon' => 'fa-chalkboard-teacher',  'color' => '#7c3aed',  'text' => '#fff'],
+    'certified'     => ['label' => 'CZWG Certified',      'icon' => 'fa-check',               'color' => '#16a34a',  'text' => '#fff'],
+    'not_certified' => ['label' => 'Not Certified',       'icon' => 'fa-times',               'color' => '#dc2626',  'text' => '#fff'],
+];
+$status = $statusMap[$certification] ?? ['label' => 'Unknown', 'icon' => 'fa-question', 'color' => '#6b7280', 'text' => '#fff'];
+
+$reqHours = match($user->rosterProfile?->status) {
+    'training'   => 2,
+    'home'       => 2,
+    'visit'      => 1,
+    'instructor' => 3,
+    default      => null,
+};
+@endphp
+
+<style>
+.au-hero {
+    background: linear-gradient(135deg, #0a1828 0%, #0d1f33 60%, #122b44 100%);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding: 1.75rem 0 1.5rem;
+    color: #fff;
+}
+.au-hero a.back-link {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    color: rgba(255,255,255,0.45); font-size: 0.78rem;
+    text-decoration: none; margin-bottom: 1rem;
+    transition: color 0.15s;
+}
+.au-hero a.back-link:hover { color: rgba(255,255,255,0.9); }
+.au-header { display: flex; align-items: center; gap: 1.1rem; flex-wrap: wrap; }
+.au-avatar { width: 72px; height: 72px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.15); object-fit: cover; flex-shrink: 0; }
+.au-name { font-size: 1.5rem; font-weight: 800; line-height: 1.1; margin: 0; }
+.au-sub { color: rgba(255,255,255,0.45); font-size: 0.8rem; margin-top: 0.2rem; }
+.au-badge {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    font-size: 0.65rem; font-weight: 700; letter-spacing: 0.08em;
+    padding: 0.25rem 0.6rem; border-radius: 4px; margin-right: 0.35rem; margin-top: 0.5rem;
+}
+.au-system-alert {
+    background: rgba(234,179,8,0.15); border: 1px solid rgba(234,179,8,0.3);
+    color: #fbbf24; border-radius: 6px; padding: 0.55rem 0.85rem;
+    font-size: 0.8rem; margin-top: 0.85rem;
+    display: flex; align-items: center; gap: 0.5rem;
+}
+.au-body { background: #f6f8fa; padding: 1.75rem 0 2.5rem; }
+.au-card {
+    background: #fff; border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 8px; padding: 1.25rem 1.35rem; margin-bottom: 1.1rem;
+}
+.au-card-title {
+    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: rgba(0,0,0,0.3); margin-bottom: 1rem;
+}
+.au-row { display: flex; align-items: baseline; gap: 0.5rem; padding: 0.3rem 0; border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 0.875rem; }
+.au-row:last-child { border-bottom: none; }
+.au-row-lbl { color: rgba(0,0,0,0.35); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; width: 130px; flex-shrink: 0; }
+.au-row-val { color: rgba(0,0,0,0.75); flex: 1; }
+.au-status-pill {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    font-size: 0.68rem; font-weight: 700; padding: 0.22rem 0.6rem;
+    border-radius: 20px; letter-spacing: 0.04em;
+}
+.au-activity-bar-track {
+    height: 6px; background: rgba(0,0,0,0.07); border-radius: 3px; overflow: hidden; flex: 1;
+}
+.au-activity-bar-fill { height: 100%; border-radius: 3px; transition: width 0.5s ease; }
+.au-form-row { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 0.85rem; }
+.modal .au-form-group select { color: #1a2a3a !important; border: 1px solid #ced4da !important; border-radius: 4px !important; }
+.au-form-group { flex: 1; min-width: 160px; }
+.au-form-group label { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: rgba(0,0,0,0.4); display: block; margin-bottom: 0.35rem; }
+.au-form-group select option { color: #1a2a3a !important; background: #fff !important; }
+.au-form-group select,
+.au-form-group select:focus {
+    width: 100%;
+    color: #1a2a3a !important;
+    background: #fff !important;
+    border: 1px solid #ced4da !important;
+    border-bottom: 1px solid #ced4da !important;
+    border-radius: 4px !important;
+    padding: 0.3rem 0.6rem !important;
+    font-size: 0.875rem !important;
+    appearance: auto !important;
+    box-shadow: none !important;
+    outline: none !important;
+}
+.au-note-item { padding: 0.75rem 0; border-bottom: 1px solid rgba(0,0,0,0.06); }
+.au-note-item:last-child { border-bottom: none; }
+.au-note-meta { font-size: 0.7rem; color: rgba(0,0,0,0.35); margin-bottom: 0.2rem; }
+.au-note-body { font-size: 0.85rem; color: rgba(0,0,0,0.7); }
+.au-disc-row { display: flex; align-items: center; gap: 0.6rem; padding: 0.35rem 0; font-size: 0.875rem; }
+</style>
+
+{{-- HERO --}}
+<div class="au-hero">
+    <div class="container">
+        <a href="{{ route('users.viewall') }}" class="back-link">
+            <i class="fas fa-arrow-left fa-xs"></i> All Users
+        </a>
+        <div class="au-header">
+            <img src="{{ $user->avatar() }}" class="au-avatar" alt="">
+            <div>
+                <h1 class="au-name">{{ $user->fullName('FL') }}</h1>
+                <div class="au-sub">CID {{ $user->id }} &nbsp;·&nbsp; {{ $user->rating->getLongName() }}</div>
+                <div style="margin-top:0.4rem;">
+                    <span class="au-badge" style="background:{{ $status['color'] }}; color:{{ $status['text'] }};">
+                        <i class="fas {{ $status['icon'] }} fa-xs"></i> {{ $status['label'] }}
+                    </span>
+                    @if($active == 1)
+                        <span class="au-badge" style="background:#dcfce7; color:#15803d;">
+                            <i class="fas fa-check fa-xs"></i> Active
+                        </span>
+                    @elseif($active == 0 && $certification !== null)
+                        <span class="au-badge" style="background:#fee2e2; color:#b91c1c;">
+                            <i class="fas fa-times fa-xs"></i> Inactive
+                        </span>
+                    @endif
+                    <span class="au-badge" style="background:rgba(255,255,255,0.1); color:rgba(255,255,255,0.8);">
+                        <i class="fas fa-shield-alt fa-xs"></i> {{ $user->permissions() }}
+                    </span>
+                </div>
+            </div>
+        </div>
         @if($user->id == 1 || $user->id == 2)
-        <div class="alert bg-czqo-blue-light">
-            This account is a system account used to identify automatic actions, or to serve as a placeholder user.
+        <div class="au-system-alert">
+            <i class="fas fa-info-circle"></i> This is a system account used for automatic actions or as a placeholder.
         </div>
         @endif
+        @if($user->fname != $user->display_fname || !$user->display_last_name || $user->display_cid_only)
+        <div class="au-system-alert" style="margin-top:0.5rem; background:rgba(249,115,22,0.12); border-color:rgba(249,115,22,0.3); color:#fb923c;">
+            <i class="fas fa-exclamation-triangle"></i> Display name does not match their CERT name.
+        </div>
+        @endif
+    </div>
+</div>
+
+{{-- BODY --}}
+<div class="au-body">
+    <div class="container">
         <div class="row">
-            <div class="col-md-6">
-                <h2 class="font-weight-bold blue-text pb-2">Basic Data</h2>
-                <div class="card p-3">
-                    <h5>Identity</h5>
-                    <ul class="list-unstyled">
-                        <li>CID: {{$user->id}}</li>
-                        @if (Auth::user()->permissions == 5)
-                        <li>CERT First Name: {{$user->fname}}</li>
-                        <li>CERT Last Name: {{$user->lname}}</li>
-                        @endif
-                        <li>Display Name: {{$user->fullName('FLC')}}</li>
-                        <li>Rating: {{$user->rating->getLongName()}} ({{$user->rating->getShortName()}})</li>
 
-                    </ul>
-                    <h5>Email</h5>
-                    <a href="mailto:{{$user->email}}">{{$user->email}}</a>
-                    <br>
-                    <h5 class="card-title">Status</h5>
-                    <div class="card-text">
-                        <div class="d-flex flex-row justify-content-left">
-                        @if ($certification == "certified")
-                            <h3>
-                            <span class="badge  badge-success rounded shadow-none">
-                                <i class="fa fa-check"></i>&nbsp;
-                                CZWG Certified
-                            </span>
-                            </h3>
-                        @elseif ($certification == "not_certified")
-                            <h3>
-                            <span class="badge badge-danger rounded shadow-none">
-                                <i class="fa fa-times"></i>&nbsp;
-                                Not Certified to Control
-                            </span>
-                            </h3>
-                        @elseif ($certification == "training")
-                            <h3>
-                            <span class="badge badge-warning rounded shadow-none">
-                                <i class="fa fa-book-open"></i>&nbsp;
-                                In Training
-                            </span>
-                            </h3>
-                        @elseif ($certification == "home")
-                            <h3>
-                            <span class="badge rounded shadow-none" style="background-color:#122b44">
-                                <i class="fa fa-user-check"></i>&nbsp;
-                                CZWG Controller
-                            </span>
-                            </h3>
-                        @elseif ($certification == "visit")
-                            <h3>
-                            <span class="badge badge-info rounded shadow-none">
-                                <i class="fa fa-plane"></i>&nbsp;
-                                    CZWG Visiting Controller
-                            </span>
-                            </h3>
-                        @elseif ($certification == "instructor")
-                            <h3>
-                            <span class="badge badge-info rounded shadow-none">
-                                <i class="fa fa-chalkboard-teacher"></i>&nbsp;
-                                        CZWG Instructor
-                            </span>
-                            </h3>
-                        @else
-                            <h3>
-                            <span class="badge badge-dark rounded shadow-none">
-                                <i class="fa fa-question"></i>&nbsp;
-                                Unknown
-                            </span>
-                            </h3>
-                        @endif
-                        @if ($active == 0)
-                            <h3>
-                            <span class="badge ml-2 badge-danger rounded shadow-none">
-                                <i class="fa fa-times"></i>&nbsp;
-                                Inactive
-                            </span>
-                            </h3>
-                        @elseif ($active == 1)
-                            <h3>
-                            <span class="badge ml-2 badge-success rounded shadow-none">
-                                <i class="fa fa-check"></i>&nbsp;
-                                Active
-                            </span>
-                            </h3>
-                        @endif
-                        </div>
-                          <span class="text-danger">
+            {{-- Left --}}
+            <div class="col-md-7">
+
+                {{-- Identity --}}
+                <div class="au-card">
+                    <div class="au-card-title">Identity</div>
+                    <div class="au-row">
+                        <span class="au-row-lbl">CID</span>
+                        <span class="au-row-val">{{ $user->id }}</span>
                     </div>
-                    <!--All users, no hours-->
-                    @if ($user->rosterProfile)
-                    <h5 class="card-title mt-2">Activity</h5>
-                        @if ($user->rosterProfile->currency < 0.1)
-                        <h3><span class="badge rounded shadow-none red">
-                            No hours recorded
-                        </span></h3>
-                        @endif
-<!--Winnipeg Training Hrs-->
-                        @if ($user->rosterProfile->status == "training")
-                        @if (!$user->rosterProfile->currency == 0)
-                          @if ($user->rosterProfile->currency < 2.0)
-                          <h3><span class="badge rounded shadow-none blue">
-                            {{$user->rosterProfile->currency}} hours recorded
-                          </span></h3>
-                          @elseif ($user->rosterProfile->currency >= 2.0)
-                          <h3><span class="badge rounded shadow-none green">
-                            {{$user->rosterProfile->currency}} hours recorded
-                          </span></h3>
-                          @endif
-                          @endif
-                              <p>They require <b>2 hours</b> of activity every month.</p>
-                        @endif
-<!--End Winnipeg Training Hours-->
-
-<!--Winnipeg Cntrlr Hrs-->
-                        @if ($user->rosterProfile->status == "home")
-                        @if (!$user->rosterProfile->currency == 0)
-                          @if ($user->rosterProfile->currency < 2.0)
-                          <h3><span class="badge rounded shadow-none blue">
-                            {{$user->rosterProfile->currency}} hours recorded
-                          </span></h3>
-                          @elseif ($user->rosterProfile->currency >= 2.0)
-                          <h3><span class="badge rounded shadow-none green">
-                            {{$user->rosterProfile->currency}} hours recorded
-                          </span></h3>
-                          @endif
-                          @endif
-                              <p>They require <b>2 hours</b> of activity every month.</p>
-                        @endif
-<!--End Winnipeg Cntrlr Hours-->
-
-<!--Winnipeg Vstr Cntrlr Hrs-->
-                        @if ($user->rosterProfile->status == "visit")
-                        @if (!$user->rosterProfile->currency == 0)
-                        @if ($user->rosterProfile->currency < 1.0)
-                          <h3><span class="badge rounded shadow-none blue">
-                              {{Auth::user()->rosterProfile->currency}} hours recorded
-                          </span></h3>
-                        @elseif ($user->rosterProfile->currency >= 1.0)
-                          <h3><span class="badge rounded shadow-none green">
-                              {{$user->rosterProfile->currency}} hours recorded
-                          </span></h3>
-                        @endif
-                        @endif
-                        <p>They require <b>1 hour</b> of activity every month.</p>
-                        @endif
-
-<!--End Winnipeg Cntrlr Hours-->
-
-<!--Winnipeg Cntrlr Hrs-->
-                        @if ($user->rosterProfile->status == "instructor")
-                        @if (!$user->rosterProfile->currency == 0)
-                            @if ($user->rosterProfile->currency < 3.0)
-                                <h3><span class="badge rounded shadow-none blue">
-                                {{$user->rosterProfile->currency}} hours recorded
-                            </span></h3>
-                            @elseif ($user->rosterProfile->currency >= 3.0)
-                                <h3><span class="badge rounded shadow-none green">
-                                {{$user->rosterProfile->currency}} hours recorded
-                                </span></h3>
-                            @endif
-                            @endif
-                            <p>They require <b>3 hours</b> of activity every 2 month.</p>
-                        @endif
-<!--End Winnipeg Instrctr Hours-->
-
+                    @if(Auth::user()->permissions == 5)
+                    <div class="au-row">
+                        <span class="au-row-lbl">CERT Name</span>
+                        <span class="au-row-val">{{ $user->fname }} {{ $user->lname }}</span>
+                    </div>
                     @endif
+                    <div class="au-row">
+                        <span class="au-row-lbl">Display Name</span>
+                        <span class="au-row-val">{{ $user->fullName('FLC') }}</span>
+                    </div>
+                    <div class="au-row">
+                        <span class="au-row-lbl">Rating</span>
+                        <span class="au-row-val">{{ $user->rating->getLongName() }} ({{ $user->rating->getShortName() }})</span>
+                    </div>
+                    <div class="au-row">
+                        <span class="au-row-lbl">Email</span>
+                        <span class="au-row-val"><a href="mailto:{{ $user->email }}" style="color:#122b44;">{{ $user->email }}</a></span>
+                    </div>
+                </div>
 
-                </div><br>
-                <h2 class="font-weight-bold blue-text pb-2">Modify User</h2>
-                <div class="card p-3">
-                  <div class="d-flex flex-row align-items-center">
-                      <ul class="list-unstyled" style="width:500px; height: 80px">
+                {{-- Activity --}}
+                @if($user->rosterProfile && $reqHours !== null)
+                @php
+                    $hrs = $user->rosterProfile->currency;
+                    $pct = min(100, round(($hrs / $reqHours) * 100));
+                    $met = $hrs >= $reqHours;
+                @endphp
+                <div class="au-card">
+                    <div class="au-card-title">Activity This Quarter</div>
+                    <div style="display:flex; align-items:center; gap:1rem; margin-bottom:0.75rem;">
+                        <span style="font-size:1.4rem; font-weight:800; color:#122b44; font-variant-numeric:tabular-nums;">{{ decimal_to_hm($hrs) }}</span>
+                        <span style="font-size:0.78rem; color:rgba(0,0,0,0.4);">of {{ decimal_to_hm($reqHours) }} required</span>
+                        @if($met)
+                        <span class="au-badge" style="background:#dcfce7; color:#15803d; margin:0;"><i class="fas fa-check fa-xs"></i> Requirement met</span>
+                        @else
+                        <span class="au-badge" style="background:#fee2e2; color:#b91c1c; margin:0;"><i class="fas fa-times fa-xs"></i> Requirement not met</span>
+                        @endif
+                    </div>
+                    <div style="display:flex; align-items:center; gap:0.75rem;">
+                        <div class="au-activity-bar-track">
+                            <div class="au-activity-bar-fill" style="width:{{ $pct }}%; background:{{ $met ? '#16a34a' : '#ef4444' }};"></div>
+                        </div>
+                        <span style="font-size:0.72rem; color:rgba(0,0,0,0.35); width:32px; text-align:right;">{{ $pct }}%</span>
+                    </div>
+                </div>
+                @endif
 
-                    <li><h5>Current Permissions Level: {{$user->permissions()}} </h5></li>
-                    @if ($user->id == Auth::user()->id)
-                            <a role="button" data-toggle="modal" data-target="#confirmChange" class="btn btn-sm btn-success">Update Yourself</a>
-                    @elseif (Auth::user()->permissions == 5 || $user->permissions < 4 && Auth::user()->permissions > 3 || $user->permissions < 2 && Auth::user()->permissions > 2)
-                    <h5 display="inline-block">Change Permissions Level:</h5>
-                    <form method="post" action="{{route('edit.userpermissions', [$user->id])}}" style="position:absolute">
-                        <select name="permissions" id="permissions" class="form-control" style="position:relative; width:100px; left:210px; bottom:40px">
-                        <option name="guest" value="0" id="0"{{ $user->permissions == "0" ? "selected=selected" : ""}}>Guest</option>
-                          <option name="controller" value="1" id="1"{{ $user->permissions == "1" ? "selected=selected" : ""}}>Controller</option>
-                          <option name="mentor" value="2" id="2"{{ $user->permissions == "2" ? "selected=selected" : ""}}>Mentor</option>
-                          <option name="instructor" value="3" id="3"{{ $user->permissions == "3" ? "selected=selected" : ""}}>Instructor</option>
-
-                            @if (Auth::user()->permissions == 5)
-                          <option name="staff" value="4" id="4"{{ $user->permissions == "4" ? "selected=selected" : ""}}>Staff Member</option>
-                          <option name="admin" value="5" id="5"{{ $user->permissions == "5" ? "selected=selected" : ""}}>Administrator</option>
-                          @endif
-                        </select>
-                        <li><h5 display="inline-block" style="position:relative; bottom:35px">Change Certification:</h5></li>
-                        <select name="certification" id="certification" class="form-control" style="position:relative; width:100px; left:210px; bottom:75px">
-                        <option name="not_certified" value="not_certified" id="not_certified"{{ $certification == "not_certified" ? "selected=selected" : ""}}>Not Certified</option>
-                          <option name="training" value="training" id="training"{{ $certification == "training" ? "selected=selected" : ""}}>Training</option>
-                          <option name="home" value="home" id="home"{{ $certification == "home" ? "selected=selected" : ""}}>Home</option>
-                          <option name="visit" value="visit" id="visit"{{ $certification == "visit" ? "selected=selected" : ""}}>Visitor</option>
-                          @if (Auth::user()->permissions >= 4)
-                          <option name="instructor" value="instructor" id="instructor"{{ $certification == "instructor" ? "selected=selected" : ""}}>Instructor</option>
-                          @endif
+                {{-- Modify --}}
+                @if($user->id == Auth::user()->id)
+                <div class="au-card">
+                    <div class="au-card-title">Modify User</div>
+                    <p style="font-size:0.85rem; color:rgba(0,0,0,0.5); margin:0 0 0.75rem;">
+                        You are editing your own account.
+                        <strong style="color:#b91c1c;">Demoting yourself below Staff will lock you out.</strong>
+                    </p>
+                    <button class="btn btn-sm btn-warning" data-toggle="modal" data-target="#confirmChange">
+                        <i class="fas fa-edit fa-xs"></i> Edit My Account
+                    </button>
+                </div>
+                @elseif(Auth::user()->permissions == 5 || ($user->permissions < 4 && Auth::user()->permissions > 3))
+                <div class="au-card">
+                    <div class="au-card-title">Modify User</div>
+                    <form method="POST" action="{{ route('edit.userpermissions', [$user->id]) }}">
                         @csrf
-                        <button type="submit" class="btn btn-sm btn-success" style="position:relative; width:150px; left:335px; bottom:114px">Update User</button>
-                      </form>
-                      @endif
-                      <br><br><br><br> <br><br><br><br>
-                  </ul>
-                </div></div>
+                        <div class="au-form-row">
+                            <div class="au-form-group">
+                                <label>Permissions Level</label>
+                                <select name="permissions" class="form-control form-control-sm">
+                                    <option value="0" {{ $user->permissions == 0 ? 'selected' : '' }}>Guest</option>
+                                    <option value="1" {{ $user->permissions == 1 ? 'selected' : '' }}>Controller</option>
+                                    <option value="2" {{ $user->permissions == 2 ? 'selected' : '' }}>Mentor</option>
+                                    <option value="3" {{ $user->permissions == 3 ? 'selected' : '' }}>Instructor</option>
+                                    @if(Auth::user()->permissions == 5)
+                                    <option value="4" {{ $user->permissions == 4 ? 'selected' : '' }}>Staff Member</option>
+                                    <option value="5" {{ $user->permissions == 5 ? 'selected' : '' }}>Administrator</option>
+                                    @endif
+                                </select>
+                            </div>
+                            <div class="au-form-group">
+                                <label>Certification Status</label>
+                                <select name="certification" class="form-control form-control-sm">
+                                    <option value="not_certified" {{ $certification == 'not_certified' ? 'selected' : '' }}>Not Certified</option>
+                                    <option value="training"      {{ $certification == 'training'      ? 'selected' : '' }}>Training</option>
+                                    <option value="home"          {{ $certification == 'home'          ? 'selected' : '' }}>Home Controller</option>
+                                    <option value="visit"         {{ $certification == 'visit'         ? 'selected' : '' }}>Visiting Controller</option>
+                                    @if(Auth::user()->permissions >= 4)
+                                    <option value="instructor"    {{ $certification == 'instructor'    ? 'selected' : '' }}>Instructor</option>
+                                    @endif
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-sm btn-primary">
+                            <i class="fas fa-save fa-xs"></i> Save Changes
+                        </button>
+                    </form>
+                </div>
+                @endif
+
             </div>
-            <div class="col-md-6">
-            <h2 class="font-weight-bold blue-text pb-2">Avatar</h2>
-                <div class="card p-3">
-                    <div class="d-flex flex-row align-items-center">
-                        <img src="{{$user->avatar()}}" style="height: 100px; width: 100px; border-radius: 50%;">
-                        <div class="ml-4">
-                            <a href="#" data-toggle="modal" data-target="#changeAvatar" class="btn btn-sm btn-primary">Change</a>
+
+            {{-- Right --}}
+            <div class="col-md-5">
+
+                {{-- Avatar --}}
+                <div class="au-card">
+                    <div class="au-card-title">Avatar</div>
+                    <div style="display:flex; align-items:center; gap:1rem;">
+                        <img src="{{ $user->avatar() }}" style="width:64px; height:64px; border-radius:50%; object-fit:cover; flex-shrink:0;">
+                        <div>
+                            <div style="font-size:0.75rem; color:rgba(0,0,0,0.35); margin-bottom:0.5rem;">
+                                Mode:
+                                @switch($user->avatar_mode)
+                                    @case(0) Default initials @break
+                                    @case(1) Custom image @break
+                                    @case(2) Discord avatar @break
+                                @endswitch
+                            </div>
+                            <button data-toggle="modal" data-target="#changeAvatar" class="btn btn-sm btn-outline-secondary mr-1">
+                                <i class="fas fa-upload fa-xs"></i> Change
+                            </button>
                             @if(!$user->isAvatarDefault())
-                            <form action="{{route('users.resetusersavatar')}}" method="POST">
+                            <form action="{{ route('users.resetusersavatar') }}" method="POST" style="display:inline;">
                                 @csrf
-                                <input type="hidden" name="user_id" value="{{$user->id}}">
-                                <input type="submit" class="btn btn-sm bg-czqo-blue-light" value="Reset">
+                                <input type="hidden" name="user_id" value="{{ $user->id }}">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Reset</button>
                             </form>
                             @endif
-                            <p class="mt-2 pl-1">Avatar Mode:
-                                @switch($user->avatar_mode)
-                                @case(0)Default
-                                @break
-                                @case(1)Custom Image
-                                @break
-                                @case(2)Discord Avatar
-                                @endswitch
-                            </p>
                         </div>
                     </div>
-                </div><br>
-                <h2 class="font-weight-bold blue-text pb-2">Discord Info</h2>
-                <div class="card p-3">
+                </div>
+
+                {{-- Discord --}}
+                <div class="au-card">
+                    <div class="au-card-title">Discord</div>
                     @if($user->hasDiscord())
-                    <h5><img style="border-radius:50%; height: 30px;" class="img-fluid" src="{{$user->getDiscordAvatar()}}" alt="">&nbsp;&nbsp;{{$user->getDiscordUser()->username}}#{{$user->getDiscordUser()->discriminator}}</h5>
-                    <ul class="list-unstyled">
-                        <li class="d-flex align-items-center">Member of the Winnipeg Discord: <i style="margin-left: 5px;font-size: 20px;" class="{{$user->memberOfCZWGGuild() ? 'fas fa-check-circle green-text' : 'fas fa-times-circle red-text'}}"></i></li>
-                    </ul>
-                    <hr>
-                    <h5>
-                        <div class="d-flex flex-row justify-content-between align-items-center">
-                            Bans
-                            {{--<a href="#" class="btn btn-sm bg-czqo-blue-light">Add Ban</a>--}}
-                        </div>
-                    </h5>
-                    @if (count($user->discordBans) < 1)
-                    No bans found.
-                    @else
-                    <div class="list-group">
+                    <div class="au-disc-row">
+                        <img src="{{ $user->getDiscordAvatar() }}" style="width:28px; height:28px; border-radius:50%;">
+                        <span style="font-size:0.875rem; font-weight:600;">{{ $user->getDiscordUser()->username }}</span>
+                    </div>
+                    <div class="au-disc-row" style="margin-top:0.25rem;">
+                        <span style="font-size:0.78rem; color:rgba(0,0,0,0.4);">Guild member</span>
+                        @if($user->memberOfCZWGGuild())
+                            <span style="color:#16a34a;"><i class="fas fa-check-circle"></i></span>
+                        @else
+                            <span style="color:#dc2626;"><i class="fas fa-times-circle"></i></span>
+                        @endif
+                    </div>
+                    @if(count($user->discordBans) > 0)
+                    <div style="margin-top:0.75rem; border-top:1px solid rgba(0,0,0,0.06); padding-top:0.75rem;">
+                        <div style="font-size:0.68rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:rgba(0,0,0,0.3); margin-bottom:0.5rem;">Bans</div>
                         @foreach($user->discordBans as $ban)
-                        <div class="list-group-item pr-0">
-                            <div class="d-flex flex-row justify-content-between">
-                                <b>From {{$ban->banStartPretty()}} to {{$ban->banEndPretty()}}</b>
-                                <div class="justify-self-end">
-                                    <a href="#" class="btn btn-sm bg-czqo-blue-light">View Reason</a>
-                                    @if($ban->isCurrent())
-                                    <a href="#" class="btn btn-sm btn-danger ">Remove Ban</a>
-                                </div>
+                        <div style="font-size:0.8rem; padding:0.35rem 0; border-bottom:1px solid rgba(0,0,0,0.05); display:flex; justify-content:space-between; align-items:center;">
+                            <span style="color:rgba(0,0,0,0.6);">{{ $ban->banStartPretty() }} → {{ $ban->banEndPretty() }}</span>
+                            <div>
+                                <a href="#" class="btn btn-xs btn-outline-secondary" style="font-size:0.65rem; padding:0.15rem 0.4rem;">Reason</a>
+                                @if($ban->isCurrent())
+                                <a href="#" class="btn btn-xs btn-outline-danger" style="font-size:0.65rem; padding:0.15rem 0.4rem;">Remove</a>
                                 @endif
                             </div>
                         </div>
@@ -287,158 +323,140 @@
                     </div>
                     @endif
                     @else
-                    This user does not have a linked Discord account.
+                    <span style="font-size:0.85rem; color:rgba(0,0,0,0.35);">No linked Discord account.</span>
                     @endif
-                </div><br>
-                <h2 class="font-weight-bold blue-text pb-2">User Notes</h2>
-                <div class="card p-3">
-                    <a href="#" data-toggle="modal" data-target="#addNoteModal" class="btn btn-sm bg-czqo-blue-light">Add Note</a>
-                    <a href="#" data-toggle="modal" data-target="#viewNotesModal" class="btn btn-sm bg-primary text-light">View Notes</a>
                 </div>
-            </div>
-        </div>
-    </div>
-    <div class="modal fade" id="addNoteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">User Note</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form action="{{route('users.createnote', $user->id)}}" method="POST">
-                    @csrf
-                    <div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Content</label>
-                        {!! Form::textarea('content', null, ['class' => 'form-control']) !!}
+
+                {{-- Notes --}}
+                <div class="au-card">
+                    <div class="au-card-title" style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.75rem;">
+                        <span>User Notes</span>
+                        <button data-toggle="modal" data-target="#addNoteModal" class="btn btn-sm btn-outline-secondary" style="font-size:0.7rem; padding:0.2rem 0.55rem;">
+                            <i class="fas fa-plus fa-xs"></i> Add
+                        </button>
                     </div>
-                    <div class="form-group">
-                        <label class="col-form-label">Confidential</label>
-                        {!! Form::checkbox('confidential', null, ['class' => 'form-control']) !!}
+                    @forelse($userNotes as $note)
+                    <div class="au-note-item">
+                        <div class="au-note-meta">{{ $note->author_name }} &nbsp;·&nbsp; {{ \Carbon\Carbon::parse($note->timestamp)->format('M j, Y') }}</div>
+                        <div class="au-note-body">{{ $note->html() }}</div>
+                        <form action="{{ route('users.deletenote', [$user->id, $note->id]) }}" method="GET" style="margin-top:0.4rem;">
+                            <button class="btn btn-xs btn-outline-danger" style="font-size:0.65rem; padding:0.15rem 0.4rem;">Delete</button>
+                        </form>
                     </div>
+                    @empty
+                    <span style="font-size:0.85rem; color:rgba(0,0,0,0.3);">No notes on this user.</span>
+                    @endforelse
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary" value="Submit">Submit</button>
-                    {!! Form::close() !!}
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!--View Notes modal-->
-    <div class="modal fade" id="viewNotesModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">View User Notes</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    @foreach($userNotes as $note)
-                    <div class="list-group-item pr-0">
-                        <div class="d-flex flex-row justify-content-between">
-                        <ul class="list-unstyled">
-                            <li><p>Author: {{$note->author_name}}</p></li>
-                            <li><p>Date/Time: {{$note->timestamp}}</p></li>
-                            <li><p>Notes: {{$note->html()}}</p></li>
-                            <form action="{{route('users.deletenote', [$user->id, $note->id])}}" method="GET">
-                            <button class="btn btn-sm btn-danger" class="mt-1">Delete</button>
-                            </form>
-                        </ul>
-                        </div>
-                    </div>
-                    @endforeach
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!--Change avatar modal-->
-    <div class="modal fade" id="changeAvatar" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Change {{$user->fullName('F')}}'s avatar</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form method="post" action="{{route('users.changeusersavatar')}}" enctype="multipart/form-data" class="" id="">
-                <div class="modal-body">
-                    <p>Abuse of this function will result in disciplinary action. This function should only be used for adjusting staff members' avatars for the staff page, or at a users request.</p>
-                    @csrf
-                    <div class="input-group pb-3">
-                        <div class="custom-file">
-                            <input type="file" class="custom-file-input" name="file">
-                            <input type="hidden" name="user_id" value="{{$user->id}}">
-                            <label class="custom-file-label">Choose file</label>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-light" data-dismiss="modal">Dismiss</button>
-                    <input type="submit" class="btn btn-success" value="Upload">
-                </div>
-                </form>
-            </div>
-        </div>
-    </div>
-    <!--End change avatar modal-->
-    <!--Confirm change own permissions modal-->
-<div class="modal fade" id="confirmChange" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Confirm Change</h5><br>
-            </div>
-            <div class="modal-body">
-            <center><h3>Are You Sure?</h3>
-            <p style="font-weight:bold; color:red">NOTE: If you demote yourself lower than staff member, you will not be able to change it back!</p></center>
-            <form method="POST" action="{{route('edit.userpermissions', [$user->id])}}">
-                {{ csrf_field() }}
-                    <h5 display="inline-block">Change Permissions Level:</h5>
-                    <form method="post" action="{{route('edit.userpermissions', [$user->id])}}" style="position:absolute">
-                        <select name="permissions" id="permissions" class="form-control" style="position:relative; width:100px; left:210px; bottom:40px">
-                        <option name="guest" value="0" id="0"{{ $user->permissions == "0" ? "selected=selected" : ""}}>Guest</option>
-                        <option name="controller" value="1" id="1"{{ $user->permissions == "1" ? "selected=selected" : ""}}>Controller</option>
-                        <option name="mentor" value="2" id="2"{{ $user->permissions == "2" ? "selected=selected" : ""}}>Mentor</option>
-                        <option name="instructor" value="3" id="3"{{ $user->permissions == "3" ? "selected=selected" : ""}}>Instructor</option>
-                        <option name="staff" value="4" id="4"{{ $user->permissions == "4" ? "selected=selected" : ""}}>Staff Member</option>
-                        @if (Auth::user()->permissions == 5)
-                        <option name="admin" value="5" id="5"{{ $user->permissions == "5" ? "selected=selected" : ""}}>Administrator</option>
-                        @endif
-                        </select>
-                        <h5 display="inline-block" style="position:relative; bottom:35px">Change Certification:</h5>
-                        <select name="certification" id="certification" class="form-control" style="position:relative; width:100px; left:210px; bottom:75px">
-                        <option name="not_certified" value="not_certified" id="not_certified"{{ $certification == "not_certified" ? "selected=selected" : ""}}>Not Certified</option>
-                        <option name="training" value="training" id="training"{{ $certification == "training" ? "selected=selected" : ""}}>Training</option>
-                        <option name="home" value="home" id="home"{{ $certification == "home" ? "selected=selected" : ""}}>Home</option>
-                        <option name="visit" value="visit" id="visit"{{ $certification == "visit" ? "selected=selected" : ""}}>Visitor</option>
-                        @if (Auth::user()->permissions >= 4)
-                        <option name="instructor" value="instructor" id="instructor"{{ $certification == "instructor" ? "selected=selected" : ""}}>Instructor</option>
-                        @endif
-                        </select>
-            <div class="modal-footer">
-            <button class="btn btn-success" type="submit" href="#">Submit</button>
-            </form>
-            <button class="btn btn-light" data-dismiss="modal" style="width:300px">Dismiss</button>
-            </div>
+
             </div>
         </div>
     </div>
 </div>
 
-<!--End Confirm change own permissions modal-->
-    <script>
-        function displayDeleteModal() {
-            $('#deleteModal').modal('show')
-        }
-    </script>
+{{-- Add Note Modal --}}
+<div class="modal fade" id="addNoteModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Note</h5>
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+            </div>
+            <form action="{{ route('users.createnote', $user->id) }}" method="POST">
+            @csrf
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="small font-weight-bold">Content</label>
+                    {!! Form::textarea('content', null, ['class' => 'form-control', 'rows' => 4]) !!}
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="confidential" id="confidential">
+                    <label class="form-check-label small" for="confidential">Confidential</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save Note</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{-- Change Avatar Modal --}}
+<div class="modal fade" id="changeAvatar" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Change {{ $user->fullName('F') }}'s Avatar</h5>
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+            </div>
+            <form method="POST" action="{{ route('users.changeusersavatar') }}" enctype="multipart/form-data">
+            @csrf
+            <div class="modal-body">
+                <p class="small text-muted">Only use this for staff page photos or at the user's request.</p>
+                <input type="hidden" name="user_id" value="{{ $user->id }}">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" name="file">
+                    <label class="custom-file-label">Choose file</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-success">Upload</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{{-- Confirm self-edit Modal --}}
+<div class="modal fade" id="confirmChange" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Your Own Account</h5>
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+            </div>
+            <form method="POST" action="{{ route('edit.userpermissions', [$user->id]) }}">
+            @csrf
+            <div class="modal-body">
+                <div class="alert alert-danger py-2 small">
+                    <strong>Warning:</strong> Demoting yourself below Staff Member will lock you out permanently.
+                </div>
+                <div class="au-form-row" style="margin-top:0.75rem;">
+                    <div class="au-form-group">
+                        <label>Permissions Level</label>
+                        <select name="permissions" class="form-control form-control-sm">
+                            <option value="0" {{ $user->permissions == 0 ? 'selected' : '' }}>Guest</option>
+                            <option value="1" {{ $user->permissions == 1 ? 'selected' : '' }}>Controller</option>
+                            <option value="2" {{ $user->permissions == 2 ? 'selected' : '' }}>Mentor</option>
+                            <option value="3" {{ $user->permissions == 3 ? 'selected' : '' }}>Instructor</option>
+                            <option value="4" {{ $user->permissions == 4 ? 'selected' : '' }}>Staff Member</option>
+                            @if(Auth::user()->permissions == 5)
+                            <option value="5" {{ $user->permissions == 5 ? 'selected' : '' }}>Administrator</option>
+                            @endif
+                        </select>
+                    </div>
+                    <div class="au-form-group">
+                        <label>Certification Status</label>
+                        <select name="certification" class="form-control form-control-sm">
+                            <option value="not_certified" {{ $certification == 'not_certified' ? 'selected' : '' }}>Not Certified</option>
+                            <option value="training"      {{ $certification == 'training'      ? 'selected' : '' }}>Training</option>
+                            <option value="home"          {{ $certification == 'home'          ? 'selected' : '' }}>Home Controller</option>
+                            <option value="visit"         {{ $certification == 'visit'         ? 'selected' : '' }}>Visiting Controller</option>
+                            @if(Auth::user()->permissions >= 4)
+                            <option value="instructor"    {{ $certification == 'instructor'    ? 'selected' : '' }}>Instructor</option>
+                            @endif
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-warning">Save Changes</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
 @stop
