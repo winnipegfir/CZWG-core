@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\AtcTraining\RosterMember;
 use App\Models\Network\SessionLog;
 use App\Models\Settings\CoreSettings;
+use Carbon\Carbon;
 use App\Notifications\Network\QuarterlyInactivity;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -70,8 +71,8 @@ class CurrencyCheck extends Command
         // Reset the hours for every member
         DB::table('roster')->update(['currency' => 0]);
 
-        // Remove our session logs because we don't need them anymore
-        SessionLog::query()->truncate();
+        // Keep the last 6 months for profile heatmaps; drop anything older
+        SessionLog::where('session_end', '<', Carbon::now()->subMonths(6))->delete();
 
         return 0;
     }

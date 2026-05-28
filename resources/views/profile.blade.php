@@ -412,7 +412,7 @@ $lastOnline  = $lastSession ? \Carbon\Carbon::parse($lastSession->session_end)->
         @if($rosterMember)
         @php
             $today     = \Carbon\Carbon::today();
-            $gridStart = $today->copy()->subWeeks(51)->startOfWeek(\Carbon\Carbon::SUNDAY);
+            $gridStart = $today->copy()->subMonths(6)->startOfWeek(\Carbon\Carbon::SUNDAY);
             $gridEnd   = $today->copy()->endOfWeek(\Carbon\Carbon::SATURDAY);
             $weeks = [];
             $cursor = $gridStart->copy();
