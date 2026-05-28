@@ -19,7 +19,7 @@ $certInfo = fn(int $level) => match($level) {
     default => ['label' => 'None','icon' => 'fa-times', 'class' => 'cert-none'],
 };
 $memberSince = $user->created_at ? \Carbon\Carbon::parse($user->created_at)->format('M Y') : '—';
-$lastOnline  = $lastSession ? \Carbon\Carbon::parse($lastSession->session_end)->diffForHumans() : 'Never';
+$lastOnline  = $lastSession ? \Carbon\Carbon::parse($lastSession->session_end)->format('M j, Y') : 'Never';
 @endphp
 
 <style>
@@ -320,13 +320,9 @@ $lastOnline  = $lastSession ? \Carbon\Carbon::parse($lastSession->session_end)->
                 <div class="profile-stat-lbl">Sessions This Month</div>
             </div>
             @endif
-            <div class="profile-stat">
-                <div class="profile-stat-val">{{ $memberSince }}</div>
-                <div class="profile-stat-lbl">Member Since</div>
-            </div>
             @if($lastSession)
             <div class="profile-stat">
-                <div class="profile-stat-val" style="font-size:0.85rem;">{{ $lastOnline }}</div>
+                <div class="profile-stat-val">{{ $lastOnline }}</div>
                 <div class="profile-stat-lbl">Last Online</div>
             </div>
             @endif
@@ -374,14 +370,8 @@ $lastOnline  = $lastSession ? \Carbon\Carbon::parse($lastSession->session_end)->
                 @endif
 
                 <div class="profile-card">
-                    <div class="profile-card-title">
-                        Sessions This Month
-                        @if($sessionCount > 0)
-                            <span style="font-weight:400; color:rgba(0,0,0,0.25); margin-left:0.4rem;">({{ $sessionCount }})</span>
-                        @endif
-                    </div>
+                    <div class="profile-card-title">Recent Sessions</div>
                     @if($sessionCount > 0)
-                    <div style="max-height: 300px; overflow-y: auto;">
                     <table class="sessions-table">
                         <thead>
                             <tr>
@@ -393,7 +383,7 @@ $lastOnline  = $lastSession ? \Carbon\Carbon::parse($lastSession->session_end)->
                             </tr>
                         </thead>
                         <tbody>
-                        @foreach($connections as $c)
+                        @foreach($connections->take(5) as $c)
                         @php
                             $uPos     = strrpos($c->callsign, '_');
                             $posKey   = $uPos !== false ? strtolower(substr($c->callsign, $uPos + 1)) : '';
@@ -409,9 +399,8 @@ $lastOnline  = $lastSession ? \Carbon\Carbon::parse($lastSession->session_end)->
                         @endforeach
                         </tbody>
                     </table>
-                    </div>
                     @else
-                    <div class="sessions-empty">No sessions this month.</div>
+                    <div class="sessions-empty">No recent sessions.</div>
                     @endif
                 </div>
 
