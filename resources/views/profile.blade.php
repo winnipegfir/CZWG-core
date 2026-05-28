@@ -213,7 +213,7 @@ $lastOnline  = $lastSession ? \Carbon\Carbon::parse($lastSession->session_end)->
     cursor: default;
     flex-shrink: 0;
 }
-.hm-future { background: transparent; }
+.hm-future { background: #f3f4f6; }
 .hm-0  { background: #ebedf0; }
 .hm-1  { background: #b6d4f5; }
 .hm-2  { background: #7bb3ed; }
