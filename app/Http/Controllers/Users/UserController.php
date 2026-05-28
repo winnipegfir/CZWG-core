@@ -73,56 +73,61 @@ class UserController extends Controller
         $rosterMember = RosterMember::where('user_id', $id)->first();
         if ($rosterMember) {
             $logs = SessionLog::where('cid', $id)->get();
-            $monthlyHours = decimal_to_hm(RosterMember::where('cid', $id)->firstOrFail()->currency);
+            $quarterlyHours = decimal_to_hm(RosterMember::where('cid', $id)->firstOrFail()->currency);
 
-            //Start our array
+            $timeRaw = ['del' => 0, 'gnd' => 0, 'twr' => 0, 'dep' => 0, 'app' => 0, 'ctr' => 0];
+            foreach ($logs as $l) {
+                if (Str::endsWith($l->callsign, 'DEL'))       $timeRaw['del'] += $l->duration;
+                elseif (Str::endsWith($l->callsign, 'GND'))   $timeRaw['gnd'] += $l->duration;
+                elseif (Str::endsWith($l->callsign, 'TWR'))   $timeRaw['twr'] += $l->duration;
+                elseif (Str::endsWith($l->callsign, 'DEP'))   $timeRaw['dep'] += $l->duration;
+                elseif (Str::endsWith($l->callsign, 'APP'))   $timeRaw['app'] += $l->duration;
+                elseif (Str::endsWith($l->callsign, 'CTR'))   $timeRaw['ctr'] += $l->duration;
+            }
+            $maxPositionHours = max(array_values($timeRaw)) ?: 1;
+
             $time = [
-                'del' => 0,
-                'gnd' => 0,
-                'twr' => 0,
-                'dep' => 0,
-                'app' => 0,
-                'ctr' => 0,
+                'del' => decimal_to_hm($timeRaw['del']),
+                'gnd' => decimal_to_hm($timeRaw['gnd']),
+                'twr' => decimal_to_hm($timeRaw['twr']),
+                'dep' => decimal_to_hm($timeRaw['dep']),
+                'app' => decimal_to_hm($timeRaw['app']),
+                'ctr' => decimal_to_hm($timeRaw['ctr']),
             ];
 
-            //Get our times per position for this month
-            foreach ($logs as $l) {
-                if (Str::endsWith($l->callsign, 'DEL')) {
-                    $time['del'] += $l->duration;
-                } elseif (Str::endsWith($l->callsign, 'GND')) {
-                    $time['gnd'] += $l->duration;
-                } elseif (Str::endsWith($l->callsign, 'TWR')) {
-                    $time['twr'] += $l->duration;
-                } elseif (Str::endsWith($l->callsign, 'DEP')) {
-                    $time['dep'] += $l->duration;
-                } elseif (Str::endsWith($l->callsign, 'APP')) {
-                    $time['app'] += $l->duration;
-                } elseif (Str::endsWith($l->callsign, 'CTR')) {
-                    $time['ctr'] += $l->duration;
-                }
-            }
-
-            //Make the time's readable
-            $time['del'] = decimal_to_hm($time['del']);
-            $time['gnd'] = decimal_to_hm($time['gnd']);
-            $time['twr'] = decimal_to_hm($time['twr']);
-            $time['dep'] = decimal_to_hm($time['dep']);
-            $time['app'] = decimal_to_hm($time['app']);
-            $time['ctr'] = decimal_to_hm($time['ctr']);
-
             $connections = SessionLog::where('cid', $id)->get()->sortByDesc('session_end');
-
             foreach ($connections as $c) {
                 $c['duration'] = decimal_to_hm($c['duration']);
             }
+
+            $sessionCount = $connections->count();
+            $lastSession  = $connections->first();
+
+            // Heatmap: daily totals keyed by 'Y-m-d'
+            $heatmapData = [];
+            foreach ($logs as $l) {
+                $day = substr($l->session_start, 0, 10);
+                $heatmapData[$day] = ($heatmapData[$day] ?? 0) + $l->duration;
+            }
         } else {
-            $monthlyHours = 'N/A';
-            $rosterMember = null;
-            $connections = [];
-            $time = [];
+            $quarterlyHours   = 'N/A';
+            $rosterMember     = null;
+            $connections      = collect();
+            $time             = [];
+            $timeRaw          = [];
+            $maxPositionHours = 1;
+            $sessionCount     = 0;
+            $lastSession      = null;
+            $heatmapData      = [];
+            $quarterlyHours   = 'N/A';
         }
 
-        return view('profile', compact('id', 'user', 'monthlyHours', 'rosterMember', 'time', 'connections'));
+        return view('profile', compact(
+            'id', 'user', 'quarterlyHours', 'rosterMember',
+            'time', 'timeRaw', 'maxPositionHours',
+            'connections', 'sessionCount', 'lastSession',
+            'heatmapData'
+        ));
     }
 
     public function viewConnections($id)
