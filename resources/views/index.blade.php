@@ -43,7 +43,7 @@
                     </style>
                     <script>
                     document.addEventListener('DOMContentLoaded', function() {
-                        var words = ['Brandon', 'Portage', 'Steinbach', 'Selkirk', 'Thompson', 'Flin Flon', 'Dauphin', 'Morden', 'Winkler', 'The Pas', 'Saskatoon', 'Regina', 'Moose Jaw', 'Swift Current', 'Prince Albert', 'Yorkton', 'North Battleford', 'Estevan', 'Weyburn', 'Thunder Bay', 'Lloydminster'];
+                        var words = @json($heroTowns);
                         var el = document.getElementById('hero-word');
                         var textEl = document.getElementById('hero-word-text');
                         var prefixEl = document.getElementById('hero-prefix');

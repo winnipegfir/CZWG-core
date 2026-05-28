@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Settings\AuditLogEntry;
 use App\Models\Settings\CoreSettings;
 use App\Models\Settings\HomepageImages;
+use App\Models\Settings\HomepageTown;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 
@@ -183,6 +184,28 @@ class SettingsController extends Controller
         $image->delete();
 
         return back()->withSuccess('Image deleted successfully!');
+    }
+
+    public function townsIndex()
+    {
+        $towns = HomepageTown::orderBy('name')->get();
+        return view('admin.settings.hometowns', compact('towns'));
+    }
+
+    public function addTown(Request $request)
+    {
+        $this->validate($request, ['name' => 'required|max:60']);
+        HomepageTown::create([
+            'name' => $request->name,
+            'icao' => strtoupper($request->icao) ?: null,
+        ]);
+        return back()->withSuccess('Town added!');
+    }
+
+    public function deleteTown($id)
+    {
+        HomepageTown::findOrFail($id)->delete();
+        return back()->withSuccess('Town removed!');
     }
 
     public function viewRoles()

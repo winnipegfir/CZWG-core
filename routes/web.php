@@ -280,6 +280,9 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/images/edit/{id}', 'Settings\SettingsController@editImage')->name('settings.images.edit');
             Route::get('/images/test/{id}', 'Settings\SettingsController@testImage')->name('settings.images.test');
             Route::get('/images/delete/{id}', 'Settings\SettingsController@deleteImage')->name('settings.images.delete');
+            Route::get('/towns', 'Settings\SettingsController@townsIndex')->name('settings.towns');
+            Route::post('/towns', 'Settings\SettingsController@addTown')->name('settings.towns.add');
+            Route::get('/towns/{id}/delete', 'Settings\SettingsController@deleteTown')->name('settings.towns.delete');
         });
     });
 });

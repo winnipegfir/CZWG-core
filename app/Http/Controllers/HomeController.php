@@ -7,6 +7,7 @@ use App\Models\AtcTraining\RosterMember;
 use App\Models\Events\Event;
 use App\Models\News\News;
 use App\Models\Settings\HomepageImages;
+use App\Models\Settings\HomepageTown;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Cache;
@@ -141,8 +142,9 @@ class HomeController extends Controller
 
         //Background Image
         $background = HomepageImages::all()->random();
+        $heroTowns = HomepageTown::orderBy('name')->pluck('name');
 
-        return view('index', compact('finalPositions', 'news', 'nextEvents', 'liveEvents', 'topControllersArray', 'weather', 'background'));
+        return view('index', compact('finalPositions', 'news', 'nextEvents', 'liveEvents', 'topControllersArray', 'weather', 'background', 'heroTowns'));
     }
 
     public function nate()
