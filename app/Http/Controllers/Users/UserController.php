@@ -106,7 +106,8 @@ class UserController extends Controller
             // Heatmap: daily totals keyed by 'Y-m-d'
             $heatmapData = [];
             foreach ($logs as $l) {
-                $day = substr($l->session_start, 0, 10);
+                if (!$l->session_start || !$l->duration) continue;
+                $day = Carbon::parse($l->session_start)->format('Y-m-d');
                 $heatmapData[$day] = ($heatmapData[$day] ?? 0) + $l->duration;
             }
         } else {
