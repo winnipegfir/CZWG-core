@@ -186,6 +186,9 @@
                     <a id="is-text"></a>
                 </div>
                 <div id="is-dots"></div>
+                <button id="is-pause" aria-label="Pause slideshow">
+                    <i class="fas fa-pause" id="is-pause-icon"></i>
+                </button>
                 <button id="is-expand" aria-label="Expand section">
                     <i class="fas fa-chevron-down" id="is-chevron" style="transform:rotate(180deg);transition:transform 0.25s ease;"></i>
                 </button>
@@ -227,6 +230,8 @@
         var elDot     = document.getElementById('is-dot');
         var elText    = document.getElementById('is-text');
         var elDots      = document.getElementById('is-dots');
+        var elPause     = document.getElementById('is-pause');
+        var elPauseIcon = document.getElementById('is-pause-icon');
         var elExpand    = document.getElementById('is-expand');
         var elChevron   = document.getElementById('is-chevron');
         var elPanel     = document.getElementById('is-panel');
@@ -241,7 +246,21 @@
             elDots.appendChild(btn);
         });
 
-        var sIdx = 0, iIdx = 0, timer = null, expanded = false;
+        var sIdx = 0, iIdx = 0, timer = null, expanded = false, manualPaused = false;
+
+        function startTimer() {
+            if (timer) clearInterval(timer);
+            timer = setInterval(advance, ITEM_MS);
+        }
+        function stopTimer() {
+            clearInterval(timer);
+            timer = null;
+        }
+        function updatePauseIcon() {
+            var paused = manualPaused || expanded;
+            elPauseIcon.className = paused ? 'fas fa-play' : 'fas fa-pause';
+            elPause.setAttribute('aria-label', paused ? 'Resume slideshow' : 'Pause slideshow');
+        }
 
         var posOrder = ['DEL','GND','TWR','APP','DEP','CTR','FSS','OBS'];
 
@@ -321,9 +340,25 @@
 
         elExpand.addEventListener('click', function () {
             expanded = !expanded;
-            if (expanded) { buildPanel(); }
+            if (expanded) {
+                buildPanel();
+                stopTimer();
+            } else {
+                if (!manualPaused) startTimer();
+            }
             elPanel.classList.toggle('open', expanded);
             elChevron.style.transform = expanded ? '' : 'rotate(180deg)';
+            updatePauseIcon();
+        });
+
+        elPause.addEventListener('click', function () {
+            manualPaused = !manualPaused;
+            if (manualPaused) {
+                stopTimer();
+            } else if (!expanded) {
+                startTimer();
+            }
+            updatePauseIcon();
         });
 
         function updateDots() {
@@ -384,13 +419,13 @@
         }
 
         function jumpTo(si, ii) {
-            clearInterval(timer);
             show(si, ii, true);
-            timer = setInterval(advance, ITEM_MS);
+            if (!manualPaused && !expanded) startTimer();
         }
 
         show(0, 0, false);
-        timer = setInterval(advance, ITEM_MS);
+        startTimer();
+        updatePauseIcon();
     })();
     </script>
 @stop

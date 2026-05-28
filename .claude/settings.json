@@ -33,7 +33,8 @@
       "Bash(curl -s -o /dev/null -w \" %{http_code}\" http://winnipegfir.test/admin/events/create)",
       "Bash(npm run *)",
       "Bash(npm install *)",
-      "Bash(findstr /i \"public/css\\\\|public/js\\\\|mix-manifest\")"
+      "Bash(findstr /i \"public/css\\\\|public/js\\\\|mix-manifest\")",
+      "PowerShell(Get-ChildItem \"c:\\\\laragon\\\\www\\\\winnipegfir\" | Where-Object { $_.Name -ne 'node_modules' } | Select-Object Name)"
     ]
   }
 }

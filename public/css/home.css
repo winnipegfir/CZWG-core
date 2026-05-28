@@ -139,6 +139,21 @@
     opacity: 0 !important;
 }
 
+#is-pause {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.35);
+    cursor: pointer;
+    padding: 0 0 0 0.9rem;
+    line-height: 1;
+    flex-shrink: 0;
+    font-size: 0.7rem;
+    transition: color 0.2s;
+}
+#is-pause:hover {
+    color: rgba(255,255,255,0.75);
+}
+
 #is-expand {
     background: none;
     border: none;
