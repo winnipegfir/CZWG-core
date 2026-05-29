@@ -39,7 +39,7 @@
                     <p class="mb-1" style="font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:#4338ca;">Longest Waiting</p>
                     @if($longestWaiting)
                         <p class="mb-0" style="font-size:1.1rem; font-weight:700; color:#122b44; line-height:1.3;">
-                            {{ $longestWaiting->user->fullName('FL') }}
+                            {{ $longestWaiting->user ? $longestWaiting->user->fullName('FL') : 'CID ' . $longestWaiting->user_id }}
                         </p>
                         <p class="mb-0" style="font-size:0.78rem; color:#6366f1;">
                             {{ $longestWaiting->waitlist_added_at->diffForHumans() }}
@@ -64,7 +64,7 @@
                             <span style="font-weight:700; color:#122b44;">{{ $waitlistBreakdown['home'] }}</span>
                         </div>
                         <div class="d-flex align-items-center justify-content-between">
-                            <span style="background:#e0f2fe; color:#0369a1; font-size:0.72rem; font-weight:700; padding:0.2em 0.55em; border-radius:0.3rem;">Visiting</span>
+                            <span style="background:#dcfce7; color:#15803d; font-size:0.72rem; font-weight:700; padding:0.2em 0.55em; border-radius:0.3rem;">Visiting</span>
                             <span style="font-weight:700; color:#122b44;">{{ $waitlistBreakdown['visiting'] }}</span>
                         </div>
                         <div class="d-flex align-items-center justify-content-between">
@@ -84,9 +84,9 @@
                     @foreach($recentActivity as $s)
                     <a href="{{ route('training.students.view', $s->id) }}"
                        style="display:flex; align-items:center; padding:0.45rem 0; border-bottom:1px solid #f1f5f9; text-decoration:none; color:#122b44;">
-                        <img src="{{ $s->user->avatar() }}" style="width:30px; height:30px; border-radius:50%; object-fit:cover; border:1px solid #e2e8f0; margin-right:0.65rem; flex-shrink:0;">
+                        <img src="{{ $s->user ? $s->user->avatar() : asset('img/default-profile-img.jpg') }}" style="width:30px; height:30px; border-radius:50%; object-fit:cover; border:1px solid #e2e8f0; margin-right:0.65rem; flex-shrink:0;">
                         <div style="flex:1; min-width:0;">
-                            <div style="font-weight:600; font-size:0.85rem;">{{ $s->user->fullName('FL') }}</div>
+                            <div style="font-weight:600; font-size:0.85rem;">{{ $s->user ? $s->user->fullName('FL') : 'CID ' . $s->user_id }}</div>
                             <div style="font-size:0.75rem; color:#94a3b8;">
                                 {{ $s->instructor_id ? 'Linked' : 'Waitlist' }}
                                 &middot; updated {{ $s->updated_at->diffForHumans() }}
@@ -119,10 +119,10 @@
                         @foreach($yourStudents as $student)
                         <a href="{{ route('training.students.view', $student->id) }}"
                            style="display:flex; align-items:center; padding:0.6rem 0; border-bottom:1px solid #f1f5f9; text-decoration:none; color:#122b44;">
-                            <img src="{{ $student->user->avatar() }}" style="width:36px; height:36px; border-radius:50%; object-fit:cover; margin-right:0.75rem; border:1px solid #e2e8f0; flex-shrink:0;">
+                            <img src="{{ $student->user ? $student->user->avatar() : asset('img/default-profile-img.jpg') }}" style="width:36px; height:36px; border-radius:50%; object-fit:cover; margin-right:0.75rem; border:1px solid #e2e8f0; flex-shrink:0;">
                             <div style="flex:1; min-width:0;">
-                                <div style="font-weight:600; font-size:0.875rem;">{{ $student->user->fullName('FL') }}</div>
-                                <div style="font-size:0.75rem; color:#64748b;">{{ $student->user->rating->getShortName() }} &middot; {{ $student->entry_type }}</div>
+                                <div style="font-weight:600; font-size:0.875rem;">{{ $student->user ? $student->user->fullName('FL') : 'CID ' . $student->user_id }}</div>
+                                <div style="font-size:0.75rem; color:#64748b;">{{ $student->user ? $student->user->rating->getShortName() : '—' }} &middot; {{ $student->entry_type }}</div>
                             </div>
                             @if($student->instructor_id)
                                 <span style="background:#dcfce7; color:#15803d; font-size:0.7rem; font-weight:700; padding:0.2em 0.55em; border-radius:0.3rem;">Linked</span>
