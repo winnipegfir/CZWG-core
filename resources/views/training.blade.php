@@ -22,7 +22,6 @@ $status = $statusMap[$training_time->colour] ?? $statusMap['grey'];
 <style>
 .training-wrap {
     background: #f6f8fa;
-    min-height: calc(100vh - 60px);
     padding: 2.5rem 0 3rem;
 }
 .training-container {

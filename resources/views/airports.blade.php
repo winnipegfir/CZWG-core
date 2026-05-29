@@ -6,7 +6,6 @@
 <style>
 .airports-wrap {
     display: flex;
-    min-height: calc(100vh - 60px);
     background: #f6f8fa;
 }
 
@@ -209,23 +208,11 @@
             <optgroup label="Manitoba">
                 <option value="cywg">CYWG · CYAV — Winnipeg</option>
                 <option value="cypg">CYPG — Portage la Prairie</option>
-                <option value="cybr">CYBR — Brandon</option>
-                <option value="cydn">CYDN — Dauphin</option>
-                <option value="cyth">CYTH — Thompson</option>
-                <option value="cyyq">CYYQ — Churchill</option>
-                <option value="cyqd">CYQD — The Pas</option>
-                <option value="cyfo">CYFO — Flin Flon</option>
             </optgroup>
             <optgroup label="Saskatchewan">
                 <option value="cyxe">CYXE — Saskatoon</option>
                 <option value="cyqr">CYQR — Regina</option>
                 <option value="cymj">CYMJ — Moose Jaw</option>
-                <option value="cypa">CYPA — Prince Albert</option>
-                <option value="cyyn">CYYN — Swift Current</option>
-                <option value="cylj">CYLJ — Lloydminster</option>
-                <option value="cyqv">CYQV — Yorkton</option>
-                <option value="cynr">CYNR — North Battleford</option>
-                <option value="cyes">CYES — Estevan</option>
                 <option value="cyvc">CYVC — La Ronge</option>
             </optgroup>
             <optgroup label="Ontario">
@@ -244,24 +231,6 @@
         <a class="sidebar-link" data-panel="cypg">
             <span class="sidebar-icao">CYPG</span>Portage la Prairie
         </a>
-        <a class="sidebar-link" data-panel="cybr">
-            <span class="sidebar-icao">CYBR</span>Brandon
-        </a>
-        <a class="sidebar-link" data-panel="cydn">
-            <span class="sidebar-icao">CYDN</span>Dauphin
-        </a>
-        <a class="sidebar-link" data-panel="cyth">
-            <span class="sidebar-icao">CYTH</span>Thompson
-        </a>
-        <a class="sidebar-link" data-panel="cyyq">
-            <span class="sidebar-icao">CYYQ</span>Churchill
-        </a>
-        <a class="sidebar-link" data-panel="cyqd">
-            <span class="sidebar-icao">CYQD</span>The Pas
-        </a>
-        <a class="sidebar-link" data-panel="cyfo">
-            <span class="sidebar-icao">CYFO</span>Flin Flon
-        </a>
 
         <div class="sidebar-province">Saskatchewan</div>
         <a class="sidebar-link" data-panel="cyxe">
@@ -272,24 +241,6 @@
         </a>
         <a class="sidebar-link" data-panel="cymj">
             <span class="sidebar-icao">CYMJ</span>Moose Jaw
-        </a>
-        <a class="sidebar-link" data-panel="cypa">
-            <span class="sidebar-icao">CYPA</span>Prince Albert
-        </a>
-        <a class="sidebar-link" data-panel="cyyn">
-            <span class="sidebar-icao">CYYN</span>Swift Current
-        </a>
-        <a class="sidebar-link" data-panel="cylj">
-            <span class="sidebar-icao">CYLJ</span>Lloydminster
-        </a>
-        <a class="sidebar-link" data-panel="cyqv">
-            <span class="sidebar-icao">CYQV</span>Yorkton
-        </a>
-        <a class="sidebar-link" data-panel="cynr">
-            <span class="sidebar-icao">CYNR</span>North Battleford
-        </a>
-        <a class="sidebar-link" data-panel="cyes">
-            <span class="sidebar-icao">CYES</span>Estevan
         </a>
         <a class="sidebar-link" data-panel="cyvc">
             <span class="sidebar-icao">CYVC</span>La Ronge
@@ -363,104 +314,6 @@
                 <p style="font-size:0.875rem;color:#6c757d;margin-bottom:0.75rem;">CYPG is included in ORBX's free Global Airport Pack.</p>
                 <a target="_blank" href="https://orbxdirect.com/product/ftx-global-airport-pack" style="font-size:0.82rem;color:#122b44;font-weight:600;text-decoration:none;">View More →</a>
             </div>
-        </div>
-
-        {{-- CYBR --}}
-        <div class="airport-panel" id="panel-cybr">
-            <h1 class="airport-panel-title">Brandon</h1>
-            <p class="airport-panel-sub">Brandon Municipal Airport (CYBR)</p>
-            <div class="section-label">Live Weather</div>
-            @php $atisLetter = \App\Classes\WeatherHelper::getAtisLetter('CYBR'); @endphp
-            <div class="metar-block">
-                @if($atisLetter)<div class="metar-atis-letter"><span>ATIS</span><span>{{ $atisLetter }}</span></div>@endif
-                <div class="metar-text">{{ \App\Classes\WeatherHelper::getAtis('CYBR') }}</div>
-            </div>
-            <div class="section-label">Operating Hours</div>
-            <ul class="hours-list">
-                <li>Tower open daily from 1300Z – 0200Z.</li>
-            </ul>
-            <div class="section-label">Scenery</div>
-            <p class="no-scenery">No dedicated third-party scenery known — default sim scenery is adequate for VFR operations.</p>
-        </div>
-
-        {{-- CYDN --}}
-        <div class="airport-panel" id="panel-cydn">
-            <h1 class="airport-panel-title">Dauphin</h1>
-            <p class="airport-panel-sub">Dauphin Barker Regional Airport (CYDN)</p>
-            <div class="section-label">Live Weather</div>
-            @php $atisLetter = \App\Classes\WeatherHelper::getAtisLetter('CYDN'); @endphp
-            <div class="metar-block">
-                @if($atisLetter)<div class="metar-atis-letter"><span>ATIS</span><span>{{ $atisLetter }}</span></div>@endif
-                <div class="metar-text">{{ \App\Classes\WeatherHelper::getAtis('CYDN') }}</div>
-            </div>
-            <div class="section-label">Operating Hours</div>
-            <div class="uncontrolled-note"><i class="fas fa-info-circle fa-xs"></i> Uncontrolled airport — no ATC services.</div>
-            <div class="section-label">Scenery</div>
-            <p class="no-scenery">No dedicated third-party scenery known.</p>
-        </div>
-
-        {{-- CYTH --}}
-        <div class="airport-panel" id="panel-cyth">
-            <h1 class="airport-panel-title">Thompson</h1>
-            <p class="airport-panel-sub">Thompson Airport (CYTH)</p>
-            <div class="section-label">Live Weather</div>
-            @php $atisLetter = \App\Classes\WeatherHelper::getAtisLetter('CYTH'); @endphp
-            <div class="metar-block">
-                @if($atisLetter)<div class="metar-atis-letter"><span>ATIS</span><span>{{ $atisLetter }}</span></div>@endif
-                <div class="metar-text">{{ \App\Classes\WeatherHelper::getAtis('CYTH') }}</div>
-            </div>
-            <div class="section-label">Operating Hours</div>
-            <div class="uncontrolled-note"><i class="fas fa-info-circle fa-xs"></i> Uncontrolled airport — no ATC services.</div>
-            <div class="section-label">Scenery</div>
-            <p class="no-scenery">No dedicated third-party scenery known.</p>
-        </div>
-
-        {{-- CYYQ --}}
-        <div class="airport-panel" id="panel-cyyq">
-            <h1 class="airport-panel-title">Churchill</h1>
-            <p class="airport-panel-sub">Churchill Airport (CYYQ)</p>
-            <div class="section-label">Live Weather</div>
-            @php $atisLetter = \App\Classes\WeatherHelper::getAtisLetter('CYYQ'); @endphp
-            <div class="metar-block">
-                @if($atisLetter)<div class="metar-atis-letter"><span>ATIS</span><span>{{ $atisLetter }}</span></div>@endif
-                <div class="metar-text">{{ \App\Classes\WeatherHelper::getAtis('CYYQ') }}</div>
-            </div>
-            <div class="section-label">Operating Hours</div>
-            <div class="uncontrolled-note"><i class="fas fa-info-circle fa-xs"></i> Uncontrolled airport — no ATC services.</div>
-            <div class="section-label">Scenery</div>
-            <p class="no-scenery">No dedicated third-party scenery known.</p>
-        </div>
-
-        {{-- CYQD --}}
-        <div class="airport-panel" id="panel-cyqd">
-            <h1 class="airport-panel-title">The Pas</h1>
-            <p class="airport-panel-sub">The Pas Airport (CYQD)</p>
-            <div class="section-label">Live Weather</div>
-            @php $atisLetter = \App\Classes\WeatherHelper::getAtisLetter('CYQD'); @endphp
-            <div class="metar-block">
-                @if($atisLetter)<div class="metar-atis-letter"><span>ATIS</span><span>{{ $atisLetter }}</span></div>@endif
-                <div class="metar-text">{{ \App\Classes\WeatherHelper::getAtis('CYQD') }}</div>
-            </div>
-            <div class="section-label">Operating Hours</div>
-            <div class="uncontrolled-note"><i class="fas fa-info-circle fa-xs"></i> Uncontrolled airport — no ATC services.</div>
-            <div class="section-label">Scenery</div>
-            <p class="no-scenery">No dedicated third-party scenery known.</p>
-        </div>
-
-        {{-- CYFO --}}
-        <div class="airport-panel" id="panel-cyfo">
-            <h1 class="airport-panel-title">Flin Flon</h1>
-            <p class="airport-panel-sub">Flin Flon Airport (CYFO)</p>
-            <div class="section-label">Live Weather</div>
-            @php $atisLetter = \App\Classes\WeatherHelper::getAtisLetter('CYFO'); @endphp
-            <div class="metar-block">
-                @if($atisLetter)<div class="metar-atis-letter"><span>ATIS</span><span>{{ $atisLetter }}</span></div>@endif
-                <div class="metar-text">{{ \App\Classes\WeatherHelper::getAtis('CYFO') }}</div>
-            </div>
-            <div class="section-label">Operating Hours</div>
-            <div class="uncontrolled-note"><i class="fas fa-info-circle fa-xs"></i> Uncontrolled airport — no ATC services.</div>
-            <div class="section-label">Scenery</div>
-            <p class="no-scenery">No dedicated third-party scenery known.</p>
         </div>
 
         {{-- CYXE --}}
@@ -552,102 +405,6 @@
             </div>
         </div>
 
-        {{-- CYPA --}}
-        <div class="airport-panel" id="panel-cypa">
-            <h1 class="airport-panel-title">Prince Albert</h1>
-            <p class="airport-panel-sub">Prince Albert Glass Field (CYPA)</p>
-            <div class="section-label">Live Weather</div>
-            @php $atisLetter = \App\Classes\WeatherHelper::getAtisLetter('CYPA'); @endphp
-            <div class="metar-block">
-                @if($atisLetter)<div class="metar-atis-letter"><span>ATIS</span><span>{{ $atisLetter }}</span></div>@endif
-                <div class="metar-text">{{ \App\Classes\WeatherHelper::getAtis('CYPA') }}</div>
-            </div>
-            <div class="section-label">Operating Hours</div>
-            <div class="uncontrolled-note"><i class="fas fa-info-circle fa-xs"></i> Uncontrolled airport — no ATC services.</div>
-            <div class="section-label">Scenery</div>
-            <p class="no-scenery">No dedicated third-party scenery known.</p>
-        </div>
-
-        {{-- CYYN --}}
-        <div class="airport-panel" id="panel-cyyn">
-            <h1 class="airport-panel-title">Swift Current</h1>
-            <p class="airport-panel-sub">Swift Current Airport (CYYN)</p>
-            <div class="section-label">Live Weather</div>
-            @php $atisLetter = \App\Classes\WeatherHelper::getAtisLetter('CYYN'); @endphp
-            <div class="metar-block">
-                @if($atisLetter)<div class="metar-atis-letter"><span>ATIS</span><span>{{ $atisLetter }}</span></div>@endif
-                <div class="metar-text">{{ \App\Classes\WeatherHelper::getAtis('CYYN') }}</div>
-            </div>
-            <div class="section-label">Operating Hours</div>
-            <div class="uncontrolled-note"><i class="fas fa-info-circle fa-xs"></i> Uncontrolled airport — no ATC services.</div>
-            <div class="section-label">Scenery</div>
-            <p class="no-scenery">No dedicated third-party scenery known.</p>
-        </div>
-
-        {{-- CYLJ --}}
-        <div class="airport-panel" id="panel-cylj">
-            <h1 class="airport-panel-title">Lloydminster</h1>
-            <p class="airport-panel-sub">Lloydminster Airport (CYLJ)</p>
-            <div class="section-label">Live Weather</div>
-            @php $atisLetter = \App\Classes\WeatherHelper::getAtisLetter('CYLJ'); @endphp
-            <div class="metar-block">
-                @if($atisLetter)<div class="metar-atis-letter"><span>ATIS</span><span>{{ $atisLetter }}</span></div>@endif
-                <div class="metar-text">{{ \App\Classes\WeatherHelper::getAtis('CYLJ') }}</div>
-            </div>
-            <div class="section-label">Operating Hours</div>
-            <div class="uncontrolled-note"><i class="fas fa-info-circle fa-xs"></i> Uncontrolled airport — no ATC services.</div>
-            <div class="section-label">Scenery</div>
-            <p class="no-scenery">No dedicated third-party scenery known.</p>
-        </div>
-
-        {{-- CYQV --}}
-        <div class="airport-panel" id="panel-cyqv">
-            <h1 class="airport-panel-title">Yorkton</h1>
-            <p class="airport-panel-sub">Yorkton Municipal Airport (CYQV)</p>
-            <div class="section-label">Live Weather</div>
-            @php $atisLetter = \App\Classes\WeatherHelper::getAtisLetter('CYQV'); @endphp
-            <div class="metar-block">
-                @if($atisLetter)<div class="metar-atis-letter"><span>ATIS</span><span>{{ $atisLetter }}</span></div>@endif
-                <div class="metar-text">{{ \App\Classes\WeatherHelper::getAtis('CYQV') }}</div>
-            </div>
-            <div class="section-label">Operating Hours</div>
-            <div class="uncontrolled-note"><i class="fas fa-info-circle fa-xs"></i> Uncontrolled airport — no ATC services.</div>
-            <div class="section-label">Scenery</div>
-            <p class="no-scenery">No dedicated third-party scenery known.</p>
-        </div>
-
-        {{-- CYNR --}}
-        <div class="airport-panel" id="panel-cynr">
-            <h1 class="airport-panel-title">North Battleford</h1>
-            <p class="airport-panel-sub">North Battleford Airport (CYNR)</p>
-            <div class="section-label">Live Weather</div>
-            @php $atisLetter = \App\Classes\WeatherHelper::getAtisLetter('CYNR'); @endphp
-            <div class="metar-block">
-                @if($atisLetter)<div class="metar-atis-letter"><span>ATIS</span><span>{{ $atisLetter }}</span></div>@endif
-                <div class="metar-text">{{ \App\Classes\WeatherHelper::getAtis('CYNR') }}</div>
-            </div>
-            <div class="section-label">Operating Hours</div>
-            <div class="uncontrolled-note"><i class="fas fa-info-circle fa-xs"></i> Uncontrolled airport — no ATC services.</div>
-            <div class="section-label">Scenery</div>
-            <p class="no-scenery">No dedicated third-party scenery known.</p>
-        </div>
-
-        {{-- CYES --}}
-        <div class="airport-panel" id="panel-cyes">
-            <h1 class="airport-panel-title">Estevan</h1>
-            <p class="airport-panel-sub">Estevan Regional Nim Airport (CYES)</p>
-            <div class="section-label">Live Weather</div>
-            @php $atisLetter = \App\Classes\WeatherHelper::getAtisLetter('CYES'); @endphp
-            <div class="metar-block">
-                @if($atisLetter)<div class="metar-atis-letter"><span>ATIS</span><span>{{ $atisLetter }}</span></div>@endif
-                <div class="metar-text">{{ \App\Classes\WeatherHelper::getAtis('CYES') }}</div>
-            </div>
-            <div class="section-label">Operating Hours</div>
-            <div class="uncontrolled-note"><i class="fas fa-info-circle fa-xs"></i> Uncontrolled airport — no ATC services.</div>
-            <div class="section-label">Scenery</div>
-            <p class="no-scenery">No dedicated third-party scenery known.</p>
-        </div>
-
         {{-- CYVC --}}
         <div class="airport-panel" id="panel-cyvc">
             <h1 class="airport-panel-title">La Ronge</h1>
@@ -658,8 +415,6 @@
                 @if($atisLetter)<div class="metar-atis-letter"><span>ATIS</span><span>{{ $atisLetter }}</span></div>@endif
                 <div class="metar-text">{{ \App\Classes\WeatherHelper::getAtis('CYVC') }}</div>
             </div>
-            <div class="section-label">Operating Hours</div>
-            <div class="uncontrolled-note"><i class="fas fa-info-circle fa-xs"></i> Uncontrolled airport — no ATC services.</div>
             <div class="section-label">Scenery</div>
             <p class="no-scenery">No dedicated third-party scenery known.</p>
         </div>

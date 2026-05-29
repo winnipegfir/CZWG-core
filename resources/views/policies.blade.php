@@ -7,7 +7,6 @@
 <style>
 .policies-wrap {
     background: #f6f8fa;
-    min-height: calc(100vh - 60px);
     padding: 2.5rem 0 3rem;
 }
 
