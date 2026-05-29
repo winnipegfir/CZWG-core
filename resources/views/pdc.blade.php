@@ -87,8 +87,8 @@
 
         <div class="pdc-section">
             <div class="pdc-section-title">When PDCs are used</div>
-            <p>Pre-Departure Clearances are issued when the Winnipeg FIR is handling high volumes of traffic — most commonly during cross-the-pond or other major VATSIM events. Controllers may also choose to use PDC at any time at their discretion.</p>
-            <p>VATCAN PDC uses the private message (PM) protocol supported by all VATSIM-approved pilot clients.</p>
+            <p>Pre-Departure Clearances are issued when the Winnipeg FIR is handling high volumes of traffic — most commonly during cross-the-pond or other major VATSIM events. Controllers may also choose to use PDC at any time at their discretion if required.</p>
+            <p>Winnipeg's PDC system uses the private message (PM) protocol supported by all VATSIM-approved pilot clients.</p>
         </div>
 
         <div class="pdc-section">
