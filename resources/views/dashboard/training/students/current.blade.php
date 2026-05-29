@@ -33,7 +33,7 @@
                             <th style="color:#64748b; font-weight:600; border-top:none;">Rating</th>
                             <th style="color:#64748b; font-weight:600; border-top:none;">Type</th>
                             <th style="color:#64748b; font-weight:600; border-top:none;">Instructor</th>
-                            <th style="color:#64748b; font-weight:600; border-top:none; width:60px;"></th>
+                            <th style="color:#64748b; font-weight:600; border-top:none; width:120px;"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -70,7 +70,15 @@
                                 @endif
                             </td>
                             <td style="vertical-align:middle;">
-                                <a href="{{ route('training.students.view', $student->id) }}" class="btn btn-sm btn-outline-secondary py-0 px-2" style="font-size:0.78rem;">View</a>
+                                <div class="d-flex" style="gap:0.35rem;">
+                                    <a href="{{ route('training.students.view', $student->id) }}" class="btn btn-sm btn-outline-secondary py-0 px-2" style="font-size:0.78rem;">View</a>
+                                    @if(Auth::user()->permissions >= 4)
+                                    <form method="POST" action="{{ route('training.students.remove', $student->id) }}" onsubmit="return confirm('Remove {{ $student->user->fullName('FL') }} from the training system?')">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-outline-danger py-0 px-2" style="font-size:0.78rem;">Remove</button>
+                                    </form>
+                                    @endif
+                                </div>
                             </td>
                         </tr>
                         @endforeach

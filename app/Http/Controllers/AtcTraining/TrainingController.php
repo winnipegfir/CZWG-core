@@ -169,9 +169,11 @@ class TrainingController extends Controller
     {
         $student = Student::where('id', $id)->firstOrFail();
         $instructors = Instructor::all();
-        $notes = (new VatcanService)->getNotes($student->user->id);
+        $notesResult = (new VatcanService)->getNotes($student->user->id);
+        $notes = $notesResult['notes'];
+        $notesError = $notesResult['status'] === 'error' ? $notesResult['message'] : null;
 
-        return view('dashboard.training.students.viewstudent', compact('student', 'instructors', 'notes'));
+        return view('dashboard.training.students.viewstudent', compact('student', 'instructors', 'notes', 'notesError'));
     }
 
 
@@ -190,6 +192,15 @@ class TrainingController extends Controller
     }
 
     ///Nate Problem... worry about it
+    public function updateEntryType(Request $request, $id)
+    {
+        $student = Student::where('id', $id)->firstOrFail();
+        $student->entry_type = $request->input('entry_type');
+        $student->save();
+
+        return redirect()->back()->withSuccess('Entry type updated.');
+    }
+
     public function removeStudent($id)
     {
         $student = Student::where('id', $id)->firstOrFail();

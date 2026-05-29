@@ -17,16 +17,23 @@ class VatcanService
 
     public function getNotes(int $cid): array
     {
-        $response = Http::withHeaders([
-            'Authorization' => 'Token ' . $this->apiKey,
-            'Accept'        => 'application/json',
-        ])->get("{$this->baseUrl}/user/{$cid}/notes");
+        try {
+            $response = Http::withHeaders([
+                'Authorization' => 'Token ' . $this->apiKey,
+                'Accept'        => 'application/json',
+            ])->get("{$this->baseUrl}/user/{$cid}/notes");
 
-        if ($response->successful()) {
-            return $response->json('notes') ?? $response->json() ?? [];
+            $body = $response->json();
+
+            if ($response->successful() && isset($body['notes'])) {
+                $notes = collect($body['notes'])->sortByDesc('created_at')->values()->all();
+                return ['status' => 'ok', 'notes' => $notes];
+            }
+
+            return ['status' => 'error', 'message' => $body['error'] ?? 'Unknown error', 'notes' => []];
+        } catch (\Exception $e) {
+            return ['status' => 'error', 'message' => 'Could not reach VATCAN API.', 'notes' => []];
         }
-
-        return [];
     }
 
     public function createNote(int $cid, string $title, string $content, int $authorCid): bool

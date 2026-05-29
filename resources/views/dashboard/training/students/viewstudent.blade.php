@@ -44,7 +44,9 @@
                     <div class="d-flex align-items-center mb-3">
                         <h5 class="font-weight-bold mb-0" style="color:#122b44;">Training Notes</h5>
                     </div>
-                    @if(empty($notes))
+                    @if($notesError)
+                        <p class="text-muted mb-0" style="font-size:0.875rem;"><i class="fas fa-exclamation-circle text-warning mr-1"></i>{{ $notesError }}</p>
+                    @elseif(empty($notes))
                         <p class="text-muted mb-0" style="font-size:0.875rem;">No training notes yet.</p>
                     @else
                         <div class="table-responsive">
@@ -89,6 +91,21 @@
             <div class="card mb-4">
                 <div class="card-body">
                     <h5 class="font-weight-bold mb-3" style="color:#122b44;">Details</h5>
+
+                    @if(Auth::user()->permissions >= 4)
+                    <p class="mb-1" style="font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:.4px; color:#94a3b8;">Entry Type</p>
+                    <form action="{{ route('training.students.entrytype', $student->id) }}" method="POST" class="mb-3">
+                        @csrf
+                        <div class="d-flex" style="gap:0.5rem;">
+                            <select name="entry_type" class="form-control form-control-sm flex-grow-1" style="font-size:0.8rem; color:#495057; background:#fff; padding:.25rem .5rem;">
+                                <option value="New Student" {{ $student->entry_type == 'New Student' ? 'selected' : '' }}>Home Student</option>
+                                <option value="New Visitor" {{ $student->entry_type == 'New Visitor' ? 'selected' : '' }}>Visiting Student</option>
+                                <option value="New Transfer" {{ $student->entry_type == 'New Transfer' ? 'selected' : '' }}>Transfer Student</option>
+                            </select>
+                            <button type="submit" class="btn btn-sm btn-success flex-shrink-0" style="font-size:0.8rem;">Save</button>
+                        </div>
+                    </form>
+                    @endif
 
                     <p class="mb-1" style="font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:.4px; color:#94a3b8;">Instructor</p>
                     <p class="mb-3" style="font-size:0.875rem; color:#122b44;">
