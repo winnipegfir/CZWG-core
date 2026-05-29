@@ -12,7 +12,7 @@
 
 /* ── Sidebar ─────────────────────────────────── */
 .airport-sidebar {
-    width: 220px;
+    width: 240px;
     flex-shrink: 0;
     background: #fff;
     border-right: 1px solid rgba(0,0,0,0.08);
@@ -23,29 +23,64 @@
     overflow-y: auto;
 }
 .sidebar-province {
-    font-size: 0.6rem;
+    font-size: 0.65rem;
     font-weight: 700;
-    letter-spacing: 0.12em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: rgba(0,0,0,0.3);
-    padding: 0.75rem 1.1rem 0.3rem;
-    margin-top: 0.5rem;
+    color: rgba(0,0,0,0.35);
+    padding: 1rem 1.25rem 0.35rem;
+    margin-top: 0.25rem;
 }
-.sidebar-province:first-child { margin-top: 0; }
+.sidebar-province:first-child { margin-top: 0; padding-top: 0.25rem; }
 .sidebar-link {
-    display: block;
-    padding: 0.4rem 1.1rem;
-    font-size: 0.8rem;
-    color: rgba(0,0,0,0.6);
+    display: flex;
+    align-items: baseline;
+    gap: 0.55rem;
+    padding: 0.5rem 1.25rem;
+    font-size: 0.875rem;
+    color: rgba(0,0,0,0.65);
     text-decoration: none;
     cursor: pointer;
-    border-left: 2px solid transparent;
+    border-left: 3px solid transparent;
     transition: all 0.12s;
     line-height: 1.3;
 }
 .sidebar-link:hover { color: #122b44; background: rgba(18,43,68,0.04); text-decoration: none; }
-.sidebar-link.active { color: #122b44; font-weight: 600; border-left-color: #122b44; background: rgba(18,43,68,0.05); }
-.sidebar-icao { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.04em; color: rgba(0,0,0,0.35); display: block; }
+.sidebar-link.active { color: #122b44; font-weight: 600; border-left-color: #122b44; background: rgba(18,43,68,0.06); }
+.sidebar-icao {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    color: rgba(0,0,0,0.3);
+    flex-shrink: 0;
+}
+.sidebar-link.active .sidebar-icao { color: rgba(18,43,68,0.45); }
+
+/* ── Mobile airport picker ───────────────────── */
+.airport-mobile-select-wrap {
+    display: none;
+    padding: 1rem 1rem 0;
+}
+.airport-mobile-select-wrap select {
+    width: 100%;
+    padding: 0.65rem 1rem;
+    font-size: 0.95rem;
+    border: 1px solid rgba(0,0,0,0.15);
+    border-radius: 8px;
+    background: #fff;
+    color: #122b44;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23122b44' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.9rem center;
+    cursor: pointer;
+}
+.airport-mobile-select-wrap select:focus {
+    outline: none;
+    border-color: #122b44;
+    box-shadow: 0 0 0 3px rgba(18,43,68,0.1);
+}
 
 /* ── Main content ────────────────────────────── */
 .airport-main {
@@ -57,15 +92,15 @@
 .airport-panel.active { display: block; }
 
 .airport-panel-title {
-    font-size: 1.35rem;
+    font-size: 1.5rem;
     font-weight: 800;
     color: #122b44;
-    margin: 0 0 0.2rem;
+    margin: 0 0 0.25rem;
 }
 .airport-panel-sub {
     color: #6c757d;
-    font-size: 0.85rem;
-    margin-bottom: 1.5rem;
+    font-size: 0.875rem;
+    margin-bottom: 1.75rem;
 }
 
 .section-label {
@@ -73,9 +108,11 @@
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    color: rgba(0,0,0,0.3);
+    color: rgba(0,0,0,0.4);
     margin-bottom: 0.6rem;
-    margin-top: 1.5rem;
+    margin-top: 1.75rem;
+    border-bottom: 1px solid rgba(0,0,0,0.07);
+    padding-bottom: 0.4rem;
 }
 .section-label:first-of-type { margin-top: 0; }
 
@@ -90,7 +127,8 @@
     display: flex;
     align-items: flex-start;
     gap: 1.25rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0;
+    word-break: break-all;
 }
 .metar-atis-letter {
     flex-shrink: 0;
@@ -114,13 +152,13 @@
     font-weight: 700;
     line-height: 1;
 }
-.metar-text { flex: 1; }
+.metar-text { flex: 1; min-width: 0; }
 
 .hours-list {
     color: #495057;
     font-size: 0.875rem;
     padding-left: 1.25rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0;
     line-height: 2;
 }
 .uncontrolled-note {
@@ -129,10 +167,10 @@
     gap: 0.4rem;
     background: #f1f5f9;
     color: #64748b;
-    font-size: 0.78rem;
+    font-size: 0.8rem;
     border-radius: 5px;
-    padding: 0.45rem 0.85rem;
-    margin-bottom: 1.5rem;
+    padding: 0.5rem 0.9rem;
+    margin-bottom: 0;
 }
 
 .scenery-item {
@@ -140,33 +178,61 @@
     border-radius: 8px;
     padding: 1rem 1.25rem;
     margin-bottom: 0.75rem;
+    background: #fff;
 }
 .badge-payware  { background:#fff3cd; color:#856404; font-size:0.68rem; font-weight:700; padding:0.2rem 0.55rem; border-radius:999px; white-space:nowrap; }
 .badge-freeware { background:#d4edda; color:#155724; font-size:0.68rem; font-weight:700; padding:0.2rem 0.55rem; border-radius:999px; white-space:nowrap; }
 .no-scenery {
-    color: rgba(0,0,0,0.3);
-    font-size: 0.82rem;
+    color: rgba(0,0,0,0.35);
+    font-size: 0.85rem;
     font-style: italic;
-    padding: 0.25rem 0 1rem;
+    padding: 0.25rem 0 0;
+    margin-bottom: 0;
 }
 
 /* ── Mobile ──────────────────────────────────── */
 @media (max-width: 768px) {
     .airports-wrap { flex-direction: column; }
-    .airport-sidebar {
-        width: 100%; height: auto; position: static;
-        border-right: none; border-bottom: 1px solid rgba(0,0,0,0.08);
-        padding: 0.75rem 0;
-        display: flex; flex-wrap: wrap; gap: 0;
-    }
-    .sidebar-province { width: 100%; }
-    .sidebar-link { display: inline-block; border-left: none; border-bottom: 2px solid transparent; padding: 0.4rem 0.75rem; }
-    .sidebar-link.active { border-bottom-color: #122b44; border-left: none; }
-    .airport-main { padding: 1.25rem; }
+    .airport-sidebar { display: none; }
+    .airport-mobile-select-wrap { display: block; }
+    .airport-main { padding: 1.25rem 1rem; }
+    .metar-block { font-size: 0.78rem; gap: 0.9rem; padding: 0.85rem 1rem; }
+    .airport-panel-title { font-size: 1.25rem; }
 }
 </style>
 
 <div class="airports-wrap">
+
+    {{-- Mobile airport picker --}}
+    <div class="airport-mobile-select-wrap">
+        <select id="mobile-airport-select">
+            <optgroup label="Manitoba">
+                <option value="cywg">CYWG · CYAV — Winnipeg</option>
+                <option value="cypg">CYPG — Portage la Prairie</option>
+                <option value="cybr">CYBR — Brandon</option>
+                <option value="cydn">CYDN — Dauphin</option>
+                <option value="cyth">CYTH — Thompson</option>
+                <option value="cyyq">CYYQ — Churchill</option>
+                <option value="cyqd">CYQD — The Pas</option>
+                <option value="cyfo">CYFO — Flin Flon</option>
+            </optgroup>
+            <optgroup label="Saskatchewan">
+                <option value="cyxe">CYXE — Saskatoon</option>
+                <option value="cyqr">CYQR — Regina</option>
+                <option value="cymj">CYMJ — Moose Jaw</option>
+                <option value="cypa">CYPA — Prince Albert</option>
+                <option value="cyyn">CYYN — Swift Current</option>
+                <option value="cylj">CYLJ — Lloydminster</option>
+                <option value="cyqv">CYQV — Yorkton</option>
+                <option value="cynr">CYNR — North Battleford</option>
+                <option value="cyes">CYES — Estevan</option>
+                <option value="cyvc">CYVC — La Ronge</option>
+            </optgroup>
+            <optgroup label="Ontario">
+                <option value="cyqt">CYQT — Thunder Bay</option>
+            </optgroup>
+        </select>
+    </div>
 
     {{-- Sidebar --}}
     <div class="airport-sidebar">
@@ -634,14 +700,26 @@
 </div>{{-- end airports-wrap --}}
 
 <script>
+function switchAirport(panelId) {
+    document.querySelectorAll('.sidebar-link').forEach(function(l) { l.classList.remove('active'); });
+    document.querySelectorAll('.airport-panel').forEach(function(p) { p.classList.remove('active'); });
+    var link = document.querySelector('.sidebar-link[data-panel="' + panelId + '"]');
+    if (link) link.classList.add('active');
+    var panel = document.getElementById('panel-' + panelId);
+    if (panel) panel.classList.add('active');
+}
+
 document.querySelectorAll('.sidebar-link').forEach(function(link) {
     link.addEventListener('click', function() {
-        document.querySelectorAll('.sidebar-link').forEach(function(l) { l.classList.remove('active'); });
-        document.querySelectorAll('.airport-panel').forEach(function(p) { p.classList.remove('active'); });
-        this.classList.add('active');
-        var panel = document.getElementById('panel-' + this.dataset.panel);
-        if (panel) panel.classList.add('active');
+        switchAirport(this.dataset.panel);
+        var sel = document.getElementById('mobile-airport-select');
+        if (sel) sel.value = this.dataset.panel;
     });
+});
+
+document.getElementById('mobile-airport-select').addEventListener('change', function() {
+    switchAirport(this.value);
+    document.querySelector('.airport-main').scrollIntoView({ behavior: 'smooth', block: 'start' });
 });
 </script>
 @endsection
