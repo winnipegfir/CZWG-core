@@ -308,6 +308,7 @@ Route::prefix('dashboard/training')->middleware('instructor')->group(function ()
 
     //AtcTraining
     Route::post('/dashboard/training/instructors', 'AtcTraining\TrainingController@addInstructor')->name('training.instructors.add');
+    Route::delete('/instructors/{id}', 'AtcTraining\TrainingController@removeInstructor')->name('training.instructors.remove');
 });
 //Admin and CI
 Route::group(['middleware' => ['executive']], function () {

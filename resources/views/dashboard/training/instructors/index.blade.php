@@ -57,6 +57,13 @@
                     View
                 </button>
                 @endif
+                @if(Auth::user()->permissions >= 4 && $instructor->students->count() == 0)
+                <form method="POST" action="{{ route('training.instructors.remove', $instructor->id) }}"
+                      onsubmit="return confirm('Remove {{ $instructor->user->fullName('FL') }} as an instructor?')" style="flex-shrink:0;">
+                    @csrf @method('DELETE')
+                    <button type="submit" class="btn btn-sm btn-outline-danger py-0 px-2" style="font-size:0.78rem;">Remove</button>
+                </form>
+                @endif
             </div>
             @endforeach
         @endif

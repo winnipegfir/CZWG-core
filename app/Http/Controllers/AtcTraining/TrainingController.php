@@ -84,6 +84,19 @@ class TrainingController extends Controller
         return view('dashboard.training.instructors.index', compact('instructors', 'potentialinstructor'));
     }
 
+    public function removeInstructor($id)
+    {
+        $instructor = Instructor::where('id', $id)->firstOrFail();
+
+        if ($instructor->students()->count() > 0) {
+            return redirect()->back()->withError('Cannot remove an instructor who has students assigned.');
+        }
+
+        $instructor->delete();
+
+        return redirect()->back()->withSuccess('Instructor removed.');
+    }
+
     public function addInstructor(Request $request)
     {
         Instructor::create([
@@ -128,7 +141,7 @@ class TrainingController extends Controller
             ->orderByRaw('waitlist_added_at IS NULL ASC')
             ->orderBy('waitlist_added_at', 'asc')
             ->get();
-        $potentialstudent = User::all();
+        $potentialstudent = User::where('id', '!=', 1)->orderBy('lname')->get();
         $instructors = Instructor::all();
 
         return view('dashboard.training.students.waitlist', compact('students', 'potentialstudent', 'instructors'));

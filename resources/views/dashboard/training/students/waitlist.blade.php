@@ -180,7 +180,7 @@ document.querySelectorAll('.row-check').forEach(c => c.addEventListener('change'
 {{-- Add to Waitlist Modal (staff only) --}}
 @if(Auth::user()->permissions >= 4)
 <div class="modal fade" id="newStudent" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title font-weight-bold" style="color:#122b44;">Add Student to Waitlist</h5>
@@ -189,7 +189,7 @@ document.querySelectorAll('.row-check').forEach(c => c.addEventListener('change'
             <form method="POST" action="{{ route('instructor.student.add.new') }}">
                 @csrf
                 <div class="modal-body">
-                    <p class="text-muted" style="font-size:0.825rem;">This will create and approve an application for the student using your CID.</p>
+                    <p class="text-muted" style="font-size:0.825rem;">Adds the selected user to the training waitlist.</p>
                     <div class="form-group mb-3">
                         <label class="font-weight-bold small">Student</label>
                         <select name="student_id" class="js-example-basic-single form-control">
