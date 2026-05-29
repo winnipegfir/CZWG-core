@@ -20,6 +20,13 @@ class DashboardController extends Controller
         $user = Auth::user();
         //  $allusers = User::all();
         $yourinstructor = Student::where('user_id', $user->id)->first();
+        $waitlistPosition = null;
+        if ($yourinstructor && $yourinstructor->status == 0 && $yourinstructor->waitlist_added_at) {
+            $waitlistPosition = Student::where('status', 0)
+                ->where('waitlist_added_at', '<=', $yourinstructor->waitlist_added_at)
+                ->whereNotNull('waitlist_added_at')
+                ->count();
+        }
         $certification = null;
         $active = null;
         $cbtnotifications = [];
@@ -50,7 +57,7 @@ class DashboardController extends Controller
         if ($user->permissions == 0) {
             return view('dashboard.index2', compact('openTickets', 'confirmedevent', 'cbtnotifications'));
         } else {
-            return view('dashboard.index', compact('event', 'potentialRosterMember', 'yourinstructor', 'openTickets', 'staffTickets', 'certification', 'active', 'atcResources', 'unconfirmedapp', 'confirmedapp', 'confirmedevent', 'cbtnotifications'));
+            return view('dashboard.index', compact('event', 'potentialRosterMember', 'yourinstructor', 'waitlistPosition', 'openTickets', 'staffTickets', 'certification', 'active', 'atcResources', 'unconfirmedapp', 'confirmedapp', 'confirmedevent', 'cbtnotifications'));
         }
     }
 

@@ -456,11 +456,6 @@
                         </div>
                     @endif
 
-                    @if ($certification == "not_certified")
-                        <a href="{{route('application.list')}}" class="dash-nav-link mt-2">
-                            <i class="fas fa-chevron-right"></i> View Your Applications
-                        </a>
-                    @endif
                 </div>
             </div>
 
@@ -475,7 +470,27 @@
                         <i class="fas fa-arrow-right"></i>
                         <strong>Winnipeg365</strong> &mdash; Training Portal
                     </a>
-                    @if($yourinstructor != null && $yourinstructor->instructor != null)
+
+                    @if($yourinstructor != null && $yourinstructor->status == 0)
+                        <hr class="my-2">
+                        <div style="background:#fef3c7; border-radius:0.5rem; padding:0.75rem 1rem;">
+                            <p class="mb-1" style="font-size:0.78rem; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; color:#92400e;">Waitlist Status</p>
+                            @if($waitlistPosition)
+                                <p class="mb-0" style="font-size:1.4rem; font-weight:700; color:#92400e; line-height:1.2;">
+                                    #{{ $waitlistPosition }}
+                                    <span style="font-size:0.8rem; font-weight:400; color:#b45309;"> on the waitlist</span>
+                                </p>
+                                @if($yourinstructor->waitlist_added_at)
+                                    <p class="mb-0 mt-1" style="font-size:0.78rem; color:#b45309;">
+                                        Waiting since {{ $yourinstructor->waitlist_added_at->format('M j, Y') }}
+                                        &mdash; {{ $yourinstructor->waitlist_added_at->diffForHumans() }}
+                                    </p>
+                                @endif
+                            @else
+                                <p class="mb-0" style="font-size:0.875rem; color:#92400e;">You are on the waitlist. Contact staff if you have questions.</p>
+                            @endif
+                        </div>
+                    @elseif($yourinstructor != null && $yourinstructor->instructor != null)
                         <hr class="my-2">
                         <p class="mb-0" style="font-size:0.875rem;">
                             <strong>Your Instructor:</strong> {{$yourinstructor->instructor->user->fullName('FL')}}<br>
@@ -531,6 +546,19 @@
                 </div>
             </div>
 
+            {{-- Instructor --}}
+            @if(Auth::user()->instructorProfile !== null && Auth::user()->permissions < 4)
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="dash-card-header">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                        <h3>Instructor</h3>
+                    </div>
+                    <a href="{{route('training.index')}}" class="dash-nav-link"><i class="fas fa-chevron-right"></i> Training Portal</a>
+                </div>
+            </div>
+            @endif
+
             {{-- Staff --}}
             @if (Auth::user()->permissions >= 4)
             <div class="card mb-3">
@@ -540,6 +568,7 @@
                         <h3>Staff</h3>
                     </div>
                     <a href="https://training.winnipegfir.ca" target="_blank" class="dash-nav-link"><i class="fas fa-chevron-right"></i> Winnipeg365</a>
+                    <a href="{{route('training.index')}}" class="dash-nav-link"><i class="fas fa-chevron-right"></i> Training Management</a>
                     <a href="{{route('roster.index')}}" class="dash-nav-link"><i class="fas fa-chevron-right"></i> Manage Controller Roster</a>
                     <a href="{{route('events.admin.index')}}" class="dash-nav-link"><i class="fas fa-chevron-right"></i> Manage Events</a>
                     <a href="{{route('news.index')}}" class="dash-nav-link"><i class="fas fa-chevron-right"></i> Manage News</a>

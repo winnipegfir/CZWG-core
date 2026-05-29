@@ -1,53 +1,41 @@
-
-<nav class="navbar navbar-light bg-light">
+<div style="background:#272727; border-bottom:1px solid #1a1a1a;">
     <div class="container">
-    <a href="/dashboard/training">
-        <h1 class="font-weight-bold blue-text">Online Training</h1>
-    </a>
-        <ul class="nav nav-pills">
-            <li class="nav-item">
-                <a class="nav-link {{ Request::is('dashboard/training') ? 'active' : '' }}" href="{{route('training.index')}}">Home</a>
-            </li>
-            @if (Auth::user()->instructorProfile !== null || Auth::user()->permissions >= 4)
-            <li class="nav-item">
-                <a class="nav-link {{ Request::is('dashboard/training/instructors/*') || Request::is('dashboard/training/instructors') ? 'active' : '' }}" href="{{route('training.instructors')}}">Instructors</a>
-            </li>
-            <li>
-                <a class="nav-link {{Request::is(route('training.instructingsessions.index')) ? 'active' : ''}}" href="{{route('training.instructingsessions.index')}}">Instructing Sessions</a>
-            </li>
-            @if (Auth::user()->permissions >= 4)
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle {{ Request::is('dashboard/training/students/*') || Request::is('dashboard/training/students') ? 'active' : '' }}" style="text-color:white" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Students</a>
-                <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 36px, 0px); top: 0px; left: 0px; will-change: transform;">
-                <a class="dropdown-item {{ Request::is('dashboard/training/students/current') ? 'active' : '' }}" href="{{route('training.students.current')}}">In Progress</a>
-                <a class="dropdown-item {{ Request::is('dashboard/training/students/completed') ? 'active' : '' }}" href="{{route('training.students.completed')}}">Completed</a>
-                <a class="dropdown-item {{ Request::is('dashboard/training/students/waitlist') ? 'active' : '' }}" href="{{route('training.students.waitlist')}}">Waitlist</a>
-                </div>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link {{ Request::is('dashboard/training/applications/*') || Request::is('dashboard/training/applications') ? 'active' : '' }}" href="{{route('training.applications')}}">
-                    Applications
-                    @if (count(\App\Models\AtcTraining\Application::where('status', 0)->get()) >= 1)
-                        <span class="badge-pill {{ Request::is('dashboard/training/applications/*') || Request::is('dashboard/training/applications') ? 'badge-light text-primary' : 'badge-primary' }}">{{count(\App\Models\AtcTraining\Application::where('status', 0)->get())}}</span>
-                    @endif
+        <div class="d-flex align-items-center" style="height:38px; gap:0.25rem;">
+            <a href="{{ route('training.index') }}" style="color:#fff; font-weight:700; font-size:1rem; text-decoration:none; margin-right:0.75rem; white-space:nowrap;">
+                Training
+            </a>
+            <nav class="d-flex align-items-center" style="gap:0.1rem; flex-wrap:wrap;">
+                <a href="{{ route('training.index') }}"
+                   style="color:{{ Request::is('dashboard/training') ? '#fff' : 'rgba(255,255,255,0.6)' }}; font-size:0.85rem; padding:0.3rem 0.65rem; border-radius:0.3rem; text-decoration:none; {{ Request::is('dashboard/training') ? 'background:rgba(255,255,255,0.12);' : '' }}">
+                    Home
                 </a>
-            </li>
-            <li class="nav-item dropdown">
-<a class="nav-link {{ Request::is('dashboard/training/cbt') ? 'active' : '' }}" href="{{route('cbt.index')}}">CBT System</a>
-              @endif
-            @endif
-        </ul>
-    </div>
-</nav><br/>
 
-{{-- <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>
-    <div class="dropdown-menu" x-placement="bottom-start" style="position: absolute; transform: translate3d(0px, 36px, 0px); top: 0px; left: 0px; will-change: transform;">
-    <a class="dropdown-item" href="#">Action</a>
-    <a class="dropdown-item" href="#">Another action</a>
-    <a class="dropdown-item" href="#">Something else here</a>
-    <div class="dropdown-divider"></div>
-    <a class="dropdown-item" href="#">Separated link</a>
+                @if(Auth::user()->instructorProfile !== null || Auth::user()->permissions >= 4)
+                <a href="{{ route('training.instructors') }}"
+                   style="color:{{ Request::is('dashboard/training/instructors*') ? '#fff' : 'rgba(255,255,255,0.6)' }}; font-size:0.85rem; padding:0.3rem 0.65rem; border-radius:0.3rem; text-decoration:none; {{ Request::is('dashboard/training/instructors*') ? 'background:rgba(255,255,255,0.12);' : '' }}">
+                    Instructors
+                </a>
+
+                @endif
+
+                @if(Auth::user()->permissions >= 4)
+                <div class="dropdown">
+                    <a href="#" data-toggle="dropdown"
+                       style="color:{{ Request::is('dashboard/training/students*') ? '#fff' : 'rgba(255,255,255,0.6)' }}; font-size:0.85rem; padding:0.3rem 0.65rem; border-radius:0.3rem; text-decoration:none; {{ Request::is('dashboard/training/students*') ? 'background:rgba(255,255,255,0.12);' : '' }}">
+                        Students <i class="fas fa-chevron-down fa-xs ml-1"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right" style="min-width:160px;">
+                        <a class="dropdown-item {{ Request::is('dashboard/training/students/waitlist') ? 'active' : '' }}" href="{{ route('training.students.waitlist') }}">
+                            Waitlist
+                        </a>
+                        <a class="dropdown-item {{ Request::is('dashboard/training/students/current') ? 'active' : '' }}" href="{{ route('training.students.current') }}">
+                            Linked
+                        </a>
+                    </div>
+                </div>
+
+                @endif
+            </nav>
+        </div>
     </div>
-</li> --}}
+</div>

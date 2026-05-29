@@ -1,92 +1,85 @@
 @extends('layouts.master')
-
-@section('navbarprim')
-
-    @parent
-
-@stop
+@section('navbarprim') @parent @stop
+@section('title', 'Students — Winnipeg FIR')
 
 @section('content')
-    @include('includes.trainingMenu')
-    <head>
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css"; rel="stylesheet" />
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js";></script>
-    </head>
-    <div class="container" style="margin-top: 20px;">
-        <h1 class="font-weight-bold blue-text">Students <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#newStudent" style="float: right;">Add New Student</button></h1>
+@include('includes.trainingMenu')
 
-        <hr>
-        <table id="dataTable" class="table table-hover">
-            <thead>
-                <tr>
-                    <th scope="col">CID</th>
-                    <th scope="col">Student Name</th>
-                    <th scope="col">Instructor Name</th>
-                </tr>
-            </thead>
-            @if (count($students) < 1)
-            <font class="font-weight-bold">There are no students in this category!</b></font>
-            @else
-            <tbody>
-            @foreach ($students as $student)
-            <tr>
-                <th scope="row">{{$student->user->id}}</th>
-                <td>
-                    <a href="{{route('training.students.view', $student->id)}}">
-                        {{$student->user->fullName('FL')}}
-                    </a>
-                </td>
-                <td>
-                    @if ($student->instructor !== null)
-                        <a href="#">
-                            {{$student->instructor->user->fullName('FLC')}}
-                        </a>
-                    @else
-                        No instructor assigned
-                    @endif
-                </td>
-            </tr>
-            @endforeach
-            @endif
-        </table>
+<div style="background:#f8fafc; padding:2rem 0;">
+<div class="container">
+
+    <div class="d-flex align-items-center mb-4">
+        <div>
+            <h2 class="font-weight-bold mb-0" style="color:#122b44;">Linked Students</h2>
+            <p class="text-muted mb-0" style="font-size:0.875rem;">{{ $students->count() }} student{{ $students->count() != 1 ? 's' : '' }}</p>
+        </div>
     </div>
 
-    <div class="modal fade" id="newStudent" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-         aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Assign Student to Instructor</h5>       
-                </div>
-                <div class="modal-body">
-                    <p><i>Note: This will create an Application and approve it for this student using your CID.</i></p>
-                    <form method="POST" action="{{route('instructor.student.add.new')}}" class="form-group">
-                        @csrf
-                        <label class="form-control font-weight-bold">Choose a Student</label>
-                        <select name="student_id" id="student_id" class="js-example-basic-single form-control" style="width:100%;">
-                        @foreach ($potentialstudent as $u)
-                            <option value="{{$u->id}}">{{$u->id}} - {{$u->fullName('FL')}}</option>
-                            @endforeach
-                            </select>
-                            <label class="form-control font-weight-bold">Choose an Instructor</label>
-                            <select name="instructor" id="instructor" class="js-example-basic-single form-control" style="width:100%;">
-                                @foreach ($instructors as $i)
-                                    <option value="{{$i->id}}">{{$i->user->id}} - {{$i->user->fullName('FL')}}</option>
-                                @endforeach
-                            </select>
 
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-success form-control" type="submit" href="#">Add Student</button>
-                    <button class="btn btn-light" data-dismiss="modal" style="width:375px">Dismiss</button>
-                  </form>
-                </div>
+    @if($students->isEmpty())
+        <div class="card">
+            <div class="card-body text-center text-muted py-5">
+                <i class="fas fa-user-graduate fa-2x mb-2" style="color:#cbd5e1;"></i>
+                <p class="mb-0">No students in this category.</p>
             </div>
-          </div>
-        </div><br>
-    <script>
-        $(document).ready(function() {
-            $('.js-example-basic-single').select2();
-        });
-    </script>
+        </div>
+    @else
+        <div class="card" style="overflow:hidden;">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0" style="font-size:0.875rem;">
+                    <thead style="background:#f8fafc; border-bottom:2px solid #e2e8f0;">
+                        <tr>
+                            <th style="color:#64748b; font-weight:600; border-top:none;">Student</th>
+                            <th style="color:#64748b; font-weight:600; border-top:none;">Rating</th>
+                            <th style="color:#64748b; font-weight:600; border-top:none;">Type</th>
+                            <th style="color:#64748b; font-weight:600; border-top:none;">Instructor</th>
+                            <th style="color:#64748b; font-weight:600; border-top:none; width:60px;"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($students as $student)
+                        <tr>
+                            <td style="vertical-align:middle;">
+                                <div class="d-flex align-items-center">
+                                    <img src="{{ $student->user->avatar() }}" style="width:34px; height:34px; border-radius:50%; object-fit:cover; border:1px solid #e2e8f0; margin-right:0.65rem; flex-shrink:0;">
+                                    <div>
+                                        <a href="{{ route('training.students.view', $student->id) }}" style="font-weight:600; color:#122b44; text-decoration:none;">
+                                            {{ $student->user->fullName('FL') }}
+                                        </a>
+                                        <div style="font-size:0.75rem; color:#94a3b8;">{{ $student->user->id }}</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td style="vertical-align:middle; color:#495057;">{{ $student->user->rating->getShortName() }}</td>
+                            <td style="vertical-align:middle;">
+                                @if($student->entry_type == 'New Student')
+                                    <span style="background:#dbeafe; color:#1d4ed8; font-size:0.72rem; font-weight:700; padding:0.2em 0.55em; border-radius:0.3rem;">Home</span>
+                                @elseif($student->entry_type == 'New Visitor')
+                                    <span style="background:#e0f2fe; color:#0369a1; font-size:0.72rem; font-weight:700; padding:0.2em 0.55em; border-radius:0.3rem;">Visiting</span>
+                                @elseif($student->entry_type == 'New Transfer')
+                                    <span style="background:#f3e8ff; color:#7e22ce; font-size:0.72rem; font-weight:700; padding:0.2em 0.55em; border-radius:0.3rem;">Transfer</span>
+                                @else
+                                    <span style="background:#f1f5f9; color:#64748b; font-size:0.72rem; font-weight:700; padding:0.2em 0.55em; border-radius:0.3rem;">{{ $student->entry_type }}</span>
+                                @endif
+                            </td>
+                            <td style="vertical-align:middle; color:#495057;">
+                                @if($student->instructor)
+                                    {{ $student->instructor->user->fullName('FL') }}
+                                @else
+                                    <span class="text-muted">—</span>
+                                @endif
+                            </td>
+                            <td style="vertical-align:middle;">
+                                <a href="{{ route('training.students.view', $student->id) }}" class="btn btn-sm btn-outline-secondary py-0 px-2" style="font-size:0.78rem;">View</a>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    @endif
+
+</div>
+</div>
 @stop

@@ -108,12 +108,6 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/article/edit/{id}', 'News\NewsController@editArticle')->name('news.articles.edit');
         });
 
-        //Assigning Instructor
-        Route::prefix('instructor')->group(function () {
-            Route::post('/add', 'AtcTraining\TrainingController@assignStudent')->name('instructor.student.add');
-            Route::post('/add', 'AtcTraining\TrainingController@newStudent')->name('instructor.student.add.new');
-            Route::get('/delete/{id}', 'AtcTraining\TrainingController@deleteStudent')->name('instructor.student.delete');
-        });
     });
 
     //User Event Applications
@@ -289,7 +283,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 //AtcTraining
 Route::post('/training', 'AtcTraining\TrainingController@editTrainingTime')->middleware('staff')->name('waittime.edit');
-Route::prefix('dashboard/training')->middleware('executive|instructor')->group(function () {
+Route::prefix('dashboard/training')->middleware('instructor')->group(function () {
     Route::get('/', 'AtcTraining\TrainingController@index')->name('training.index');
     Route::get('/sessions', 'AtcTraining\TrainingController@instructingSessionsIndex')->name('training.instructingsessions.index');
     Route::get('/sessions/{id}', 'AtcTraining\TrainingController@viewInstructingSession')->name('training.instructingsessions.viewsession');
@@ -303,16 +297,15 @@ Route::prefix('dashboard/training')->middleware('executive|instructor')->group(f
     Route::get('/students/{id}', 'AtcTraining\TrainingController@viewStudent')->name('training.students.view');
     Route::post('/students/{id}/assigninstructor', 'AtcTraining\TrainingController@assignInstructorToStudent')->name('training.students.assigninstructor');
     Route::post('/students/{id}/setstatus', 'AtcTraining\TrainingController@changeStudentStatus')->name('training.students.setstatus');
-    Route::get('notes/{id}', 'AtcTraining\TrainingController@viewNote')->name('trainingnote.view');
+    Route::post('/students/{id}/activate', 'AtcTraining\TrainingController@activateWithInstructor')->name('training.students.activate');
+    Route::delete('/students/{id}', 'AtcTraining\TrainingController@removeStudent')->name('training.students.remove');
+    Route::post('/students/add', 'AtcTraining\TrainingController@newStudent')->name('instructor.student.add.new');
     Route::post('notes/add/{id}', 'AtcTraining\TrainingController@addNote')->name('add.trainingnote');
     Route::get('notes/create/{id}', 'AtcTraining\TrainingController@newNoteView')->name('view.add.note');
-    Route::post('solorequest/{id}', 'AtcTraining\TrainingController@soloRequest')->name('training.solo.request');
 
     //AtcTraining
     Route::post('/dashboard/training/instructors', 'AtcTraining\TrainingController@addInstructor')->name('training.instructors.add');
 });
 //Admin and CI
 Route::group(['middleware' => ['executive']], function () {
-    Route::get('/training/solo/approve/{id}', 'AtcTraining\TrainingController@approveSoloRequest')->name('training.solo.approve');
-    Route::get('/training/solo/deny/{id}', 'AtcTraining\TrainingController@denySoloRequest')->name('training.solo.deny');
 });

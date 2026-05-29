@@ -3,24 +3,12 @@
 namespace App\Http\Controllers\AtcTraining;
 
 use App\Http\Controllers\Controller;
-use App\Models\AtcTraining\Application;
-use App\Models\AtcTraining\CBT\CbtExam;
-use App\Models\AtcTraining\CBT\CbtExamAnswer;
-use App\Models\AtcTraining\CBT\CbtExamAssign;
-use App\Models\AtcTraining\CBT\CbtExamQuestion;
-use App\Models\AtcTraining\CBT\CbtExamResult;
-use App\Models\AtcTraining\CBT\CbtModule;
-use App\Models\AtcTraining\CBT\CbtModuleAssign;
-use App\Models\AtcTraining\CBT\CbtNotification;
 use App\Models\AtcTraining\Instructor;
-use App\Models\AtcTraining\InstructorStudents;
 use App\Models\AtcTraining\RosterMember;
-use App\Models\AtcTraining\SoloRequest;
 use App\Models\AtcTraining\Student;
-use App\Models\AtcTraining\StudentNote;
 use App\Models\AtcTraining\TrainingWaittime;
 use App\Models\Users\User;
-use App\Notifications\SoloApproval;
+use App\Services\VatcanService;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -31,14 +19,13 @@ class TrainingController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $soloreq = SoloRequest::where('approved', '0')->get();
         $instructor = Instructor::where('user_id', $user->id)->first();
         $yourStudents = null;
         if ($instructor) {
             $yourStudents = Student::where('instructor_id', $instructor->id)->get();
         }
 
-        return view('dashboard.training.indexinstructor', compact('yourStudents', 'soloreq'));
+        return view('dashboard.training.indexinstructor', compact('yourStudents'));
     }
 
     public function newNoteView($id)
@@ -50,21 +37,22 @@ class TrainingController extends Controller
 
     public function addNote(Request $request, $id)
     {
-        $student = Student::where('id', $id)->first();
-        $instructor = Instructor::where('user_id', Auth::user()->id)->first();
-        if ($student != null && $instructor != null) {
-            $newnote = StudentNote::create([
-                'student_id' => $student->id,
-                'author_id' => $instructor->id,
-                'title' => $request->input('title'),
-                'content' => $request->input('content'),
-                'created_at' => Carbon::now()->toDateTimeString(),
-            ]);
+        $student = Student::where('id', $id)->firstOrFail();
 
-            return redirect('/dashboard/training/students/'.$student->id.'')->withSuccess('You have added a training note for '.$student->user->fullName('FLC').'');
-        } else {
-            return redirect('/dashboard/training/students/'.$student->id.'')->withError('You do not have sufficient permissions to do this!');
+        $success = (new VatcanService)->createNote(
+            $student->user->id,
+            $request->input('title'),
+            $request->input('content'),
+            Auth::user()->id
+        );
+
+        if ($success) {
+            return redirect()->route('training.students.view', $student->id)
+                ->withSuccess('Training note added for ' . $student->user->fullName('FLC') . '.');
         }
+
+        return redirect()->route('training.students.view', $student->id)
+            ->withError('Failed to save note via VATCAN API. Please try again.');
     }
 
     public function trainingTime()
@@ -136,158 +124,82 @@ class TrainingController extends Controller
             'created_at' => Carbon::now()->toDateTimeString(),
             'accepted_application' => $application->id,
             'entry_type' => $request->input('entry_type'),
+            'waitlist_added_at' => Carbon::now(),
         ]);
-        if ($instructor != null) {
-            $modules = CbtModule::all();
-            foreach ($modules as $module) {
-                if ($module->assignall == '1') {
-                    CbtModuleAssign::create([
-                        'cbt_module_id' => $module->id,
-                        'student_id' => $student->id,
-                        'instructor_id' => $student->instructor->id,
-                        'intro' => '1',
-                        'created_at' => Carbon::now()->toDateTimeString(),
-                    ]);
-                }
-            }
-        }
 
         return redirect('dashboard/training/students/'.$student->id.'')->withSuccess('Added New Student: '.$student->user->fullName('FLC').'');
     }
 
     public function currentStudents()
     {
-        $students = Student::where('status', '1')->get();
-        $potentialstudent = User::all();
+        $students = Student::whereNotNull('instructor_id')->orderBy('created_at', 'asc')->get();
         $instructors = Instructor::all();
 
-        return view('dashboard.training.students.current', compact('students', 'potentialstudent', 'instructors'));
-    }
-
-    public function completedStudents()
-    {
-        $students = Student::where('status', '2')->get();
-        $potentialstudent = User::all();
-        $instructors = Instructor::all();
-
-        return view('dashboard.training.students.current', compact('students', 'potentialstudent', 'instructors'));
+        return view('dashboard.training.students.current', compact('students', 'instructors'));
     }
 
     public function newStudents()
     {
-        $students = Student::where('status', '0')->get();
+        $students = Student::whereNull('instructor_id')
+            ->orderByRaw('waitlist_added_at IS NULL ASC')
+            ->orderBy('waitlist_added_at', 'asc')
+            ->get();
         $potentialstudent = User::all();
         $instructors = Instructor::all();
 
         return view('dashboard.training.students.waitlist', compact('students', 'potentialstudent', 'instructors'));
     }
 
+    public function activateWithInstructor(Request $request, $id)
+    {
+        $student = Student::where('id', $id)->firstOrFail();
+        $instructorId = $request->input('instructor');
+
+        $student->instructor_id = ($instructorId !== 'unassign' && $instructorId) ? $instructorId : null;
+        $student->status = '1';
+        $student->last_status_change = Carbon::now()->toDateTimeString();
+        $student->save();
+
+
+        return redirect()->route('training.students.waitlist')
+            ->withSuccess('Started training for ' . $student->user->fullName('FLC') . '.');
+    }
+
     public function viewStudent($id)
     {
-        $student = Student::where('id', $id)->firstorFail();
+        $student = Student::where('id', $id)->firstOrFail();
         $instructors = Instructor::all();
-        $modules2 = CbtModule::all();
-        $modules = CbtModuleAssign::where('student_id', $student->id)->get();
-        $exams = CbtExam::all();
-        $openexams = CbtExamAssign::where('student_id', $student->id)->get();
-        $completedexams = CbtExamResult::where('student_id', $student->id)->get();
-        $solo = SoloRequest::where('student_id', $student->id)->get();
+        $notes = (new VatcanService)->getNotes($student->user->id);
 
-        return view('dashboard.training.students.viewstudent', compact('modules2', 'solo', 'student', 'instructors', 'completedexams', 'exams', 'openexams', 'modules'));
+        return view('dashboard.training.students.viewstudent', compact('student', 'instructors', 'notes'));
     }
 
-    public function soloRequest(Request $request, $id)
-    {
-        $student = Student::whereId($id)->first();
-
-        SoloRequest::create([
-            'student_id' => $student->id,
-            'instructor_id' => $student->instructor->id,
-            'position' => $request->input('position'),
-            'approved' => '0',
-            'created_at' => Carbon::now()->toDateTimeString(),
-        ]);
-
-        return redirect()->back()->withSuccess('Solo request has been made!');
-    }
-
-    public function approveSoloRequest($id)
-    {
-        $solorequest = SoloRequest::whereId($id)->first();
-        $solorequest->approved = '1';
-        $solorequest->save();
-        $rosterupdate = RosterMember::where('user_id', $solorequest->student->user->id)->first();
-        if ($solorequest->position == 'Delivery') {
-            $rosterupdate->del = '3';
-            $rosterupdate->save();
-        } elseif ($solorequest->position == 'Ground') {
-            $rosterupdate->gnd = '3';
-            $rosterupdate->save();
-        } elseif ($solorequest->position == 'Tower') {
-            $rosterupdate->twr = '3';
-            $rosterupdate->save();
-        } elseif ($solorequest->position == 'Departure') {
-            $rosterupdate->dep = '3';
-            $rosterupdate->save();
-        } elseif ($solorequest->position == 'Arrival') {
-            $rosterupdate->app = '3';
-            $rosterupdate->save();
-        } elseif ($solorequest->position == 'Centre') {
-            $rosterupdate->ctr = '3';
-            $rosterupdate->save();
-        }
-        CbtNotification::create([
-            'student_id' => $solorequest->student_id,
-            'message' => 'You have been issued a Solo Certificate for '.$solorequest->position.'!',
-            'dismissed' => '0',
-        ]);
-        $positions = $solorequest->position;
-        $solorequest->student->user->notify(new SoloApproval($positions));
-
-        return redirect()->back()->withSuccess('Approved the solo request for '.$solorequest->student->user->fullName('FLC').'!');
-    }
-
-    public function denySoloRequest($id)
-    {
-        $solorequest = SoloRequest::whereId($id)->first();
-        $solorequest->approved = '2';
-        $solorequest->save();
-
-        return redirect()->back()->withError('You have denied the solo request for '.$solorequest->student->user->fullName('FLC').'!');
-    }
 
     public function changeStudentStatus(Request $request, $id)
     {
         $student = Student::where('id', $id)->firstorFail();
         if ($student != null) {
             $student->status = $request->input('status');
-            $student->save();
-        }
-        if ($student->status == '1') {
-            $modules = CbtModule::all();
-            foreach ($modules as $module) {
-                if ($module->assignall == '1') {
-                    $check = CbtModuleAssign::where([
-                        ['cbt_module_id', $module->id],
-                        ['student_id', $student->id],
-                    ])->first();
-                    if ($check == null) {
-                        CbtModuleAssign::create([
-                            'cbt_module_id' => $module->id,
-                            'student_id' => $student->id,
-                            'instructor_id' => $student->instructor->id,
-                            'intro' => '1',
-                            'created_at' => Carbon::now()->toDateTimeString(),
-                        ]);
-                    }
-                }
+            if ($request->input('status') == '0' && $student->waitlist_added_at === null) {
+                $student->waitlist_added_at = Carbon::now();
             }
+            $student->save();
         }
 
         return redirect()->back()->withSuccess('Sucessfully Changed The Status Of '.$student->user->fullName('FLC').'');
     }
 
     ///Nate Problem... worry about it
+    public function removeStudent($id)
+    {
+        $student = Student::where('id', $id)->firstOrFail();
+        $name = $student->user->fullName('FLC');
+        $student->delete();
+
+        return redirect()->route('training.students.waitlist')
+            ->withSuccess('Removed ' . $name . ' from the training system.');
+    }
+
     public function assignInstructorToStudent(Request $request, $id)
     {
         $student = Student::where('id', $id)->firstorFail();
@@ -403,12 +315,6 @@ class TrainingController extends Controller
         return redirect()->back()->withSuccess('Unassigned module sucessfully!');
     }
 
-    public function viewNote($id)
-    {
-        $note = StudentNote::where('id', $id)->firstorFail();
-
-        return view('dashboard.training.students.viewnote', compact('note'));
-    }
 
     public function viewApplication($application_id)
     {
@@ -430,6 +336,7 @@ class TrainingController extends Controller
                 'status' => '0',
                 'created_at' => Carbon::now()->toDateTimeString(),
                 'accepted_application' => $application->id,
+                'waitlist_added_at' => Carbon::now(),
             ]);
         }
 

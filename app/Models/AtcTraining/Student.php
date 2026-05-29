@@ -10,7 +10,11 @@ use Illuminate\Database\Eloquent\Model;
 class Student extends Model
 {
     protected $fillable = [
-        'user_id', 'status', 'instructor_id', 'last_status_change', 'accepted_application', 'entry_type',
+        'user_id', 'status', 'instructor_id', 'last_status_change', 'accepted_application', 'entry_type', 'waitlist_added_at',
+    ];
+
+    protected $casts = [
+        'waitlist_added_at' => 'datetime',
     ];
 
     public function user()

@@ -35,7 +35,18 @@
       "Bash(npm install *)",
       "Bash(findstr /i \"public/css\\\\|public/js\\\\|mix-manifest\")",
       "PowerShell(Get-ChildItem \"c:\\\\laragon\\\\www\\\\winnipegfir\" | Where-Object { $_.Name -ne 'node_modules' } | Select-Object Name)",
-      "WebFetch(domain:houston.center)"
+      "WebFetch(domain:houston.center)",
+      "Bash(Get-ChildItem -Path \"c:\\\\laragon\\\\www\\\\winnipegfir\\\\database\\\\migrations\" -Filter \"*instructor*\" -o Name)",
+      "WebFetch(domain:vatcan.ca)",
+      "WebSearch",
+      "WebFetch(domain:api.vatcan.ca)",
+      "WebFetch(domain:github.com)",
+      "PowerShell(\\(Get-Content c:\\\\laragon\\\\www\\\\winnipegfir\\\\.env\\) -replace 'VATCAN_API_URL=https://vatcan.vlhtesting.com', 'VATCAN_API_URL=https://api.vatcan.ca' | Set-Content c:\\\\laragon\\\\www\\\\winnipegfir\\\\.env)",
+      "PowerShell(\\(Get-Content c:\\\\laragon\\\\www\\\\winnipegfir\\\\.env\\) -replace 'VATCAN_API_URL=https://api.vatcan.ca', 'VATCAN_API_URL=https://vatcan.ca/api' | Set-Content c:\\\\laragon\\\\www\\\\winnipegfir\\\\.env)",
+      "PowerShell(\\(Get-Content c:\\\\laragon\\\\www\\\\winnipegfir\\\\.env\\) -replace 'VATCAN_API_URL=https://vatcan.ca/api', 'VATCAN_API_URL=https://vatcan.ca/api/v2' | Set-Content c:\\\\laragon\\\\www\\\\winnipegfir\\\\.env)"
+    ],
+    "additionalDirectories": [
+      "c:\\laragon\\www\\winnipegfir\\\nVATCAN_API_KEY=fYKopA4iUT1Ul5lG1GJz4lcjx6KYcILAS5jabHUq7dY3wgCUNQ\nVATCAN_API_URL=https:"
     ]
   }
 }
