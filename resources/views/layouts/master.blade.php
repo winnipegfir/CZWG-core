@@ -169,7 +169,7 @@
                             <div class="dropdown-menu" aria-labelledby="navDropPilots">
                                 <a class="dropdown-item" href="{{route('airports')}}">Airports</a>
                                 <a class="dropdown-item" href="{{route('pdc')}}">Pre-Departure Clearance</a>
-                                <a class="dropdown-item" href="https://simaware.ca" target="_blank">Live Map</a>
+                                <a class="dropdown-item" href="https://vatsim-radar.com" target="_blank">Live Map</a>
                             </div>
                         </li>
 
