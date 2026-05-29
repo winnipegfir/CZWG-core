@@ -70,10 +70,10 @@
                                 @endif
                             </td>
                             <td style="vertical-align:middle;">
-                                <div class="d-flex" style="gap:0.35rem;">
+                                <div class="d-flex align-items-center" style="gap:0.35rem;">
                                     <a href="{{ route('training.students.view', $student->id) }}" class="btn btn-sm btn-outline-secondary py-0 px-2" style="font-size:0.78rem;">View</a>
                                     @if(Auth::user()->permissions >= 4)
-                                    <form method="POST" action="{{ route('training.students.remove', $student->id) }}" onsubmit="return confirm('Remove {{ $student->user->fullName('FL') }} from the training system?')">
+                                    <form method="POST" action="{{ route('training.students.remove', $student->id) }}" onsubmit="return confirm('Remove {{ $student->user->fullName('FL') }}?')">
                                         @csrf @method('DELETE')
                                         <button type="submit" class="btn btn-sm btn-outline-danger py-0 px-2" style="font-size:0.78rem;">Remove</button>
                                     </form>

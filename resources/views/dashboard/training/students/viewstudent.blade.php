@@ -117,8 +117,18 @@
                         @endif
                     </p>
 
-                    @if($student->waitlist_added_at)
                     <p class="mb-1" style="font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:.4px; color:#94a3b8;">Waitlist Since</p>
+                    @if(Auth::user()->permissions >= 4)
+                    <form action="{{ route('training.students.waitlistdate', $student->id) }}" method="POST" class="mb-3">
+                        @csrf
+                        <div class="d-flex" style="gap:0.5rem;">
+                            <input type="date" name="waitlist_added_at" class="form-control form-control-sm flex-grow-1"
+                                value="{{ $student->waitlist_added_at ? $student->waitlist_added_at->format('Y-m-d') : '' }}"
+                                style="font-size:0.8rem; color:#495057;">
+                            <button type="submit" class="btn btn-sm btn-success flex-shrink-0" style="font-size:0.8rem;">Save</button>
+                        </div>
+                    </form>
+                    @elseif($student->waitlist_added_at)
                     <p class="mb-3" style="font-size:0.875rem; color:#122b44;">
                         {{ $student->waitlist_added_at->format('M j, Y') }}
                         <span class="text-muted">({{ $student->waitlist_added_at->diffForHumans() }})</span>

@@ -12,7 +12,6 @@ use App\Services\VatcanService;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 class TrainingController extends Controller
 {
@@ -103,31 +102,16 @@ class TrainingController extends Controller
             return redirect()->back()->withError('This student already exists in the system!');
         }
 
-        $instructor = null;
-        if ($request->input('instructor') != 'unassign') {
-            $instructor = $request->input('instructor');
-        }
-
-        $application = Application::create([
-            'user_id' => $request->input('student_id'),
-            'status' => '2',
-            'submitted_at' => Carbon::now()->toDateTimeString(),
-            'processed_at' => Carbon::now()->toDateTimeString(),
-            'processed_by' => Auth::user()->id,
-            'application_id' => Str::random(8),
-        ]);
         $student = Student::create([
             'user_id' => $request->input('student_id'),
-            'instructor_id' => $instructor,
             'status' => '0',
             'last_status_change' => Carbon::now()->toDateTimeString(),
-            'created_at' => Carbon::now()->toDateTimeString(),
-            'accepted_application' => $application->id,
             'entry_type' => $request->input('entry_type'),
             'waitlist_added_at' => Carbon::now(),
         ]);
 
-        return redirect('dashboard/training/students/'.$student->id.'')->withSuccess('Added New Student: '.$student->user->fullName('FLC').'');
+        return redirect()->route('training.students.waitlist')
+            ->withSuccess('Added ' . $student->user->fullName('FLC') . ' to the waitlist.');
     }
 
     public function currentStudents()
@@ -192,6 +176,17 @@ class TrainingController extends Controller
     }
 
     ///Nate Problem... worry about it
+    public function updateWaitlistDate(Request $request, $id)
+    {
+        $student = Student::where('id', $id)->firstOrFail();
+        $student->waitlist_added_at = $request->input('waitlist_added_at')
+            ? Carbon::parse($request->input('waitlist_added_at'))
+            : null;
+        $student->save();
+
+        return redirect()->back()->withSuccess('Waitlist date updated.');
+    }
+
     public function updateEntryType(Request $request, $id)
     {
         $student = Student::where('id', $id)->firstOrFail();
@@ -207,7 +202,7 @@ class TrainingController extends Controller
         $name = $student->user->fullName('FLC');
         $student->delete();
 
-        return redirect()->route('training.students.waitlist')
+        return redirect()->back()
             ->withSuccess('Removed ' . $name . ' from the training system.');
     }
 

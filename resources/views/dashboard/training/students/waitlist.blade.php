@@ -54,7 +54,7 @@
                             <th style="color:#64748b; font-weight:600;">Type</th>
                             <th style="color:#64748b; font-weight:600;">Added</th>
                             <th style="color:#64748b; font-weight:600;">Waiting</th>
-                            <th style="min-width:200px; color:#64748b; font-weight:600;"></th>
+                            <th style="width:100px;"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -94,30 +94,15 @@
                                 @endif
                             </td>
                             <td style="vertical-align:middle;">
-                                @if(Auth::user()->permissions >= 4)
-                                <form method="POST" action="{{ route('training.students.activate', $student->id) }}" class="d-flex align-items-center mb-1" style="gap:0.4rem;">
-                                    @csrf
-                                    <select name="instructor" class="form-control form-control-sm" style="font-size:0.8rem; max-width:160px; color:#495057; background:#fff; padding:.25rem .5rem;">
-                                        <option value="unassign">No instructor</option>
-                                        @foreach($instructors as $instructor)
-                                            <option value="{{ $instructor->id }}"
-                                                @if($student->instructor_id == $instructor->id) selected @endif>
-                                                {{ $instructor->user->fullName('FL') }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    <button type="submit" class="btn btn-sm btn-success" style="white-space:nowrap; font-size:0.8rem;">Start</button>
-                                </form>
-                                <div class="d-flex" style="gap:0.35rem;">
+                                <div class="d-flex align-items-center" style="gap:0.35rem;">
                                     <a href="{{ route('training.students.view', $student->id) }}" class="btn btn-sm btn-outline-secondary py-0 px-2" style="font-size:0.78rem;">View</a>
-                                    <form method="POST" action="{{ route('training.students.remove', $student->id) }}" onsubmit="return confirm('Remove {{ $student->user->fullName('FL') }} from the training system?')">
+                                    @if(Auth::user()->permissions >= 4)
+                                    <form method="POST" action="{{ route('training.students.remove', $student->id) }}" onsubmit="return confirm('Remove {{ $student->user->fullName('FL') }}?')">
                                         @csrf @method('DELETE')
                                         <button type="submit" class="btn btn-sm btn-outline-danger py-0 px-2" style="font-size:0.78rem;">Remove</button>
                                     </form>
+                                    @endif
                                 </div>
-                                @else
-                                <a href="{{ route('training.students.view', $student->id) }}" class="btn btn-sm btn-outline-secondary py-0 px-2" style="font-size:0.78rem;">View</a>
-                                @endif
                             </td>
                         </tr>
                         @endforeach
