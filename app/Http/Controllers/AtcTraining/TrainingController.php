@@ -81,7 +81,7 @@ class TrainingController extends Controller
             'waitTime' => 'required',
         ]);
 
-        $training_time = TrainingWaittime::where('id', 1)->first();
+        $training_time = TrainingWaittime::firstOrNew(['id' => 1]);
         $training_time->wait_length = $request->waitTime;
         $training_time->colour = $request->trainingTimeColour;
         $training_time->save();

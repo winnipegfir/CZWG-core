@@ -1,82 +1,259 @@
 @extends('layouts.master')
-@section('title', 'Training')
+@section('title', 'Training - Winnipeg FIR')
+@section('description', 'Learn about controller training at the Winnipeg FIR on VATSIM.')
 
 @php
-if (!$training_time)
-{
+if (!$training_time) {
     $training_time = (object) [
         'colour' => 'grey',
         'wait_length' => 'N/A'
     ];
 }
+$statusMap = [
+    'green'  => ['bg' => '#d4edda', 'border' => '#28a745', 'text' => '#155724', 'label' => 'Short Wait'],
+    'yellow' => ['bg' => '#fff3cd', 'border' => '#feba00', 'text' => '#856404', 'label' => 'Moderate Wait'],
+    'red'    => ['bg' => '#f8d7da', 'border' => '#dc3545', 'text' => '#721c24', 'label' => 'Long Wait'],
+    'grey'   => ['bg' => '#f1f3f5', 'border' => '#adb5bd', 'text' => '#6c757d', 'label' => 'Status Unknown'],
+];
+$status = $statusMap[$training_time->colour] ?? $statusMap['grey'];
 @endphp
 
 @section('content')
-    <div class="container pt-2 pb-0">
-        <h1 class="blue-text font-weight-bold">Controller Training</h1>
-    </div>
-    <div class="row w-100" style="background-color: {{$training_time->colour}};{{$training_time->colour=='yellow' ? 'background-color: #feba00; color: black':'color: white'}}">
-        <div class="container mb-2 mt-3 text-center">
-            <h2 class="font-weight-bold mb-0">Current Estimated Instructor Linking Wait time:</h2>
-            <h5>{{$training_time->wait_length}}</h5>
-            @if(Auth::check() && Auth::user()->permissions >= 4)
-            <h3 class="ml-0 btn btn-sm btn-primary" data-toggle="modal" data-target="#waitEdit">Wait Time Editor</h3>
-            @endif
-        </div>
+<style>
+.training-wrap {
+    background: #f6f8fa;
+    min-height: calc(100vh - 60px);
+    padding: 2.5rem 0 3rem;
+}
+.training-container {
+    padding: 0 1rem;
+}
+
+/* ── Hero ─────────────────────────────────── */
+.training-hero {
+    margin-bottom: 2rem;
+}
+.training-hero h1 {
+    font-size: 2.6rem;
+    font-weight: 800;
+    color: #122b44;
+    margin-bottom: 0.6rem;
+}
+.training-hero p {
+    color: #6c757d;
+    font-size: 0.95rem;
+    max-width: 680px;
+    line-height: 1.65;
+    margin: 0;
+}
+
+/* ── Wait time banner ─────────────────────── */
+.wait-banner {
+    border-radius: 10px;
+    border: 1px solid;
+    padding: 1.1rem 1.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 2.25rem;
+}
+.wait-banner-left { display: flex; align-items: center; gap: 1rem; }
+.wait-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+.wait-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0.65;
+    display: block;
+    margin-bottom: 0.1rem;
+}
+.wait-value {
+    font-size: 1.05rem;
+    font-weight: 700;
+}
+
+/* ── Content cards ────────────────────────── */
+.section-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(0,0,0,0.3);
+    margin-bottom: 1rem;
+}
+.training-card {
+    background: #fff;
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    padding: 1.4rem 1.6rem;
+    margin-bottom: 1rem;
+}
+.training-card h3 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #122b44;
+    margin: 0 0 0.6rem;
+}
+.training-card p {
+    font-size: 0.875rem;
+    color: #495057;
+    line-height: 1.7;
+    margin: 0;
+}
+.training-card p + p { margin-top: 0.6rem; }
+.training-card a { color: #122b44; font-weight: 600; }
+
+/* ── Big join CTA ────────────────────────── */
+.join-cta-big {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #122b44;
+    color: #fff;
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 0.9rem 1.5rem;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: background 0.15s;
+    margin-bottom: 0;
+}
+.join-cta-big:hover { background: #1a3d5e; color: #fff; text-decoration: none; }
+
+/* ── Footer ───────────────────────────────── */
+.training-footer {
+    margin-top: 1rem;
+    padding-top: 0;
+    border-top: none;
+}
+.training-footer a {
+    color: #122b44;
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-decoration: none;
+}
+.training-footer a:hover { text-decoration: underline; }
+.training-footer .muted-link {
+    display: block;
+    margin-top: 0.75rem;
+    font-size: 0.8rem;
+    color: #6c757d;
+    font-weight: 400;
+    text-decoration: none;
+}
+.training-footer .muted-link:hover { text-decoration: underline; }
+
+/* ── Admin button ─────────────────────────── */
+.admin-edit-btn {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.3rem 0.75rem;
+    border-radius: 5px;
+    border: 1px solid currentColor;
+    background: transparent;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.15s;
+}
+.admin-edit-btn:hover { opacity: 1; }
+
+@media (max-width: 600px) {
+    .training-hero h1 { font-size: 1.8rem; }
+}
+</style>
+
+<div class="training-wrap">
+<div class="container training-container">
+
+    <div class="training-hero">
+        <h1>Controller Training</h1>
+        <p>Everything you need to know about getting on the scope at the Winnipeg FIR — our training platform, wait times, and what to expect.</p>
     </div>
 
-    <div class="container" style="margin-top: 20px;">
-        <div>
-            <h3 class="font-weight-bold blue-text">Training, on Your Schedule.</h3>
-                <p>For many years, VATSIM controllers-to-be have had the same pathway to getting on the scope - join their FIR of choice, then wait for an instructor to become available. This causes bottlenecks, and we wanted to find a way to fix that. That's when the Winnipeg team created <a href="https://training.winnipegfir.ca">Winnipeg365</a> - a brand new, state of the art and robust online training platform, built for both instructors <i>and</i> students.
-                The best feature of Winnipeg365? As a new student, you don't have to sit around and wait.</p>
-                <p>Once you are accepted into the FIR (typically only taking a few days), you will automatically be enrolled into the system - and will be eligible to get right into the fundamentals. From the laws of aviation, to taxiing and aircraft for the first time, Winnipeg365 has it all. And while you'll still have to wait for an instructor before heading onto the network to control, this platform speeds that up for everyone - and we all love when things are done quickly and properly!</p>
-        </div>
-        <hr>
-        <div>
-            <h3 class="font-weight-bold blue-text">Interested In Joining Winnipeg?</h3>
-                <p>Come join the community of students, controllers and instructors in Winnipeg today by clicking <a href="{{url('/join')}}">here.</a></p>
-        </div>
-        <hr>
-        <div>
-            <h4 class="font-weight-bold blue-text">Looking to Visit?</h4>
-                <p>Visiting controllers are provided training based on instructor availability, similar to standard home controllers and students. However, Winnipeg's home controllers always hold priority, so we ask for (and appreciate) your patience during what can sometimes be a lengthy waiting period. That said, we're always happy to welcome a new face to our team - even if you're not a Winnipeg home controller! Head <a href="{{url('/join')}}">here</a> for more info.</p>
-        </div>
-        <hr>
-            <p>Questions? <a href="{{route('staff')}}">Contact our Chief Instructor!</a></p>
-    </div>
-
-@if(Auth::check() && Auth::user()->permissions >= 4)
-
-<!-- Start Time Editor modal -->
-    <div class="modal fade" id="waitEdit" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Colour/Time Editor</h5>
-                </div>
-                <form method="POST" action="{{route('waittime.edit')}}">
-                    @csrf
-                    <div class="modal-body">
-                        <h5 class="font-weight-bold blue-text mb-0">Wait Time:</h5>
-                            <input name="waitTime" class="form-control" value="{{$training_time->wait_length}}" placeholder="1 Week">
-                        <br>
-                        <h5 class="font-weight-bold blue-text mb-0">Colour:</h5>
-                        <select name="trainingTimeColour" id="trainingTimeColourSelect" class="form-control">
-                            <option value="green" class="btn-green" {{$training_time->colour == 'green' ? 'selected=selected' : ''}}>Green</option>
-                            <option value="yellow" class="btn-yellow" {{$training_time->colour == 'yellow' ? 'selected=selected' : ''}}>Yellow</option>
-                            <option value="red" class="btn-red" {{$training_time->colour == 'red' ? 'selected=selected' : ''}}>Red</option>
-                        </select>
-                    </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-success">Edit</button>
-                        <button class="btn btn-light" data-dismiss="modal">Dismiss</button>
-                    </div>
-                </form>
+    {{-- Wait time banner --}}
+    <div class="section-label">Current Instructor Linking Estimated Wait</div>
+    <div class="wait-banner" style="background:{{ $status['bg'] }};border-color:{{ $status['border'] }};">
+        <div class="wait-banner-left">
+            <div class="wait-dot" style="background:{{ $status['border'] }};"></div>
+            <div>
+                <span class="wait-value" style="color:{{ $status['text'] }};">{{ $training_time->wait_length }}</span>
+                @if(isset($training_time->updated_at) && $training_time->updated_at)
+                <span style="display:block;font-size:0.72rem;color:{{ $status['text'] }};opacity:0.55;margin-top:0.15rem;">Last updated: {{ \Carbon\Carbon::parse($training_time->updated_at)->format('F j, Y') }}</span>
+                @endif
             </div>
         </div>
+        @if(Auth::check() && Auth::user()->permissions >= 4)
+        <button class="admin-edit-btn" style="color:{{ $status['text'] }};" data-toggle="modal" data-target="#waitEdit">
+            <i class="fas fa-pencil-alt fa-xs" style="margin-right:0.3rem;"></i> Edit
+        </button>
+        @endif
     </div>
-<!-- End Time Editor modal -->
+    
+    <h3 style="font-size:1.05rem;font-weight:700;color:#122b44;margin:0 0 0.6rem;">Training, on Your Schedule</h3>
+    <p style="font-size:0.875rem;color:#495057;line-height:1.7;margin:0;">For many years, VATSIM controllers-to-be had the same pathway to getting on the scope — join a FIR, then wait for an instructor to become available. That causes bottlenecks, and the Winnipeg team built <a href="https://training.winnipegfir.ca" target="_blank" rel="noopener noreferrer" style="color:#122b44;font-weight:600;">Winnipeg365</a> to fix that: a state-of-the-art online training platform built for both students and instructors.</p>
+    <p style="font-size:0.875rem;color:#495057;line-height:1.7;margin:0.6rem 0 2rem;">Once accepted into the FIR — typically only a few days — you're automatically enrolled and can get right into the fundamentals: the laws of aviation, taxiing, aircraft types, and more. You'll still need to wait for an instructor before controlling live on the network, but Winnipeg365 speeds that process up for everyone.</p>
 
+    <div style="display:flex;gap:1rem;margin-bottom:1rem;flex-wrap:wrap;">
+        <div class="training-card" style="flex:1;min-width:220px;margin-bottom:0;">
+            <h3>Interested in Joining?</h3>
+            <p>Ready to start your controlling career? Follow our step-by-step guide to create your VATSIM account, join VATCAN, and transfer to the Winnipeg FIR.</p>
+        </div>
+        <div class="training-card" style="flex:1;min-width:220px;margin-bottom:0;">
+            <h3>Visiting Controllers</h3>
+            <p>Visiting controllers receive training based on instructor availability. Winnipeg's home controllers hold priority, so we appreciate your patience — but we're always happy to welcome a new face.</p>
+        </div>
+    </div>
+
+    <a href="{{ url('/join') }}" class="join-cta-big">
+        Join the Winnipeg FIR <i class="fas fa-arrow-right fa-sm" style="margin-left:0.4rem;"></i>
+    </a>
+
+    <div class="training-footer">
+        <a href="{{ route('staff') }}" class="muted-link" style="margin-top:0;">Questions? Contact our Chief Instructor</a>
+    </div>
+
+</div>
+</div>
+
+@if(Auth::check() && Auth::user()->permissions >= 4)
+<div class="modal fade" id="waitEdit" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title font-weight-bold">Wait Time Editor</h5>
+            </div>
+            <form method="POST" action="{{ route('waittime.edit') }}">
+                @csrf
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="font-weight-bold" style="font-size:0.875rem;">Wait Time</label>
+                        <input name="waitTime" class="form-control" value="{{ $training_time->wait_length }}" placeholder="e.g. 1 Week">
+                    </div>
+                    <div>
+                        <label class="font-weight-bold" style="font-size:0.875rem;">Status Colour</label>
+                        <select name="trainingTimeColour" class="form-control">
+                            <option value="green"  {{ $training_time->colour == 'green'  ? 'selected' : '' }}>Green — Short Wait</option>
+                            <option value="yellow" {{ $training_time->colour == 'yellow' ? 'selected' : '' }}>Yellow — Moderate Wait</option>
+                            <option value="red"    {{ $training_time->colour == 'red'    ? 'selected' : '' }}>Red — Long Wait</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success btn-sm">Save</button>
+                    <button type="button" class="btn btn-light btn-sm" data-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 @endif
+
 @endsection

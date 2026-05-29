@@ -10,9 +10,7 @@
     padding: 2.5rem 0 3rem;
 }
 .join-container {
-    max-width: 860px;
-    margin: 0 auto;
-    padding: 0 1.5rem;
+    padding: 0 1rem;
 }
 
 /* ── Hero ─────────────────────────────────── */
@@ -194,7 +192,7 @@
 </style>
 
 <div class="join-wrap">
-<div class="join-container">
+<div class="container join-container">
 
     <div class="join-hero">
         <h1>Join the Winnipeg FIR</h1>
