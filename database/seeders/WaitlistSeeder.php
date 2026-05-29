@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\AtcTraining\Student;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class WaitlistSeeder extends Seeder
 {
@@ -43,6 +44,8 @@ class WaitlistSeeder extends Seeder
 
         $skipped = [];
 
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+
         foreach ($students as $s) {
             $existing = Student::where('user_id', $s['cid'])->first();
             if ($existing) {
@@ -61,6 +64,8 @@ class WaitlistSeeder extends Seeder
                 'updated_at'       => Carbon::parse($s['date']),
             ]);
         }
+
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         $this->command->info('Seeded ' . (count($students) - count($skipped)) . ' students.');
         if ($skipped) {
