@@ -218,8 +218,9 @@ class TrainingController extends Controller
         $student->save();
 
 
+        $name = $student->user ? $student->user->fullName('FLC') : 'CID ' . $student->user_id;
         return redirect()->route('training.students.waitlist')
-            ->withSuccess('Started training for ' . $student->user->fullName('FLC') . '.');
+            ->withSuccess('Started training for ' . $name . '.');
     }
 
     public function viewStudent($id)
@@ -245,7 +246,8 @@ class TrainingController extends Controller
             $student->save();
         }
 
-        return redirect()->back()->withSuccess('Sucessfully Changed The Status Of '.$student->user->fullName('FLC').'');
+        $name = $student->user ? $student->user->fullName('FLC') : 'CID ' . $student->user_id;
+        return redirect()->back()->withSuccess('Successfully Changed The Status Of ' . $name . '.');
     }
 
     ///Nate Problem... worry about it
@@ -282,7 +284,7 @@ class TrainingController extends Controller
     public function removeStudent($id)
     {
         $student = Student::where('id', $id)->firstOrFail();
-        $name = $student->user->fullName('FLC');
+        $name = $student->user ? $student->user->fullName('FLC') : 'CID ' . $student->user_id;
         $student->delete();
 
         return redirect()->back()
