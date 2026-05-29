@@ -293,7 +293,7 @@ class TrainingController extends Controller
         $name = $student->user ? $student->user->fullName('FLC') : 'CID ' . $student->user_id;
         $student->delete();
 
-        return redirect()->back()
+        return redirect()->route('training.students.waitlist')
             ->withSuccess('Removed ' . $name . ' from the training system.');
     }
 
