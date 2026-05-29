@@ -55,7 +55,7 @@ class DashboardController extends Controller
         $atcResources = AtcResource::all()->sortBy('title');
 
         if ($user->permissions == 0) {
-            return view('dashboard.index2', compact('openTickets', 'confirmedevent', 'cbtnotifications'));
+            return view('dashboard.index2', compact('openTickets', 'confirmedevent', 'cbtnotifications', 'yourinstructor', 'waitlistPosition'));
         } else {
             return view('dashboard.index', compact('event', 'potentialRosterMember', 'yourinstructor', 'waitlistPosition', 'openTickets', 'staffTickets', 'certification', 'active', 'atcResources', 'unconfirmedapp', 'confirmedapp', 'confirmedevent', 'cbtnotifications'));
         }
