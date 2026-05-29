@@ -180,7 +180,7 @@ document.querySelectorAll('.row-check').forEach(c => c.addEventListener('change'
 {{-- Add to Waitlist Modal (staff only) --}}
 @if(Auth::user()->permissions >= 4)
 <div class="modal fade" id="newStudent" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+    <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title font-weight-bold" style="color:#122b44;">Add Student to Waitlist</h5>
@@ -220,10 +220,11 @@ document.querySelectorAll('.row-check').forEach(c => c.addEventListener('change'
 @endif
 
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<style>.select2-container { width: 100% !important; }</style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 <script>
     $(document).ready(function () {
-        $('.js-example-basic-single').select2({ dropdownParent: $('#newStudent') });
+        $('.js-example-basic-single').select2({ dropdownParent: $('#newStudent'), width: '100%' });
     });
 </script>
 

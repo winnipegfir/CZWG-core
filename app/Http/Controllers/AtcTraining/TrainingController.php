@@ -24,7 +24,20 @@ class TrainingController extends Controller
             $yourStudents = Student::where('instructor_id', $instructor->id)->get();
         }
 
-        return view('dashboard.training.indexinstructor', compact('yourStudents'));
+        $longestWaiting = Student::whereNull('instructor_id')
+            ->whereNotNull('waitlist_added_at')
+            ->orderBy('waitlist_added_at', 'asc')
+            ->first();
+
+        $recentActivity = Student::orderBy('updated_at', 'desc')->limit(5)->get();
+
+        $waitlistBreakdown = [
+            'home'     => Student::whereNull('instructor_id')->where('entry_type', 'New Student')->count(),
+            'visiting' => Student::whereNull('instructor_id')->where('entry_type', 'New Visitor')->count(),
+            'transfer' => Student::whereNull('instructor_id')->where('entry_type', 'New Transfer')->count(),
+        ];
+
+        return view('dashboard.training.indexinstructor', compact('yourStudents', 'longestWaiting', 'recentActivity', 'waitlistBreakdown'));
     }
 
     public function newNoteView($id)
