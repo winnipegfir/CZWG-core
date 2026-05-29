@@ -295,6 +295,7 @@ Route::prefix('dashboard/training')->middleware('instructor')->group(function ()
     Route::get('/students/completed', 'AtcTraining\TrainingController@completedStudents')->name('training.students.completed');
     Route::get('/students/waitlist', 'AtcTraining\TrainingController@newStudents')->name('training.students.waitlist');
     Route::post('/students/add', 'AtcTraining\TrainingController@newStudent')->name('instructor.student.add.new');
+    Route::post('/students/add-linked', 'AtcTraining\TrainingController@newLinkedStudent')->name('training.students.add.linked');
     Route::post('/students/bulk-remove', 'AtcTraining\TrainingController@bulkRemoveStudents')->name('training.students.bulkremove');
     Route::get('/students/{id}', 'AtcTraining\TrainingController@viewStudent')->name('training.students.view');
     Route::post('/students/{id}/assigninstructor', 'AtcTraining\TrainingController@assignInstructorToStudent')->name('training.students.assigninstructor');

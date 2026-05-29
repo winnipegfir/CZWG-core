@@ -152,8 +152,36 @@ class TrainingController extends Controller
     {
         $students = Student::whereNotNull('instructor_id')->orderBy('created_at', 'asc')->get();
         $instructors = Instructor::all();
+        $potentialstudent = User::where('id', '!=', 1)->orderBy('lname')->get();
 
-        return view('dashboard.training.students.current', compact('students', 'instructors'));
+        return view('dashboard.training.students.current', compact('students', 'instructors', 'potentialstudent'));
+    }
+
+    public function newLinkedStudent(Request $request)
+    {
+        $userId = $request->input('add_method') === 'cid'
+            ? (int) $request->input('cid_input')
+            : (int) $request->input('student_id');
+
+        $check = Student::where('user_id', $userId)->first();
+        if ($check != null) {
+            return redirect()->back()->withError('This student already exists in the system!');
+        }
+
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+        $student = Student::create([
+            'user_id'            => $userId,
+            'status'             => '1',
+            'instructor_id'      => $request->input('instructor_id') ?: null,
+            'last_status_change' => Carbon::now()->toDateTimeString(),
+            'entry_type'         => $request->input('entry_type'),
+            'waitlist_added_at'  => null,
+        ]);
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+
+        $name = $student->user ? $student->user->fullName('FLC') : 'CID ' . $userId;
+        return redirect()->route('training.students.current')
+            ->withSuccess('Added ' . $name . ' as a linked student.');
     }
 
     public function newStudents(Request $request)

@@ -18,8 +18,8 @@
                 {{ $student->user->rating->getLongName() }} ({{ $student->user->rating->getShortName() }})
                 &nbsp;&middot;&nbsp;
                 @if($student->entry_type == 'New Student') Home Student
-                @elseif($student->entry_type == 'New Visitor') Visiting Student
-                @elseif($student->entry_type == 'New Transfer') Transfer Student
+                @elseif($student->entry_type == 'New Visitor') Visiting Controller
+                @elseif($student->entry_type == 'New Transfer') Transfer Controller
                 @else {{ $student->entry_type }}
                 @endif
             </p>
@@ -99,8 +99,8 @@
                         <div class="d-flex" style="gap:0.5rem;">
                             <select name="entry_type" class="form-control form-control-sm flex-grow-1" style="font-size:0.8rem; color:#495057; background:#fff; padding:.25rem .5rem;">
                                 <option value="New Student" {{ $student->entry_type == 'New Student' ? 'selected' : '' }}>Home Student</option>
-                                <option value="New Visitor" {{ $student->entry_type == 'New Visitor' ? 'selected' : '' }}>Visiting Student</option>
-                                <option value="New Transfer" {{ $student->entry_type == 'New Transfer' ? 'selected' : '' }}>Transfer Student</option>
+                                <option value="New Visitor" {{ $student->entry_type == 'New Visitor' ? 'selected' : '' }}>Visiting Controller</option>
+                                <option value="New Transfer" {{ $student->entry_type == 'New Transfer' ? 'selected' : '' }}>Transfer Controller</option>
                             </select>
                             <button type="submit" class="btn btn-sm btn-success flex-shrink-0" style="font-size:0.8rem;">Save</button>
                         </div>

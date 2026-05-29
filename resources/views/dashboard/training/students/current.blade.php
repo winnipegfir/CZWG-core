@@ -13,6 +13,11 @@
             <h2 class="font-weight-bold mb-0" style="color:#122b44;">Linked Students</h2>
             <p class="text-muted mb-0" style="font-size:0.875rem;">{{ $students->count() }} student{{ $students->count() != 1 ? 's' : '' }}</p>
         </div>
+        @if(Auth::user()->permissions >= 4)
+        <button type="button" class="btn btn-sm btn-primary ml-auto" data-toggle="modal" data-target="#addLinkedStudent">
+            <i class="fas fa-plus fa-xs mr-1"></i> Add Student
+        </button>
+        @endif
     </div>
 
     @if($students->isEmpty())
@@ -74,7 +79,7 @@
                                 @if($student->entry_type == 'New Student')
                                     <span style="background:#dbeafe; color:#1d4ed8; font-size:0.72rem; font-weight:700; padding:0.2em 0.55em; border-radius:0.3rem;">Home</span>
                                 @elseif($student->entry_type == 'New Visitor')
-                                    <span style="background:#e0f2fe; color:#0369a1; font-size:0.72rem; font-weight:700; padding:0.2em 0.55em; border-radius:0.3rem;">Visiting</span>
+                                    <span style="background:#dcfce7; color:#15803d; font-size:0.72rem; font-weight:700; padding:0.2em 0.55em; border-radius:0.3rem;">Visiting</span>
                                 @elseif($student->entry_type == 'New Transfer')
                                     <span style="background:#f3e8ff; color:#7e22ce; font-size:0.72rem; font-weight:700; padding:0.2em 0.55em; border-radius:0.3rem;">Transfer</span>
                                 @else
@@ -109,6 +114,87 @@
 
 </div>
 </div>
+
+@if(Auth::user()->permissions >= 4)
+<div class="modal fade" id="addLinkedStudent" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title font-weight-bold" style="color:#122b44;">Add Linked Student</h5>
+                <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+            </div>
+            <form method="POST" action="{{ route('training.students.add.linked') }}">
+                @csrf
+                <input type="hidden" name="add_method" id="linkedAddMethod" value="existing">
+                <div class="modal-body">
+                    <div class="btn-group btn-group-sm w-100 mb-3" role="group">
+                        <button type="button" class="btn btn-primary" id="linkedTabExisting" onclick="setLinkedMethod('existing')">Existing User</button>
+                        <button type="button" class="btn btn-outline-primary" id="linkedTabCid" onclick="setLinkedMethod('cid')">By CID</button>
+                    </div>
+
+                    <div id="linkedPanelExisting">
+                        <div class="form-group mb-3">
+                            <label class="font-weight-bold small">Student</label>
+                            <select name="student_id" class="js-linked-select form-control">
+                                @foreach($potentialstudent as $u)
+                                    <option value="{{ $u->id }}">{{ $u->id }} &mdash; {{ $u->fullName('FL') }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="linkedPanelCid" style="display:none;">
+                        <div class="form-group mb-3">
+                            <label class="font-weight-bold small">VATSIM CID</label>
+                            <input type="number" name="cid_input" class="form-control" placeholder="e.g. 1234567">
+                            <small class="text-muted">Their name will appear automatically once they log in.</small>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="font-weight-bold small">Entry Type</label>
+                        <select name="entry_type" class="form-control">
+                            <option value="New Student">New Student (Home)</option>
+                            <option value="New Visitor">New Visitor</option>
+                            <option value="New Transfer">New Transfer</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group mb-0">
+                        <label class="font-weight-bold small">Instructor</label>
+                        <select name="instructor_id" class="form-control">
+                            <option value="">— None —</option>
+                            @foreach($instructors as $i)
+                                <option value="{{ $i->id }}">{{ $i->user->fullName('FL') }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Student</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<style>.select2-container { width: 100% !important; }</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.js-linked-select').select2({ dropdownParent: $('#addLinkedStudent'), width: '100%' });
+    });
+    function setLinkedMethod(method) {
+        document.getElementById('linkedAddMethod').value = method;
+        document.getElementById('linkedPanelExisting').style.display = method === 'existing' ? '' : 'none';
+        document.getElementById('linkedPanelCid').style.display = method === 'cid' ? '' : 'none';
+        document.getElementById('linkedTabExisting').className = method === 'existing' ? 'btn btn-primary' : 'btn btn-outline-primary';
+        document.getElementById('linkedTabCid').className = method === 'cid' ? 'btn btn-primary' : 'btn btn-outline-primary';
+    }
+</script>
+@endif
 
 @if(Auth::user()->permissions >= 4)
 <script>
