@@ -47,7 +47,8 @@
       "Bash(Get-Content \"c:\\\\laragon\\\\www\\\\winnipegfir\\\\storage\\\\logs\\\\laravel.log\" -Tail 50)",
       "Bash(tail -100 /var/www/winnipegfir.ca/storage/logs/laravel.log 2>/dev/null || echo \"not found\")",
       "Read(//var/www/winnipegfir.ca/storage/logs/**)",
-      "Bash(Select-String -Path \"C:\\\\laragon\\\\www\\\\winnipegfir\\\\routes\\\\web.php\" -Pattern \"Route::.*training\" -Context 3,3)"
+      "Bash(Select-String -Path \"C:\\\\laragon\\\\www\\\\winnipegfir\\\\routes\\\\web.php\" -Pattern \"Route::.*training\" -Context 3,3)",
+      "Bash(Select-String -Path \"C:\\\\laragon\\\\www\\\\winnipegfir\\\\.env\" -Pattern \"CONNECT_|APP_DEBUG|APP_URL\")"
     ],
     "additionalDirectories": [
       "c:\\laragon\\www\\winnipegfir\\\nVATCAN_API_KEY=fYKopA4iUT1Ul5lG1GJz4lcjx6KYcILAS5jabHUq7dY3wgCUNQ\nVATCAN_API_URL=https:"

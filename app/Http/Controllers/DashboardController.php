@@ -21,9 +21,15 @@ class DashboardController extends Controller
         //  $allusers = User::all();
         $yourinstructor = Student::where('user_id', $user->id)->first();
         $waitlistPosition = null;
+        $waitlistTypeTotal = null;
         if ($yourinstructor && $yourinstructor->status == 0 && $yourinstructor->waitlist_added_at) {
             $waitlistPosition = Student::where('status', 0)
+                ->where('entry_type', $yourinstructor->entry_type)
                 ->where('waitlist_added_at', '<=', $yourinstructor->waitlist_added_at)
+                ->whereNotNull('waitlist_added_at')
+                ->count();
+            $waitlistTypeTotal = Student::where('status', 0)
+                ->where('entry_type', $yourinstructor->entry_type)
                 ->whereNotNull('waitlist_added_at')
                 ->count();
         }
@@ -55,9 +61,9 @@ class DashboardController extends Controller
         $atcResources = AtcResource::all()->sortBy('title');
 
         if ($user->permissions == 0) {
-            return view('dashboard.index2', compact('openTickets', 'confirmedevent', 'cbtnotifications', 'yourinstructor', 'waitlistPosition'));
+            return view('dashboard.index2', compact('openTickets', 'confirmedevent', 'cbtnotifications', 'yourinstructor', 'waitlistPosition', 'waitlistTypeTotal'));
         } else {
-            return view('dashboard.index', compact('event', 'potentialRosterMember', 'yourinstructor', 'waitlistPosition', 'openTickets', 'staffTickets', 'certification', 'active', 'atcResources', 'unconfirmedapp', 'confirmedapp', 'confirmedevent', 'cbtnotifications'));
+            return view('dashboard.index', compact('event', 'potentialRosterMember', 'yourinstructor', 'waitlistPosition', 'waitlistTypeTotal', 'openTickets', 'staffTickets', 'certification', 'active', 'atcResources', 'unconfirmedapp', 'confirmedapp', 'confirmedevent', 'cbtnotifications'));
         }
     }
 

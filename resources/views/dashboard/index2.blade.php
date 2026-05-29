@@ -112,9 +112,19 @@
                             <div style="background:#fef3c7; border-radius:0.5rem; padding:0.75rem 1rem;">
                                 <p class="mb-1" style="font-size:0.78rem; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; color:#92400e;">Waitlist Status</p>
                                 @if($waitlistPosition)
+                                    @php
+                                        $waitlistTypeLabel = match($yourinstructor->entry_type) {
+                                            'New Student' => 'Home',
+                                            'New Visitor' => 'Visitor',
+                                            'New Transfer' => 'Transfer',
+                                            default => $yourinstructor->entry_type,
+                                        };
+                                    @endphp
                                     <p class="mb-0" style="font-size:1.4rem; font-weight:700; color:#92400e; line-height:1.2;">
                                         #{{ $waitlistPosition }}
-                                        <span style="font-size:0.8rem; font-weight:400; color:#b45309;"> on the waitlist</span>
+                                        <span style="font-size:0.8rem; font-weight:400; color:#b45309;"> among {{ $waitlistTypeLabel }} students
+                                            @if($waitlistTypeTotal) ({{ $waitlistTypeTotal }} total)@endif
+                                        </span>
                                     </p>
                                     @if($yourinstructor->waitlist_added_at)
                                         <p class="mb-0 mt-1" style="font-size:0.78rem; color:#b45309;">
