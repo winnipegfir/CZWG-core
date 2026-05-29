@@ -196,6 +196,16 @@ class TrainingController extends Controller
         return redirect()->back()->withSuccess('Entry type updated.');
     }
 
+    public function bulkRemoveStudents(Request $request)
+    {
+        $ids = $request->input('student_ids', []);
+        if (!empty($ids)) {
+            Student::whereIn('id', $ids)->delete();
+        }
+
+        return redirect()->back()->withSuccess(count($ids) . ' student(s) removed from the training system.');
+    }
+
     public function removeStudent($id)
     {
         $student = Student::where('id', $id)->firstOrFail();

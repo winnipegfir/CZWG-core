@@ -15,7 +15,6 @@
         </div>
     </div>
 
-
     @if($students->isEmpty())
         <div class="card">
             <div class="card-body text-center text-muted py-5">
@@ -24,11 +23,25 @@
             </div>
         </div>
     @else
-        <div class="card" style="overflow:hidden;">
+        @if(Auth::user()->permissions >= 4)
+        <form method="POST" action="{{ route('training.students.bulkremove') }}" id="bulkForm" onsubmit="return confirm('Remove selected students from the training system?')">
+            @csrf
+            <div id="bulkBar" style="display:none; background:#fee2e2; border:1px solid #fecaca; border-radius:0.5rem; padding:0.6rem 1rem; margin-bottom:0.75rem; align-items:center; gap:0.75rem;">
+                <span id="bulkCount" style="font-size:0.875rem; color:#b91c1c; font-weight:600;"></span>
+                <button type="submit" class="btn btn-sm btn-danger py-0 px-3" style="font-size:0.8rem;">Remove Selected</button>
+                <button type="button" class="btn btn-sm btn-light py-0 px-2" style="font-size:0.8rem;" onclick="clearSelection()">Clear</button>
+            </div>
+        @endif
+        <div class="card">
             <div class="table-responsive">
                 <table class="table table-hover mb-0" style="font-size:0.875rem;">
                     <thead style="background:#f8fafc; border-bottom:2px solid #e2e8f0;">
                         <tr>
+                            @if(Auth::user()->permissions >= 4)
+                            <th style="width:36px; border-top:none;">
+                                <input type="checkbox" id="selectAll" style="cursor:pointer;">
+                            </th>
+                            @endif
                             <th style="color:#64748b; font-weight:600; border-top:none;">Student</th>
                             <th style="color:#64748b; font-weight:600; border-top:none;">Rating</th>
                             <th style="color:#64748b; font-weight:600; border-top:none;">Type</th>
@@ -39,6 +52,11 @@
                     <tbody>
                         @foreach($students as $student)
                         <tr>
+                            @if(Auth::user()->permissions >= 4)
+                            <td style="vertical-align:middle;">
+                                <input type="checkbox" name="student_ids[]" value="{{ $student->id }}" class="row-check" style="cursor:pointer;">
+                            </td>
+                            @endif
                             <td style="vertical-align:middle;">
                                 <div class="d-flex align-items-center">
                                     <img src="{{ $student->user->avatar() }}" style="width:34px; height:34px; border-radius:50%; object-fit:cover; border:1px solid #e2e8f0; margin-right:0.65rem; flex-shrink:0;">
@@ -86,8 +104,45 @@
                 </table>
             </div>
         </div>
+        @if(Auth::user()->permissions >= 4)
+        </form>
+        @endif
     @endif
 
 </div>
 </div>
+
+@if(Auth::user()->permissions >= 4)
+<script>
+const selectAll = document.getElementById('selectAll');
+const bulkBar = document.getElementById('bulkBar');
+const bulkCount = document.getElementById('bulkCount');
+
+function updateBulkBar() {
+    const checked = document.querySelectorAll('.row-check:checked');
+    if (checked.length > 0) {
+        bulkBar.style.display = 'flex';
+        bulkCount.textContent = checked.length + ' student' + (checked.length > 1 ? 's' : '') + ' selected';
+    } else {
+        bulkBar.style.display = 'none';
+    }
+}
+
+function clearSelection() {
+    document.querySelectorAll('.row-check').forEach(c => c.checked = false);
+    if (selectAll) selectAll.checked = false;
+    updateBulkBar();
+}
+
+if (selectAll) {
+    selectAll.addEventListener('change', function() {
+        document.querySelectorAll('.row-check').forEach(c => c.checked = this.checked);
+        updateBulkBar();
+    });
+}
+
+document.querySelectorAll('.row-check').forEach(c => c.addEventListener('change', updateBulkBar));
+</script>
+@endif
+
 @stop

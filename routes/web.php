@@ -299,6 +299,7 @@ Route::prefix('dashboard/training')->middleware('instructor')->group(function ()
     Route::post('/students/{id}/setstatus', 'AtcTraining\TrainingController@changeStudentStatus')->name('training.students.setstatus');
     Route::post('/students/{id}/activate', 'AtcTraining\TrainingController@activateWithInstructor')->name('training.students.activate');
     Route::delete('/students/{id}', 'AtcTraining\TrainingController@removeStudent')->name('training.students.remove');
+    Route::post('/students/bulk-remove', 'AtcTraining\TrainingController@bulkRemoveStudents')->name('training.students.bulkremove');
     Route::post('/students/{id}/entrytype', 'AtcTraining\TrainingController@updateEntryType')->name('training.students.entrytype');
     Route::post('/students/{id}/waitlistdate', 'AtcTraining\TrainingController@updateWaitlistDate')->name('training.students.waitlistdate');
     Route::post('/students/add', 'AtcTraining\TrainingController@newStudent')->name('instructor.student.add.new');
