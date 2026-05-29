@@ -65,7 +65,12 @@
                                                     {{ $member->user->fullName('FL') }}
                                                 @endif
                                             </div>
-                                            <div style="color:#6c757d; font-size:0.82rem; margin-bottom:0.4rem;">{{ $member->position }}</div>
+                                            <div style="color:#6c757d; font-size:0.82rem; margin-bottom:0.4rem;">
+                                                {{ $member->position }}
+                                                @if($member->shortform)
+                                                    <span style="display:inline-block; background:#122b44; color:#fff; font-size:0.7rem; font-weight:700; border-radius:0.25rem; padding:0.1rem 0.4rem; margin-left:0.4rem; letter-spacing:0.03em; vertical-align:middle;">{{ $member->shortform }}</span>
+                                                @endif
+                                            </div>
 
                                             @if($member->description)
                                                 <p style="font-size:0.85rem; color:#495057; margin-bottom:0.4rem; line-height:1.5;">{{ $member->description }}</p>
