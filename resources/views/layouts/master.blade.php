@@ -158,8 +158,8 @@
                                 @endif
                                 @if(!Auth::check() || Auth::user()->permissions == 0)
                                     <a class="dropdown-item" href="{{url('/join')}}">How to Become a Controller</a>
-                                    <a class="dropdown-item" href="{{route('training')}}">Training</a>
                                 @endif
+                                <a class="dropdown-item" href="{{route('training')}}">Training</a>
                             </div>
                         </li>
 
