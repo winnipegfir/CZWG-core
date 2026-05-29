@@ -54,10 +54,7 @@
                             <th style="color:#64748b; font-weight:600;">Type</th>
                             <th style="color:#64748b; font-weight:600;">Added</th>
                             <th style="color:#64748b; font-weight:600;">Waiting</th>
-                            @if(Auth::user()->permissions >= 4)
-                            <th style="min-width:180px; color:#64748b; font-weight:600;">Start Training</th>
-                            @endif
-                            <th style="width:100px;"></th>
+                            <th style="min-width:200px; color:#64748b; font-weight:600;"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -96,9 +93,9 @@
                                     <span class="text-muted">—</span>
                                 @endif
                             </td>
-                            @if(Auth::user()->permissions >= 4)
-                            <td>
-                                <form method="POST" action="{{ route('training.students.activate', $student->id) }}" class="d-flex align-items-center" style="gap:0.4rem;">
+                            <td style="vertical-align:middle;">
+                                @if(Auth::user()->permissions >= 4)
+                                <form method="POST" action="{{ route('training.students.activate', $student->id) }}" class="d-flex align-items-center mb-1" style="gap:0.4rem;">
                                     @csrf
                                     <select name="instructor" class="form-control form-control-sm" style="font-size:0.8rem; max-width:160px; color:#495057; background:#fff; padding:.25rem .5rem;">
                                         <option value="unassign">No instructor</option>
@@ -109,22 +106,18 @@
                                             </option>
                                         @endforeach
                                     </select>
-                                    <button type="submit" class="btn btn-sm btn-success" style="white-space:nowrap; font-size:0.8rem;">
-                                        Start Training
-                                    </button>
+                                    <button type="submit" class="btn btn-sm btn-success" style="white-space:nowrap; font-size:0.8rem;">Start</button>
                                 </form>
-                            </td>
-                            @endif
-                            <td style="vertical-align:middle;">
                                 <div class="d-flex" style="gap:0.35rem;">
                                     <a href="{{ route('training.students.view', $student->id) }}" class="btn btn-sm btn-outline-secondary py-0 px-2" style="font-size:0.78rem;">View</a>
-                                    @if(Auth::user()->permissions >= 4)
                                     <form method="POST" action="{{ route('training.students.remove', $student->id) }}" onsubmit="return confirm('Remove {{ $student->user->fullName('FL') }} from the training system?')">
                                         @csrf @method('DELETE')
                                         <button type="submit" class="btn btn-sm btn-outline-danger py-0 px-2" style="font-size:0.78rem;">Remove</button>
                                     </form>
-                                    @endif
                                 </div>
+                                @else
+                                <a href="{{ route('training.students.view', $student->id) }}" class="btn btn-sm btn-outline-secondary py-0 px-2" style="font-size:0.78rem;">View</a>
+                                @endif
                             </td>
                         </tr>
                         @endforeach
