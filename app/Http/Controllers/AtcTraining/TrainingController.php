@@ -12,6 +12,7 @@ use App\Services\VatcanService;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TrainingController extends Controller
 {
@@ -123,21 +124,28 @@ class TrainingController extends Controller
 
     public function newStudent(Request $request)
     {
-        $check = Student::where('user_id', $request->input('student_id'))->first();
+        $userId = $request->input('add_method') === 'cid'
+            ? (int) $request->input('cid_input')
+            : (int) $request->input('student_id');
+
+        $check = Student::where('user_id', $userId)->first();
         if ($check != null) {
             return redirect()->back()->withError('This student already exists in the system!');
         }
 
+        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         $student = Student::create([
-            'user_id' => $request->input('student_id'),
-            'status' => '0',
+            'user_id'            => $userId,
+            'status'             => '0',
             'last_status_change' => Carbon::now()->toDateTimeString(),
-            'entry_type' => $request->input('entry_type'),
-            'waitlist_added_at' => Carbon::now(),
+            'entry_type'         => $request->input('entry_type'),
+            'waitlist_added_at'  => Carbon::now(),
         ]);
+        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
+        $name = $student->user ? $student->user->fullName('FLC') : 'CID ' . $userId;
         return redirect()->route('training.students.waitlist')
-            ->withSuccess('Added ' . $student->user->fullName('FLC') . ' to the waitlist.');
+            ->withSuccess('Added ' . $name . ' to the waitlist.');
     }
 
     public function currentStudents()
@@ -148,16 +156,27 @@ class TrainingController extends Controller
         return view('dashboard.training.students.current', compact('students', 'instructors'));
     }
 
-    public function newStudents()
+    public function newStudents(Request $request)
     {
-        $students = Student::whereNull('instructor_id')
+        $filter = $request->input('filter', 'all');
+
+        $query = Student::whereNull('instructor_id')
             ->orderByRaw('waitlist_added_at IS NULL ASC')
-            ->orderBy('waitlist_added_at', 'asc')
-            ->get();
+            ->orderBy('waitlist_added_at', 'asc');
+
+        if ($filter === 'home') {
+            $query->where('entry_type', 'New Student');
+        } elseif ($filter === 'visiting') {
+            $query->where('entry_type', 'New Visitor');
+        } elseif ($filter === 'transfer') {
+            $query->where('entry_type', 'New Transfer');
+        }
+
+        $students = $query->get();
         $potentialstudent = User::where('id', '!=', 1)->orderBy('lname')->get();
         $instructors = Instructor::all();
 
-        return view('dashboard.training.students.waitlist', compact('students', 'potentialstudent', 'instructors'));
+        return view('dashboard.training.students.waitlist', compact('students', 'potentialstudent', 'instructors', 'filter'));
     }
 
     public function activateWithInstructor(Request $request, $id)

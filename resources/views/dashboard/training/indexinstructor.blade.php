@@ -94,8 +94,12 @@
                         </div>
                         @if($s->instructor_id)
                             <span style="background:#dcfce7; color:#15803d; font-size:0.68rem; font-weight:700; padding:0.15em 0.45em; border-radius:0.3rem; flex-shrink:0;">Linked</span>
+                        @elseif($s->entry_type == 'New Visitor')
+                            <span style="background:#dcfce7; color:#15803d; font-size:0.68rem; font-weight:700; padding:0.15em 0.45em; border-radius:0.3rem; flex-shrink:0;">Visiting</span>
+                        @elseif($s->entry_type == 'New Transfer')
+                            <span style="background:#f3e8ff; color:#7e22ce; font-size:0.68rem; font-weight:700; padding:0.15em 0.45em; border-radius:0.3rem; flex-shrink:0;">Transfer</span>
                         @else
-                            <span style="background:#fef3c7; color:#92400e; font-size:0.68rem; font-weight:700; padding:0.15em 0.45em; border-radius:0.3rem; flex-shrink:0;">Waitlist</span>
+                            <span style="background:#dbeafe; color:#1d4ed8; font-size:0.68rem; font-weight:700; padding:0.15em 0.45em; border-radius:0.3rem; flex-shrink:0;">Home</span>
                         @endif
                     </a>
                     @endforeach

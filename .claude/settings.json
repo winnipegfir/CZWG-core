@@ -43,7 +43,10 @@
       "WebFetch(domain:github.com)",
       "PowerShell(\\(Get-Content c:\\\\laragon\\\\www\\\\winnipegfir\\\\.env\\) -replace 'VATCAN_API_URL=https://vatcan.vlhtesting.com', 'VATCAN_API_URL=https://api.vatcan.ca' | Set-Content c:\\\\laragon\\\\www\\\\winnipegfir\\\\.env)",
       "PowerShell(\\(Get-Content c:\\\\laragon\\\\www\\\\winnipegfir\\\\.env\\) -replace 'VATCAN_API_URL=https://api.vatcan.ca', 'VATCAN_API_URL=https://vatcan.ca/api' | Set-Content c:\\\\laragon\\\\www\\\\winnipegfir\\\\.env)",
-      "PowerShell(\\(Get-Content c:\\\\laragon\\\\www\\\\winnipegfir\\\\.env\\) -replace 'VATCAN_API_URL=https://vatcan.ca/api', 'VATCAN_API_URL=https://vatcan.ca/api/v2' | Set-Content c:\\\\laragon\\\\www\\\\winnipegfir\\\\.env)"
+      "PowerShell(\\(Get-Content c:\\\\laragon\\\\www\\\\winnipegfir\\\\.env\\) -replace 'VATCAN_API_URL=https://vatcan.ca/api', 'VATCAN_API_URL=https://vatcan.ca/api/v2' | Set-Content c:\\\\laragon\\\\www\\\\winnipegfir\\\\.env)",
+      "Bash(Get-Content \"c:\\\\laragon\\\\www\\\\winnipegfir\\\\storage\\\\logs\\\\laravel.log\" -Tail 50)",
+      "Bash(tail -100 /var/www/winnipegfir.ca/storage/logs/laravel.log 2>/dev/null || echo \"not found\")",
+      "Read(//var/www/winnipegfir.ca/storage/logs/**)"
     ],
     "additionalDirectories": [
       "c:\\laragon\\www\\winnipegfir\\\nVATCAN_API_KEY=fYKopA4iUT1Ul5lG1GJz4lcjx6KYcILAS5jabHUq7dY3wgCUNQ\nVATCAN_API_URL=https:"

@@ -16,9 +16,23 @@
     font-weight: 700;
     letter-spacing: 0.02em;
 }
-.wl-badge-home    { background:#dbeafe; color:#1d4ed8; }
-.wl-badge-visit   { background:#e0f2fe; color:#0369a1; }
+.wl-badge-home     { background:#dbeafe; color:#1d4ed8; }
+.wl-badge-visit    { background:#dcfce7; color:#15803d; }
 .wl-badge-transfer { background:#f3e8ff; color:#7e22ce; }
+.wl-filter-tabs { display:flex; gap:0.4rem; margin-bottom:1rem; }
+.wl-filter-tab {
+    padding:0.3rem 0.85rem;
+    border-radius:999px;
+    font-size:0.8rem;
+    font-weight:600;
+    text-decoration:none;
+    background:#f1f5f9;
+    color:#475569;
+    border:1px solid #e2e8f0;
+    transition:background 0.15s;
+}
+.wl-filter-tab:hover { background:#e2e8f0; color:#1e293b; text-decoration:none; }
+.wl-filter-tab.active { background:#122b44; color:#fff; border-color:#122b44; }
 </style>
 
 <div class="container" style="margin-top:1.5rem; margin-bottom:3rem;">
@@ -34,6 +48,13 @@
     <p class="text-muted mb-3" style="font-size:0.875rem;">
         {{ $students->count() }} student{{ $students->count() != 1 ? 's' : '' }} waiting &mdash; ordered by date added.
     </p>
+
+    <div class="wl-filter-tabs">
+        <a href="{{ request()->fullUrlWithQuery(['filter' => 'all']) }}" class="wl-filter-tab {{ $filter === 'all' ? 'active' : '' }}">All</a>
+        <a href="{{ request()->fullUrlWithQuery(['filter' => 'home']) }}" class="wl-filter-tab {{ $filter === 'home' ? 'active' : '' }}">Home</a>
+        <a href="{{ request()->fullUrlWithQuery(['filter' => 'visiting']) }}" class="wl-filter-tab {{ $filter === 'visiting' ? 'active' : '' }}">Visiting</a>
+        <a href="{{ request()->fullUrlWithQuery(['filter' => 'transfer']) }}" class="wl-filter-tab {{ $filter === 'transfer' ? 'active' : '' }}">Transfer</a>
+    </div>
 
 
     @if($students->isEmpty())
@@ -83,10 +104,10 @@
                             <td class="text-muted font-weight-bold">{{ $i + 1 }}</td>
                             <td>
                                 <a href="{{ route('training.students.view', $student->id) }}" style="color:#122b44; font-weight:600;">
-                                    {{ $student->user->fullName('FL') }}
+                                    {{ $student->user ? $student->user->fullName('FL') : 'CID ' . $student->user_id }}
                                 </a>
                                 <br>
-                                <span class="text-muted" style="font-size:0.78rem;">{{ $student->user->id }}</span>
+                                <span class="text-muted" style="font-size:0.78rem;">{{ $student->user_id }}</span>
                             </td>
                             <td>
                                 @if($student->entry_type == 'New Student')
@@ -117,7 +138,7 @@
                                 <div class="d-flex align-items-center" style="gap:0.35rem;">
                                     <a href="{{ route('training.students.view', $student->id) }}" class="btn btn-sm btn-outline-secondary py-0 px-2" style="font-size:0.78rem;">View</a>
                                     @if(Auth::user()->permissions >= 4)
-                                    <form method="POST" action="{{ route('training.students.remove', $student->id) }}" onsubmit="return confirm('Remove {{ $student->user->fullName('FL') }}?')">
+                                    <form method="POST" action="{{ route('training.students.remove', $student->id) }}" onsubmit="return confirm('Remove {{ $student->user ? $student->user->fullName('FL') : 'CID ' . $student->user_id }}?')">
                                         @csrf @method('DELETE')
                                         <button type="submit" class="btn btn-sm btn-outline-danger py-0 px-2" style="font-size:0.78rem;">Remove</button>
                                     </form>
@@ -188,16 +209,32 @@ document.querySelectorAll('.row-check').forEach(c => c.addEventListener('change'
             </div>
             <form method="POST" action="{{ route('instructor.student.add.new') }}">
                 @csrf
+                <input type="hidden" name="add_method" id="addMethod" value="existing">
                 <div class="modal-body">
-                    <p class="text-muted" style="font-size:0.825rem;">Adds the selected user to the training waitlist.</p>
-                    <div class="form-group mb-3">
-                        <label class="font-weight-bold small">Student</label>
-                        <select name="student_id" class="js-example-basic-single form-control">
-                            @foreach($potentialstudent as $u)
-                                <option value="{{ $u->id }}">{{ $u->id }} &mdash; {{ $u->fullName('FL') }}</option>
-                            @endforeach
-                        </select>
+                    <div class="btn-group btn-group-sm w-100 mb-3" role="group">
+                        <button type="button" class="btn btn-primary" id="tabExisting" onclick="setAddMethod('existing')">Existing User</button>
+                        <button type="button" class="btn btn-outline-primary" id="tabCid" onclick="setAddMethod('cid')">By CID</button>
                     </div>
+
+                    <div id="panelExisting">
+                        <div class="form-group mb-3">
+                            <label class="font-weight-bold small">Student</label>
+                            <select name="student_id" class="js-example-basic-single form-control">
+                                @foreach($potentialstudent as $u)
+                                    <option value="{{ $u->id }}">{{ $u->id }} &mdash; {{ $u->fullName('FL') }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="panelCid" style="display:none;">
+                        <div class="form-group mb-3">
+                            <label class="font-weight-bold small">VATSIM CID</label>
+                            <input type="number" name="cid_input" class="form-control" placeholder="e.g. 1234567">
+                            <small class="text-muted">Their name will appear automatically once they log in.</small>
+                        </div>
+                    </div>
+
                     <div class="form-group mb-0">
                         <label class="font-weight-bold small">Entry Type</label>
                         <select name="entry_type" class="form-control">
@@ -226,6 +263,14 @@ document.querySelectorAll('.row-check').forEach(c => c.addEventListener('change'
     $(document).ready(function () {
         $('.js-example-basic-single').select2({ dropdownParent: $('#newStudent'), width: '100%' });
     });
+
+    function setAddMethod(method) {
+        document.getElementById('addMethod').value = method;
+        document.getElementById('panelExisting').style.display = method === 'existing' ? '' : 'none';
+        document.getElementById('panelCid').style.display = method === 'cid' ? '' : 'none';
+        document.getElementById('tabExisting').className = method === 'existing' ? 'btn btn-primary' : 'btn btn-outline-primary';
+        document.getElementById('tabCid').className = method === 'cid' ? 'btn btn-primary' : 'btn btn-outline-primary';
+    }
 </script>
 
 @stop
