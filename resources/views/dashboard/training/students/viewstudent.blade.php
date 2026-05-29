@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('navbarprim') @parent @stop
-@section('title', $student->user->fullName('FL') . ' — Training')
+@section('title', ($student->user ? $student->user->fullName('FL') : 'CID ' . $student->user_id) . ' — Training')
 
 @section('content')
 @include('includes.trainingMenu')
@@ -11,11 +11,11 @@
 
     {{-- Header --}}
     <div class="d-flex align-items-center mb-4">
-        <img src="{{ $student->user->avatar() }}" style="width:56px; height:56px; border-radius:50%; object-fit:cover; border:2px solid #e2e8f0; margin-right:1rem; flex-shrink:0;">
+        <img src="{{ $student->user ? $student->user->avatar() : asset('img/default-profile-img.jpg') }}" style="width:56px; height:56px; border-radius:50%; object-fit:cover; border:2px solid #e2e8f0; margin-right:1rem; flex-shrink:0;">
         <div>
-            <h2 class="font-weight-bold mb-0" style="color:#122b44; line-height:1.2;">{{ $student->user->fullName('FLC') }}</h2>
+            <h2 class="font-weight-bold mb-0" style="color:#122b44; line-height:1.2;">{{ $student->user ? $student->user->fullName('FLC') : 'CID ' . $student->user_id }}</h2>
             <p class="mb-0 text-muted" style="font-size:0.875rem;">
-                {{ $student->user->rating->getLongName() }} ({{ $student->user->rating->getShortName() }})
+                {{ $student->user ? $student->user->rating->getLongName() . ' (' . $student->user->rating->getShortName() . ')' : 'Rating unknown' }}
                 &nbsp;&middot;&nbsp;
                 @if($student->entry_type == 'New Student') Home Student
                 @elseif($student->entry_type == 'New Visitor') Visiting Controller
@@ -190,7 +190,7 @@
                 <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
             </div>
             <div class="modal-body">
-                <p style="font-size:0.875rem;">Are you sure you want to remove <strong>{{ $student->user->fullName('FL') }}</strong> from the training system? This cannot be undone.</p>
+                <p style="font-size:0.875rem;">Are you sure you want to remove <strong>{{ $student->user ? $student->user->fullName('FL') : 'CID ' . $student->user_id }}</strong> from the training system? This cannot be undone.</p>
             </div>
             <div class="modal-footer" style="border-top:1px solid #e9ecef;">
                 <button type="button" class="btn btn-light btn-sm" data-dismiss="modal">Cancel</button>
