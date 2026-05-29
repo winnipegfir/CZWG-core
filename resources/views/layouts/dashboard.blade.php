@@ -161,8 +161,8 @@
                                     @auth
                                         <a class="dropdown-item" href="{{url('/dashboard/application/list')}}">Your Applications</a>
                                     @endauth
-                                    <a class="dropdown-item" href="{{route('training')}}">Training</a>
                                 @endif
+                                <a class="dropdown-item" href="{{route('training')}}">Training</a>
                             </div>
                         </li>
 
