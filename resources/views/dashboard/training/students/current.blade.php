@@ -24,13 +24,14 @@
         </div>
     @else
         @if(Auth::user()->permissions >= 4)
-        <form method="POST" action="{{ route('training.students.bulkremove') }}" id="bulkForm" onsubmit="return confirm('Remove selected students from the training system?')">
+        <form method="POST" action="{{ route('training.students.bulkremove') }}" id="bulkForm">
             @csrf
-            <div id="bulkBar" style="display:none; background:#fee2e2; border:1px solid #fecaca; border-radius:0.5rem; padding:0.6rem 1rem; margin-bottom:0.75rem; align-items:center; gap:0.75rem;">
-                <span id="bulkCount" style="font-size:0.875rem; color:#b91c1c; font-weight:600;"></span>
-                <button type="submit" class="btn btn-sm btn-danger py-0 px-3" style="font-size:0.8rem;">Remove Selected</button>
-                <button type="button" class="btn btn-sm btn-light py-0 px-2" style="font-size:0.8rem;" onclick="clearSelection()">Clear</button>
-            </div>
+        </form>
+        <div id="bulkBar" style="display:none; background:#fee2e2; border:1px solid #fecaca; border-radius:0.5rem; padding:0.6rem 1rem; margin-bottom:0.75rem; align-items:center; gap:0.75rem;">
+            <span id="bulkCount" style="font-size:0.875rem; color:#b91c1c; font-weight:600;"></span>
+            <button type="button" class="btn btn-sm btn-danger py-0 px-3" style="font-size:0.8rem;" onclick="submitBulk()">Remove Selected</button>
+            <button type="button" class="btn btn-sm btn-light py-0 px-2" style="font-size:0.8rem;" onclick="clearSelection()">Clear</button>
+        </div>
         @endif
         <div class="card">
             <div class="table-responsive">
@@ -104,9 +105,6 @@
                 </table>
             </div>
         </div>
-        @if(Auth::user()->permissions >= 4)
-        </form>
-        @endif
     @endif
 
 </div>
@@ -120,12 +118,8 @@ const bulkCount = document.getElementById('bulkCount');
 
 function updateBulkBar() {
     const checked = document.querySelectorAll('.row-check:checked');
-    if (checked.length > 0) {
-        bulkBar.style.display = 'flex';
-        bulkCount.textContent = checked.length + ' student' + (checked.length > 1 ? 's' : '') + ' selected';
-    } else {
-        bulkBar.style.display = 'none';
-    }
+    bulkBar.style.display = checked.length > 0 ? 'flex' : 'none';
+    bulkCount.textContent = checked.length + ' student' + (checked.length !== 1 ? 's' : '') + ' selected';
 }
 
 function clearSelection() {
@@ -134,13 +128,28 @@ function clearSelection() {
     updateBulkBar();
 }
 
+function submitBulk() {
+    const checked = document.querySelectorAll('.row-check:checked');
+    if (!checked.length) return;
+    if (!confirm('Remove ' + checked.length + ' student' + (checked.length !== 1 ? 's' : '') + ' from the training system?')) return;
+    const form = document.getElementById('bulkForm');
+    form.querySelectorAll('input[name="student_ids[]"]').forEach(i => i.remove());
+    checked.forEach(c => {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = 'student_ids[]';
+        input.value = c.value;
+        form.appendChild(input);
+    });
+    form.submit();
+}
+
 if (selectAll) {
     selectAll.addEventListener('change', function() {
         document.querySelectorAll('.row-check').forEach(c => c.checked = this.checked);
         updateBulkBar();
     });
 }
-
 document.querySelectorAll('.row-check').forEach(c => c.addEventListener('change', updateBulkBar));
 </script>
 @endif
