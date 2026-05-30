@@ -34,7 +34,7 @@
                 </div>
             </div>
 
-            {{{{-- Main content --}}
+            {{-- Main content --}}
             <div class="col-md-9">
                 @foreach($groups as $g)
                     <div id="{{ $g->slug }}" class="mb-5">
