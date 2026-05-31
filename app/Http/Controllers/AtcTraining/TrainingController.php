@@ -388,10 +388,6 @@ class TrainingController extends Controller
     {
         $student = Student::where('id', $id)->firstOrFail();
 
-        if ($student->instructor_id) {
-            return redirect()->back()->withError('Cannot remove a student who has an instructor linked. Unlink the instructor first.');
-        }
-
         $name = $student->user ? $student->user->fullName('FLC') : 'CID ' . $student->user_id;
         $student->delete();
 
@@ -413,11 +409,12 @@ class TrainingController extends Controller
             return redirect()->back()->withSuccess('Paired ' . $student->user->fullName('FLC') . ' with Instructor ' . $student->instructor->user->fullName('FLC') . '.');
         }
 
-        $student->instructor_id = null;
-        $student->save();
+        $name = $student->user ? $student->user->fullName('FLC') : 'CID ' . $student->user_id;
         $vatcan->unassignInstructor($student->user_id);
+        $student->delete();
 
-        return redirect()->back()->withSuccess('Unassigned ' . $student->user->fullName('FLC') . ' from instructor.');
+        return redirect()->route('training.students.current')
+            ->withSuccess('Unlinked and removed ' . $name . ' from the training system.');
     }
 
     public function assignExam(Request $request)
