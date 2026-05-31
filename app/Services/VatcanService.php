@@ -36,6 +36,26 @@ class VatcanService
         }
     }
 
+    public function getUser(int $cid): array
+    {
+        try {
+            $response = Http::withHeaders([
+                'Authorization' => 'Token ' . $this->apiKey,
+                'Accept'        => 'application/json',
+            ])->get("{$this->baseUrl}/user/{$cid}/");
+
+            $body = $response->json();
+
+            if ($response->successful() && $body) {
+                return ['status' => 'ok', 'data' => $body];
+            }
+
+            return ['status' => 'error', 'message' => $body['error'] ?? 'Unknown error', 'data' => null];
+        } catch (\Exception $e) {
+            return ['status' => 'error', 'message' => 'Could not reach VATCAN API.', 'data' => null];
+        }
+    }
+
     public function createNote(int $cid, string $title, string $content, int $authorCid): bool
     {
         $response = Http::withHeaders([

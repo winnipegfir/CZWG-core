@@ -109,9 +109,13 @@
 
                     <p class="mb-1" style="font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:.4px; color:#94a3b8;">Instructor</p>
                     <p class="mb-3" style="font-size:0.875rem; color:#122b44;">
-                        @if($student->instructor)
-                            {{ $student->instructor->user->fullName('FL') }}
-                            <br><a href="mailto:{{ $student->instructor->email }}" style="font-size:0.78rem; color:#64748b;">{{ $student->instructor->email }}</a>
+                        @if($vatcanUserError)
+                            <span class="text-muted" style="font-size:0.8rem;"><i class="fas fa-exclamation-circle text-warning mr-1"></i>{{ $vatcanUserError }}</span>
+                        @elseif($vatcanUser && !empty($vatcanUser['instructor']))
+                            {{ $vatcanUser['instructor']['name'] ?? 'Unknown' }}
+                            @if(!empty($vatcanUser['instructor']['assigned_at']))
+                                <span style="display:block; font-size:0.75rem; color:#94a3b8;">Since {{ \Carbon\Carbon::parse($vatcanUser['instructor']['assigned_at'])->format('M j, Y') }}</span>
+                            @endif
                         @else
                             <span class="text-muted">Not assigned</span>
                         @endif

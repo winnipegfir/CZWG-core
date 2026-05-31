@@ -229,15 +229,22 @@ class TrainingController extends Controller
         $instructors = Instructor::all();
 
         if ($student->user) {
-            $notesResult = (new VatcanService)->getNotes($student->user->id);
+            $vatcan = new VatcanService;
+            $notesResult = $vatcan->getNotes($student->user->id);
             $notes = $notesResult['notes'];
             $notesError = $notesResult['status'] === 'error' ? $notesResult['message'] : null;
+
+            $userResult = $vatcan->getUser($student->user->id);
+            $vatcanUser = $userResult['status'] === 'ok' ? ($userResult['data']['data'] ?? null) : null;
+            $vatcanUserError = $userResult['status'] === 'error' ? $userResult['message'] : null;
         } else {
             $notes = [];
             $notesError = 'No VATCAN data available until this member logs in for the first time.';
+            $vatcanUser = null;
+            $vatcanUserError = 'No VATCAN data available until this member logs in for the first time.';
         }
 
-        return view('dashboard.training.students.viewstudent', compact('student', 'instructors', 'notes', 'notesError'));
+        return view('dashboard.training.students.viewstudent', compact('student', 'instructors', 'notes', 'notesError', 'vatcanUser', 'vatcanUserError'));
     }
 
 
