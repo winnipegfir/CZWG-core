@@ -21,6 +21,12 @@
     </div>
 
 
+    @if(isset($vatcanError) && $vatcanError)
+    <div class="alert alert-warning py-2" style="font-size:0.85rem;">
+        <i class="fas fa-exclamation-circle mr-1"></i> VATCAN sync unavailable: {{ $vatcanError }}
+    </div>
+    @endif
+
     @if($missingFromOurSystem->isNotEmpty())
     <div class="card mb-4" style="border-color:#fde68a;">
         <div class="card-body">
