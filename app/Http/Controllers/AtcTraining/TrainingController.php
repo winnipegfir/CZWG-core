@@ -127,30 +127,29 @@ class TrainingController extends Controller
         $instructors = Instructor::all();
         $potentialinstructor = RosterMember::where('status', 'instructor')->get();
 
-        $vatcan = new VatcanService;
+        $rosterResult = (new VatcanService)->getRoster();
 
-        // Check each of our instructors against VATCAN
         $vatcanFlags = [];
-        foreach ($instructors as $instructor) {
-            $result = $vatcan->getUser($instructor->user->id);
-            if ($result['status'] === 'ok') {
-                $vatcanFlags[$instructor->user->id] = (bool) ($result['data']['data']['instructor'] ?? false);
-            } else {
-                $vatcanFlags[$instructor->user->id] = null;
-            }
-        }
-
-        // Find VATCAN instructors not in our system
-        $rosterResult = $vatcan->getRoster();
         $missingFromOurSystem = collect();
+
         if ($rosterResult['status'] === 'ok') {
-            $ourInstructorCids = $instructors->pluck('user_id')->flip();
             $allMembers = collect(array_merge(
                 $rosterResult['data']['controllers'] ?? [],
                 $rosterResult['data']['visitors'] ?? []
             ));
+
+            // Build set of CIDs flagged as instructor on VATCAN
+            $vatcanInstructorCids = $allMembers->where('instructor', 1)->pluck('cid')->flip();
+
+            // Check each of our instructors against that set
+            foreach ($instructors as $instructor) {
+                $vatcanFlags[$instructor->user->id] = $vatcanInstructorCids->has($instructor->user->id);
+            }
+
+            // Find VATCAN instructors not added to our system
+            $ourInstructorCids = $instructors->pluck('user_id')->flip();
             $missingFromOurSystem = $allMembers->filter(
-                fn($m) => !empty($m['instructor']) && !$ourInstructorCids->has($m['cid'])
+                fn($m) => $m['instructor'] == 1 && !$ourInstructorCids->has($m['cid'])
             )->values();
         }
 
