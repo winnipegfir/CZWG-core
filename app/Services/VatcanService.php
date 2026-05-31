@@ -56,13 +56,13 @@ class VatcanService
         }
     }
 
-    public function getFir(int $firId): array
+    public function getRoster(): array
     {
         try {
             $response = Http::withHeaders([
                 'Authorization' => 'Token ' . $this->apiKey,
                 'Accept'        => 'application/json',
-            ])->get("{$this->baseUrl}/fir/{$firId}/");
+            ])->get("{$this->baseUrl}/facility/roster");
 
             $body = $response->json();
 

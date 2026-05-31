@@ -21,6 +21,44 @@
     </div>
 
 
+    @if($missingFromOurSystem->isNotEmpty())
+    <div class="card mb-4" style="border-color:#fde68a;">
+        <div class="card-body">
+            <h5 class="font-weight-bold mb-1" style="color:#92400e; font-size:0.95rem;">
+                <i class="fas fa-exclamation-triangle mr-1"></i>
+                {{ $missingFromOurSystem->count() }} VATCAN Instructor{{ $missingFromOurSystem->count() != 1 ? 's' : '' }} Not Added Here
+            </h5>
+            <p class="text-muted mb-3" style="font-size:0.8rem;">These people are flagged as instructors on VATCAN but haven't been added to the Winnipeg training system.</p>
+            <div class="table-responsive">
+                <table class="table table-sm mb-0" style="font-size:0.85rem;">
+                    <thead>
+                        <tr>
+                            <th style="color:#64748b; font-weight:600; border-top:none;">Name</th>
+                            <th style="color:#64748b; font-weight:600; border-top:none;">CID</th>
+                            <th style="color:#64748b; font-weight:600; border-top:none;">Type</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($missingFromOurSystem as $m)
+                        <tr>
+                            <td style="color:#122b44; font-weight:600;">{{ $m['first_name'] }} {{ $m['last_name'] }}</td>
+                            <td style="color:#64748b;">{{ $m['cid'] }}</td>
+                            <td>
+                                @if($m['flag_is_visitor'])
+                                    <span style="background:#dcfce7; color:#15803d; font-size:0.7rem; font-weight:700; padding:0.15em 0.45em; border-radius:0.3rem;">Visitor</span>
+                                @else
+                                    <span style="background:#dbeafe; color:#1d4ed8; font-size:0.7rem; font-weight:700; padding:0.15em 0.45em; border-radius:0.3rem;">Home</span>
+                                @endif
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    @endif
+
     <div class="card" style="overflow:hidden;">
         @if($instructors->isEmpty())
             <div class="card-body text-center text-muted py-5">

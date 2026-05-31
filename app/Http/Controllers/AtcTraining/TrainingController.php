@@ -43,7 +43,7 @@ class TrainingController extends Controller
 
     public function reconcile()
     {
-        $firResult = (new VatcanService)->getFir(7);
+        $firResult = (new VatcanService)->getRoster();
 
         if ($firResult['status'] === 'error') {
             return view('dashboard.training.reconcile', [
@@ -128,6 +128,8 @@ class TrainingController extends Controller
         $potentialinstructor = RosterMember::where('status', 'instructor')->get();
 
         $vatcan = new VatcanService;
+
+        // Check each of our instructors against VATCAN
         $vatcanFlags = [];
         foreach ($instructors as $instructor) {
             $result = $vatcan->getUser($instructor->user->id);
@@ -138,7 +140,21 @@ class TrainingController extends Controller
             }
         }
 
-        return view('dashboard.training.instructors.index', compact('instructors', 'potentialinstructor', 'vatcanFlags'));
+        // Find VATCAN instructors not in our system
+        $rosterResult = $vatcan->getRoster();
+        $missingFromOurSystem = collect();
+        if ($rosterResult['status'] === 'ok') {
+            $ourInstructorCids = $instructors->pluck('user_id')->flip();
+            $allMembers = collect(array_merge(
+                $rosterResult['data']['controllers'] ?? [],
+                $rosterResult['data']['visitors'] ?? []
+            ));
+            $missingFromOurSystem = $allMembers->filter(
+                fn($m) => !empty($m['instructor']) && !$ourInstructorCids->has($m['cid'])
+            )->values();
+        }
+
+        return view('dashboard.training.instructors.index', compact('instructors', 'potentialinstructor', 'vatcanFlags', 'missingFromOurSystem'));
     }
 
     public function removeInstructor($id)
