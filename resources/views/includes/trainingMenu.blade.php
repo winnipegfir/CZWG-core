@@ -34,6 +34,11 @@
                     </div>
                 </div>
 
+                <a href="{{ route('training.reconcile') }}"
+                   style="color:{{ Request::is('dashboard/training/reconcile') ? '#fff' : 'rgba(255,255,255,0.6)' }}; font-size:0.85rem; padding:0.3rem 0.65rem; border-radius:0.3rem; text-decoration:none; {{ Request::is('dashboard/training/reconcile') ? 'background:rgba(255,255,255,0.12);' : '' }}">
+                    Reconcile
+                </a>
+
                 @endif
             </nav>
         </div>

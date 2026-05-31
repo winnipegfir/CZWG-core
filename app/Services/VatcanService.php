@@ -56,6 +56,26 @@ class VatcanService
         }
     }
 
+    public function getFir(int $firId): array
+    {
+        try {
+            $response = Http::withHeaders([
+                'Authorization' => 'Token ' . $this->apiKey,
+                'Accept'        => 'application/json',
+            ])->get("{$this->baseUrl}/fir/{$firId}/");
+
+            $body = $response->json();
+
+            if ($response->successful() && isset($body['data'])) {
+                return ['status' => 'ok', 'data' => $body['data']];
+            }
+
+            return ['status' => 'error', 'message' => $body['error'] ?? 'Unknown error', 'data' => null];
+        } catch (\Exception $e) {
+            return ['status' => 'error', 'message' => 'Could not reach VATCAN API.', 'data' => null];
+        }
+    }
+
     public function assignInstructor(int $studentCid, int $instructorCid, int $assignedBy): bool
     {
         try {

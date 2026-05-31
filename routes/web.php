@@ -290,6 +290,7 @@ Route::prefix('dashboard/training')->middleware('instructor')->group(function ()
     Route::view('/sessions/create', 'dashboard.training.instructingsessions.create')->name('training.instructingsessions.createsessionindex');
     Route::get('/sessions/create', 'AtcTraining\TrainingController@createInstructingSession')->name('training.instructingsessions.createsession');
     Route::get('/instructors', 'AtcTraining\TrainingController@instructorsIndex')->name('training.instructors');
+    Route::get('/reconcile', 'AtcTraining\TrainingController@reconcile')->name('training.reconcile');
     Route::get('/students/current', 'AtcTraining\TrainingController@currentStudents')->name('training.students.current');
     Route::get('/students/new', 'AtcTraining\TrainingController@newStudents')->name('training.students.new');
     Route::get('/students/completed', 'AtcTraining\TrainingController@completedStudents')->name('training.students.completed');

@@ -32,7 +32,15 @@
             <div style="display:flex; align-items:center; padding:1rem 1.25rem; border-bottom:1px solid #f1f5f9;">
                 <img src="{{ $instructor->user->avatar() }}" style="width:44px; height:44px; border-radius:50%; object-fit:cover; border:1px solid #e2e8f0; flex-shrink:0; margin-right:1rem;">
                 <div style="flex:1; min-width:0;">
-                    <div style="font-weight:600; color:#122b44; font-size:0.9rem;">{{ $instructor->user->fullName('FLC') }}</div>
+                    <div style="font-weight:600; color:#122b44; font-size:0.9rem; display:flex; align-items:center; gap:0.5rem;">
+                        {{ $instructor->user->fullName('FLC') }}
+                        @php $flag = $vatcanFlags[$instructor->user->id] ?? null; @endphp
+                        @if($flag === false)
+                            <span style="background:#fee2e2; color:#b91c1c; font-size:0.68rem; font-weight:700; padding:0.15em 0.45em; border-radius:0.3rem;" title="Not flagged as instructor on VATCAN">Not on VATCAN</span>
+                        @elseif($flag === null)
+                            <span style="background:#f1f5f9; color:#94a3b8; font-size:0.68rem; font-weight:700; padding:0.15em 0.45em; border-radius:0.3rem;" title="Could not reach VATCAN API">VATCAN unknown</span>
+                        @endif
+                    </div>
                     <div style="font-size:0.78rem; color:#64748b; margin-top:0.1rem;">
                         {{ $instructor->qualification ?? 'Instructor' }}
                         @if($instructor->email)

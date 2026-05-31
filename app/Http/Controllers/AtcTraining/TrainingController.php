@@ -41,6 +41,38 @@ class TrainingController extends Controller
         return view('dashboard.training.indexinstructor', compact('yourStudents', 'longestWaiting', 'recentActivity', 'waitlistBreakdown'));
     }
 
+    public function reconcile()
+    {
+        $firResult = (new VatcanService)->getFir(7);
+
+        if ($firResult['status'] === 'error') {
+            return view('dashboard.training.reconcile', [
+                'error' => $firResult['message'],
+                'onVatcanNotLinked' => collect(),
+                'linkedNotOnVatcan' => collect(),
+            ]);
+        }
+
+        $firData = $firResult['data'];
+        $vatcanMembers = collect(array_merge(
+            $firData['controllers'] ?? [],
+            $firData['visitors'] ?? []
+        ));
+
+        $linkedStudentCids = Student::whereNotNull('instructor_id')->pluck('user_id')->flip();
+
+        $onVatcanNotLinked = $vatcanMembers
+            ->filter(fn($m) => !empty($m['instructor']) && !$linkedStudentCids->has($m['cid']));
+
+        $vatcanLinkedCids = $vatcanMembers->filter(fn($m) => !empty($m['instructor']))->pluck('cid')->flip();
+
+        $linkedNotOnVatcan = Student::whereNotNull('instructor_id')
+            ->get()
+            ->filter(fn($s) => !$vatcanLinkedCids->has($s->user_id));
+
+        return view('dashboard.training.reconcile', compact('onVatcanNotLinked', 'linkedNotOnVatcan', 'firData') + ['error' => null]);
+    }
+
     public function newNoteView($id)
     {
         $student = Student::where('id', $id)->firstorFail();
@@ -95,7 +127,18 @@ class TrainingController extends Controller
         $instructors = Instructor::all();
         $potentialinstructor = RosterMember::where('status', 'instructor')->get();
 
-        return view('dashboard.training.instructors.index', compact('instructors', 'potentialinstructor'));
+        $vatcan = new VatcanService;
+        $vatcanFlags = [];
+        foreach ($instructors as $instructor) {
+            $result = $vatcan->getUser($instructor->user->id);
+            if ($result['status'] === 'ok') {
+                $vatcanFlags[$instructor->user->id] = (bool) ($result['data']['data']['instructor'] ?? false);
+            } else {
+                $vatcanFlags[$instructor->user->id] = null;
+            }
+        }
+
+        return view('dashboard.training.instructors.index', compact('instructors', 'potentialinstructor', 'vatcanFlags'));
     }
 
     public function removeInstructor($id)
@@ -305,6 +348,11 @@ class TrainingController extends Controller
     public function removeStudent($id)
     {
         $student = Student::where('id', $id)->firstOrFail();
+
+        if ($student->instructor_id) {
+            return redirect()->back()->withError('Cannot remove a student who has an instructor linked. Unlink the instructor first.');
+        }
+
         $name = $student->user ? $student->user->fullName('FLC') : 'CID ' . $student->user_id;
         $student->delete();
 
