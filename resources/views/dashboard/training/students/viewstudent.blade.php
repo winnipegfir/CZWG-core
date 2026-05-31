@@ -112,10 +112,8 @@
                         @if($vatcanUserError)
                             <span class="text-muted" style="font-size:0.8rem;"><i class="fas fa-exclamation-circle text-warning mr-1"></i>{{ $vatcanUserError }}</span>
                         @elseif($vatcanUser && !empty($vatcanUser['instructor']))
-                            {{ $vatcanUser['instructor']['name'] ?? 'Unknown' }}
-                            @if(!empty($vatcanUser['instructor']['assigned_at']))
-                                <span style="display:block; font-size:0.75rem; color:#94a3b8;">Since {{ \Carbon\Carbon::parse($vatcanUser['instructor']['assigned_at'])->format('M j, Y') }}</span>
-                            @endif
+                            @php $instructorUser = \App\Models\Users\User::find($vatcanUser['instructor']); @endphp
+                            {{ $instructorUser ? $instructorUser->fullName('FL') : 'CID ' . $vatcanUser['instructor'] }}
                         @else
                             <span class="text-muted">Not assigned</span>
                         @endif
