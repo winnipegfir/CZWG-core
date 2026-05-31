@@ -8,6 +8,7 @@ use App\Models\AtcTraining\RosterMember;
 use App\Models\AtcTraining\Student;
 use App\Models\AtcTraining\TrainingWaittime;
 use App\Models\Users\User;
+use App\Services\DiscordTrainingWebhook;
 use App\Services\VatcanService;
 use Auth;
 use Carbon\Carbon;
@@ -209,6 +210,14 @@ class TrainingController extends Controller
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
         $name = $student->user ? $student->user->fullName('FLC') : 'CID ' . $userId;
+
+        (new DiscordTrainingWebhook)->waitlistAdded(
+            $student->user ? $student->user->fullName('FL') : 'CID ' . $userId,
+            $userId,
+            $request->input('entry_type'),
+            Auth::user()->fullName('FL')
+        );
+
         return redirect()->route('training.students.waitlist')
             ->withSuccess('Added ' . $name . ' to the waitlist.');
     }
@@ -306,6 +315,13 @@ class TrainingController extends Controller
 
         if ($student->instructor_id && $student->user) {
             $vatcan->assignInstructor($student->user_id, $student->instructor->user->id, Auth::id());
+
+            (new DiscordTrainingWebhook)->studentLinked(
+                $student->user->fullName('FL'),
+                $student->user_id,
+                $student->instructor->user->fullName('FL'),
+                Auth::user()->fullName('FL')
+            );
         }
 
         $name = $student->user ? $student->user->fullName('FLC') : 'CID ' . $student->user_id;
@@ -411,6 +427,13 @@ class TrainingController extends Controller
 
         $name = $student->user ? $student->user->fullName('FLC') : 'CID ' . $student->user_id;
         $vatcan->unassignInstructor($student->user_id);
+
+        (new DiscordTrainingWebhook)->studentUnlinked(
+            $student->user ? $student->user->fullName('FL') : 'CID ' . $student->user_id,
+            $student->user_id,
+            Auth::user()->fullName('FL')
+        );
+
         $student->delete();
 
         return redirect()->route('training.students.current')

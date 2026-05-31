@@ -50,5 +50,6 @@ return [
         'client_secret' => env('DISCORD_SECRET'),
         'redirect' => env('DISCORD_REDIRECT_URI'),
         'redirect_join' => env('DISCORD_REDIRECT_URI_JOIN'),
+        'training_webhook' => env('DISCORD_TRAINING_WEBHOOK'),
     ],
 ];
