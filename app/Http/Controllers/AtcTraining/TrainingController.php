@@ -179,6 +179,10 @@ class TrainingController extends Controller
         ]);
         DB::statement('SET FOREIGN_KEY_CHECKS=1;');
 
+        if ($student->instructor_id && $student->instructor) {
+            (new VatcanService)->assignInstructor($student->user_id, $student->instructor->user->id, Auth::id());
+        }
+
         $name = $student->user ? $student->user->fullName('FLC') : 'CID ' . $userId;
         return redirect()->route('training.students.current')
             ->withSuccess('Added ' . $name . ' as a linked student.');
@@ -211,12 +215,16 @@ class TrainingController extends Controller
     {
         $student = Student::where('id', $id)->firstOrFail();
         $instructorId = $request->input('instructor');
+        $vatcan = new VatcanService;
 
         $student->instructor_id = ($instructorId !== 'unassign' && $instructorId) ? $instructorId : null;
         $student->status = '1';
         $student->last_status_change = Carbon::now()->toDateTimeString();
         $student->save();
 
+        if ($student->instructor_id && $student->user) {
+            $vatcan->assignInstructor($student->user_id, $student->instructor->user->id, Auth::id());
+        }
 
         $name = $student->user ? $student->user->fullName('FLC') : 'CID ' . $student->user_id;
         return redirect()->route('training.students.waitlist')
@@ -306,26 +314,23 @@ class TrainingController extends Controller
 
     public function assignInstructorToStudent(Request $request, $id)
     {
-        $student = Student::where('id', $id)->firstorFail();
-        $instructor = $request->input('instructor');
-        if ($student != null) {
-            if ($instructor != 'unassign') {
-                $student->instructor_id = $request->input('instructor');
-                $student->save();
+        $student = Student::where('id', $id)->firstOrFail();
+        $instructorInput = $request->input('instructor');
+        $vatcan = new VatcanService;
 
-                return redirect()->back()->withSuccess('Paired '.$student->user->fullName('FLC').'with Instructor '.$student->instructor->user->fullName('FLC').'');
-            }
-            if ($instructor == 'unassign') {
-                $student->instructor_id = null;
-                $student->save();
+        if ($instructorInput !== 'unassign') {
+            $student->instructor_id = $instructorInput;
+            $student->save();
+            $vatcan->assignInstructor($student->user_id, $student->instructor->user->id, Auth::id());
 
-                return redirect()->back()->withSuccess('Unassigned '.$student->user->fullName('FLC').' from Instructor ');
-            }
+            return redirect()->back()->withSuccess('Paired ' . $student->user->fullName('FLC') . ' with Instructor ' . $student->instructor->user->fullName('FLC') . '.');
         }
 
-        if ($student == null) {
-            return redirect()->back()->withError('Unable to find a student with CID '.$student->user->id.'');
-        }
+        $student->instructor_id = null;
+        $student->save();
+        $vatcan->unassignInstructor($student->user_id);
+
+        return redirect()->back()->withSuccess('Unassigned ' . $student->user->fullName('FLC') . ' from instructor.');
     }
 
     public function assignExam(Request $request)

@@ -56,6 +56,37 @@ class VatcanService
         }
     }
 
+    public function assignInstructor(int $studentCid, int $instructorCid, int $assignedBy): bool
+    {
+        try {
+            $response = Http::withHeaders([
+                'Authorization' => 'Token ' . $this->apiKey,
+                'Accept'        => 'application/json',
+            ])->post("{$this->baseUrl}/user/{$studentCid}/instructor/assign", [
+                'instructor_cid' => $instructorCid,
+                'assigned_by'    => $assignedBy,
+            ]);
+
+            return $response->successful();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    public function unassignInstructor(int $studentCid): bool
+    {
+        try {
+            $response = Http::withHeaders([
+                'Authorization' => 'Token ' . $this->apiKey,
+                'Accept'        => 'application/json',
+            ])->post("{$this->baseUrl}/user/{$studentCid}/instructor/unassign");
+
+            return $response->successful();
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
     public function createNote(int $cid, string $title, string $content, int $authorCid): bool
     {
         $response = Http::withHeaders([
