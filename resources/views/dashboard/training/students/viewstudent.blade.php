@@ -163,7 +163,7 @@
                         @csrf
                         <div class="d-flex" style="gap:0.5rem;">
                             <select name="instructor" class="form-control form-control-sm flex-grow-1" style="font-size:0.8rem; color:#495057; background:#fff; padding:.25rem .5rem;">
-                                <option value="unassign" {{ !$student->instructor_id ? 'selected' : '' }}>No instructor (waitlisted)</option>
+                                <option value="unassign">Unlink student</option>
                                 @foreach($instructors as $instructor)
                                     <option value="{{ $instructor->id }}" {{ $student->instructor_id == $instructor->id ? 'selected' : '' }}>
                                         {{ $instructor->user->fullName('FL') }}

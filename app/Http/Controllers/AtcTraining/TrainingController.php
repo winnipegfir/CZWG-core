@@ -418,9 +418,19 @@ class TrainingController extends Controller
         $vatcan = new VatcanService;
 
         if ($instructorInput !== 'unassign') {
+            if ($student->instructor_id) {
+                $vatcan->unassignInstructor($student->user_id);
+            }
             $student->instructor_id = $instructorInput;
             $student->save();
             $vatcan->assignInstructor($student->user_id, $student->instructor->user->id, Auth::id());
+
+            (new DiscordTrainingWebhook)->studentLinked(
+                $student->user->fullName('FL'),
+                $student->user_id,
+                $student->instructor->user->fullName('FL'),
+                Auth::user()->fullName('FL')
+            );
 
             return redirect()->back()->withSuccess('Paired ' . $student->user->fullName('FLC') . ' with Instructor ' . $student->instructor->user->fullName('FLC') . '.');
         }
