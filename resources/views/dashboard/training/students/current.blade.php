@@ -20,6 +20,16 @@
         @endif
     </div>
 
+    @if($vatcanOnlyCount > 0)
+    <div style="background:#fef3c7; border:1px solid #fde68a; border-radius:0.5rem; padding:0.7rem 1rem; margin-bottom:1rem; display:flex; align-items:center; justify-content:space-between; gap:1rem;">
+        <span style="font-size:0.875rem; color:#92400e;">
+            <i class="fas fa-exclamation-triangle mr-1"></i>
+            <strong>{{ $vatcanOnlyCount }} student{{ $vatcanOnlyCount != 1 ? 's' : '' }}</strong> {{ $vatcanOnlyCount != 1 ? 'have' : 'has' }} an instructor assigned on VATCAN but {{ $vatcanOnlyCount != 1 ? 'aren\'t' : 'isn\'t' }} in this list.
+        </span>
+        <a href="{{ route('training.reconcile') }}" style="font-size:0.8rem; font-weight:600; color:#92400e; white-space:nowrap;">View details &rarr;</a>
+    </div>
+    @endif
+
     @if($students->isEmpty())
         <div class="card">
             <div class="card-body text-center text-muted py-5">

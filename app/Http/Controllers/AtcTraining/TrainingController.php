@@ -70,7 +70,7 @@ class TrainingController extends Controller
             ->get()
             ->filter(fn($s) => !$vatcanLinkedCids->has($s->user_id));
 
-        return view('dashboard.training.reconcile', compact('onVatcanNotLinked', 'linkedNotOnVatcan', 'firData') + ['error' => null]);
+        return view('dashboard.training.reconcile', compact('onVatcanNotLinked', 'linkedNotOnVatcan') + ['error' => null]);
     }
 
     public function newNoteView($id)
@@ -140,7 +140,7 @@ class TrainingController extends Controller
                     $rosterResult['data']['visitors'] ?? []
                 ));
 
-                $vatcanInstructorCids = $allMembers->where('instructor', 1)->pluck('cid')->flip();
+                $vatcanInstructorCids = $allMembers->where('is_instructor', true)->pluck('cid')->flip();
 
                 foreach ($instructors as $instructor) {
                     if ($instructor->user) {
@@ -150,7 +150,7 @@ class TrainingController extends Controller
 
                 $ourInstructorCids = $instructors->pluck('user_id')->flip();
                 $missingFromOurSystem = $allMembers->filter(
-                    fn($m) => $m['instructor'] == 1 && !$ourInstructorCids->has($m['cid'])
+                    fn($m) => ($m['is_instructor'] ?? false) && !$ourInstructorCids->has($m['cid'])
                 )->values();
             } else {
                 $vatcanError = $rosterResult['message'];
@@ -219,7 +219,24 @@ class TrainingController extends Controller
         $instructors = Instructor::all();
         $potentialstudent = User::where('id', '!=', 1)->orderBy('lname')->get();
 
-        return view('dashboard.training.students.current', compact('students', 'instructors', 'potentialstudent'));
+        $vatcanOnlyCount = 0;
+        try {
+            $rosterResult = (new VatcanService)->getRoster();
+            if ($rosterResult['status'] === 'ok') {
+                $allMembers = collect(array_merge(
+                    $rosterResult['data']['controllers'] ?? [],
+                    $rosterResult['data']['visitors'] ?? []
+                ));
+                $linkedStudentCids = $students->pluck('user_id')->flip();
+                $vatcanOnlyCount = $allMembers->filter(
+                    fn($m) => !empty($m['instructor']) && !$linkedStudentCids->has($m['cid'])
+                )->count();
+            }
+        } catch (\Exception $e) {
+            // silently fail — banner just won't show
+        }
+
+        return view('dashboard.training.students.current', compact('students', 'instructors', 'potentialstudent', 'vatcanOnlyCount'));
     }
 
     public function newLinkedStudent(Request $request)
