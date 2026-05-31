@@ -62,10 +62,10 @@ class VatcanService
             $response = Http::withHeaders([
                 'Authorization' => 'Token ' . $this->apiKey,
                 'Accept'        => 'application/json',
-            ])->post("{$this->baseUrl}/user/{$studentCid}/instructor/assign", [
+            ])->post("{$this->baseUrl}/user/{$studentCid}/instructor/assign?" . http_build_query([
                 'instructor_cid' => $instructorCid,
                 'assigned_by'    => $assignedBy,
-            ]);
+            ]));
 
             return $response->successful();
         } catch (\Exception $e) {
