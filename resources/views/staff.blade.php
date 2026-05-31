@@ -42,56 +42,67 @@
                         @if($g->description)
                             <p style="color:#6c757d; font-size:0.9rem; margin-bottom:1.25rem;">{{ $g->description }}</p>
                         @endif
-
+            
+                        @php
+                            // Group members by their position title
+                            $byPosition = $g->members->groupBy('position');
+                        @endphp
+            
                         <div class="row">
-                            @foreach($g->members as $member)
-                                <div class="col-md-12 mb-3">
-                                    <div style="background:#f8f9fa; border:1px solid #e9ecef; border-radius:0.5rem; padding:1.25rem; display:flex; align-items:flex-start; gap:1rem; height:100%;">
-                                        {{-- Avatar --}}
-                                        @if($member->user_id == 1)
-                                            <img src="https://www.drupal.org/files/profile_default.png"
-                                                 style="width:64px; height:64px; border-radius:50%; object-fit:cover; flex-shrink:0; border:2px solid #e9ecef;">
-                                        @else
-                                            <img src="{{ $member->user->avatar() }}"
-                                                 style="width:64px; height:64px; border-radius:50%; object-fit:cover; flex-shrink:0; border:2px solid #e9ecef;">
-                                        @endif
-
-                                        {{-- Info --}}
-                                        <div style="flex:1; min-width:0;">
-                                            <div style="font-weight:700; color:#122b44; font-size:1rem; line-height:1.2;">
-                                                @if($member->user_id == 1)
-                                                    Vacant
-                                                @else
-                                                    {{ $member->user->fullName('FL') }}
-                                                @endif
-                                            </div>
-                                            <div style="color:#6c757d; font-size:0.82rem; margin-bottom:0.4rem;">
-                                                {{ $member->position }}
-                                                @if($member->shortform)
-                                                    <span style="margin:0 0.3rem;">·</span>{{ $member->shortform }}
-                                                @endif
-                                            </div>
-
-                                            @if($member->description)
-                                                <p style="font-size:0.85rem; color:#495057; margin-bottom:0.4rem; line-height:1.5;">{{ $member->description }}</p>
+                            @foreach($byPosition as $position => $members)
+                                @php
+                                    $colClass = $members->count() > 1 ? 'col-md-6' : 'col-md-12';
+                                @endphp
+            
+                                @foreach($members as $member)
+                                    <div class="{{ $colClass }} mb-3">
+                                        <div style="background:#f8f9fa; border:1px solid #e9ecef; border-radius:0.5rem; padding:1.25rem; display:flex; align-items:flex-start; gap:1rem; height:100%;">
+                                            {{-- Avatar --}}
+                                            @if($member->user_id == 1)
+                                                <img src="https://www.drupal.org/files/profile_default.png"
+                                                     style="width:64px; height:64px; border-radius:50%; object-fit:cover; flex-shrink:0; border:2px solid #e9ecef;">
+                                            @else
+                                                <img src="{{ $member->user->avatar() }}"
+                                                     style="width:64px; height:64px; border-radius:50%; object-fit:cover; flex-shrink:0; border:2px solid #e9ecef;">
                                             @endif
-
-                                            <div style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center;">
-                                                @if($member->email)
-                                                    <a href="mailto:{{ $member->email }}" style="font-size:0.82rem; color:#122b44;">
-                                                        <i class="fas fa-envelope fa-xs mr-1"></i>{{ $member->email }}
-                                                    </a>
+            
+                                            {{-- Info --}}
+                                            <div style="flex:1; min-width:0;">
+                                                <div style="font-weight:700; color:#122b44; font-size:1rem; line-height:1.2;">
+                                                    @if($member->user_id == 1)
+                                                        Vacant
+                                                    @else
+                                                        {{ $member->user->fullName('FL') }}
+                                                    @endif
+                                                </div>
+                                                <div style="color:#6c757d; font-size:0.82rem; margin-bottom:0.4rem;">
+                                                    {{ $member->position }}
+                                                    @if($member->shortform)
+                                                        <span style="margin:0 0.3rem;">·</span>{{ $member->shortform }}
+                                                    @endif
+                                                </div>
+            
+                                                @if($member->description)
+                                                    <p style="font-size:0.85rem; color:#495057; margin-bottom:0.4rem; line-height:1.5;">{{ $member->description }}</p>
                                                 @endif
-                                                @if($member->user_id != 1 && $member->user->bio)
-                                                    <a href="#" data-toggle="modal" data-target="#viewStaffBio{{ $member->id }}"
-                                                       style="font-size:0.82rem; color:#6c757d;">
-                                                        <i class="fas fa-id-card fa-xs mr-1"></i>View bio
-                                                    </a>
-                                                @endif
+            
+                                                <div style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center;">
+                                                    @if($member->email)
+                                                        <a href="mailto:{{ $member->email }}" style="font-size:0.82rem; color:#122b44;">
+                                                            <i class="fas fa-envelope fa-xs mr-1"></i>{{ $member->email }}
+                                                        </a>
+                                                    @endif
+                                                    @if($member->user_id != 1 && $member->user->bio)
+                                                        <a href="#" data-toggle="modal" data-target="#viewStaffBio{{ $member->id }}"
+                                                           style="font-size:0.82rem; color:#6c757d;">
+                                                            <i class="fas fa-id-card fa-xs mr-1"></i>View bio
+                                                        </a>
+                                                    @endif
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                @endforeach
                             @endforeach
                         </div>
                     </div>
