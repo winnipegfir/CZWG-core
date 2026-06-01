@@ -48,9 +48,11 @@ class TrainingController extends Controller
 
         if ($firResult['status'] === 'error') {
             return view('dashboard.training.reconcile', [
-                'error' => $firResult['message'],
-                'onVatcanNotLinked' => collect(),
-                'linkedNotOnVatcan' => collect(),
+                'error'              => $firResult['message'],
+                'onVatcanNotLinked'  => collect(),
+                'linkedNotOnVatcan'  => collect(),
+                'studentsNotOnRoster' => collect(),
+                'rosterNotInSystem'  => collect(),
             ]);
         }
 
@@ -59,19 +61,31 @@ class TrainingController extends Controller
             $firData['controllers'] ?? [],
             $firData['visitors'] ?? []
         ));
+        $allVatcanCids = $vatcanMembers->pluck('cid')->flip();
 
+        // Existing: instructor sync checks
         $linkedStudentCids = Student::whereNotNull('instructor_id')->pluck('user_id')->flip();
-
         $onVatcanNotLinked = $vatcanMembers
             ->filter(fn($m) => !empty($m['instructor']) && !$linkedStudentCids->has($m['cid']));
-
         $vatcanLinkedCids = $vatcanMembers->filter(fn($m) => !empty($m['instructor']))->pluck('cid')->flip();
-
         $linkedNotOnVatcan = Student::whereNotNull('instructor_id')
             ->get()
             ->filter(fn($s) => !$vatcanLinkedCids->has($s->user_id));
 
-        return view('dashboard.training.reconcile', compact('onVatcanNotLinked', 'linkedNotOnVatcan') + ['error' => null]);
+        // New: students in our system (waitlist or linked) not on the VATCAN roster at all
+        $studentsNotOnRoster = Student::all()
+            ->filter(fn($s) => !$allVatcanCids->has($s->user_id));
+
+        // New: VATCAN roster members not in our training system at all
+        $allStudentCids = Student::pluck('user_id')->flip();
+        $rosterNotInSystem = $vatcanMembers
+            ->filter(fn($m) => !$allStudentCids->has($m['cid']))
+            ->sortBy(fn($m) => ($m['last_name'] ?? '') . ($m['first_name'] ?? ''))
+            ->values();
+
+        return view('dashboard.training.reconcile', compact(
+            'onVatcanNotLinked', 'linkedNotOnVatcan', 'studentsNotOnRoster', 'rosterNotInSystem'
+        ) + ['error' => null]);
     }
 
     public function newNoteView($id)
