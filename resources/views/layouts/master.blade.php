@@ -461,5 +461,38 @@
     <script>
         $("blockquote").addClass('blockquote');
     </script>
+
+    <!-- Version update toast -->
+    <div id="czwg-version-toast" style="display:none;position:fixed;bottom:1.25rem;right:1.25rem;z-index:9999;min-width:280px;max-width:340px;background:#1a1a2e;border:1px solid #2d4a6b;border-radius:6px;padding:1rem 1.1rem;box-shadow:0 4px 18px rgba(0,0,0,0.45);color:#e8eaf0;">
+        <div style="display:flex;align-items:flex-start;gap:0.75rem;">
+            <i class="fas fa-sync-alt" style="margin-top:3px;color:#5b9bd5;flex-shrink:0;"></i>
+            <div style="flex:1;">
+                <div style="font-weight:600;font-size:0.9rem;margin-bottom:0.2rem;">Site updated</div>
+                <div style="font-size:0.82rem;color:#9eafc2;margin-bottom:0.75rem;">A newer version of Winnipeg FIR is available. Refresh to get the latest.</div>
+                <div style="display:flex;gap:0.5rem;">
+                    <button onclick="window.location.reload()" style="flex:1;padding:0.3rem 0.6rem;background:#2563a8;border:none;border-radius:4px;color:#fff;font-size:0.82rem;font-weight:600;cursor:pointer;">Refresh now</button>
+                    <button onclick="document.getElementById('czwg-version-toast').style.display='none'" style="padding:0.3rem 0.6rem;background:transparent;border:1px solid #3a4f66;border-radius:4px;color:#9eafc2;font-size:0.82rem;cursor:pointer;">Dismiss</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+    (function () {
+        var currentBuild = {{ json_encode((string) $__cs->sys_build) }};
+        var shown = false;
+        function checkVersion() {
+            fetch('/version', { cache: 'no-store' })
+                .then(function (r) { return r.json(); })
+                .then(function (data) {
+                    if (!shown && String(data.build) !== String(currentBuild)) {
+                        shown = true;
+                        document.getElementById('czwg-version-toast').style.display = 'block';
+                    }
+                })
+                .catch(function () { /* silently ignore network errors */ });
+        }
+        setInterval(checkVersion, 60000);
+    })();
+    </script>
     </body>
 </html>

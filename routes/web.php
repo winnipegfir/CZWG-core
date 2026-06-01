@@ -45,6 +45,9 @@ Route::view('/bill', 'bill')->name('bill');
 Route::view('/wpg', 'wpg')->name('wpg');
 Route::view('/pdc', 'pdc')->name('pdc');
 Route::view('/vote', 'vote')->name('vote');
+Route::get('/version', function () {
+    return response()->json(['build' => \App\Models\Settings\CoreSettings::where('id', 1)->value('sys_build')]);
+});
 
 Route::prefix('yearend')->group(function () {
     Route::redirect('/', 'yearend/2023');

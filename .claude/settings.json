@@ -52,7 +52,10 @@
       "Bash(git pull *)",
       "Bash(Get-Content C:\\\\laragon\\\\www\\\\winnipegfir\\\\storage\\\\logs\\\\laravel.log -Tail 40)",
       "WebFetch(domain:atc-bookings.vatsim.net)",
-      "Bash(Get-ChildItem -Path \"c:\\\\laragon\\\\www\\\\winnipegfir\\\\app\\\\Http\\\\Controllers\" -Directory)"
+      "Bash(Get-ChildItem -Path \"c:\\\\laragon\\\\www\\\\winnipegfir\\\\app\\\\Http\\\\Controllers\" -Directory)",
+      "Bash(grep -rn \"yourinstructor\\\\|waitlistPosition\\\\|waitlistTypeTotal\" /mnt/c/laragon/www/winnipegfir/resources/views/dashboard/)",
+      "Read(//mnt/c/laragon/www/winnipegfir/resources/views/**)",
+      "Read(//c/laragon/www/winnipegfir/resources/views/dashboard/**)"
     ],
     "additionalDirectories": [
       "c:\\laragon\\www\\winnipegfir\\\nVATCAN_API_KEY=fYKopA4iUT1Ul5lG1GJz4lcjx6KYcILAS5jabHUq7dY3wgCUNQ\nVATCAN_API_URL=https:"
