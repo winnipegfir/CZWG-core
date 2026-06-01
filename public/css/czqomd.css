@@ -565,7 +565,7 @@ div.notes{
         background: #fff !important;
         overflow-y: auto !important;
         z-index: 1048 !important;
-        padding: 1rem 1.5rem 3rem !important;
+        padding: 0 1.5rem 3rem !important;
         border-top: 1px solid rgba(0,0,0,0.08) !important;
     }
 
@@ -583,6 +583,11 @@ div.notes{
     }
 
     #dashNavbar .nav-link::before { display: none !important; }
+
+    /* No double separator before user section */
+    #dashNavbar .navbar-nav.mr-auto > .nav-item:last-child > .nav-link {
+        border-bottom: none !important;
+    }
 
     #dashNavbar .dropdown-toggle::after {
         float: right !important;
@@ -613,8 +618,8 @@ div.notes{
         flex-wrap: wrap !important;
         align-items: center !important;
         border-top: 1px solid rgba(0,0,0,0.08) !important;
-        margin-top: 0.5rem !important;
-        padding-top: 1rem !important;
+        margin-top: -0.25rem !important;
+        padding-top: 0.5rem !important;
     }
 
     #dashNavbar .navbar-nav.ml-auto > .nav-item:not(.dash-nav-social) {
@@ -823,7 +828,7 @@ div.notes{
         background: #0d2035 !important;
         overflow-y: auto !important;
         z-index: 1048 !important;
-        padding: 1rem 1.5rem 3rem !important;
+        padding: 0 1.5rem 3rem !important;
         transition: none !important;
         height: auto !important;
         max-height: none !important;
@@ -876,6 +881,11 @@ div.notes{
 
     #navbarSupportedContent .nav-link::before { display: none !important; }
 
+    /* No double separator before user section */
+    #navbarSupportedContent .navbar-nav.mr-auto > .nav-item:last-child > .nav-link {
+        border-bottom: none !important;
+    }
+
     #navbarSupportedContent .dropdown-toggle::after {
         float: right !important;
         margin-top: 0.55em !important;
@@ -916,8 +926,8 @@ div.notes{
         align-items: center !important;
         width: 100% !important;
         border-top: 1px solid rgba(255,255,255,0.1) !important;
-        margin-top: 0.5rem !important;
-        padding-top: 1rem !important;
+        margin-top: -0.25rem !important;
+        padding-top: 0.5rem !important;
     }
 
     #navbarSupportedContent .navbar-nav.ml-auto > .nav-item:not(.nav-social) {
