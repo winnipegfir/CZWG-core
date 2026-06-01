@@ -25,10 +25,12 @@ $lastOnline  = $lastSession ? \Carbon\Carbon::parse($lastSession->session_end)->
 <style>
 /* ── Profile hero ──────────────────────────────────────── */
 .profile-hero {
-    background: linear-gradient(135deg, #0a1828 0%, #0d1f33 60%, #122b44 100%);
-    border-bottom: 1px solid rgba(255,255,255,0.08);
+    background: linear-gradient(135deg, #080f1a 0%, #0d2035 50%, #122b44 100%);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
     padding: 2rem 0 1.75rem;
     color: #fff;
+    position: relative;
+    overflow: hidden;
 }
 .profile-hero a.back-link {
     display: inline-flex;
@@ -171,7 +173,7 @@ $lastOnline  = $lastSession ? \Carbon\Carbon::parse($lastSession->session_end)->
 .heatmap-wrap {
     display: flex;
     gap: 0;
-    min-width: max-content;
+    width: 100%;
 }
 .heatmap-days-col {
     display: flex;
@@ -179,14 +181,36 @@ $lastOnline  = $lastSession ? \Carbon\Carbon::parse($lastSession->session_end)->
     padding-top: 18px;
     padding-right: 6px;
     gap: 2px;
+    flex-shrink: 0;
 }
 .heatmap-day-label {
     font-size: 0.58rem;
     color: rgba(0,0,0,0.3);
-    height: 11px;
-    line-height: 11px;
+    height: var(--hm-cell, 11px);
+    line-height: var(--hm-cell, 11px);
     text-align: right;
     white-space: nowrap;
+}
+.heatmap-month-row {
+    display: flex;
+    gap: 2px;
+    height: 16px;
+    margin-bottom: 2px;
+    font-size: 0.58rem;
+    color: rgba(0,0,0,0.3);
+}
+.heatmap-month-row .hm-month-label {
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    line-height: 16px;
+    padding: 0 4px;
+    box-sizing: border-box;
+}
+.hm-month-spacer, .hm-col-spacer {
+    width: 8px;
+    flex-shrink: 0;
+    flex-grow: 0;
 }
 .heatmap-cols {
     display: flex;
@@ -197,18 +221,12 @@ $lastOnline  = $lastSession ? \Carbon\Carbon::parse($lastSession->session_end)->
     display: flex;
     flex-direction: column;
     gap: 2px;
-}
-.heatmap-month-label {
-    font-size: 0.58rem;
-    color: rgba(0,0,0,0.3);
-    height: 16px;
-    line-height: 16px;
-    white-space: nowrap;
-    overflow: visible;
+    width: var(--hm-cell, 14px);
+    flex-shrink: 0;
 }
 .hm-cell {
-    width: 11px;
-    height: 11px;
+    width: var(--hm-cell, 14px);
+    height: var(--hm-cell, 14px);
     border-radius: 2px;
     cursor: default;
     flex-shrink: 0;
@@ -286,7 +304,13 @@ $lastOnline  = $lastSession ? \Carbon\Carbon::parse($lastSession->session_end)->
 
 {{-- HERO --}}
 <div class="profile-hero">
-    <div class="container">
+    <div style="position:absolute; inset:0; pointer-events:none; overflow:hidden;">
+        <img src="{{ $user->avatar() }}"
+             style="position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+                    width:140%; height:140%; object-fit:cover;
+                    filter:blur(50px); opacity:0.09;">
+    </div>
+    <div class="container" style="position:relative;">
         <a href="{{ route('roster.public') }}" class="back-link">
             <i class="fas fa-arrow-left fa-xs"></i> Roster
         </a>
@@ -336,8 +360,33 @@ $lastOnline  = $lastSession ? \Carbon\Carbon::parse($lastSession->session_end)->
     <div class="container">
         <div class="row">
 
-            {{-- Left: Certifications --}}
+            {{-- Left: Certifications + Heatmap --}}
             @if($rosterMember)
+            @php
+                $today      = \Carbon\Carbon::today();
+                $qFirstMonth = (int)ceil($today->month / 3) * 3 - 2;
+                $qStart     = \Carbon\Carbon::create($today->year, $qFirstMonth, 1);
+                $gridStart  = $qStart->copy()->startOfWeek(\Carbon\Carbon::SUNDAY);
+                $gridEnd    = $today->copy()->endOfWeek(\Carbon\Carbon::SATURDAY);
+                $weeks = [];
+                $cursor = $gridStart->copy();
+                while ($cursor->lte($gridEnd)) {
+                    $week = [];
+                    for ($d = 0; $d < 7; $d++) { $week[] = $cursor->copy(); $cursor->addDay(); }
+                    $weeks[] = $week;
+                }
+                $hmLevel = fn(float $h): int => match(true) {
+                    $h <= 0 => 0, $h < 1 => 1, $h < 2 => 2, $h < 4 => 3, default => 4
+                };
+                $monthGroups = [];
+                foreach ($weeks as $week) {
+                    $key = $week[0]->format('Y-n');
+                    if (!isset($monthGroups[$key])) {
+                        $monthGroups[$key] = ['label' => $week[0]->format('M'), 'count' => 0];
+                    }
+                    $monthGroups[$key]['count']++;
+                }
+            @endphp
             <div class="col-md-5">
                 <div class="profile-card">
                     <div class="profile-card-title">Certifications</div>
@@ -354,6 +403,89 @@ $lastOnline  = $lastSession ? \Carbon\Carbon::parse($lastSession->session_end)->
                             </div>
                         </div>
                         @endforeach
+                    </div>
+                </div>
+
+                <div class="profile-card">
+                    <div class="profile-card-title">Activity This Quarter</div>
+                    <div class="heatmap-wrap" id="heatmap-container">
+                        <div class="heatmap-days-col">
+                            <div class="heatmap-day-label"></div>
+                            <div class="heatmap-day-label">Mon</div>
+                            <div class="heatmap-day-label"></div>
+                            <div class="heatmap-day-label">Wed</div>
+                            <div class="heatmap-day-label"></div>
+                            <div class="heatmap-day-label">Fri</div>
+                            <div class="heatmap-day-label"></div>
+                        </div>
+                        <div style="display:flex; flex-direction:column; flex:1; min-width:0;">
+                            <div class="heatmap-month-row" id="heatmap-month-row">
+                            @foreach($monthGroups as $mg)
+                                @if(!$loop->first)<div class="hm-month-spacer"></div>@endif
+                                <div class="hm-month-label" data-weeks="{{ $mg['count'] }}">{{ $mg['label'] }}</div>
+                            @endforeach
+                            </div>
+                            <div class="heatmap-cols">
+                            @php $hmPrevMonth = -1; @endphp
+                            @foreach($weeks as $week)
+                                @php
+                                    $isNewMonth = $week[0]->month !== $hmPrevMonth;
+                                    if ($isNewMonth) $hmPrevMonth = $week[0]->month;
+                                @endphp
+                                @if($isNewMonth && !$loop->first)
+                                    <div class="hm-col-spacer"></div>
+                                @endif
+                                <div class="heatmap-col">
+                                    @foreach($week as $day)
+                                    @php
+                                        $dateStr  = $day->format('Y-m-d');
+                                        $hrs      = $heatmapData[$dateStr] ?? 0;
+                                        $lvl      = $hmLevel((float)$hrs);
+                                        $isFuture = $day->gt($today);
+                                        $tip      = $isFuture ? '' : ($hrs > 0 ? $day->format('M j').': '.decimal_to_hm($hrs) : $day->format('M j').': no activity');
+                                    @endphp
+                                    <div class="hm-cell {{ $isFuture ? 'hm-future' : 'hm-'.$lvl }}"
+                                         @if($tip) title="{{ $tip }}" @endif></div>
+                                    @endforeach
+                                </div>
+                            @endforeach
+                            </div>
+                        </div>
+                    </div>
+                    <script>
+                    (function() {
+                        function syncHeatmap() {
+                            var container = document.getElementById('heatmap-container');
+                            if (!container) return;
+                            var dayCol  = container.querySelector('.heatmap-days-col');
+                            var cols    = container.querySelectorAll('.heatmap-col');
+                            var spacers = container.querySelectorAll('.hm-col-spacer');
+                            var nCols   = cols.length;
+                            var nSpc    = spacers.length;
+                            var available = container.clientWidth - (dayCol ? dayCol.offsetWidth : 0);
+                            var totalGaps = (nCols + nSpc - 1) * 2;
+                            var spacerPx  = nSpc * 8;
+                            var size = Math.floor((available - totalGaps - spacerPx) / nCols);
+                            size = Math.min(20, Math.max(8, size));
+                            container.style.setProperty('--hm-cell', size + 'px');
+                            // Set month label widths to match: N weeks * (size+2) - 2
+                            container.querySelectorAll('.hm-month-label').forEach(function(el) {
+                                var n = parseInt(el.dataset.weeks, 10);
+                                el.style.width = (n * (size + 2) - 2) + 'px';
+                            });
+                        }
+                        window.addEventListener('load', syncHeatmap);
+                        window.addEventListener('resize', syncHeatmap);
+                    })();
+                    </script>
+                    <div class="heatmap-legend">
+                        <span>Less</span>
+                        <div class="hm-legend-cell hm-0"></div>
+                        <div class="hm-legend-cell hm-1"></div>
+                        <div class="hm-legend-cell hm-2"></div>
+                        <div class="hm-legend-cell hm-3"></div>
+                        <div class="hm-legend-cell hm-4"></div>
+                        <span>More</span>
                     </div>
                 </div>
             </div>
@@ -408,71 +540,6 @@ $lastOnline  = $lastSession ? \Carbon\Carbon::parse($lastSession->session_end)->
 
         </div>{{-- end .row --}}
 
-        {{-- Heatmap: full width --}}
-        @if($rosterMember)
-        @php
-            $today     = \Carbon\Carbon::today();
-            $gridStart = $today->copy()->subMonths(6)->startOfWeek(\Carbon\Carbon::SUNDAY);
-            $gridEnd   = $today->copy()->endOfWeek(\Carbon\Carbon::SATURDAY);
-            $weeks = [];
-            $cursor = $gridStart->copy();
-            while ($cursor->lte($gridEnd)) {
-                $week = [];
-                for ($d = 0; $d < 7; $d++) { $week[] = $cursor->copy(); $cursor->addDay(); }
-                $weeks[] = $week;
-            }
-            $hmLevel = fn(float $h): int => match(true) {
-                $h <= 0 => 0, $h < 1 => 1, $h < 2 => 2, $h < 4 => 3, default => 4
-            };
-        @endphp
-        <div class="profile-card">
-            <div class="profile-card-title">Controlling Activity</div>
-            <div class="heatmap-wrap">
-                <div class="heatmap-days-col">
-                    <div class="heatmap-day-label"></div>
-                    <div class="heatmap-day-label">Mon</div>
-                    <div class="heatmap-day-label"></div>
-                    <div class="heatmap-day-label">Wed</div>
-                    <div class="heatmap-day-label"></div>
-                    <div class="heatmap-day-label">Fri</div>
-                    <div class="heatmap-day-label"></div>
-                </div>
-                <div class="heatmap-cols">
-                @php $prevMonth = -1; @endphp
-                @foreach($weeks as $week)
-                <div class="heatmap-col">
-                    @php
-                        $firstDay  = $week[0];
-                        $showMonth = ($firstDay->month !== $prevMonth);
-                        if ($showMonth) $prevMonth = $firstDay->month;
-                    @endphp
-                    <div class="heatmap-month-label">{{ $showMonth ? $firstDay->format('M') : '' }}</div>
-                    @foreach($week as $day)
-                    @php
-                        $dateStr  = $day->format('Y-m-d');
-                        $hrs      = $heatmapData[$dateStr] ?? 0;
-                        $lvl      = $hmLevel((float)$hrs);
-                        $isFuture = $day->gt($today);
-                        $tip      = $isFuture ? '' : ($hrs > 0 ? $day->format('M j').': '.decimal_to_hm($hrs) : $day->format('M j').': no activity');
-                    @endphp
-                    <div class="hm-cell {{ $isFuture ? 'hm-future' : 'hm-'.$lvl }}"
-                         @if($tip) title="{{ $tip }}" @endif></div>
-                    @endforeach
-                </div>
-                @endforeach
-                </div>
-            </div>
-            <div class="heatmap-legend">
-                <span>Less</span>
-                <div class="hm-legend-cell hm-0"></div>
-                <div class="hm-legend-cell hm-1"></div>
-                <div class="hm-legend-cell hm-2"></div>
-                <div class="hm-legend-cell hm-3"></div>
-                <div class="hm-legend-cell hm-4"></div>
-                <span>More</span>
-            </div>
-        </div>
-        @endif
 
     </div>{{-- end .container --}}
 </div>{{-- end .profile-body --}}
