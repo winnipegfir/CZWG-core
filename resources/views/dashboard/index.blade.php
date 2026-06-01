@@ -88,6 +88,7 @@
     background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 0.6rem;
     padding: 0.85rem 0.9rem; text-decoration: none !important; color: #122b44 !important;
     transition: background 0.12s, box-shadow 0.12s, transform 0.12s;
+    text-align: left;
 }
 .db-tile:hover {
     background: #f0f4f8; border-color: #cbd5e1;
@@ -100,6 +101,18 @@
 }
 .db-tile-label { font-size: 0.8rem; font-weight: 600; line-height: 1.25; color: #1e293b; }
 .db-tile-sub   { font-size: 0.68rem; color: #94a3b8; }
+
+/* ── Mobile ──────────────────────────────────────────────── */
+@media (max-width: 640px) {
+    .db-hero { padding: 1.5rem 0 1.25rem; }
+    .db-hero-inner { gap: 1rem; }
+    .db-avatar { width: 64px; height: 64px; }
+    .db-avatar-btn { width: 22px; height: 22px; }
+    .db-name { font-size: 1.25rem; }
+    .db-sub { font-size: 0.75rem; margin-bottom: 0.4rem; }
+    .db-activity { min-width: 0; width: 100%; box-sizing: border-box; }
+    .db-tile-grid-3 { grid-template-columns: repeat(2, 1fr); }
+}
 
 /* Resource rows */
 .db-resource-row {
@@ -146,12 +159,12 @@
                         <i class="fas fa-pen" style="font-size:0.75rem; color:#fff;"></i>
                     </button>
                 </h1>
-                <p class="db-sub">
+                <p class="db-sub" style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
                     {{ Auth::user()->id }}
-                    &nbsp;&middot;&nbsp;
-                    {{ Auth::user()->rating->getLongName() }} ({{ Auth::user()->rating->getShortName() }})
+                    &middot;
+                    {{ Auth::user()->rating->getShortName() }}
                     @if(Auth::user()->staffProfile)
-                        &nbsp;&middot;&nbsp; {{ Auth::user()->staffProfile->position }}
+                        &middot; {{ Auth::user()->staffProfile->position }}
                     @endif
                 </p>
                 <div style="display:flex; flex-wrap:wrap; gap:0.4rem; align-items:center;">
@@ -326,7 +339,7 @@
                 <div class="db-tile-grid db-tile-grid-3">
                     <a href="https://training.winnipegfir.ca" target="_blank" class="db-tile">
                         <div class="db-tile-icon" style="background:#eff6ff; color:#2563eb;"><i class="fas fa-graduation-cap"></i></div>
-                        <span class="db-tile-label">Training Portal</span>
+                        <span class="db-tile-label">Winnipeg365 Training</span>
                     </a>
                     <a href="{{ route('tickets.index', ['create' => 'yes']) }}" class="db-tile">
                         <div class="db-tile-icon" style="background:#f0fdf4; color:#16a34a;"><i class="fas fa-plus-circle"></i></div>
@@ -344,6 +357,12 @@
                     <a href="{{ url('/dashboard/events/view') }}" class="db-tile">
                         <div class="db-tile-icon" style="background:#f0fdf4; color:#16a34a;"><i class="fas fa-calendar-alt"></i></div>
                         <span class="db-tile-label">Event Rosters</span>
+                    </a>
+                    @endif
+                    @if(false)
+                    <a href="#" class="db-tile">
+                        <div class="db-tile-icon" style="background:#eff6ff; color:#2563eb;"><i class="fas fa-calendar-check"></i></div>
+                        <span class="db-tile-label">ATC Bookings</span>
                     </a>
                     @endif
                 </div>
@@ -373,7 +392,7 @@
                     </a>
                     <a href="{{ route('roster.index') }}" class="db-tile">
                         <div class="db-tile-icon" style="background:#f0fdf4; color:#16a34a;"><i class="fas fa-users"></i></div>
-                        <span class="db-tile-label">Controller Roster</span>
+                        <span class="db-tile-label">Manage Roster</span>
                     </a>
                     <a href="{{ route('events.admin.index') }}" class="db-tile">
                         <div class="db-tile-icon" style="background:#fdf4ff; color:#9333ea;"><i class="fas fa-calendar-alt"></i></div>
@@ -415,61 +434,8 @@
         {{-- RIGHT ─ info & context --}}
         <div class="col-lg-4">
 
-            {{-- Discord & Emails --}}
-            <div class="db-card">
-                <div class="db-card-label">Account</div>
-                <div class="db-tile-grid">
-                    @if(!Auth::user()->hasDiscord())
-                    <a href="#" class="db-tile" data-toggle="modal" data-target="#discordModal">
-                        <div class="db-tile-icon" style="background:#eef2ff; color:#7289da;"><i class="fab fa-discord"></i></div>
-                        <span class="db-tile-label">Discord</span>
-                        <span class="db-tile-sub">Not linked</span>
-                    </a>
-                    @else
-                    <a href="#" class="db-tile" data-toggle="modal" data-target="#discordModal">
-                        <div class="db-tile-icon" style="background:#eef2ff; color:#7289da;">
-                            <img src="{{ Auth::user()->getDiscordAvatar() }}" style="width:30px; height:30px; border-radius:50%; object-fit:cover;">
-                        </div>
-                        <span class="db-tile-label">Discord</span>
-                        <span class="db-tile-sub">{{ Auth::user()->getDiscordUser()->username }}</span>
-                    </a>
-                    @endif
-
-                    @if(Auth::user()->gdpr_subscribed_emails == 0)
-                    <a href="{{ url('/dashboard/emailpref/subscribe') }}" class="db-tile">
-                        <div class="db-tile-icon" style="background:#fef2f2; color:#ef4444;"><i class="fas fa-envelope"></i></div>
-                        <span class="db-tile-label">Emails</span>
-                        <span class="db-tile-sub">Not subscribed</span>
-                    </a>
-                    @else
-                    <a href="{{ url('/dashboard/emailpref/unsubscribe') }}" class="db-tile">
-                        <div class="db-tile-icon" style="background:#f0fdf4; color:#16a34a;"><i class="fas fa-envelope"></i></div>
-                        <span class="db-tile-label">Emails</span>
-                        <span class="db-tile-sub">Subscribed</span>
-                    </a>
-                    @endif
-
-                    <button class="db-tile" style="border:1px solid #e2e8f0; cursor:pointer;" data-toggle="modal" data-target="#bioModal">
-                        <div class="db-tile-icon" style="background:#f8fafc; color:#64748b;"><i class="fas fa-align-left"></i></div>
-                        <span class="db-tile-label">Biography</span>
-                    </button>
-
-                    <a href="{{ route('me.data') }}" class="db-tile">
-                        <div class="db-tile-icon" style="background:#f8fafc; color:#64748b;"><i class="fas fa-database"></i></div>
-                        <span class="db-tile-label">My Data</span>
-                    </a>
-                </div>
-                @if(Auth::user()->hasDiscord() && !Auth::user()->memberOfCZWGGuild())
-                <div style="margin-top:0.6rem; padding:0.55rem 0.7rem; background:#eef2ff; border-radius:0.4rem; font-size:0.76rem; color:#4338ca; display:flex; align-items:center; gap:0.5rem;">
-                    <i class="fab fa-discord fa-xs"></i>
-                    <span style="flex:1;">You're not in the CZWG Discord.</span>
-                    <a href="#" data-toggle="modal" data-target="#joinDiscordServerModal" style="color:#4338ca; font-weight:600; text-decoration:none; white-space:nowrap;">Join &rarr;</a>
-                </div>
-                @endif
-            </div>
-
             {{-- ATC Resources --}}
-            @if(Auth::user()->permissions >= 1 || $certification == 'training')
+            @if((Auth::user()->rosterProfile && Auth::user()->rosterProfile->status != 'not_certified') || Auth::user()->permissions >= 4)
             <div class="db-card">
                 <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.9rem;">
                     <div class="db-card-label" style="margin-bottom:0;">ATC Resources</div>
@@ -481,7 +447,7 @@
                 </div>
                 @forelse($atcResources as $resource)
                     @if(!$resource->atc_only || Auth::user()->permissions >= 1)
-                    <div class="db-resource-row">
+                    <div class="db-resource-row" style="{{ $loop->last ? 'border-bottom:none;' : '' }}">
                         <span style="flex:1;">{{ $resource->title }}</span>
                         <a href="{{ $resource->url }}" target="_blank"
                            style="color:#94a3b8; font-size:0.8rem; margin-left:0.75rem; text-decoration:none;">
@@ -492,6 +458,49 @@
                 @empty
                     <p style="font-size:0.82rem; color:#94a3b8; margin:0;">No resources yet.</p>
                 @endforelse
+
+                @if($yourinstructor && $yourinstructor->status != 0 && $yourinstructor->instructor != null)
+                <div style="display:flex; align-items:center; gap:0.75rem; margin-top:0.9rem; padding-top:0.9rem; border-top:1px solid #f1f5f9;">
+                    <div style="width:34px; height:34px; border-radius:8px; background:#eff6ff; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <i class="fas fa-chalkboard-teacher" style="color:#2563eb; font-size:0.82rem;"></i>
+                    </div>
+                    <div>
+                        <div style="font-size:0.7rem; font-weight:700; letter-spacing:0.07em; text-transform:uppercase; color:#94a3b8; margin-bottom:0.15rem;">Your Instructor</div>
+                        <div style="font-size:0.875rem; font-weight:600; color:#1e293b;">{{ $yourinstructor->instructor->user->fullName('FL') }}</div>
+                        <div style="font-size:0.72rem; color:#94a3b8;">{{ $yourinstructor->instructor->email }}</div>
+                    </div>
+                </div>
+                @elseif($certification == 'training' && !($yourinstructor && $yourinstructor->status == 0))
+                <div style="margin-top:0.9rem; padding-top:0.9rem; border-top:1px solid #f1f5f9; font-size:0.82rem; color:#94a3b8;">
+                    No instructor assigned yet. Contact staff if you have questions.
+                </div>
+                @endif
+            </div>
+            @endif
+
+            @if(false)
+            {{-- ATC Bookings (hidden until VATSIM_BOOKING_KEY is available) --}}
+            {{-- To enable: remove @if(false)/@endif, replace $previewBookings with $myBookings, update href to route('bookings.index') --}}
+            @php
+                $previewBookings = collect([
+                    ['callsign' => 'CZWG_CTR', 'start' => '2026-06-03 14:00:00', 'end' => '2026-06-03 17:00:00'],
+                    ['callsign' => 'CYWG_APP', 'start' => '2026-06-05 22:00:00', 'end' => '2026-06-05 23:30:00'],
+                ]);
+            @endphp
+            <div class="db-card">
+                <div class="db-card-label">ATC Bookings</div>
+                @foreach($previewBookings as $b)
+                @php $start = \Carbon\Carbon::parse($b['start']); $end = \Carbon\Carbon::parse($b['end']); @endphp
+                <div class="db-resource-row">
+                    <div style="flex:1;">
+                        <div style="font-weight:600; font-size:0.875rem; color:#1e293b;">{{ $b['callsign'] }}</div>
+                        <div style="font-size:0.72rem; color:#64748b;">{{ $start->format('M j') }} &middot; {{ $start->format('H:i') }}z &ndash; {{ $end->format('H:i') }}z</div>
+                    </div>
+                </div>
+                @endforeach
+                <a href="#" style="font-size:0.78rem; color:#2563eb; text-decoration:none; display:inline-block; margin-top:0.65rem;">
+                    Manage bookings &rarr;
+                </a>
             </div>
             @endif
 
@@ -523,26 +532,79 @@
                 @endif
             </div>
 
-            {{-- Training status (non-staff) --}}
-            @if($yourinstructor && $yourinstructor->status != 0 && $yourinstructor->instructor != null && Auth::user()->permissions < 4)
+            {{-- Account --}}
             <div class="db-card">
-                <div class="db-card-label">Your Instructor</div>
-                <div style="display:flex; align-items:center; gap:0.75rem;">
-                    <div class="db-tile-icon" style="background:#eff6ff; color:#2563eb; width:36px; height:36px; border-radius:8px; flex-shrink:0;">
-                        <i class="fas fa-chalkboard-teacher"></i>
+                <div class="db-card-label">Account</div>
+
+                {{-- Discord --}}
+                <div style="display:flex; align-items:center; gap:0.75rem; padding:0.6rem 0; border-bottom:1px solid #f1f5f9;">
+                    <div style="width:32px; height:32px; border-radius:8px; background:#eef2ff; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        @if(Auth::user()->hasDiscord())
+                            <img src="{{ Auth::user()->getDiscordAvatar() }}" style="width:32px; height:32px; border-radius:8px; object-fit:cover;">
+                        @else
+                            <i class="fab fa-discord" style="color:#7289da; font-size:0.85rem;"></i>
+                        @endif
                     </div>
-                    <div>
-                        <div style="font-size:0.875rem; font-weight:600; color:#1e293b;">{{ $yourinstructor->instructor->user->fullName('FL') }}</div>
-                        <a href="mailto:{{ $yourinstructor->instructor->email }}" style="font-size:0.75rem; color:#2563eb; text-decoration:none;">{{ $yourinstructor->instructor->email }}</a>
+                    <div style="flex:1; min-width:0;">
+                        <div style="font-size:0.82rem; font-weight:600; color:#1e293b;">Discord</div>
+                        <div style="font-size:0.72rem; color:#94a3b8;">
+                            @if(Auth::user()->hasDiscord()){{ Auth::user()->getDiscordUser()->username }}@else Not linked @endif
+                        </div>
                     </div>
+                    @if(Auth::user()->hasDiscord())
+                        <a href="#" data-toggle="modal" data-target="#discordModal" style="font-size:0.72rem; color:#ef4444; text-decoration:none; white-space:nowrap;">Unlink</a>
+                    @else
+                        <a href="#" data-toggle="modal" data-target="#discordModal" style="font-size:0.72rem; color:#2563eb; text-decoration:none; white-space:nowrap;">Link &rarr;</a>
+                    @endif
                 </div>
+
+                @if(Auth::user()->hasDiscord() && !Auth::user()->memberOfCZWGGuild())
+                <div style="padding:0.5rem 0.65rem; background:#eef2ff; border-radius:0.4rem; font-size:0.72rem; color:#4338ca; display:flex; align-items:center; gap:0.5rem; margin:0.4rem 0;">
+                    <i class="fab fa-discord fa-xs"></i>
+                    <span style="flex:1;">You're not in the CZWG Discord server.</span>
+                    <a href="#" data-toggle="modal" data-target="#joinDiscordServerModal" style="color:#4338ca; font-weight:600; text-decoration:none; white-space:nowrap;">Join &rarr;</a>
+                </div>
+                @endif
+
+                {{-- Emails --}}
+                <div style="display:flex; align-items:center; gap:0.75rem; padding:0.6rem 0; border-bottom:1px solid #f1f5f9;">
+                    <div style="width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; {{ Auth::user()->gdpr_subscribed_emails ? 'background:#f0fdf4;' : 'background:#fef2f2;' }}">
+                        <i class="fas fa-envelope" style="font-size:0.82rem; {{ Auth::user()->gdpr_subscribed_emails ? 'color:#16a34a;' : 'color:#ef4444;' }}"></i>
+                    </div>
+                    <div style="flex:1;">
+                        <div style="font-size:0.82rem; font-weight:600; color:#1e293b;">Email notifications</div>
+                        <div style="font-size:0.72rem; color:#94a3b8;">{{ Auth::user()->gdpr_subscribed_emails ? 'Subscribed' : 'Not subscribed' }}</div>
+                    </div>
+                    @if(Auth::user()->gdpr_subscribed_emails == 0)
+                        <a href="{{ url('/dashboard/emailpref/subscribe') }}" style="font-size:0.72rem; color:#16a34a; text-decoration:none; white-space:nowrap;">Subscribe &rarr;</a>
+                    @else
+                        <a href="{{ url('/dashboard/emailpref/unsubscribe') }}" style="font-size:0.72rem; color:#ef4444; text-decoration:none; white-space:nowrap;">Unsubscribe</a>
+                    @endif
+                </div>
+
+                {{-- Biography --}}
+                <div style="display:flex; align-items:center; gap:0.75rem; padding:0.6rem 0; border-bottom:1px solid #f1f5f9;">
+                    <div style="width:32px; height:32px; border-radius:8px; background:#f8fafc; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <i class="fas fa-align-left" style="color:#94a3b8; font-size:0.82rem;"></i>
+                    </div>
+                    <div style="flex:1;">
+                        <div style="font-size:0.82rem; font-weight:600; color:#1e293b;">Biography</div>
+                    </div>
+                    <button data-toggle="modal" data-target="#bioModal" style="background:none; border:none; padding:0; font-size:0.72rem; color:#2563eb; cursor:pointer; white-space:nowrap;">Edit &rarr;</button>
+                </div>
+
+                {{-- My Data --}}
+                <div style="display:flex; align-items:center; gap:0.75rem; padding:0.6rem 0;">
+                    <div style="width:32px; height:32px; border-radius:8px; background:#f8fafc; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <i class="fas fa-database" style="color:#94a3b8; font-size:0.82rem;"></i>
+                    </div>
+                    <div style="flex:1;">
+                        <div style="font-size:0.82rem; font-weight:600; color:#1e293b;">My Data</div>
+                    </div>
+                    <a href="{{ route('me.data') }}" style="font-size:0.72rem; color:#2563eb; text-decoration:none; white-space:nowrap;">Manage &rarr;</a>
+                </div>
+
             </div>
-            @elseif($certification == 'training' && !($yourinstructor && $yourinstructor->status == 0))
-            <div class="db-card">
-                <div class="db-card-label">Training</div>
-                <p style="font-size:0.82rem; color:#94a3b8; margin:0;">No instructor assigned yet. Contact staff if you have questions.</p>
-            </div>
-            @endif
 
         </div>{{-- end right col --}}
 
