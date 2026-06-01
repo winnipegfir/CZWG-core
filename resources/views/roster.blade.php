@@ -15,7 +15,7 @@ function certBadge($level) {
 @endphp
 
 @section('content')
-<div class="roster-page-wrap">
+<div class="container roster-page-wrap">
 
     {{-- Page header --}}
     <div class="roster-page-header">
@@ -114,7 +114,7 @@ function certBadge($level) {
                     <tr>
                         <td><a href="{{url('/roster/'.$vc->cid)}}" class="roster-cid">{{$vc->cid}}</a></td>
                         <td class="roster-name">{{$vc->user->fullName('FL')}}</td>
-                        <td><span class="rating-badge">{{$vc->user->rating_short}}</span></td>
+                        <td><span class="rating-badge">{{$vc->user->rating->getShortName()}}</span></td>
                         <td>{!! certBadge($vc->del) !!}</td>
                         <td>{!! certBadge($vc->gnd) !!}</td>
                         <td>{!! certBadge($vc->twr) !!}</td>
