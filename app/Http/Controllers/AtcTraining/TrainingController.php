@@ -351,6 +351,7 @@ class TrainingController extends Controller
 
     public function activateWithInstructor(Request $request, $id)
     {
+        abort_if(Auth::user()->permissions < 4, 403);
         $student = Student::where('id', $id)->firstOrFail();
         $instructorId = $request->input('instructor');
         $vatcan = new VatcanService;
@@ -460,6 +461,7 @@ class TrainingController extends Controller
 
     public function assignInstructorToStudent(Request $request, $id)
     {
+        abort_if(Auth::user()->permissions < 4, 403);
         $student = Student::where('id', $id)->firstOrFail();
         $instructorInput = $request->input('instructor');
         $vatcan = new VatcanService;

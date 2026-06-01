@@ -154,7 +154,7 @@
             @endif
 
             {{-- Actions --}}
-            @if(Auth::user()->permissions >= 3)
+            @if(Auth::user()->permissions >= 4)
             <div class="card mb-4">
                 <div class="card-body">
                     <h5 class="font-weight-bold mb-1" style="color:#122b44;">Instructor</h5>
