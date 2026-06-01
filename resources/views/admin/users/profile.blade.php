@@ -191,11 +191,14 @@ $reqHours = $user->rosterProfile?->status !== null && $user->rosterProfile?->sta
                         <span class="au-badge" style="background:#fee2e2; color:#b91c1c; margin:0;"><i class="fas fa-times fa-xs"></i> Requirement not met</span>
                         @endif
                     </div>
-                    <div style="display:flex; align-items:center; gap:0.75rem;">
+                    <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.5rem;">
                         <div class="au-activity-bar-track">
                             <div class="au-activity-bar-fill" style="width:{{ $pct }}%; background:{{ $met ? '#16a34a' : '#ef4444' }};"></div>
                         </div>
                         <span style="font-size:0.72rem; color:rgba(0,0,0,0.35); width:32px; text-align:right;">{{ $pct }}%</span>
+                    </div>
+                    <div style="font-size:0.7rem; color:rgba(0,0,0,0.35);">
+                        Quarter ends {{ \Carbon\Carbon::now()->endOfQuarter()->format('M j, Y') }}
                     </div>
                 </div>
                 @endif

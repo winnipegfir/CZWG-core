@@ -454,6 +454,9 @@
                                     <i class="fas fa-check-circle"></i> Currency requirement met
                                 </p>
                             @endif
+                            <p class="mb-0 mt-1" style="font-size:0.72rem; color:{{$textColor}}; opacity:0.55;">
+                                Quarter ends {{ \Carbon\Carbon::now()->endOfQuarter()->format('M j, Y') }}
+                            </p>
                         </div>
                     @endif
 
