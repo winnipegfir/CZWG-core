@@ -58,7 +58,9 @@
       "Read(//c/laragon/www/winnipegfir/resources/views/dashboard/**)",
       "Bash(git branch *)",
       "Bash(git reset *)",
-      "Bash(gh pr create --title 'New dashboard redesign' --body ' *)"
+      "Bash(gh pr create --title 'New dashboard redesign' --body ' *)",
+      "Bash(git merge *)",
+      "Bash(git stash *)"
     ],
     "additionalDirectories": [
       "c:\\laragon\\www\\winnipegfir\\\nVATCAN_API_KEY=fYKopA4iUT1Ul5lG1GJz4lcjx6KYcILAS5jabHUq7dY3wgCUNQ\nVATCAN_API_URL=https:"

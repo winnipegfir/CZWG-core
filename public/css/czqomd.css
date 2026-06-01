@@ -744,6 +744,10 @@ div.notes{
         padding-right: 1rem !important;
     }
 
+    #czwgHeader .navbar-brand {
+        padding-left: 0.25rem !important;
+    }
+
     #navbarSupportedContent .navbar-nav {
         flex-direction: column !important;
         width: 100% !important;
