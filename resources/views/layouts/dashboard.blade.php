@@ -45,13 +45,13 @@
         @if (Auth::check())
         @switch (Auth::user()->preferences)
             @case("default")
-            <link href="{{ asset('css/czqomd.css') }}" rel="stylesheet">
+            <link href="{{ asset('css/czqomd.css') }}?v=10" rel="stylesheet">
             @break
             @default
-            <link href="{{ asset('css/czqomd.css') }}" rel="stylesheet">
+            <link href="{{ asset('css/czqomd.css') }}?v=10" rel="stylesheet">
         @endswitch
         @else
-        <link href="{{ asset('css/czqomd.css') }}" rel="stylesheet">
+        <link href="{{ asset('css/czqomd.css') }}?v=10" rel="stylesheet">
         @endif
         <!--Leaflet-->
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin=""/>
@@ -245,6 +245,24 @@
             </div>
         </nav>
     </header>
+    <script>
+    (function() {
+        var nav = document.getElementById('czwgDashHeader');
+        var menu = document.getElementById('dashNavbar');
+        function positionMenu() {
+            if (window.innerWidth < 992 && menu) {
+                var rect = nav.getBoundingClientRect();
+                menu.style.setProperty('top', (rect.top + rect.height) + 'px', 'important');
+            } else if (menu) {
+                menu.style.removeProperty('top');
+            }
+        }
+        positionMenu();
+        window.addEventListener('resize', positionMenu);
+        window.addEventListener('scroll', positionMenu);
+        menu && menu.addEventListener('shown.bs.collapse', positionMenu);
+    })();
+    </script>
     @if ($errors->any())
         <div class="alert alert-danger" style="margin: 0; border-radius: 0; border: none;">
             <div class="container">

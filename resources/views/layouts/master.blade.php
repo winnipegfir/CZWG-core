@@ -45,13 +45,13 @@
         @if (Auth::check())
         @switch (Auth::user()->preferences)
             @case("default")
-            <link href="{{ asset('css/czqomd.css') }}?v=9" rel="stylesheet">
+            <link href="{{ asset('css/czqomd.css') }}?v=10" rel="stylesheet">
             @break
             @default
-            <link href="{{ asset('css/czqomd.css') }}?v=9" rel="stylesheet">
+            <link href="{{ asset('css/czqomd.css') }}?v=10" rel="stylesheet">
         @endswitch
         @else
-        <link href="{{ asset('css/czqomd.css') }}?v=9" rel="stylesheet">
+        <link href="{{ asset('css/czqomd.css') }}?v=10" rel="stylesheet">
         @endif
         <!--Leaflet-->
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin=""/>
@@ -257,9 +257,9 @@
         function positionMenu() {
             if (window.innerWidth < 992 && menu) {
                 var rect = nav.getBoundingClientRect();
-                menu.style.top = (rect.top + rect.height) + 'px';
+                menu.style.setProperty('top', (rect.top + rect.height) + 'px', 'important');
             } else if (menu) {
-                menu.style.top = '';
+                menu.style.removeProperty('top');
             }
         }
         positionMenu();
