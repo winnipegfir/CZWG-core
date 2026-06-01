@@ -647,62 +647,260 @@ div.notes{
 
 /* === Roster === */
 
+/* Page wrapper */
+.roster-page-wrap {
+    max-width: 1100px;
+    margin: 28px auto 60px;
+    padding: 0 1.25rem;
+}
+
+.roster-page-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.roster-page-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #122b44;
+    margin: 0 0 0.2rem;
+    line-height: 1.2;
+}
+
+.roster-page-sub {
+    font-size: 0.875rem;
+    color: #64748b;
+    margin: 0;
+}
+
+/* Controls row */
+.roster-controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.9rem;
+}
+
+/* Pill tabs */
+.roster-pills {
+    display: flex;
+    background: #f1f5f9;
+    border-radius: 10px;
+    padding: 3px;
+    gap: 2px;
+}
+
+.roster-pill {
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    padding: 0.38rem 1.1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #64748b;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    transition: background 0.15s, color 0.15s, box-shadow 0.15s;
+    white-space: nowrap;
+}
+
+.roster-pill:hover {
+    background: #e2e8f0;
+    color: #334155;
+}
+
+.roster-pill.active {
+    background: #fff;
+    color: #122b44;
+    font-weight: 600;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+.pill-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #e2e8f0;
+    color: #475569;
+    font-size: 0.72rem;
+    font-weight: 700;
+    border-radius: 999px;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 5px;
+    line-height: 1;
+}
+
+.roster-pill.active .pill-count {
+    background: #122b44;
+    color: #fff;
+}
+
+/* Search */
+.roster-search-wrap {
+    position: relative;
+    flex: 0 1 260px;
+}
+
+.roster-search-icon {
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+    font-size: 0.8rem;
+    pointer-events: none;
+}
+
+.roster-search-input {
+    width: 100%;
+    padding: 0.45rem 0.9rem 0.45rem 2.1rem;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    color: #334155;
+    background: #fff;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.roster-search-input:focus {
+    border-color: #122b44;
+    box-shadow: 0 0 0 3px rgba(18,43,68,0.08);
+}
+
+.roster-search-input::placeholder {
+    color: #94a3b8;
+}
+
+
+/* Legend + search row */
+.roster-legend-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.75rem;
+}
+
+.roster-legend {
+    font-size: 0.8rem;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+/* Table wrap */
+.roster-table-wrap {
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    overflow: hidden;
+    overflow-x: auto;
+}
+
+/* Table */
 .roster-table {
     font-size: 0.9rem;
-    border-collapse: separate;
+    border-collapse: collapse;
     border-spacing: 0;
+    width: 100%;
+    margin: 0;
 }
 
 .roster-table thead th {
     background: #f8fafc;
     color: #64748b;
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.6px;
-    padding: 0.75rem 1rem;
-    border-bottom: 2px solid #e2e8f0;
+    letter-spacing: 0.7px;
+    padding: 0.7rem 1rem;
+    border-bottom: 1.5px solid #e2e8f0;
     border-top: none;
     white-space: nowrap;
+    text-align: center;
+}
+
+.roster-table thead th:first-child,
+.roster-table thead th:nth-child(2) {
+    text-align: left;
+}
+
+.roster-table thead th.sortable {
+    cursor: pointer;
+    user-select: none;
+}
+
+.roster-table thead th.sortable:hover {
+    background: #f1f5f9;
+    color: #334155;
+}
+
+.sort-icon {
+    font-size: 0.65rem;
+    margin-left: 3px;
+    opacity: 0.5;
+}
+
+.roster-table thead th.sortable:hover .sort-icon,
+.roster-table thead th[data-dir="asc"] .sort-icon,
+.roster-table thead th[data-dir="desc"] .sort-icon {
+    opacity: 1;
 }
 
 .roster-table tbody tr {
-    transition: background 0.12s ease;
+    border-bottom: 1px solid #f1f5f9;
+    transition: background 0.1s;
+}
+
+.roster-table tbody tr:last-child {
+    border-bottom: none;
 }
 
 .roster-table tbody tr:hover {
     background: #f8fafc;
 }
 
-.roster-table tbody td,
-.roster-table tbody th {
-    padding: 0.7rem 1rem;
+.roster-table tbody td {
+    padding: 0.65rem 1rem;
     vertical-align: middle;
-    border-top: 1px solid #f1f5f9;
     text-align: center;
 }
 
-.roster-table tbody td:first-child,
-.roster-table tbody th:first-child,
-.roster-table thead th:first-child {
+.roster-table tbody td:first-child {
     text-align: left;
     width: 1px;
     white-space: nowrap;
 }
 
-.roster-table tbody td:nth-child(2),
-.roster-table thead th:nth-child(2) {
+.roster-table tbody td:nth-child(2) {
     text-align: left;
+}
+
+.roster-table tbody td:nth-child(3) {
     width: 1px;
     white-space: nowrap;
 }
 
-.roster-table tbody td:nth-child(3),
-.roster-table thead th:nth-child(3) {
-    width: 1px;
-    white-space: nowrap;
+.roster-table th:nth-child(n+4):nth-child(-n+9),
+.roster-table td:nth-child(n+4):nth-child(-n+9) {
+    width: 44px;
+    min-width: 44px;
+    padding-left: 4px !important;
+    padding-right: 4px !important;
+    text-align: center;
 }
 
+/* CID link */
 .roster-cid {
     color: #122b44 !important;
     font-weight: 600;
@@ -711,77 +909,59 @@ div.notes{
 
 .roster-cid:hover {
     color: #1d4ed8 !important;
+    text-decoration: none;
 }
 
+/* Name */
+.roster-name {
+    font-weight: 500;
+}
+
+/* Rating badge */
 .rating-badge {
     display: inline-block;
     background: #e8edf2;
     color: #122b44;
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     font-weight: 700;
-    padding: 0.2rem 0.55rem;
-    border-radius: 4px;
+    padding: 0.18rem 0.5rem;
+    border-radius: 5px;
     letter-spacing: 0.3px;
 }
 
+/* Cert badges */
 .cert-badge {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 0.22rem 0.65rem;
-    border-radius: 999px;
-    font-size: 0.72rem;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    font-size: 0.7rem;
     font-weight: 600;
-    letter-spacing: 0.2px;
-    white-space: nowrap;
 }
 
 .cert-certified {
     background: #dcfce7;
     color: #15803d;
-    width: 26px;
-    height: 26px;
-    padding: 0;
 }
 
 .cert-solo {
     background: #fef3c7;
     color: #92400e;
-    width: 26px;
-    height: 26px;
-    padding: 0;
 }
 
 .cert-training {
     background: #dbeafe;
     color: #1d4ed8;
-    width: 26px;
-    height: 26px;
-    padding: 0;
 }
 
 .cert-none {
     background: #f1f5f9;
     color: #94a3b8;
-    width: 26px;
-    height: 26px;
-    padding: 0;
 }
 
-.roster-table th,
-.roster-table td {
-    vertical-align: middle !important;
-}
-
-.roster-table th:nth-child(n+4):nth-child(-n+9),
-.roster-table td:nth-child(n+4):nth-child(-n+9) {
-    width: 46px;
-    min-width: 46px;
-    text-align: center;
-    padding-left: 4px !important;
-    padding-right: 4px !important;
-}
-
+/* Status badges (used elsewhere) */
 .status-badge {
     display: inline-block;
     padding: 0.2em 0.65em;
@@ -801,17 +981,166 @@ div.notes{
     color: #b91c1c;
 }
 
-.roster-legend {
-    font-size: 0.8rem;
-    color: #64748b;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    flex-wrap: wrap;
+/* No results message */
+.roster-no-results {
+    text-align: center;
+    color: #94a3b8;
+    font-size: 0.9rem;
+    padding: 2rem 0;
+    margin: 0;
 }
 
-.roster-legend .cert-none {
-    font-size: 1rem;
+/* Mobile tweaks */
+@media (max-width: 600px) {
+    .roster-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .roster-search-wrap {
+        flex: none;
+    }
+}
+
+/* === Dashboard Roster (admin index) === */
+
+.dash-back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.9rem;
+    color: #122b44;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.dash-back-link:hover {
+    color: #1d4ed8;
+    text-decoration: none;
+}
+
+/* CID text (non-link variant for admin table) */
+.roster-cid-plain {
+    color: #122b44;
+    font-size: 0.875rem;
+}
+
+/* Remarks cell — subtle, truncate if very long */
+.roster-remarks {
+    font-size: 0.8rem;
+    color: #64748b;
+    max-width: 180px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Action buttons */
+.dash-roster-edit-btn {
+    background: #f1f5f9;
+    color: #334155;
+    border: 1px solid #e2e8f0;
+    font-size: 0.75rem;
+    padding: 0.22rem 0.6rem;
+}
+
+.dash-roster-edit-btn:hover {
+    background: #e2e8f0;
+    color: #122b44;
+}
+
+.dash-roster-delete-btn {
+    background: #fff1f2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+    font-size: 0.75rem;
+    padding: 0.22rem 0.55rem;
+}
+
+.dash-roster-delete-btn:hover {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* === Dashboard Roster Edit Form === */
+
+.dash-roster-edit-wrap {
+    max-width: 760px;
+    margin: 28px auto 60px;
+    padding: 0 1.25rem;
+}
+
+.dash-edit-card {
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 1.25rem;
+}
+
+.dash-edit-card-header {
+    background: #f8fafc;
+    border-bottom: 1.5px solid #e2e8f0;
+    padding: 0.65rem 1.1rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    color: #64748b;
+}
+
+.dash-edit-card-body {
+    padding: 1.1rem 1.1rem 0.5rem;
+}
+
+.dash-edit-label {
+    display: block;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 0.3rem;
+}
+
+.dash-edit-select {
+    display: block;
+    width: 100%;
+    padding: 0.38rem 0.7rem;
+    font-size: 0.875rem;
+    color: #334155;
+    background: #fff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    outline: none;
+    appearance: auto;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.dash-edit-select:focus {
+    border-color: #122b44;
+    box-shadow: 0 0 0 3px rgba(18,43,68,0.08);
+}
+
+.dash-edit-textarea {
+    display: block;
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    color: #334155;
+    background: #fff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    outline: none;
+    resize: vertical;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.dash-edit-textarea:focus {
+    border-color: #122b44;
+    box-shadow: 0 0 0 3px rgba(18,43,68,0.08);
+}
+
+.dash-edit-actions {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
 }
 
 /* ============================================================

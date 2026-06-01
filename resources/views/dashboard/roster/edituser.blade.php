@@ -4,58 +4,33 @@
     @parent
 @stop
 
-@section('title', 'Edit Controller - Winnipeg FIR')
+@section('title', 'Edit Controller — Winnipeg FIR')
 @section('description', "Winnipeg FIR's Controller Roster")
 
 @section('content')
-<style>
-.edit-form select.form-control {
-    display: block !important;
-    width: 100% !important;
-    height: calc(1.5em + .75rem + 2px) !important;
-    padding: .375rem .75rem !important;
-    font-size: .875rem !important;
-    font-weight: 400 !important;
-    line-height: 1.5 !important;
-    color: #495057 !important;
-    background-color: #fff !important;
-    background-clip: padding-box !important;
-    border: 1px solid #ced4da !important;
-    border-radius: .25rem !important;
-    box-shadow: none !important;
-    -webkit-appearance: auto !important;
-    appearance: auto !important;
-    border-bottom: 1px solid #ced4da !important;
-    margin-bottom: 0 !important;
-}
-.edit-form select.form-control:focus {
-    border-color: #80bdff !important;
-    outline: 0 !important;
-    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25) !important;
-}
-.edit-form .form-group label {
-    margin-bottom: .4rem !important;
-    font-size: .875rem !important;
-}
-</style>
-<div class="container" style="margin-top: 28px; max-width: 720px;">
-    <a href="{{route('roster.index')}}" class="blue-text" style="font-size: 1.1em;">
+<div class="dash-roster-edit-wrap">
+
+    <a href="{{ route('roster.index') }}" class="dash-back-link">
         <i class="fas fa-arrow-left"></i> Roster
     </a>
 
-    <h1 class="blue-text font-weight-bold mt-3 mb-1">Edit Controller</h1>
-    <p class="text-muted mb-4">
-        <strong>{{$roster->full_name}}</strong> &mdash; CID {{$cid}}
-    </p>
+    <div class="dash-roster-edit-header">
+        <div>
+            <h1 class="roster-page-title mt-3 mb-1">Edit Controller</h1>
+            <p class="roster-page-sub">
+                <strong>{{ $roster->full_name }}</strong> &mdash; CID {{ $cid }}
+            </p>
+        </div>
+    </div>
 
-    <form method="POST" action="{{route('roster.editcontroller', [$cid])}}" class="edit-form">
+    <form method="POST" action="{{ route('roster.editcontroller', [$cid]) }}" class="dash-roster-edit-form">
         @csrf
         <input type="hidden" name="cid" value="{{ $cid }}">
 
-        {{-- Cert levels --}}
-        <div class="card mb-4">
-            <div class="card-header font-weight-bold">Position Certifications</div>
-            <div class="card-body">
+        {{-- Position Certifications --}}
+        <div class="dash-edit-card">
+            <div class="dash-edit-card-header">Position Certifications</div>
+            <div class="dash-edit-card-body">
                 <div class="form-row">
                     @foreach([
                         'del' => 'Delivery',
@@ -66,8 +41,8 @@
                         'ctr' => 'Centre',
                     ] as $field => $label)
                     <div class="form-group col-6 col-md-4">
-                        <label class="font-weight-500 text-dark" for="{{$field}}">{{$label}}</label>
-                        <select name="{{$field}}" id="{{$field}}" class="form-control form-control-sm">
+                        <label class="dash-edit-label" for="{{ $field }}">{{ $label }}</label>
+                        <select name="{{ $field }}" id="{{ $field }}" class="dash-edit-select">
                             <option value="1" {{ $roster->$field == "1" ? "selected" : "" }}>Not Certified</option>
                             <option value="2" {{ $roster->$field == "2" ? "selected" : "" }}>Training</option>
                             <option value="3" {{ $roster->$field == "3" ? "selected" : "" }}>Solo</option>
@@ -80,30 +55,32 @@
         </div>
 
         {{-- Remarks --}}
-        <div class="card mb-4">
-            <div class="card-header font-weight-bold">Remarks</div>
-            <div class="card-body">
+        <div class="dash-edit-card">
+            <div class="dash-edit-card-header">Remarks</div>
+            <div class="dash-edit-card-body">
                 <div class="form-group mb-0">
-                    <textarea name="remarks" id="remarks" rows="3" class="form-control" placeholder="Optional notes...">{{ $roster->remarks }}</textarea>
+                    <textarea name="remarks" id="remarks" rows="3"
+                              class="dash-edit-textarea"
+                              placeholder="Optional notes…">{{ $roster->remarks }}</textarea>
                 </div>
             </div>
         </div>
 
-        {{-- Status & admin options --}}
-        <div class="card mb-4">
-            <div class="card-header font-weight-bold">Settings</div>
-            <div class="card-body">
+        {{-- Settings --}}
+        <div class="dash-edit-card">
+            <div class="dash-edit-card-header">Settings</div>
+            <div class="dash-edit-card-body">
                 <div class="form-row">
                     <div class="form-group col-6 col-md-4">
-                        <label class="font-weight-500 text-dark" for="active">Active Status</label>
-                        <select name="active" id="active" class="form-control form-control-sm">
+                        <label class="dash-edit-label" for="active">Active Status</label>
+                        <select name="active" id="active" class="dash-edit-select">
                             <option value="1" {{ $roster->active == "1" ? "selected" : "" }}>Active</option>
                             <option value="0" {{ $roster->active == "0" ? "selected" : "" }}>Not Active</option>
                         </select>
                     </div>
                     <div class="form-group col-6 col-md-4">
-                        <label class="font-weight-500 text-dark" for="rating_hours">Reset Rating Hours?</label>
-                        <select name="rating_hours" id="rating_hours" class="form-control form-control-sm">
+                        <label class="dash-edit-label" for="rating_hours">Reset Rating Hours?</label>
+                        <select name="rating_hours" id="rating_hours" class="dash-edit-select">
                             <option value="false">No</option>
                             <option value="true">Yes</option>
                         </select>
@@ -112,10 +89,11 @@
             </div>
         </div>
 
-        <div class="mb-5">
+        <div class="dash-edit-actions">
             <button type="submit" class="btn btn-success px-4">Save Changes</button>
-            <a href="{{route('roster.index')}}" class="btn btn-light ml-2">Cancel</a>
+            <a href="{{ route('roster.index') }}" class="btn btn-light ml-2">Cancel</a>
         </div>
     </form>
+
 </div>
 @stop

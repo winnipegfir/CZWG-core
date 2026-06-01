@@ -45,13 +45,13 @@
         @if (Auth::check())
         @switch (Auth::user()->preferences)
             @case("default")
-            <link href="{{ asset('css/czqomd.css') }}?v=10" rel="stylesheet">
+            <link href="{{ asset('css/czqomd.css') }}?v=11" rel="stylesheet">
             @break
             @default
-            <link href="{{ asset('css/czqomd.css') }}?v=10" rel="stylesheet">
+            <link href="{{ asset('css/czqomd.css') }}?v=11" rel="stylesheet">
         @endswitch
         @else
-        <link href="{{ asset('css/czqomd.css') }}?v=10" rel="stylesheet">
+        <link href="{{ asset('css/czqomd.css') }}?v=11" rel="stylesheet">
         @endif
         <!--Leaflet-->
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin=""/>
