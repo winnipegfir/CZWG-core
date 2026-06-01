@@ -478,7 +478,7 @@
     </div>
     <script>
     (function () {
-        var currentBuild = {{ json_encode($__cs->release . '-' . $__cs->sys_build) }};
+        var currentBuild = {!! json_encode($__cs->release . '-' . $__cs->sys_build) !!};
         var shown = false;
         function checkVersion() {
             fetch('/version', { cache: 'no-store' })
@@ -491,7 +491,8 @@
                 })
                 .catch(function () { /* silently ignore network errors */ });
         }
-        setInterval(checkVersion, 60000);
+        window.czwgCheckVersion = checkVersion;
+        setInterval(checkVersion, 5000); // TEST: change back to 60000
     })();
     </script>
     </body>
