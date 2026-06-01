@@ -219,7 +219,7 @@ document.querySelectorAll('.row-check').forEach(c => c.addEventListener('change'
                     <div id="panelExisting">
                         <div class="form-group mb-3">
                             <label class="font-weight-bold small">Student</label>
-                            <select name="student_id" class="js-example-basic-single form-control">
+                            <select name="student_id" id="wlStudentSelect" class="js-example-basic-single form-control">
                                 @foreach($potentialstudent as $u)
                                     <option value="{{ $u->id }}">{{ $u->id }} &mdash; {{ $u->fullName('FL') }}</option>
                                 @endforeach
@@ -230,14 +230,16 @@ document.querySelectorAll('.row-check').forEach(c => c.addEventListener('change'
                     <div id="panelCid" style="display:none;">
                         <div class="form-group mb-3">
                             <label class="font-weight-bold small">VATSIM CID</label>
-                            <input type="number" name="cid_input" class="form-control" placeholder="e.g. 1234567">
+                            <input type="number" name="cid_input" id="wlCidInput" class="form-control" placeholder="e.g. 1234567">
                             <small class="text-muted">Their name will appear automatically once they log in.</small>
                         </div>
                     </div>
 
+                    <div id="wlMemberBanner" style="display:none;" class="py-2 mb-3"></div>
+
                     <div class="form-group mb-0">
                         <label class="font-weight-bold small">Entry Type</label>
-                        <select name="entry_type" class="form-control">
+                        <select name="entry_type" id="wlEntryType" class="form-control">
                             <option value="New Student">New Student (Home)</option>
                             <option value="New Visitor">New Visitor</option>
                             <option value="New Transfer">New Transfer</option>
@@ -260,17 +262,84 @@ document.querySelectorAll('.row-check').forEach(c => c.addEventListener('change'
 <style>.select2-container { width: 100% !important; }</style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 <script>
-    $(document).ready(function () {
-        $('.js-example-basic-single').select2({ dropdownParent: $('#newStudent'), width: '100%' });
-    });
+const WL_CHECK_URL = '{{ route("training.students.checkmembership") }}';
 
-    function setAddMethod(method) {
-        document.getElementById('addMethod').value = method;
-        document.getElementById('panelExisting').style.display = method === 'existing' ? '' : 'none';
-        document.getElementById('panelCid').style.display = method === 'cid' ? '' : 'none';
-        document.getElementById('tabExisting').className = method === 'existing' ? 'btn btn-primary' : 'btn btn-outline-primary';
-        document.getElementById('tabCid').className = method === 'cid' ? 'btn btn-primary' : 'btn btn-outline-primary';
+function wlApplyMembership(data) {
+    const banner  = document.getElementById('wlMemberBanner');
+    const select  = document.getElementById('wlEntryType');
+    select.querySelectorAll('option').forEach(o => o.disabled = false);
+
+    if (data.status === 'error') {
+        banner.className = 'alert alert-warning py-2 mb-3';
+        banner.style.display = '';
+        banner.innerHTML = '<i class="fas fa-exclamation-triangle mr-1"></i> Could not verify VATCAN membership — double-check the entry type manually.';
+        return;
     }
+    if (data.type === 'home') {
+        banner.style.display = 'none';
+    } else if (data.type === 'visitor') {
+        banner.className = 'alert alert-info py-2 mb-3';
+        banner.style.display = '';
+        banner.innerHTML = '<i class="fas fa-info-circle mr-1"></i> This person is on the CZWG <strong>visitor</strong> roster — entry type locked to <strong>New Visitor</strong>.';
+        select.value = 'New Visitor';
+        select.querySelectorAll('option:not([value="New Visitor"])').forEach(o => o.disabled = true);
+    } else {
+        banner.className = 'alert alert-warning py-2 mb-3';
+        banner.style.display = '';
+        banner.innerHTML = '<i class="fas fa-exclamation-circle mr-1"></i> <strong>This person is not on the CZWG home roster.</strong> Are they visiting? Entry type set to <strong>New Visitor</strong>.';
+        select.value = 'New Visitor';
+        select.querySelectorAll('option:not([value="New Visitor"])').forEach(o => o.disabled = true);
+    }
+}
+
+function wlCheckMembership(cid) {
+    if (!cid) return;
+    const banner = document.getElementById('wlMemberBanner');
+    banner.className = 'alert alert-secondary py-2 mb-3';
+    banner.style.display = '';
+    banner.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i> Checking VATCAN roster…';
+    fetch(WL_CHECK_URL + '?cid=' + cid, { headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' } })
+        .then(r => r.json())
+        .then(wlApplyMembership)
+        .catch(() => {
+            banner.className = 'alert alert-warning py-2 mb-3';
+            banner.style.display = '';
+            banner.innerHTML = '<i class="fas fa-exclamation-triangle mr-1"></i> Could not reach VATCAN — double-check the entry type manually.';
+        });
+}
+
+function wlResetBanner() {
+    const banner = document.getElementById('wlMemberBanner');
+    const select = document.getElementById('wlEntryType');
+    banner.style.display = 'none';
+    select.querySelectorAll('option').forEach(o => o.disabled = false);
+    select.value = 'New Student';
+}
+
+$(document).ready(function () {
+    $('.js-example-basic-single').select2({ dropdownParent: $('#newStudent'), width: '100%' });
+
+    $('#wlStudentSelect').on('change', function () {
+        const cid = parseInt($(this).val());
+        if (cid) wlCheckMembership(cid); else wlResetBanner();
+    });
+});
+
+document.getElementById('wlCidInput').addEventListener('blur', function () {
+    const cid = parseInt(this.value);
+    if (cid) wlCheckMembership(cid); else wlResetBanner();
+});
+
+$('#newStudent').on('hidden.bs.modal', wlResetBanner);
+
+function setAddMethod(method) {
+    document.getElementById('addMethod').value = method;
+    document.getElementById('panelExisting').style.display = method === 'existing' ? '' : 'none';
+    document.getElementById('panelCid').style.display = method === 'cid' ? '' : 'none';
+    document.getElementById('tabExisting').className = method === 'existing' ? 'btn btn-primary' : 'btn btn-outline-primary';
+    document.getElementById('tabCid').className = method === 'cid' ? 'btn btn-primary' : 'btn btn-outline-primary';
+    wlResetBanner();
+}
 </script>
 
 @stop

@@ -199,12 +199,16 @@ class TrainingController extends Controller
             return redirect()->back()->withError('This student already exists in the system!');
         }
 
-        $memberCheck = (new VatcanService)->isFirMember($userId);
-        if ($memberCheck['status'] === 'error') {
-            return redirect()->back()->withError('Could not verify FIR membership via VATCAN: ' . $memberCheck['message']);
+        $memberResult = (new VatcanService)->getFirMembershipType($userId);
+        if ($memberResult['status'] === 'error') {
+            return redirect()->back()->withError('Could not verify FIR membership via VATCAN: ' . $memberResult['message']);
         }
-        if (!$memberCheck['member']) {
-            return redirect()->back()->withError('CID ' . $userId . ' is not on the Winnipeg FIR roster on VATCAN. They must be a FIR member before being added to the training system.');
+        $entryType = $request->input('entry_type');
+        if ($memberResult['type'] === 'visitor' && $entryType !== 'New Visitor') {
+            return redirect()->back()->withError('CID ' . $userId . ' is on the CZWG roster as a visitor. They must be added as "New Visitor".');
+        }
+        if ($memberResult['type'] === 'none' && $entryType !== 'New Visitor') {
+            return redirect()->back()->withError('CID ' . $userId . ' is not on the CZWG home roster. If they are visiting, add them as "New Visitor".');
         }
 
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
@@ -267,12 +271,16 @@ class TrainingController extends Controller
             return redirect()->back()->withError('This student already exists in the system!');
         }
 
-        $memberCheck = (new VatcanService)->isFirMember($userId);
-        if ($memberCheck['status'] === 'error') {
-            return redirect()->back()->withError('Could not verify FIR membership via VATCAN: ' . $memberCheck['message']);
+        $memberResult = (new VatcanService)->getFirMembershipType($userId);
+        if ($memberResult['status'] === 'error') {
+            return redirect()->back()->withError('Could not verify FIR membership via VATCAN: ' . $memberResult['message']);
         }
-        if (!$memberCheck['member']) {
-            return redirect()->back()->withError('CID ' . $userId . ' is not on the Winnipeg FIR roster on VATCAN. They must be a FIR member before being added to the training system.');
+        $entryType = $request->input('entry_type');
+        if ($memberResult['type'] === 'visitor' && $entryType !== 'New Visitor') {
+            return redirect()->back()->withError('CID ' . $userId . ' is on the CZWG roster as a visitor. They must be added as "New Visitor".');
+        }
+        if ($memberResult['type'] === 'none' && $entryType !== 'New Visitor') {
+            return redirect()->back()->withError('CID ' . $userId . ' is not on the CZWG home roster. If they are visiting, add them as "New Visitor".');
         }
 
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
@@ -293,6 +301,15 @@ class TrainingController extends Controller
         $name = $student->user ? $student->user->fullName('FLC') : 'CID ' . $userId;
         return redirect()->route('training.students.current')
             ->withSuccess('Added ' . $name . ' as a linked student.');
+    }
+
+    public function checkMembership(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $cid = (int) $request->input('cid');
+        if (!$cid) {
+            return response()->json(['status' => 'error', 'message' => 'No CID provided.']);
+        }
+        return response()->json((new VatcanService)->getFirMembershipType($cid));
     }
 
     public function newStudents(Request $request)

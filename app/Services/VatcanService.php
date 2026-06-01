@@ -56,18 +56,22 @@ class VatcanService
         }
     }
 
-    public function isFirMember(int $cid): array
+    public function getFirMembershipType(int $cid): array
     {
         $result = $this->getRoster();
         if ($result['status'] === 'error') {
             return ['status' => 'error', 'message' => $result['message']];
         }
-        $allMembers = collect(array_merge(
-            $result['data']['controllers'] ?? [],
-            $result['data']['visitors'] ?? []
-        ));
-        $isMember = $allMembers->contains(fn($m) => (int) ($m['cid'] ?? 0) === $cid);
-        return ['status' => 'ok', 'member' => $isMember];
+        $controllers = collect($result['data']['controllers'] ?? []);
+        $visitors    = collect($result['data']['visitors'] ?? []);
+
+        if ($controllers->contains(fn($m) => (int) ($m['cid'] ?? 0) === $cid)) {
+            return ['status' => 'ok', 'type' => 'home'];
+        }
+        if ($visitors->contains(fn($m) => (int) ($m['cid'] ?? 0) === $cid)) {
+            return ['status' => 'ok', 'type' => 'visitor'];
+        }
+        return ['status' => 'ok', 'type' => 'none'];
     }
 
     public function getRoster(): array
