@@ -11,6 +11,7 @@
     background: linear-gradient(135deg, #080f1a 0%, #0d2035 50%, #122b44 100%);
     padding: 2.25rem 0 2rem;
     border-bottom: 1px solid rgba(255,255,255,0.05);
+    position: relative; overflow: hidden;
 }
 .db-hero-inner { display: flex; align-items: center; gap: 1.5rem; flex-wrap: wrap; }
 .db-avatar-wrap { position: relative; flex-shrink: 0; }
@@ -140,7 +141,13 @@
 
 {{-- ═══════════════════════════════ HERO ═══════════════════════════════ --}}
 <div class="db-hero">
-    <div class="container">
+    <div style="position:absolute; inset:0; pointer-events:none; overflow:hidden;">
+        <img src="{{ Auth::user()->avatar() }}"
+             style="position:absolute; left:50%; top:50%; transform:translate(-50%, -50%);
+                    width:110%; height:200%; object-fit:cover;
+                    filter:blur(45px); opacity:0.08;">
+    </div>
+    <div class="container" style="position:relative;">
         <div class="db-hero-inner">
 
             {{-- Identity --}}
