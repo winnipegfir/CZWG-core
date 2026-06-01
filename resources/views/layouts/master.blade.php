@@ -478,13 +478,13 @@
     </div>
     <script>
     (function () {
-        var currentBuild = {{ json_encode((string) $__cs->sys_build) }};
+        var currentBuild = {{ json_encode($__cs->release . '-' . $__cs->sys_build) }};
         var shown = false;
         function checkVersion() {
             fetch('/version', { cache: 'no-store' })
                 .then(function (r) { return r.json(); })
                 .then(function (data) {
-                    if (!shown && String(data.build) !== String(currentBuild)) {
+                    if (!shown && String(data.version) !== String(currentBuild)) {
                         shown = true;
                         document.getElementById('czwg-version-toast').style.display = 'block';
                     }

@@ -46,7 +46,8 @@ Route::view('/wpg', 'wpg')->name('wpg');
 Route::view('/pdc', 'pdc')->name('pdc');
 Route::view('/vote', 'vote')->name('vote');
 Route::get('/version', function () {
-    return response()->json(['build' => \App\Models\Settings\CoreSettings::where('id', 1)->value('sys_build')]);
+    $s = \App\Models\Settings\CoreSettings::where('id', 1)->first(['release', 'sys_build']);
+    return response()->json(['version' => $s->release . '-' . $s->sys_build]);
 });
 
 Route::prefix('yearend')->group(function () {
