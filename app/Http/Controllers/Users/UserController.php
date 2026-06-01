@@ -62,9 +62,11 @@ class UserController extends Controller
 
     public function viewAllUsers()
     {
-        $users = User::all()->sortBy('id');
+        $users = User::where('deleted', '!=', 1)->get()->sortBy('id');
 
-        return view('admin.users.index', compact('users'));
+        $permissionCounts = $users->groupBy('permissions')->map->count();
+
+        return view('admin.users.index', compact('users', 'permissionCounts'));
     }
 
     public function viewProfile($id)

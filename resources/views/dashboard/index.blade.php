@@ -426,8 +426,15 @@
                     @if (Auth::user()->rosterProfile && Auth::user()->rosterProfile->status != "not_certified")
                         @php
                             $hours = Auth::user()->rosterProfile->currency ?? 0;
-                            $pct = min(100, ($hours / 3.0) * 100);
-                            if ($hours >= 3.0) {
+                            $reqHours = match(Auth::user()->rosterProfile->status) {
+                                'training'   => 2,
+                                'home'       => 2,
+                                'visit'      => 1,
+                                'instructor' => 3,
+                                default      => 3,
+                            };
+                            $pct = min(100, ($hours / $reqHours) * 100);
+                            if ($hours >= $reqHours) {
                                 $barColor = '#22c55e'; $bgColor = '#dcfce7'; $textColor = '#15803d'; $label = 'Requirement met';
                             } elseif ($hours < 0.1) {
                                 $barColor = '#ef4444'; $bgColor = '#fee2e2'; $textColor = '#b91c1c'; $label = 'No hours recorded';
@@ -443,12 +450,12 @@
                                 <span style="font-size:1.5rem; font-weight:700; color:{{$textColor}}; line-height:1;">
                                     {{ $hours < 0.1 ? '0:00' : decimal_to_hm($hours) }}
                                 </span>
-                                <span style="font-size:0.8rem; color:{{$textColor}}; opacity:0.7;">/ 3:00</span>
+                                <span style="font-size:0.8rem; color:{{$textColor}}; opacity:0.7;">/ {{ decimal_to_hm($reqHours) }}</span>
                             </div>
                             <div style="height:6px; border-radius:999px; background:rgba(0,0,0,0.1); overflow:hidden;">
                                 <div style="height:100%; width:{{$pct}}%; background:{{$barColor}}; border-radius:999px; transition:width 0.4s ease;"></div>
                             </div>
-                            @if($hours >= 3.0)
+                            @if($hours >= $reqHours)
                                 <p class="mb-0 mt-1" style="font-size:0.75rem; color:{{$textColor}};">
                                     <i class="fas fa-check-circle"></i> Currency requirement met
                                 </p>
