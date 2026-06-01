@@ -426,13 +426,7 @@
                     @if (Auth::user()->rosterProfile && Auth::user()->rosterProfile->status != "not_certified")
                         @php
                             $hours = Auth::user()->rosterProfile->currency ?? 0;
-                            $reqHours = match(Auth::user()->rosterProfile->status) {
-                                'training'   => 2,
-                                'home'       => 2,
-                                'visit'      => 1,
-                                'instructor' => 3,
-                                default      => 3,
-                            };
+                            $reqHours = 3;
                             $pct = min(100, ($hours / $reqHours) * 100);
                             if ($hours >= $reqHours) {
                                 $barColor = '#22c55e'; $bgColor = '#dcfce7'; $textColor = '#15803d'; $label = 'Requirement met';

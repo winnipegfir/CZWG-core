@@ -15,13 +15,7 @@ $statusMap = [
 ];
 $status = $statusMap[$certification] ?? ['label' => 'Unknown', 'icon' => 'fa-question', 'color' => '#6b7280', 'text' => '#fff'];
 
-$reqHours = match($user->rosterProfile?->status) {
-    'training'   => 2,
-    'home'       => 2,
-    'visit'      => 1,
-    'instructor' => 3,
-    default      => null,
-};
+$reqHours = $user->rosterProfile?->status !== null && $user->rosterProfile?->status !== 'not_certified' ? 3 : null;
 @endphp
 
 <style>
