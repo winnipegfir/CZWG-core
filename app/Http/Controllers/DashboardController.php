@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AtcTraining\RosterMember;
+use App\Services\VatsimBookingService;
 use App\Models\AtcTraining\Student;
 use App\Models\Events\ControllerApplication;
 use App\Models\Events\Event;
@@ -60,10 +61,18 @@ class DashboardController extends Controller
 
         $atcResources = AtcResource::all()->sortBy('title');
 
+        $myBookings = collect();
+        if ($user->permissions >= 1) {
+            $bookingResult = (new VatsimBookingService)->getBookings(['cid' => $user->id, 'sort' => 'start', 'sort_dir' => 'asc']);
+            $myBookings = collect($bookingResult['data'] ?? [])
+                ->filter(fn($b) => Carbon::parse($b['end'])->isFuture())
+                ->values();
+        }
+
         if ($user->permissions == 0) {
             return view('dashboard.index2', compact('openTickets', 'confirmedevent', 'cbtnotifications', 'yourinstructor', 'waitlistPosition', 'waitlistTypeTotal'));
         } else {
-            return view('dashboard.index', compact('event', 'potentialRosterMember', 'yourinstructor', 'waitlistPosition', 'waitlistTypeTotal', 'openTickets', 'staffTickets', 'certification', 'active', 'atcResources', 'unconfirmedapp', 'confirmedapp', 'confirmedevent', 'cbtnotifications'));
+            return view('dashboard.index', compact('event', 'potentialRosterMember', 'yourinstructor', 'waitlistPosition', 'waitlistTypeTotal', 'openTickets', 'staffTickets', 'certification', 'active', 'atcResources', 'unconfirmedapp', 'confirmedapp', 'confirmedevent', 'cbtnotifications', 'myBookings'));
         }
     }
 

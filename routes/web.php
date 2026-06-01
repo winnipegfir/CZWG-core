@@ -17,6 +17,14 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', 'HomeController@view')->name('index');
 Route::view('/airports', 'airports')->name('airports');
 Route::get('/nate', 'HomeController@nate')->name('nate');
+// Bookings hidden until API key is available
+// Route::get('/bookings', 'BookingController@index')->name('bookings.index');
+// Route::middleware('certified')->group(function () {
+//     Route::post('/bookings', 'BookingController@store')->name('bookings.store');
+//     Route::put('/bookings/{id}', 'BookingController@update')->name('bookings.update');
+//     Route::delete('/bookings/{id}', 'BookingController@destroy')->name('bookings.destroy');
+// });
+
 Route::get('/roster', 'AtcTraining\RosterController@showPublic')->name('roster.public');
 Route::get('/roster/{id}', 'Users\UserController@viewProfile');
 Route::get('/roster/{id}/connections', 'Users\UserController@viewConnections');

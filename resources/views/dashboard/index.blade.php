@@ -512,6 +512,42 @@
                 </div>
             </div>
 
+            {{-- ATC Bookings — hidden until API key is available --}}
+            @if(false && Auth::user()->permissions >= 1)
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="dash-card-header">
+                        <i class="fas fa-calendar-check"></i>
+                        <h3>ATC Bookings</h3>
+                    </div>
+                    @if($myBookings->isEmpty())
+                        <p class="text-muted mb-0" style="font-size:0.875rem;">No upcoming bookings.</p>
+                    @else
+                        @foreach($myBookings->take(3) as $b)
+                        @php
+                            $start = \Carbon\Carbon::parse($b['start']);
+                            $end   = \Carbon\Carbon::parse($b['end']);
+                        @endphp
+                        <div class="d-flex align-items-center py-2" style="border-bottom:1px solid #f1f5f9;">
+                            <div style="flex:1;">
+                                <div style="font-weight:600; font-size:0.875rem; color:#122b44;">{{ $b['callsign'] }}</div>
+                                <div style="font-size:0.75rem; color:#64748b;">
+                                    {{ $start->format('M j') }} &middot; {{ $start->format('H:i') }}z &ndash; {{ $end->format('H:i') }}z
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                        @if($myBookings->count() > 3)
+                            <p class="mb-0 mt-2" style="font-size:0.78rem; color:#64748b;">+{{ $myBookings->count() - 3 }} more</p>
+                        @endif
+                    @endif
+                    <a href="{{ route('bookings.index') }}" class="dash-nav-link mt-2">
+                        <i class="fas fa-chevron-right"></i> View
+                    </a>
+                </div>
+            </div>
+            @endif
+
             {{-- Support --}}
             <div class="card mb-3">
                 <div class="card-body">

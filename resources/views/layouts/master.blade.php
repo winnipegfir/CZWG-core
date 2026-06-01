@@ -149,7 +149,7 @@
                         @endif
 
                         {{-- ATC --}}
-                        <li class="nav-item dropdown {{ Request::is('roster') || Request::is('atcresources') || Request::is('join') || Request::is('training') ? 'active' : '' }}">
+                        <li class="nav-item dropdown {{ Request::is('roster') || Request::is('atcresources') || Request::is('join') || Request::is('training') || Request::is('bookings') ? 'active' : '' }}">
                             <a class="nav-link dropdown-toggle" id="navDropATC" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">ATC</a>
                             <div class="dropdown-menu" aria-labelledby="navDropATC">
                                 <a class="dropdown-item" href="{{route('roster.public')}}">Roster</a>
@@ -160,6 +160,7 @@
                                     <a class="dropdown-item" href="{{url('/join')}}">How to Become a Controller</a>
                                 @endif
                                 <a class="dropdown-item" href="{{route('training')}}">Training</a>
+                                {{-- <a class="dropdown-item" href="{{route('bookings.index')}}">ATC Bookings</a> --}}
                             </div>
                         </li>
 

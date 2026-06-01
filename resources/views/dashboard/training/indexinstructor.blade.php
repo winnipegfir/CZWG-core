@@ -8,8 +8,8 @@
 <div style="background:#f8fafc; padding:2rem 0;">
 <div class="container">
 
-    {{-- Stats row (exec only) --}}
-    @if(Auth::user()->permissions >= 4)
+    {{-- Stats row --}}
+    @if(Auth::user()->permissions >= 3 || Auth::user()->instructorProfile !== null)
     @php
         $waitlistCount   = \App\Models\AtcTraining\Student::whereNull('instructor_id')->count();
         $inProgressCount = \App\Models\AtcTraining\Student::whereNotNull('instructor_id')->count();

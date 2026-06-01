@@ -56,6 +56,20 @@ class VatcanService
         }
     }
 
+    public function isFirMember(int $cid): array
+    {
+        $result = $this->getRoster();
+        if ($result['status'] === 'error') {
+            return ['status' => 'error', 'message' => $result['message']];
+        }
+        $allMembers = collect(array_merge(
+            $result['data']['controllers'] ?? [],
+            $result['data']['visitors'] ?? []
+        ));
+        $isMember = $allMembers->contains(fn($m) => (int) ($m['cid'] ?? 0) === $cid);
+        return ['status' => 'ok', 'member' => $isMember];
+    }
+
     public function getRoster(): array
     {
         try {

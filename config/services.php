@@ -44,6 +44,12 @@ return [
         'key' => env('AIRPORT_API_KEY'),
     ],
 
+    'vatsim_bookings' => [
+        'url'     => 'https://atc-bookings.vatsim.net/api',
+        'key'     => env('VATSIM_BOOKING_KEY'),
+        'callsign_prefix' => 'CZ',
+    ],
+
     'discord' => [
         'token' => env('DISCORD_BOT_TOKEN'),
         'client_id' => env('DISCORD_KEY'),

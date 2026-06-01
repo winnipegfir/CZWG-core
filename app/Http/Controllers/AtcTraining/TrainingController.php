@@ -199,6 +199,14 @@ class TrainingController extends Controller
             return redirect()->back()->withError('This student already exists in the system!');
         }
 
+        $memberCheck = (new VatcanService)->isFirMember($userId);
+        if ($memberCheck['status'] === 'error') {
+            return redirect()->back()->withError('Could not verify FIR membership via VATCAN: ' . $memberCheck['message']);
+        }
+        if (!$memberCheck['member']) {
+            return redirect()->back()->withError('CID ' . $userId . ' is not on the Winnipeg FIR roster on VATCAN. They must be a FIR member before being added to the training system.');
+        }
+
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');
         $student = Student::create([
             'user_id'            => $userId,
@@ -257,6 +265,14 @@ class TrainingController extends Controller
         $check = Student::where('user_id', $userId)->first();
         if ($check != null) {
             return redirect()->back()->withError('This student already exists in the system!');
+        }
+
+        $memberCheck = (new VatcanService)->isFirMember($userId);
+        if ($memberCheck['status'] === 'error') {
+            return redirect()->back()->withError('Could not verify FIR membership via VATCAN: ' . $memberCheck['message']);
+        }
+        if (!$memberCheck['member']) {
+            return redirect()->back()->withError('CID ' . $userId . ' is not on the Winnipeg FIR roster on VATCAN. They must be a FIR member before being added to the training system.');
         }
 
         DB::statement('SET FOREIGN_KEY_CHECKS=0;');

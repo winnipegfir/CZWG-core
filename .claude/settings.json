@@ -50,7 +50,9 @@
       "Bash(Select-String -Path \"C:\\\\laragon\\\\www\\\\winnipegfir\\\\routes\\\\web.php\" -Pattern \"Route::.*training\" -Context 3,3)",
       "Bash(Select-String -Path \"C:\\\\laragon\\\\www\\\\winnipegfir\\\\.env\" -Pattern \"CONNECT_|APP_DEBUG|APP_URL\")",
       "Bash(git pull *)",
-      "Bash(Get-Content C:\\\\laragon\\\\www\\\\winnipegfir\\\\storage\\\\logs\\\\laravel.log -Tail 40)"
+      "Bash(Get-Content C:\\\\laragon\\\\www\\\\winnipegfir\\\\storage\\\\logs\\\\laravel.log -Tail 40)",
+      "WebFetch(domain:atc-bookings.vatsim.net)",
+      "Bash(Get-ChildItem -Path \"c:\\\\laragon\\\\www\\\\winnipegfir\\\\app\\\\Http\\\\Controllers\" -Directory)"
     ],
     "additionalDirectories": [
       "c:\\laragon\\www\\winnipegfir\\\nVATCAN_API_KEY=fYKopA4iUT1Ul5lG1GJz4lcjx6KYcILAS5jabHUq7dY3wgCUNQ\nVATCAN_API_URL=https:"

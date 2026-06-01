@@ -18,7 +18,7 @@
 
                 @endif
 
-                @if(Auth::user()->permissions >= 4)
+                @if(Auth::user()->permissions >= 3 || Auth::user()->instructorProfile !== null)
                 <div class="dropdown">
                     <a href="#" data-toggle="dropdown"
                        style="color:{{ Request::is('dashboard/training/students*') ? '#fff' : 'rgba(255,255,255,0.6)' }}; font-size:0.85rem; padding:0.3rem 0.65rem; border-radius:0.3rem; text-decoration:none; {{ Request::is('dashboard/training/students*') ? 'background:rgba(255,255,255,0.12);' : '' }}">
@@ -33,12 +33,13 @@
                         </a>
                     </div>
                 </div>
+                @endif
 
+                @if(Auth::user()->permissions >= 4)
                 <a href="{{ route('training.reconcile') }}"
                    style="color:{{ Request::is('dashboard/training/reconcile') ? '#fff' : 'rgba(255,255,255,0.6)' }}; font-size:0.85rem; padding:0.3rem 0.65rem; border-radius:0.3rem; text-decoration:none; {{ Request::is('dashboard/training/reconcile') ? 'background:rgba(255,255,255,0.12);' : '' }}">
                     Reconcile
                 </a>
-
                 @endif
             </nav>
         </div>
