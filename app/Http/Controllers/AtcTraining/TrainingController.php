@@ -80,7 +80,7 @@ class TrainingController extends Controller
         $allStudentCids = Student::pluck('user_id')->flip();
         $rosterNotInSystem = $vatcanMembers
             ->filter(fn($m) => !$allStudentCids->has($m['cid']))
-            ->sortBy(fn($m) => ($m['last_name'] ?? '') . ($m['first_name'] ?? ''))
+            ->sortBy(fn($m) => [(int) ($m['rating'] ?? 0), $m['last_name'] ?? '', $m['first_name'] ?? ''])
             ->values();
 
         return view('dashboard.training.reconcile', compact(
