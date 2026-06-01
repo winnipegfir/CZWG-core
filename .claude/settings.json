@@ -55,7 +55,10 @@
       "Bash(Get-ChildItem -Path \"c:\\\\laragon\\\\www\\\\winnipegfir\\\\app\\\\Http\\\\Controllers\" -Directory)",
       "Bash(grep -rn \"yourinstructor\\\\|waitlistPosition\\\\|waitlistTypeTotal\" /mnt/c/laragon/www/winnipegfir/resources/views/dashboard/)",
       "Read(//mnt/c/laragon/www/winnipegfir/resources/views/**)",
-      "Read(//c/laragon/www/winnipegfir/resources/views/dashboard/**)"
+      "Read(//c/laragon/www/winnipegfir/resources/views/dashboard/**)",
+      "Bash(git branch *)",
+      "Bash(git reset *)",
+      "Bash(gh pr create --title 'New dashboard redesign' --body ' *)"
     ],
     "additionalDirectories": [
       "c:\\laragon\\www\\winnipegfir\\\nVATCAN_API_KEY=fYKopA4iUT1Ul5lG1GJz4lcjx6KYcILAS5jabHUq7dY3wgCUNQ\nVATCAN_API_URL=https:"
