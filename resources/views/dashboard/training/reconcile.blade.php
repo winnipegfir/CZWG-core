@@ -185,7 +185,7 @@
                             <tr>
                                 <td style="color:#122b44; font-weight:600;">{{ $member['first_name'] ?? '' }} {{ $member['last_name'] ?? '' }}</td>
                                 <td style="color:#64748b;">{{ $member['cid'] }}</td>
-                                <td style="color:#64748b;">{{ $member['rating'] ?? '—' }}</td>
+                                <td style="color:#64748b;">{{ \App\Classes\VatsimRating::tryFrom((int)($member['rating'] ?? -99))?->getShortName() ?? ($member['rating'] ?? '—') }}</td>
                                 <td>
                                     @if(!empty($member['flag_is_visitor']))
                                         <span style="background:#dcfce7; color:#15803d; font-size:0.7rem; font-weight:700; padding:0.15em 0.45em; border-radius:0.3rem;">Visitor</span>
