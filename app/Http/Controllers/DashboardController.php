@@ -72,7 +72,7 @@ class DashboardController extends Controller
         }
 
         $totalVatsimHours = null;
-        if ($potentialRosterMember && in_array($potentialRosterMember->status, ['home', 'visit', 'instructor'])) {
+        if ($potentialRosterMember && in_array($potentialRosterMember->status, ['home', 'instructor'])) {
             $quarterStart = Carbon::now()->startOfQuarter()->format('Y-m-d');
             $cid = $potentialRosterMember->cid;
             $cacheKey = 'vatsim_total_hours_' . $cid . '_' . $quarterStart;
