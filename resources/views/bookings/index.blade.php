@@ -169,7 +169,12 @@
                     <div class="form-group mb-3">
                         <label class="font-weight-bold small">Callsign</label>
                         <div class="d-flex align-items-center" style="gap:0.5rem;">
-                            <input type="text" name="airspace" class="form-control" value="{{ $airspace }}" style="text-transform:uppercase;" maxlength="10" required>
+                            <select name="airspace" class="form-control" required>
+                                <option value="" disabled>Position</option>
+                                @foreach($positionPrefixes as $prefix)
+                                    <option value="{{ $prefix }}" {{ $airspace === $prefix ? 'selected' : '' }}>{{ $prefix }}</option>
+                                @endforeach
+                            </select>
                             <span class="font-weight-bold text-muted">_</span>
                             <input type="text" name="position" class="form-control" value="{{ $position }}" style="text-transform:uppercase;" maxlength="10" required>
                         </div>
