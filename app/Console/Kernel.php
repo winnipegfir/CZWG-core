@@ -6,6 +6,7 @@ use App\Console\Commands\ActivityLog;
 use App\Console\Commands\CheckVisitHours;
 use App\Console\Commands\CurrencyCheck;
 use App\Console\Commands\EventReminders;
+use App\Console\Commands\PurgeExpiredBookings;
 use App\Console\Commands\RatingUpdate;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -32,6 +33,7 @@ class Kernel extends ConsoleKernel
         // * * * * * schedulers
         $schedule->command(ActivityLog::class)->everyMinute()->evenInMaintenanceMode();
         $schedule->command(EventReminders::class)->everyMinute();
+        $schedule->command(PurgeExpiredBookings::class)->everyMinute();
         $schedule->call(function () {
             file_get_contents(config('cronurls.minute'));
         })->everyMinute();
