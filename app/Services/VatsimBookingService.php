@@ -61,6 +61,7 @@ class VatsimBookingService
         try {
             $response = Http::withToken($this->apiKey)
                 ->delete("{$this->baseUrl}/booking/{$id}");
+            \Log::info('VATSIM delete booking', ['id' => $id, 'status' => $response->status(), 'body' => $response->body()]);
             return $response->successful();
         } catch (\Exception $e) {
             return false;
