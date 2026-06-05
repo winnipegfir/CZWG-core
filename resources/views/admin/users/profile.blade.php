@@ -104,7 +104,15 @@ $reqHours = $user->rosterProfile?->status !== null && $user->rosterProfile?->sta
         <div class="au-header">
             <img src="{{ $user->avatar() }}" class="au-avatar" alt="">
             <div>
-                <h1 class="au-name">{{ $user->fullName('FL') }}</h1>
+                <h1 class="au-name" style="display:flex; align-items:center; gap:0.4rem;">
+                    {{ $user->fullName('FL') }}
+                    @if($user->fname != $user->display_fname || !$user->display_last_name || $user->display_cid_only)
+                    <span title="Display name does not match their CERT name"
+                          style="font-size:0.7rem; font-weight:600; background:rgba(249,115,22,0.2); color:#fb923c; border:1px solid rgba(249,115,22,0.35); border-radius:999px; padding:0.1em 0.5em; white-space:nowrap;">
+                        <i class="fas fa-exclamation-triangle fa-xs"></i> Name mismatch
+                    </span>
+                    @endif
+                </h1>
                 <div class="au-sub">CID {{ $user->id }} &nbsp;·&nbsp; {{ $user->rating->getLongName() }}</div>
                 <div style="margin-top:0.4rem;">
                     <span class="au-badge" style="background:{{ $status['color'] }}; color:{{ $status['text'] }};">
@@ -128,11 +136,6 @@ $reqHours = $user->rosterProfile?->status !== null && $user->rosterProfile?->sta
         @if($user->id == 1 || $user->id == 2)
         <div class="au-system-alert">
             <i class="fas fa-info-circle"></i> This is a system account used for automatic actions or as a placeholder.
-        </div>
-        @endif
-        @if($user->fname != $user->display_fname || !$user->display_last_name || $user->display_cid_only)
-        <div class="au-system-alert" style="margin-top:0.5rem; background:rgba(249,115,22,0.12); border-color:rgba(249,115,22,0.3); color:#fb923c;">
-            <i class="fas fa-exclamation-triangle"></i> Display name does not match their CERT name.
         </div>
         @endif
     </div>
@@ -207,6 +210,40 @@ $reqHours = $user->rosterProfile?->status !== null && $user->rosterProfile?->sta
                     <div style="font-size:0.7rem; color:rgba(0,0,0,0.35);">
                         Quarter ends {{ \Carbon\Carbon::now()->endOfQuarter()->format('M j, Y') }}
                     </div>
+                    @if($totalVatsimHours !== null)
+                    @php
+                        $outsideHrs = max(0, $totalVatsimHours - $hrs);
+                        $firRatio = $totalVatsimHours > 0 ? $hrs / $totalVatsimHours : null;
+                        $meetsFirReq = $firRatio !== null && $firRatio >= 0.5;
+                    @endphp
+                    <div style="margin-top:0.6rem; padding-top:0.5rem; border-top:1px solid #f1f5f9; display:flex; gap:0;">
+                        <div style="flex:1; text-align:center;">
+                            <div style="font-size:0.82rem; font-weight:700; color:#122b44;">{{ decimal_to_hm($hrs) }}</div>
+                            <div style="font-size:0.65rem; color:rgba(0,0,0,0.35); margin-top:0.1rem;">In FIR</div>
+                        </div>
+                        <div style="width:1px; background:#f1f5f9;"></div>
+                        <div style="flex:1; text-align:center;">
+                            <div style="font-size:0.82rem; font-weight:700; color:#122b44;">{{ decimal_to_hm($outsideHrs) }}</div>
+                            <div style="font-size:0.65rem; color:rgba(0,0,0,0.35); margin-top:0.1rem;">Outside FIR</div>
+                        </div>
+                        <div style="width:1px; background:#f1f5f9;"></div>
+                        <div style="flex:1; text-align:center;">
+                            <div style="font-size:0.82rem; font-weight:700; color:#122b44;">{{ decimal_to_hm($totalVatsimHours) }}</div>
+                            <div style="font-size:0.65rem; color:rgba(0,0,0,0.35); margin-top:0.1rem;">Total VATSIM</div>
+                        </div>
+                        @if($firRatio !== null)
+                        <div style="width:1px; background:#f1f5f9;"></div>
+                        <div style="flex:1; text-align:center;">
+                            <div style="font-size:0.82rem; font-weight:700; color:{{ $meetsFirReq ? '#15803d' : '#b91c1c' }};">
+                                {{ round($firRatio * 100) }}%
+                            </div>
+                            <div style="font-size:0.65rem; color:rgba(0,0,0,0.35); margin-top:0.1rem;">
+                                <i class="fas {{ $meetsFirReq ? 'fa-check' : 'fa-times' }} fa-xs"></i> FIR ratio
+                            </div>
+                        </div>
+                        @endif
+                    </div>
+                    @endif
                 </div>
                 @endif
 

@@ -18,7 +18,9 @@ use Carbon\Carbon;
 use Discord\Http\Endpoint;
 use Discord\Parts\Guild\Guild;
 use Exception;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -177,7 +179,37 @@ class UserController extends Controller
         //$xml['return'] = file_get_contents('https://cert.vatsim.net/cert/vatsimnet/idstatus.php?cid=' . $user->id);
         $auditLog = AuditLogEntry::where('affected_id', $id)->get();
 
-        return view('admin.users.profile', compact('user', 'xml', 'certification', 'active', 'auditLog', 'userNotes'));
+        $totalVatsimHours = null;
+        if ($potentialRosterMember && in_array($potentialRosterMember->status, ['home', 'instructor'])) {
+            $quarterStart = Carbon::now()->startOfQuarter()->format('Y-m-d');
+            $cid = $potentialRosterMember->cid;
+            $cacheKey = 'vatsim_total_hours_' . $cid . '_' . $quarterStart;
+
+            $totalVatsimHours = Cache::remember($cacheKey, 3600, function () use ($cid, $quarterStart) {
+                try {
+                    $client = new Client();
+                    $pageNum = 1;
+                    $totalMinutes = 0;
+
+                    do {
+                        $url = sprintf('https://api.vatsim.net/api/ratings/%s/atcsessions/?page=%s&start=%s', $cid, $pageNum, $quarterStart);
+                        $response = $client->request('GET', $url, ['timeout' => 10]);
+                        $data = json_decode($response->getBody()->getContents());
+                        foreach ($data->results as $result) {
+                            $totalMinutes += $result->minutes_on_callsign;
+                        }
+                        $hasNext = !empty($data->next);
+                        $pageNum++;
+                    } while ($hasNext);
+
+                    return $totalMinutes / 60;
+                } catch (\Exception $e) {
+                    return null;
+                }
+            });
+        }
+
+        return view('admin.users.profile', compact('user', 'xml', 'certification', 'active', 'auditLog', 'userNotes', 'totalVatsimHours'));
     }
 
     public function editPermissions(Request $request, $id)
