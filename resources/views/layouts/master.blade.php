@@ -200,6 +200,9 @@
                     </ul>
 
                     <ul class="navbar-nav ml-auto align-items-center">
+                        <li class="nav-item d-none d-lg-flex align-items-center mr-2">
+                            <span id="utc-clock" style="font-size:0.8rem; font-weight:600; letter-spacing:0.04em; opacity:0.75; color:#fff; font-variant-numeric:tabular-nums;"></span>
+                        </li>
                         @unless (Auth::check())
                             <li class="nav-item nav-social">
                                 <a href="{{route('auth.connect.login')}}" class="nav-link" title="Login">
@@ -494,6 +497,21 @@
         }
         window.czwgCheckVersion = checkVersion;
         setInterval(checkVersion, 5000); // TEST: change back to 60000
+    })();
+    </script>
+    <script>
+    (function() {
+        var el = document.getElementById('utc-clock');
+        if (!el) return;
+        function tick() {
+            var now = new Date();
+            var h = String(now.getUTCHours()).padStart(2, '0');
+            var m = String(now.getUTCMinutes()).padStart(2, '0');
+            var s = String(now.getUTCSeconds()).padStart(2, '0');
+            el.textContent = h + ':' + m + ':' + s + 'z';
+        }
+        tick();
+        setInterval(tick, 1000);
     })();
     </script>
     </body>
