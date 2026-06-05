@@ -163,6 +163,9 @@
                                     @endauth
                                 @endif
                                 <a class="dropdown-item" href="{{route('training')}}">Training</a>
+                                @if(Auth::check() && Auth::user()->permissions >= 1)
+                                    <a class="dropdown-item" href="{{route('bookings.index')}}">ATC Bookings</a>
+                                @endif
                             </div>
                         </li>
 
