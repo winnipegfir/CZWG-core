@@ -206,7 +206,7 @@
 
                     <ul class="navbar-nav ml-auto align-items-center">
                         <li class="nav-item d-none d-lg-flex align-items-center mr-2">
-                            <span id="utc-clock" style="font-size:0.8rem; font-weight:600; letter-spacing:0.04em; opacity:0.75; color:#fff; font-variant-numeric:tabular-nums;"></span>
+                            <span id="utc-clock" style="font-size:0.8rem; font-weight:600; letter-spacing:0.04em; opacity:0.65; color:#122b44; font-variant-numeric:tabular-nums;"></span>
                         </li>
                         @auth
                             <li class="nav-item dropdown mr-1">
