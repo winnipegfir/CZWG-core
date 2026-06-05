@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Network\MonitoredPosition;
 use App\Services\VatsimBookingService;
 use Auth;
 use Carbon\Carbon;
@@ -33,14 +34,24 @@ class BookingController extends Controller
             ? $bookings->where('cid', Auth::id())->values()
             : collect();
 
-        return view('bookings.index', compact('bookings', 'myBookings'));
+        $positionPrefixes = MonitoredPosition::all()
+            ->map(fn($p) => explode('_', $p->identifier)[0])
+            ->unique()
+            ->sort()
+            ->values();
+
+        return view('bookings.index', compact('bookings', 'myBookings', 'positionPrefixes'));
     }
 
     public function store(Request $request)
     {
+        $validPrefixes = MonitoredPosition::all()
+            ->map(fn($p) => explode('_', $p->identifier)[0])
+            ->unique()->values()->toArray();
+
         $request->validate([
-            'airspace' => 'required|string|max:20',
-            'position' => 'required|string|max:10',
+            'airspace' => ['required', 'string', 'max:20', 'in:' . implode(',', $validPrefixes)],
+            'position' => 'required|string|max:10|alpha',
             'start'    => 'required|date',
             'end'      => 'required|date|after:start',
         ]);
