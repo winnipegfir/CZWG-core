@@ -260,9 +260,7 @@
                             $meetsFirReq = $firRatio !== null && $firRatio >= 0.5;
                         @endphp
                         <div style="font-size:0.7rem; color:rgba(255,255,255,0.4); white-space:nowrap;">
-                            <span style="color:rgba(255,255,255,0.75); font-weight:600;">{{ decimal_to_hm($hours) }}</span> FIR
-                            &nbsp;·&nbsp;
-                            <span style="color:rgba(255,255,255,0.75); font-weight:600;">{{ decimal_to_hm($outsideHours) }}</span> outside
+                            <span style="color:rgba(255,255,255,0.75); font-weight:600;">{{ decimal_to_hm($outsideHours) }}</span> outside CZWG
                             &nbsp;·&nbsp;
                             <span style="color:rgba(255,255,255,0.75); font-weight:600;">{{ decimal_to_hm($totalVatsimHours) }}</span> total
                             @if($firRatio !== null)
