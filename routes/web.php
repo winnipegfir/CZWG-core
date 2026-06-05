@@ -44,7 +44,6 @@ Route::get('/training', 'AtcTraining\TrainingController@trainingTime')->name('tr
 Route::view('/bill', 'bill')->name('bill');
 Route::view('/wpg', 'wpg')->name('wpg');
 Route::view('/pdc', 'pdc')->name('pdc');
-Route::view('/vote', 'vote')->name('vote');
 Route::get('/version', function () {
     $s = \App\Models\Settings\CoreSettings::where('id', 1)->first(['release', 'sys_build']);
     return response()->json(['version' => $s->release . '-' . $s->sys_build]);
@@ -226,6 +225,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/func/avatarchange', 'Users\UserController@changeUsersAvatar')->name('users.changeusersavatar');
         Route::post('/func/avatarreset', 'Users\UserController@resetUsersAvatar')->name('users.resetusersavatar');
         Route::post('/func/bioreset', 'Users\UserController@resetUsersBio')->name('users.resetusersbio');
+        Route::post('/func/namereset', 'Users\UserController@resetUsersName')->name('users.resetusersname');
         Route::get('/{id}/delete', 'Users\UserController@deleteUser');
         Route::get('/{id}/edit', 'Users\UserController@editUser')->name('users.edit.create');
         Route::post('/{id}/edit', 'Users\UserController@storeEditUser')->name('users.edit.store');

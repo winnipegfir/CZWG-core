@@ -162,6 +162,13 @@ $reqHours = $user->rosterProfile?->status !== null && $user->rosterProfile?->sta
                     <div class="au-row">
                         <span class="au-row-lbl">Display Name</span>
                         <span class="au-row-val">{{ $user->fullName('FLC') }}</span>
+                        @if($user->display_fname !== $user->fname || !$user->display_last_name || $user->display_cid_only)
+                        <form action="{{ route('users.resetusersname') }}" method="POST" style="display:inline; margin-left:0.5rem;">
+                            @csrf
+                            <input type="hidden" name="user_id" value="{{ $user->id }}">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Reset</button>
+                        </form>
+                        @endif
                     </div>
                     <div class="au-row">
                         <span class="au-row-lbl">Rating</span>

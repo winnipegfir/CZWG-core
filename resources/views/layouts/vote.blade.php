@@ -88,7 +88,6 @@
     <body>
     <!--Header-->
     
-    @include('maintenancemode::notification')
     @if (\App\Models\Settings\CoreSettings::where('id', 1)->firstOrFail()->banner)
         <div class="alert alert-{{\App\Models\Settings\CoreSettings::where('id', 1)->firstOrFail()->bannerMode}}" style="margin: 0; border-radius: 0; border: none;">
             <div class="text-center align-self-center">
@@ -310,8 +309,8 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>The Winnipeg FIR uses VATSIM Connect (auth.vatsim.net) for authentication. This is similar to SSO, but allows you to select specific data to share with us. Click 'Login' below to continue.</p>
-                    <p><small>If you are having issues with Connect, please send an email to the Webmaster and use <a href="{{route('auth.sso.login')}}">SSO to login.</a></small></p>
+                    <p>The Winnipeg FIR uses VATSIM Connect (auth.vatsim.net) for authentication. This allows you to select specific data to share with us. Click 'Login' below to continue.</p>
+                    <p><small>If you are having issues logging in, please send an email to the Webmaster.</small></p>
                 </div>
                 <div class="modal-footer">
                     <a href="{{route('auth.connect.login')}}" role="button" class="btn bg-czqo-blue-light">Login</a>

@@ -261,6 +261,27 @@
                             <span class="db-activity-met"><i class="fas fa-check-circle fa-xs"></i> Requirement met</span>
                         @endif
                     </div>
+                    @if($totalVatsimHours !== null)
+                    @php
+                        $outsideHours = max(0, $totalVatsimHours - $hours);
+                    @endphp
+                    <div style="margin-top:0.65rem; padding-top:0.55rem; border-top:1px solid rgba(255,255,255,0.1); display:flex; gap:0; font-size:0.72rem;">
+                        <div style="flex:1; text-align:center;">
+                            <div style="color:rgba(255,255,255,0.9); font-weight:700; font-size:0.82rem;">{{ decimal_to_hm($hours) }}</div>
+                            <div style="color:rgba(255,255,255,0.4); margin-top:0.15rem;">In FIR</div>
+                        </div>
+                        <div style="width:1px; background:rgba(255,255,255,0.1);"></div>
+                        <div style="flex:1; text-align:center;">
+                            <div style="color:rgba(255,255,255,0.9); font-weight:700; font-size:0.82rem;">{{ decimal_to_hm($outsideHours) }}</div>
+                            <div style="color:rgba(255,255,255,0.4); margin-top:0.15rem;">Outside FIR</div>
+                        </div>
+                        <div style="width:1px; background:rgba(255,255,255,0.1);"></div>
+                        <div style="flex:1; text-align:center;">
+                            <div style="color:rgba(255,255,255,0.9); font-weight:700; font-size:0.82rem;">{{ decimal_to_hm($totalVatsimHours) }}</div>
+                            <div style="color:rgba(255,255,255,0.4); margin-top:0.15rem;">Total</div>
+                        </div>
+                    </div>
+                    @endif
                 </div>
             @endif
 

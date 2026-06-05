@@ -289,6 +289,25 @@ class UserController extends Controller
         return redirect()->back()->with('success', 'Biography reset!');
     }
 
+    public function resetUsersName(Request $request)
+    {
+        $this->validate($request, [
+            'user_id' => 'required',
+        ]);
+
+        $editUser = Auth::user();
+        $user = User::whereId($request->get('user_id'))->firstOrFail();
+
+        $user->display_fname = $user->fname;
+        $user->display_last_name = 1;
+        $user->display_cid_only = 0;
+        $user->save();
+
+        AuditLogEntry::insert($editUser, 'Reset user display name to CERT name', $user, 0);
+
+        return redirect()->back()->with('success', 'Display name reset to CERT name!');
+    }
+
     public function storeEditUser(Request $request, $id)
     {
         $user = User::find($id);
