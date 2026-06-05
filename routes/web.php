@@ -18,7 +18,7 @@ Route::get('/', 'HomeController@view')->name('index');
 Route::view('/airports', 'airports')->name('airports');
 Route::get('/nate', 'HomeController@nate')->name('nate');
 Route::get('/bookings', 'BookingController@index')->name('bookings.index');
-Route::middleware(['certified', 'bookingban'])->group(function () {
+Route::middleware(['certified'])->group(function () {
     Route::post('/bookings', 'BookingController@store')->name('bookings.store');
     Route::put('/bookings/{id}', 'BookingController@update')->name('bookings.update');
     Route::delete('/bookings/{id}', 'BookingController@destroy')->name('bookings.destroy');
