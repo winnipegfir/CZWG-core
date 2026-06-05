@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Network\MonitoredPosition;
 use App\Services\VatsimBookingService;
 use Auth;
 use Carbon\Carbon;
@@ -26,7 +25,7 @@ class BookingController extends Controller
         $bookings = collect($result['data'] ?? [])
             ->filter(fn($b) =>
                 Carbon::parse($b['end'])->isFuture() &&
-                (str_starts_with($b['callsign'], 'CY') || str_starts_with($b['callsign'], 'CZ'))
+                (str_starts_with($b['callsign'], 'CY') || str_starts_with($b['callsign'], 'CZ') || str_starts_with($b['callsign'], 'WP') || str_starts_with($b['callsign'], 'ZW'))
             )
             ->values();
 
@@ -34,20 +33,14 @@ class BookingController extends Controller
             ? $bookings->where('cid', Auth::id())->values()
             : collect();
 
-        $positionPrefixes = MonitoredPosition::all()
-            ->map(fn($p) => explode('_', $p->identifier)[0])
-            ->unique()
-            ->sort()
-            ->values();
+        $positionPrefixes = ['CYQT', 'CYWG', 'CYAV', 'CYPG', 'CYXE', 'CYQR', 'CYMJ', 'WPG'];
 
         return view('bookings.index', compact('bookings', 'myBookings', 'positionPrefixes'));
     }
 
     public function store(Request $request)
     {
-        $validPrefixes = MonitoredPosition::all()
-            ->map(fn($p) => explode('_', $p->identifier)[0])
-            ->unique()->values()->toArray();
+        $validPrefixes = ['CYQT', 'CYWG', 'CYAV', 'CYPG', 'CYXE', 'CYQR', 'CYMJ', 'WPG'];
 
         $request->validate([
             'airspace' => ['required', 'string', 'max:20', 'in:' . implode(',', $validPrefixes)],
