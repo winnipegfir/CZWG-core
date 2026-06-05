@@ -160,7 +160,7 @@
                                     <a class="dropdown-item" href="{{url('/join')}}">How to Become a Controller</a>
                                 @endif
                                 <a class="dropdown-item" href="{{route('training')}}">Training</a>
-                                {{-- <a class="dropdown-item" href="{{route('bookings.index')}}">ATC Bookings</a> --}}
+                                <a class="dropdown-item" href="{{route('bookings.index')}}">ATC Bookings</a>
                             </div>
                         </li>
 

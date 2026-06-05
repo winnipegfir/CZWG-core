@@ -31,8 +31,8 @@ class BookingController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'airspace' => 'required|string|max=20',
-            'position' => 'required|string|max=10',
+            'airspace' => 'required|string|max:20',
+            'position' => 'required|string|max:10',
             'start'    => 'required|date',
             'end'      => 'required|date|after:start',
         ]);
@@ -63,9 +63,15 @@ class BookingController extends Controller
             'end'      => 'required|date|after:start',
         ]);
 
+        $service = new VatsimBookingService;
+        $existing = $service->getBooking($id);
+        if (!$existing || ($existing['cid'] ?? null) != Auth::id()) {
+            abort(403);
+        }
+
         $callsign = strtoupper($request->airspace) . '_' . strtoupper($request->position);
 
-        $result = (new VatsimBookingService)->updateBooking($id, [
+        $result = $service->updateBooking($id, [
             'callsign' => $callsign,
             'cid'      => Auth::id(),
             'start'    => Carbon::parse($request->start)->format('Y-m-d H:i:s'),
@@ -81,7 +87,13 @@ class BookingController extends Controller
 
     public function destroy(int $id)
     {
-        $success = (new VatsimBookingService)->deleteBooking($id);
+        $service = new VatsimBookingService;
+        $existing = $service->getBooking($id);
+        if (!$existing || ($existing['cid'] ?? null) != Auth::id()) {
+            abort(403);
+        }
+
+        $success = $service->deleteBooking($id);
 
         if ($success) {
             return redirect()->route('bookings.index')->withSuccess('Booking cancelled.');
