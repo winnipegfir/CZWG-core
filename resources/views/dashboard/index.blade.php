@@ -507,18 +507,10 @@
             </div>
             @endif
 
-            @if(false)
-            {{-- ATC Bookings (hidden until VATSIM_BOOKING_KEY is available) --}}
-            {{-- To enable: remove @if(false)/@endif, replace $previewBookings with $myBookings, update href to route('bookings.index') --}}
-            @php
-                $previewBookings = collect([
-                    ['callsign' => 'CZWG_CTR', 'start' => '2026-06-03 14:00:00', 'end' => '2026-06-03 17:00:00'],
-                    ['callsign' => 'CYWG_APP', 'start' => '2026-06-05 22:00:00', 'end' => '2026-06-05 23:30:00'],
-                ]);
-            @endphp
+            @if($myBookings->isNotEmpty())
             <div class="db-card">
                 <div class="db-card-label">ATC Bookings</div>
-                @foreach($previewBookings as $b)
+                @foreach($myBookings as $b)
                 @php $start = \Carbon\Carbon::parse($b['start']); $end = \Carbon\Carbon::parse($b['end']); @endphp
                 <div class="db-resource-row">
                     <div style="flex:1;">
@@ -527,7 +519,7 @@
                     </div>
                 </div>
                 @endforeach
-                <a href="#" style="font-size:0.78rem; color:#2563eb; text-decoration:none; display:inline-block; margin-top:0.65rem;">
+                <a href="{{ route('bookings.index') }}" style="font-size:0.78rem; color:#2563eb; text-decoration:none; display:inline-block; margin-top:0.65rem;">
                     Manage bookings &rarr;
                 </a>
             </div>

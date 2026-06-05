@@ -15,19 +15,6 @@ class VatsimBookingService
         $this->apiKey  = config('services.vatsim_bookings.key');
     }
 
-    public function getBooking(int $id): ?array
-    {
-        try {
-            $response = Http::get("{$this->baseUrl}/booking/{$id}");
-            if ($response->successful()) {
-                return $response->json();
-            }
-            return null;
-        } catch (\Exception $e) {
-            return null;
-        }
-    }
-
     public function getBookings(array $params = []): array
     {
         try {

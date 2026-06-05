@@ -9,6 +9,12 @@ use Illuminate\Http\Request;
 
 class BookingController extends Controller
 {
+    private function ownsBooking(VatsimBookingService $service, int $id): bool
+    {
+        $result = $service->getBookings(['cid' => Auth::id()]);
+        return collect($result['data'] ?? [])->contains('id', $id);
+    }
+
     public function index()
     {
         $result = (new VatsimBookingService)->getBookings([
@@ -66,8 +72,7 @@ class BookingController extends Controller
         ]);
 
         $service = new VatsimBookingService;
-        $existing = $service->getBooking($id);
-        if (!$existing || ($existing['cid'] ?? null) != Auth::id()) {
+        if (!$this->ownsBooking($service, $id)) {
             abort(403);
         }
 
@@ -90,8 +95,7 @@ class BookingController extends Controller
     public function destroy(int $id)
     {
         $service = new VatsimBookingService;
-        $existing = $service->getBooking($id);
-        if (!$existing || ($existing['cid'] ?? null) != Auth::id()) {
+        if (!$this->ownsBooking($service, $id)) {
             abort(403);
         }
 
