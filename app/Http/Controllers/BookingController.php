@@ -12,13 +12,15 @@ class BookingController extends Controller
     public function index()
     {
         $result = (new VatsimBookingService)->getBookings([
-            'callsign' => config('services.vatsim_bookings.callsign_prefix'),
             'sort'     => 'start',
             'sort_dir' => 'asc',
         ]);
 
         $bookings = collect($result['data'] ?? [])
-            ->filter(fn($b) => Carbon::parse($b['end'])->isFuture())
+            ->filter(fn($b) =>
+                Carbon::parse($b['end'])->isFuture() &&
+                (str_starts_with($b['callsign'], 'CY') || str_starts_with($b['callsign'], 'CZ'))
+            )
             ->values();
 
         $myBookings = Auth::check()
