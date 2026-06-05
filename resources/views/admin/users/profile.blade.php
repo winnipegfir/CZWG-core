@@ -212,8 +212,9 @@ $reqHours = $user->rosterProfile?->status !== null && $user->rosterProfile?->sta
                     </div>
                     @if($totalVatsimHours !== null)
                     @php
-                        $outsideHrs = max(0, $totalVatsimHours - $hrs);
-                        $firRatio = $totalVatsimHours > 0 ? $hrs / $totalVatsimHours : null;
+                        $effectiveTotal = max($totalVatsimHours, $hrs);
+                        $outsideHrs = max(0, $effectiveTotal - $hrs);
+                        $firRatio = $effectiveTotal > 0 ? min(1, $hrs / $effectiveTotal) : null;
                         $meetsFirReq = $firRatio !== null && $firRatio >= 0.5;
                     @endphp
                     <div style="margin-top:0.6rem; padding-top:0.5rem; border-top:1px solid #f1f5f9; display:flex; gap:0;">
@@ -228,7 +229,7 @@ $reqHours = $user->rosterProfile?->status !== null && $user->rosterProfile?->sta
                         </div>
                         <div style="width:1px; background:#f1f5f9;"></div>
                         <div style="flex:1; text-align:center;">
-                            <div style="font-size:0.82rem; font-weight:700; color:#122b44;">{{ decimal_to_hm($totalVatsimHours) }}</div>
+                            <div style="font-size:0.82rem; font-weight:700; color:#122b44;">{{ decimal_to_hm($effectiveTotal) }}</div>
                             <div style="font-size:0.65rem; color:rgba(0,0,0,0.35); margin-top:0.1rem;">Total VATSIM</div>
                         </div>
                         @if($firRatio !== null)

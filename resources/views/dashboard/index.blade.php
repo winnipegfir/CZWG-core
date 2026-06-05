@@ -255,14 +255,15 @@
                         </div>
                         @if($totalVatsimHours !== null)
                         @php
-                            $outsideHours = max(0, $totalVatsimHours - $hours);
-                            $firRatio = $totalVatsimHours > 0 ? $hours / $totalVatsimHours : null;
+                            $effectiveTotal = max($totalVatsimHours, $hours);
+                            $outsideHours = max(0, $effectiveTotal - $hours);
+                            $firRatio = $effectiveTotal > 0 ? min(1, $hours / $effectiveTotal) : null;
                             $meetsFirReq = $firRatio !== null && $firRatio >= 0.5;
                         @endphp
                         <div style="font-size:0.7rem; color:rgba(255,255,255,0.4); white-space:nowrap;">
                             <span style="color:rgba(255,255,255,0.75); font-weight:600;">{{ decimal_to_hm($outsideHours) }}</span> outside CZWG
                             &nbsp;·&nbsp;
-                            <span style="color:rgba(255,255,255,0.75); font-weight:600;">{{ decimal_to_hm($totalVatsimHours) }}</span> total
+                            <span style="color:rgba(255,255,255,0.75); font-weight:600;">{{ decimal_to_hm($effectiveTotal) }}</span> total
                             @if($firRatio !== null)
                             &nbsp;
                             <span title="{{ $meetsFirReq ? '50% FIR requirement met' : '50% FIR requirement not met' }}"
