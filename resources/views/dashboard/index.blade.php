@@ -254,13 +254,24 @@
                             <span class="db-activity-of">/ {{ decimal_to_hm($reqHours) }}</span>
                         </div>
                         @if($totalVatsimHours !== null)
-                        @php $outsideHours = max(0, $totalVatsimHours - $hours); @endphp
+                        @php
+                            $outsideHours = max(0, $totalVatsimHours - $hours);
+                            $firRatio = $totalVatsimHours > 0 ? $hours / $totalVatsimHours : null;
+                            $meetsFirReq = $firRatio !== null && $firRatio >= 0.5;
+                        @endphp
                         <div style="font-size:0.7rem; color:rgba(255,255,255,0.4); white-space:nowrap;">
                             <span style="color:rgba(255,255,255,0.75); font-weight:600;">{{ decimal_to_hm($hours) }}</span> FIR
                             &nbsp;·&nbsp;
                             <span style="color:rgba(255,255,255,0.75); font-weight:600;">{{ decimal_to_hm($outsideHours) }}</span> outside
                             &nbsp;·&nbsp;
                             <span style="color:rgba(255,255,255,0.75); font-weight:600;">{{ decimal_to_hm($totalVatsimHours) }}</span> total
+                            @if($firRatio !== null)
+                            &nbsp;
+                            <span title="{{ $meetsFirReq ? '50% FIR requirement met' : '50% FIR requirement not met' }}"
+                                  style="color:{{ $meetsFirReq ? '#4ade80' : '#f87171' }};">
+                                <i class="fas {{ $meetsFirReq ? 'fa-check-circle' : 'fa-times-circle' }} fa-xs"></i>
+                            </span>
+                            @endif
                         </div>
                         @endif
                     </div>
