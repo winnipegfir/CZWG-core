@@ -82,7 +82,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/privacyaccept', 'Users\UserController@privacyAccept');
     Route::get('/privacydeny', 'Users\UserController@privacyDeny');
 
-    Route::group(['middleware' => 'executive'], function () {
+    Route::group(['middleware' => 'staff'], function () {
         Route::prefix('admin')->group(function () {
             //Uploads
             Route::get('/upload', 'Publications\UploadController@upload')->middleware('staff')->name('dashboard.upload');
