@@ -12,14 +12,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        $tables = DB::select("SHOW TABLES");
-        $tables = array_map('current',$tables);
+        $tables = DB::connection()->getDoctrineSchemaManager()->listTableNames();
 
         Schema::disableForeignKeyConstraints();
-        foreach ($tables as $table)
-        {
-            if (\Illuminate\Support\Str::startsWith($table, 'cbt_'))
+        foreach ($tables as $table) {
+            if (\Illuminate\Support\Str::startsWith($table, 'cbt_')) {
                 Schema::dropIfExists($table);
+            }
         }
         Schema::enableForeignKeyConstraints();
     }

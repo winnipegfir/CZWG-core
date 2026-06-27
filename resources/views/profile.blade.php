@@ -341,7 +341,7 @@ $lastOnline  = $lastSession ? \Carbon\Carbon::parse($lastSession->session_end)->
             </div>
             <div class="profile-stat">
                 <div class="profile-stat-val">{{ $sessionCount }}</div>
-                <div class="profile-stat-lbl">Sessions This Month</div>
+                <div class="profile-stat-lbl">Sessions This Quarter</div>
             </div>
             @endif
             @if($lastSession)

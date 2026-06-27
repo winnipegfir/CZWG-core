@@ -11,18 +11,24 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('used_connect');
-            $table->dropColumn('subdivision_code');
-            $table->dropColumn('subdivision_name');
-            $table->dropColumn('division_name');
-            $table->dropColumn('division_code');
-            $table->dropColumn('region_code');
-            $table->dropColumn('region_name');
-            $table->dropColumn('rating_short');
-            $table->dropColumn('rating_long');
-            $table->dropColumn('rating_GRP');
-        });
+        $columns = [
+            'used_connect',
+            'subdivision_code',
+            'subdivision_name',
+            'division_name',
+            'division_code',
+            'region_code',
+            'region_name',
+            'rating_short',
+            'rating_long',
+            'rating_GRP',
+        ];
+
+        foreach ($columns as $column) {
+            Schema::table('users', function (Blueprint $table) use ($column) {
+                $table->dropColumn($column);
+            });
+        }
     }
 
     /**
