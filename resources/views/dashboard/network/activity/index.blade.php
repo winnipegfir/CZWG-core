@@ -20,6 +20,18 @@
         </div>
     </div>
 
+    {{-- Policy note --}}
+    <div class="activity-policy-note">
+        <i class="fas fa-circle-info"></i>
+        <div>
+            <strong>Position policy:</strong> hours only keep a controller's certification current if they're worked at
+            <strong>their own rating's position, or the tier directly below it</strong> &mdash; e.g. a C1 stays current by controlling
+            <strong>CTR</strong> or <strong>APP/DEP</strong>, an S3 by controlling <strong>APP/DEP</strong> or <strong>TWR</strong>, and so on.
+            The <strong>Total Hours</strong> column below is the raw quarterly total (what the automated quarterly reset uses); the
+            <strong>Qualifying Hours</strong> column only counts hours worked at an eligible tier. Click <i class="fas fa-chevron-down"></i> on a row to see the breakdown by position.
+        </div>
+    </div>
+
     {{-- Summary cards --}}
     <div class="activity-summary-row">
         <div class="activity-summary-card">
@@ -56,19 +68,22 @@
                     <th class="sortable" data-col="1">Controller Name <i class="fas fa-sort sort-icon"></i></th>
                     <th class="sortable" data-col="2">Status <i class="fas fa-sort sort-icon"></i></th>
                     <th class="sortable" data-col="3">Rating <i class="fas fa-sort sort-icon"></i></th>
-                    <th class="sortable" data-col="4">Hours Logged <i class="fas fa-sort sort-icon"></i></th>
+                    <th class="sortable" data-col="4">Total Hours <i class="fas fa-sort sort-icon"></i></th>
+                    <th class="sortable" data-col="5">Qualifying Hours <i class="fas fa-sort sort-icon"></i></th>
                     <th>Requirement</th>
                     <th>Result</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
             @forelse ($members as $member)
-                <tr>
+                <tr class="activity-row" data-toggle-target="#breakdown-{{ $member->id }}">
                     <td><strong class="roster-cid-plain">{{ $member->cid }}</strong></td>
                     <td class="roster-name">{{ $member->user ? $member->user->fullName('FL') : $member->full_name }}</td>
                     <td class="text-capitalize">{{ $member->status }}</td>
-                    <td><span class="rating-badge">{{ $member->rating }}</span></td>
+                    <td><span class="rating-badge">{{ $member->rating_short_name ?? 'N/A' }}</span></td>
                     <td data-sort="{{ $member->currency }}">{{ decimal_to_hm($member->currency) }}</td>
+                    <td data-sort="{{ $member->qualifying_hours }}">{{ decimal_to_hm($member->qualifying_hours) }}</td>
                     <td>{{ $member->requirement === null ? 'N/A' : decimal_to_hm($member->requirement) }}</td>
                     <td>
                         @if ($member->meets_requirement === null)
@@ -78,11 +93,31 @@
                         @else
                             <span class="status-badge status-inactive">Below requirement</span>
                         @endif
+                        @if ($member->meets_position_requirement === false)
+                            <span class="status-badge status-inactive mt-1">Not on eligible position</span>
+                        @endif
+                    </td>
+                    <td><i class="fas fa-chevron-down activity-expand-icon"></i></td>
+                </tr>
+                <tr class="activity-breakdown-row" id="breakdown-{{ $member->id }}" style="display:none;">
+                    <td colspan="9">
+                        @if (empty($member->position_breakdown))
+                            <span class="text-muted" style="font-size:0.85rem;">No sessions logged this quarter.</span>
+                        @else
+                            <div class="activity-breakdown-chips">
+                                @foreach ($member->position_breakdown as $label => $data)
+                                    <span class="activity-chip {{ $data['qualifies'] ? 'activity-chip-ok' : 'activity-chip-bad' }}">
+                                        <i class="fas {{ $data['qualifies'] ? 'fa-check' : 'fa-xmark' }}"></i>
+                                        {{ $label }}: {{ decimal_to_hm($data['hours']) }}
+                                    </span>
+                                @endforeach
+                            </div>
+                        @endif
                     </td>
                 </tr>
             @empty
                 <tr>
-                    <td colspan="7" class="text-center text-muted py-4">No active roster members found.</td>
+                    <td colspan="9" class="text-center text-muted py-4">No active roster members found.</td>
                 </tr>
             @endforelse
             </tbody>
@@ -120,25 +155,102 @@
     color: #64748b;
     margin-top: 0.2rem;
 }
+
+.activity-policy-note {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    background: #eff6ff;
+    border: 1.5px solid #bfdbfe;
+    border-radius: 10px;
+    padding: 0.85rem 1.1rem;
+    font-size: 0.85rem;
+    color: #1e3a5f;
+    margin-bottom: 1.25rem;
+}
+
+.activity-policy-note > i {
+    color: #1d4ed8;
+    margin-top: 0.15rem;
+}
+
+.activity-row {
+    cursor: pointer;
+}
+
+.activity-expand-icon {
+    color: #94a3b8;
+    font-size: 0.75rem;
+    transition: transform 0.15s;
+}
+
+.activity-row.expanded .activity-expand-icon {
+    transform: rotate(180deg);
+}
+
+.activity-breakdown-row td {
+    background: #f8fafc;
+    padding: 0.75rem 1rem !important;
+    text-align: left !important;
+}
+
+.activity-breakdown-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.activity-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+}
+
+.activity-chip-ok {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.activity-chip-bad {
+    background: #fee2e2;
+    color: #b91c1c;
+}
 </style>
 
 <script>
 $(document).ready(function () {
-    // ── Live search ────────────────────────────────────────────
+    // ── Expand/collapse position breakdown ─────────────────────
+    $(document).on('click', '.activity-row', function () {
+        var target = $($(this).data('toggle-target'));
+        target.toggle();
+        $(this).toggleClass('expanded');
+    });
+
+    // ── Live search (matches against the row + its breakdown) ──
     $('#activitySearch').on('input', function () {
         var q = $(this).val().trim().toLowerCase();
-        var rows = $('#activityTable tbody tr');
         var visible = 0;
-        rows.each(function () {
-            var text = $(this).text().toLowerCase();
+        $('#activityTable tbody tr.activity-row').each(function () {
+            var row = $(this);
+            var breakdown = $(row.data('toggle-target'));
+            var text = (row.text() + ' ' + breakdown.text()).toLowerCase();
             var show = !q || text.indexOf(q) > -1;
-            $(this).toggle(show);
+            row.toggle(show);
+            // Keep breakdown row hidden unless the user has expanded it
+            if (!show) {
+                breakdown.hide();
+                row.removeClass('expanded');
+            }
             if (show) visible++;
         });
         $('.roster-no-results').toggle(visible === 0);
     });
 
-    // ── Column sort ────────────────────────────────────────────
+    // ── Column sort (keeps each row paired with its breakdown row) ──
     $(document).on('click', '.sortable-table .sortable', function () {
         var th = $(this);
         var table = th.closest('table');
@@ -154,11 +266,11 @@ $(document).ready(function () {
         th.find('.sort-icon').removeClass('fa-sort').addClass(asc ? 'fa-sort-up' : 'fa-sort-down');
 
         var tbody = table.find('tbody');
-        var rows = tbody.find('tr').toArray();
+        var rows = tbody.find('tr.activity-row').toArray();
         rows.sort(function (a, b) {
             var aCell = $(a).find('td').eq(col);
             var bCell = $(b).find('td').eq(col);
-            if (col === 4) {
+            if (col === 4 || col === 5) {
                 var aNum = parseFloat(aCell.data('sort'));
                 var bNum = parseFloat(bCell.data('sort'));
                 return asc ? aNum - bNum : bNum - aNum;
@@ -170,10 +282,13 @@ $(document).ready(function () {
             }
             return asc ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
         });
-        tbody.append(rows);
+        $.each(rows, function (i, row) {
+            var breakdown = $($(row).data('toggle-target'));
+            tbody.append(row).append(breakdown);
+        });
     });
 
-    // Default sort by hours logged asc (worst first)
+    // Default sort by total hours asc (worst first)
     $('#activityTable .sortable[data-col="4"]').trigger('click');
 });
 </script>
