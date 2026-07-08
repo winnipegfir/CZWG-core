@@ -47,9 +47,10 @@
             <strong>Position policy:</strong> hours only keep a controller's certification current if they're worked at
             <strong>their own rating's position, or the tier directly below it</strong> &mdash; e.g. a C1 stays current by controlling
             <strong>CTR</strong> or <strong>APP/DEP</strong>, an S3 by controlling <strong>APP/DEP</strong> or <strong>TWR</strong>, and so on.
-            The <strong>Total Hours</strong> column below is the raw total for the selected date range; the
-            <strong>Qualifying Hours</strong> column only counts hours worked at an eligible tier, and <strong>Non-FIR Hours</strong> is the difference
-            &mdash; hours logged on a position that doesn't count toward that person's requirement. Requirements are checked quarterly; use the date range above to look at a different period.
+            The <strong>Total Hours</strong> column below is the raw total for the selected date range. <strong>Qualifying Hours</strong> only counts
+            hours worked at an eligible tier <em>within Winnipeg FIR</em>. <strong>Non-FIR Hours</strong> is time logged on a position outside Winnipeg
+            FIR (e.g. a visiting session at Toronto Center) &mdash; it never counts toward this requirement, regardless of position or tier.
+            Requirements are checked quarterly; use the date range above to look at a different period.
             Click <i class="fas fa-chevron-down"></i> on a row to see the breakdown by position.
         </div>
     </div>

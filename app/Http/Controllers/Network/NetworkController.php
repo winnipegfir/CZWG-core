@@ -38,6 +38,11 @@ class NetworkController extends Controller
         4 => 'CTR',
     ];
 
+    // Same prefixes ActivityLog uses to decide a position belongs to Winnipeg FIR.
+    // Anything logged on a callsign that doesn't match one of these (e.g. a Toronto
+    // position) is a foreign-FIR session and never counts toward this FIR's requirement.
+    const HOME_FIR_PREFIXES = ['ZWG', 'CZWG', 'CYWG', 'CYAV', 'CYPG', 'CYQR', 'CYXE', 'CYQT', 'CYMJ', 'WPG'];
+
     public function index()
     {
         return view('dashboard.network.index');
@@ -75,14 +80,23 @@ class NetworkController extends Controller
                 $breakdown = [];
                 $qualifyingHours = 0;
                 $totalLoggedHours = 0;
+                $nonFirHours = 0;
 
                 foreach ($sessionsByCid->get($member->cid, collect()) as $session) {
-                    $suffix = Str::of($session->callsign)->afterLast('_')->upper()->toString();
-                    $positionTier = self::POSITION_TIERS[$suffix] ?? null;
-                    $label = $positionTier ? self::TIER_LABELS[$positionTier] : 'Other';
+                    $isHomeFir = Str::contains(strtoupper($session->callsign), self::HOME_FIR_PREFIXES);
 
-                    $qualifies = $ratingTier !== null && $positionTier !== null
-                        && ($positionTier === $ratingTier || $positionTier === $ratingTier - 1);
+                    if (! $isHomeFir) {
+                        $label = 'Non-FIR ('.$session->callsign.')';
+                        $qualifies = false;
+                        $nonFirHours += $session->duration;
+                    } else {
+                        $suffix = Str::of($session->callsign)->afterLast('_')->upper()->toString();
+                        $positionTier = self::POSITION_TIERS[$suffix] ?? null;
+                        $label = $positionTier ? self::TIER_LABELS[$positionTier] : 'Other';
+
+                        $qualifies = $ratingTier !== null && $positionTier !== null
+                            && ($positionTier === $ratingTier || $positionTier === $ratingTier - 1);
+                    }
 
                     if (! isset($breakdown[$label])) {
                         $breakdown[$label] = ['hours' => 0, 'qualifies' => $qualifies];
@@ -98,7 +112,8 @@ class NetworkController extends Controller
                 $member->position_breakdown = $breakdown;
                 $member->qualifying_hours = $qualifyingHours;
                 $member->total_logged_hours = $totalLoggedHours;
-                $member->non_fir_hours = $totalLoggedHours - $qualifyingHours;
+                $member->non_fir_hours = $nonFirHours;
+                $member->off_tier_hours = $totalLoggedHours - $qualifyingHours - $nonFirHours;
                 $member->meets_requirement = $requirement === null ? null : $totalLoggedHours >= $requirement;
                 $member->meets_position_requirement = $ratingTier === null ? null
                     : ($requirement === null ? null : $qualifyingHours >= $requirement);
