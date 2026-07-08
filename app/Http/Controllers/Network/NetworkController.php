@@ -130,9 +130,12 @@ class NetworkController extends Controller
                 $member->total_logged_hours = $totalLoggedHours;
                 $member->non_fir_hours = $nonFirHours;
                 $member->off_tier_hours = $totalLoggedHours - $qualifyingHours - $nonFirHours;
-                $member->meets_requirement = $member->vatsim_data_unavailable || $requirement === null ? null : $totalLoggedHours >= $requirement;
-                $member->meets_position_requirement = $member->vatsim_data_unavailable || $ratingTier === null ? null
-                    : ($requirement === null ? null : $qualifyingHours >= $requirement);
+
+                // Only hours worked at an eligible position within Winnipeg FIR can
+                // ever satisfy the requirement -- raw total hours (which can be 100%
+                // foreign-FIR time) must never be used to decide pass/fail.
+                $member->meets_requirement = $member->vatsim_data_unavailable || $requirement === null
+                    ? null : $qualifyingHours >= $requirement;
 
                 return $member;
             })

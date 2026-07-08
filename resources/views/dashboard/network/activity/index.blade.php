@@ -47,9 +47,9 @@
             <strong>Position policy:</strong> hours only keep a controller's certification current if they're worked at
             <strong>their own rating's position, or the tier directly below it</strong> &mdash; e.g. a C1 stays current by controlling
             <strong>CTR</strong> or <strong>APP/DEP</strong>, an S3 by controlling <strong>APP/DEP</strong> or <strong>TWR</strong>, and so on.
-            The <strong>Total Hours</strong> column below is the raw total for the selected date range. <strong>Qualifying Hours</strong> only counts
-            hours worked at an eligible tier <em>within Winnipeg FIR</em>. <strong>Non-FIR Hours</strong> is time logged on a position outside Winnipeg
-            FIR (e.g. a visiting session at Toronto Center) &mdash; it never counts toward this requirement, regardless of position or tier.
+            <strong>Requirement / Result is judged on Qualifying Hours only</strong> &mdash; the <strong>Total Hours</strong> column is just the raw total
+            for the selected date range and can include time that doesn't count. <strong>Non-FIR Hours</strong> is time logged on a position outside
+            Winnipeg FIR (e.g. a visiting session at Toronto Center); it never counts toward this requirement no matter how much of it there is.
             Requirements are checked quarterly; use the date range above to look at a different period.
             Click <i class="fas fa-chevron-down"></i> on a row to see the breakdown by position.
             Session data is pulled live from VATSIM's own connection history, not our local activity log, so out-of-FIR sessions are counted correctly.
@@ -129,8 +129,8 @@
                         @else
                             <span class="status-badge status-inactive">Below requirement</span>
                         @endif
-                        @if ($member->meets_requirement && $member->meets_position_requirement === false)
-                            <span class="status-badge status-inactive mt-1">Not on eligible position</span>
+                        @if (! $member->vatsim_data_unavailable && $member->non_fir_hours > 0)
+                            <div class="activity-result-note">{{ decimal_to_hm($member->non_fir_hours) }} non-FIR, didn't count</div>
                         @endif
                     </td>
                     <td><i class="fas fa-chevron-down activity-expand-icon"></i></td>
@@ -284,6 +284,13 @@
 .activity-status-unknown {
     background: #fef3c7;
     color: #92400e;
+}
+
+.activity-result-note {
+    font-size: 0.7rem;
+    color: #94a3b8;
+    margin-top: 0.25rem;
+    white-space: nowrap;
 }
 </style>
 
