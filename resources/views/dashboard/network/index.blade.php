@@ -12,8 +12,8 @@
         </div>
         <div class="card p-4 orange white-text">
             <h3>Controller Activity</h3>
-            <p>View controller activity statistics against policy requirements (Coming Soon)</p>
-            <a class="white-text font-weight-bold" href="#">Go <i class="fas fa-arrow-right"></i></a>
+            <p>View controller activity statistics against policy requirements</p>
+            <a class="text-white font-weight-bold" href="{{route('network.activity.index')}}">Go <i class="fas fa-arrow-right"></i></a>
         </div>
         <div class="card p-4 purple white-text">
             <h3>Overall Statistics</h3>
