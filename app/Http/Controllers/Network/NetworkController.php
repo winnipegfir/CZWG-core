@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Network;
 
+use App\Classes\VatsimStatsApi;
 use App\Http\Controllers\Controller;
 use App\Models\AtcTraining\RosterMember;
 use App\Models\Network\MonitoredPosition;
-use App\Models\Network\SessionLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Carbon;
@@ -59,17 +59,19 @@ class NetworkController extends Controller
         $rangeEnd = $request->filled('end') ? Carbon::parse($request->get('end'))->endOfDay() : $defaultEnd;
         $isCustomRange = $request->filled('start') || $request->filled('end');
 
-        $sessionsByCid = SessionLog::whereNotNull('duration')
-            ->where('session_start', '>=', $rangeStart)
-            ->where('session_start', '<=', $rangeEnd)
-            ->get()
-            ->groupBy('cid');
-
-        $members = RosterMember::where('active', '1')
+        $roster = RosterMember::where('active', '1')
             ->whereIn('status', ['home', 'visit', 'instructor', 'training'])
             ->with('user')
-            ->get()
-            ->map(function ($member) use ($sessionsByCid) {
+            ->get();
+
+        // Pull real ATC session history straight from VATSIM instead of relying on
+        // our own activity bot, which only ever records positions matching this
+        // FIR's callsign prefixes and silently drops everything else (e.g. a
+        // controller working a Toronto position never shows up in our own log).
+        $vatsimSessionsByCid = VatsimStatsApi::getAtcSessionsForMembers($roster->pluck('cid')->unique(), $rangeStart);
+
+        $members = $roster
+            ->map(function ($member) use ($vatsimSessionsByCid, $rangeEnd) {
                 $requirement = config('currency.'.$member->status);
                 $member->requirement = $requirement;
 
@@ -77,45 +79,59 @@ class NetworkController extends Controller
                 $member->rating_short_name = $ratingShortName;
                 $ratingTier = self::RATING_TIERS[$ratingShortName] ?? null;
 
+                $sessions = $vatsimSessionsByCid[(string) $member->cid] ?? null;
+                $member->vatsim_data_unavailable = $sessions === null;
+
                 $breakdown = [];
                 $qualifyingHours = 0;
                 $totalLoggedHours = 0;
                 $nonFirHours = 0;
 
-                foreach ($sessionsByCid->get($member->cid, collect()) as $session) {
-                    $isHomeFir = Str::contains(strtoupper($session->callsign), self::HOME_FIR_PREFIXES);
+                foreach ($sessions ?? [] as $session) {
+                    $sessionStart = Carbon::parse($session['start']);
+                    if ($sessionStart->gt($rangeEnd)) {
+                        continue;
+                    }
+
+                    $durationHours = ((float) $session['minutes_on_callsign']) / 60;
+                    $callsign = strtoupper($session['callsign']);
+                    $isHomeFir = Str::contains($callsign, self::HOME_FIR_PREFIXES);
 
                     if (! $isHomeFir) {
-                        $label = 'Non-FIR ('.$session->callsign.')';
+                        $category = 'Non-FIR';
                         $qualifies = false;
-                        $nonFirHours += $session->duration;
+                        $nonFirHours += $durationHours;
                     } else {
-                        $suffix = Str::of($session->callsign)->afterLast('_')->upper()->toString();
+                        $suffix = Str::of($callsign)->afterLast('_')->toString();
                         $positionTier = self::POSITION_TIERS[$suffix] ?? null;
-                        $label = $positionTier ? self::TIER_LABELS[$positionTier] : 'Other';
+                        $category = $positionTier ? self::TIER_LABELS[$positionTier] : 'Other';
 
                         $qualifies = $ratingTier !== null && $positionTier !== null
                             && ($positionTier === $ratingTier || $positionTier === $ratingTier - 1);
                     }
 
-                    if (! isset($breakdown[$label])) {
-                        $breakdown[$label] = ['hours' => 0, 'qualifies' => $qualifies];
+                    // Keyed by raw callsign (not just tier) so staff can see exactly
+                    // which position each chunk of hours came from.
+                    if (! isset($breakdown[$callsign])) {
+                        $breakdown[$callsign] = ['hours' => 0, 'qualifies' => $qualifies, 'category' => $category];
                     }
-                    $breakdown[$label]['hours'] += $session->duration;
+                    $breakdown[$callsign]['hours'] += $durationHours;
 
-                    $totalLoggedHours += $session->duration;
+                    $totalLoggedHours += $durationHours;
                     if ($qualifies) {
-                        $qualifyingHours += $session->duration;
+                        $qualifyingHours += $durationHours;
                     }
                 }
+
+                ksort($breakdown);
 
                 $member->position_breakdown = $breakdown;
                 $member->qualifying_hours = $qualifyingHours;
                 $member->total_logged_hours = $totalLoggedHours;
                 $member->non_fir_hours = $nonFirHours;
                 $member->off_tier_hours = $totalLoggedHours - $qualifyingHours - $nonFirHours;
-                $member->meets_requirement = $requirement === null ? null : $totalLoggedHours >= $requirement;
-                $member->meets_position_requirement = $ratingTier === null ? null
+                $member->meets_requirement = $member->vatsim_data_unavailable || $requirement === null ? null : $totalLoggedHours >= $requirement;
+                $member->meets_position_requirement = $member->vatsim_data_unavailable || $ratingTier === null ? null
                     : ($requirement === null ? null : $qualifyingHours >= $requirement);
 
                 return $member;
@@ -126,9 +142,10 @@ class NetworkController extends Controller
         $totalMembers = $members->count();
         $meetingRequirement = $members->where('meets_requirement', true)->count();
         $belowRequirement = $members->where('meets_requirement', false)->count();
+        $dataUnavailable = $members->where('vatsim_data_unavailable', true)->count();
 
         return view('dashboard.network.activity.index', compact(
-            'members', 'quarterLabel', 'totalMembers', 'meetingRequirement', 'belowRequirement',
+            'members', 'quarterLabel', 'totalMembers', 'meetingRequirement', 'belowRequirement', 'dataUnavailable',
             'rangeStart', 'rangeEnd', 'isCustomRange'
         ));
     }

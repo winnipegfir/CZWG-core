@@ -52,6 +52,7 @@
             FIR (e.g. a visiting session at Toronto Center) &mdash; it never counts toward this requirement, regardless of position or tier.
             Requirements are checked quarterly; use the date range above to look at a different period.
             Click <i class="fas fa-chevron-down"></i> on a row to see the breakdown by position.
+            Session data is pulled live from VATSIM's own connection history, not our local activity log, so out-of-FIR sessions are counted correctly.
         </div>
     </div>
 
@@ -69,6 +70,12 @@
             <div class="activity-summary-value text-danger">{{ $belowRequirement }}</div>
             <div class="activity-summary-label">Below Requirement</div>
         </div>
+        @if ($dataUnavailable > 0)
+            <div class="activity-summary-card">
+                <div class="activity-summary-value" style="color:#92400e;">{{ $dataUnavailable }}</div>
+                <div class="activity-summary-label">Data Unavailable</div>
+            </div>
+        @endif
     </div>
 
     {{-- Legend + Search --}}
@@ -111,7 +118,11 @@
                     <td data-sort="{{ $member->non_fir_hours }}">{{ decimal_to_hm($member->non_fir_hours) }}</td>
                     <td>{{ $member->requirement === null ? 'N/A' : decimal_to_hm($member->requirement) }}</td>
                     <td>
-                        @if ($member->meets_requirement === null)
+                        @if ($member->vatsim_data_unavailable)
+                            <span class="status-badge activity-status-unknown" title="Couldn't reach VATSIM's session history for this CID. Reload to retry.">
+                                <i class="fas fa-triangle-exclamation"></i> Data unavailable
+                            </span>
+                        @elseif ($member->meets_requirement === null)
                             <span class="status-badge">N/A</span>
                         @elseif ($member->meets_requirement)
                             <span class="status-badge status-active">Meets requirement</span>
@@ -126,14 +137,16 @@
                 </tr>
                 <tr class="activity-breakdown-row" id="breakdown-{{ $member->id }}" style="display:none;">
                     <td colspan="10">
-                        @if (empty($member->position_breakdown))
-                            <span class="text-muted" style="font-size:0.85rem;">No sessions logged this quarter.</span>
+                        @if ($member->vatsim_data_unavailable)
+                            <span class="text-muted" style="font-size:0.85rem;"><i class="fas fa-triangle-exclamation text-warning"></i> Couldn't fetch this controller's session history from VATSIM (their CID may currently be online, or the request timed out). Reload the page to retry.</span>
+                        @elseif (empty($member->position_breakdown))
+                            <span class="text-muted" style="font-size:0.85rem;">No sessions logged in this date range.</span>
                         @else
                             <div class="activity-breakdown-chips">
-                                @foreach ($member->position_breakdown as $label => $data)
+                                @foreach ($member->position_breakdown as $callsign => $data)
                                     <span class="activity-chip {{ $data['qualifies'] ? 'activity-chip-ok' : 'activity-chip-bad' }}">
                                         <i class="fas {{ $data['qualifies'] ? 'fa-check' : 'fa-xmark' }}"></i>
-                                        {{ $label }}: {{ decimal_to_hm($data['hours']) }}
+                                        {{ $callsign }} <span class="activity-chip-category">({{ $data['category'] }})</span>: {{ decimal_to_hm($data['hours']) }}
                                     </span>
                                 @endforeach
                             </div>
@@ -261,6 +274,16 @@
 .activity-chip-bad {
     background: #fee2e2;
     color: #b91c1c;
+}
+
+.activity-chip-category {
+    font-weight: 400;
+    opacity: 0.75;
+}
+
+.activity-status-unknown {
+    background: #fef3c7;
+    color: #92400e;
 }
 </style>
 
