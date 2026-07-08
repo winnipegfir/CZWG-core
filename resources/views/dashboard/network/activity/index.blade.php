@@ -16,8 +16,28 @@
     <div class="roster-page-header mt-3">
         <div>
             <h1 class="roster-page-title">Controller Activity</h1>
-            <p class="roster-page-sub">{{ $quarterLabel }} &mdash; hours logged against each member's activity requirement</p>
+            <p class="roster-page-sub">
+                @if ($isCustomRange)
+                    {{ $rangeStart->format('M j, Y') }} &ndash; {{ $rangeEnd->format('M j, Y') }} &mdash; hours logged against each member's activity requirement
+                @else
+                    {{ $quarterLabel }} (current quarter) &mdash; hours logged against each member's activity requirement
+                @endif
+            </p>
         </div>
+        <form method="GET" action="{{ route('network.activity.index') }}" class="activity-range-form">
+            <div class="form-group mb-0">
+                <label for="activityStart">From</label>
+                <input type="date" id="activityStart" name="start" class="form-control form-control-sm" value="{{ $rangeStart->format('Y-m-d') }}">
+            </div>
+            <div class="form-group mb-0">
+                <label for="activityEnd">To</label>
+                <input type="date" id="activityEnd" name="end" class="form-control form-control-sm" value="{{ $rangeEnd->format('Y-m-d') }}">
+            </div>
+            <button type="submit" class="btn btn-sm bg-czqo-blue-light">Apply</button>
+            @if ($isCustomRange)
+                <a href="{{ route('network.activity.index') }}" class="btn btn-sm btn-light">Reset to Quarter</a>
+            @endif
+        </form>
     </div>
 
     {{-- Policy note --}}
@@ -27,8 +47,10 @@
             <strong>Position policy:</strong> hours only keep a controller's certification current if they're worked at
             <strong>their own rating's position, or the tier directly below it</strong> &mdash; e.g. a C1 stays current by controlling
             <strong>CTR</strong> or <strong>APP/DEP</strong>, an S3 by controlling <strong>APP/DEP</strong> or <strong>TWR</strong>, and so on.
-            The <strong>Total Hours</strong> column below is the raw quarterly total (what the automated quarterly reset uses); the
-            <strong>Qualifying Hours</strong> column only counts hours worked at an eligible tier. Click <i class="fas fa-chevron-down"></i> on a row to see the breakdown by position.
+            The <strong>Total Hours</strong> column below is the raw total for the selected date range; the
+            <strong>Qualifying Hours</strong> column only counts hours worked at an eligible tier, and <strong>Non-FIR Hours</strong> is the difference
+            &mdash; hours logged on a position that doesn't count toward that person's requirement. Requirements are checked quarterly; use the date range above to look at a different period.
+            Click <i class="fas fa-chevron-down"></i> on a row to see the breakdown by position.
         </div>
     </div>
 
@@ -70,6 +92,7 @@
                     <th class="sortable" data-col="3">Rating <i class="fas fa-sort sort-icon"></i></th>
                     <th class="sortable" data-col="4">Total Hours <i class="fas fa-sort sort-icon"></i></th>
                     <th class="sortable" data-col="5">Qualifying Hours <i class="fas fa-sort sort-icon"></i></th>
+                    <th class="sortable" data-col="6">Non-FIR Hours <i class="fas fa-sort sort-icon"></i></th>
                     <th>Requirement</th>
                     <th>Result</th>
                     <th></th>
@@ -82,8 +105,9 @@
                     <td class="roster-name">{{ $member->user ? $member->user->fullName('FL') : $member->full_name }}</td>
                     <td class="text-capitalize">{{ $member->status }}</td>
                     <td><span class="rating-badge">{{ $member->rating_short_name ?? 'N/A' }}</span></td>
-                    <td data-sort="{{ $member->currency }}">{{ decimal_to_hm($member->currency) }}</td>
+                    <td data-sort="{{ $member->total_logged_hours }}">{{ decimal_to_hm($member->total_logged_hours) }}</td>
                     <td data-sort="{{ $member->qualifying_hours }}">{{ decimal_to_hm($member->qualifying_hours) }}</td>
+                    <td data-sort="{{ $member->non_fir_hours }}">{{ decimal_to_hm($member->non_fir_hours) }}</td>
                     <td>{{ $member->requirement === null ? 'N/A' : decimal_to_hm($member->requirement) }}</td>
                     <td>
                         @if ($member->meets_requirement === null)
@@ -93,14 +117,14 @@
                         @else
                             <span class="status-badge status-inactive">Below requirement</span>
                         @endif
-                        @if ($member->meets_position_requirement === false)
+                        @if ($member->meets_requirement && $member->meets_position_requirement === false)
                             <span class="status-badge status-inactive mt-1">Not on eligible position</span>
                         @endif
                     </td>
                     <td><i class="fas fa-chevron-down activity-expand-icon"></i></td>
                 </tr>
                 <tr class="activity-breakdown-row" id="breakdown-{{ $member->id }}" style="display:none;">
-                    <td colspan="9">
+                    <td colspan="10">
                         @if (empty($member->position_breakdown))
                             <span class="text-muted" style="font-size:0.85rem;">No sessions logged this quarter.</span>
                         @else
@@ -117,7 +141,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="9" class="text-center text-muted py-4">No active roster members found.</td>
+                    <td colspan="10" class="text-center text-muted py-4">No active roster members found.</td>
                 </tr>
             @endforelse
             </tbody>
@@ -127,6 +151,24 @@
 </div>
 
 <style>
+.activity-range-form {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-left: auto;
+}
+
+.activity-range-form label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.2rem;
+    display: block;
+}
+
 .activity-summary-row {
     display: flex;
     gap: 1rem;
@@ -270,7 +312,7 @@ $(document).ready(function () {
         rows.sort(function (a, b) {
             var aCell = $(a).find('td').eq(col);
             var bCell = $(b).find('td').eq(col);
-            if (col === 4 || col === 5) {
+            if (col === 4 || col === 5 || col === 6) {
                 var aNum = parseFloat(aCell.data('sort'));
                 var bNum = parseFloat(bCell.data('sort'));
                 return asc ? aNum - bNum : bNum - aNum;

@@ -43,14 +43,20 @@ class NetworkController extends Controller
         return view('dashboard.network.index');
     }
 
-    public function activityIndex()
+    public function activityIndex(Request $request)
     {
         $now = Carbon::now();
         $quarterLabel = 'Q'.ceil($now->month / 3).' '.$now->year;
-        $quarterStart = $now->copy()->startOfQuarter();
+        $defaultStart = $now->copy()->startOfQuarter();
+        $defaultEnd = $now->copy();
+
+        $rangeStart = $request->filled('start') ? Carbon::parse($request->get('start'))->startOfDay() : $defaultStart;
+        $rangeEnd = $request->filled('end') ? Carbon::parse($request->get('end'))->endOfDay() : $defaultEnd;
+        $isCustomRange = $request->filled('start') || $request->filled('end');
 
         $sessionsByCid = SessionLog::whereNotNull('duration')
-            ->where('session_start', '>=', $quarterStart)
+            ->where('session_start', '>=', $rangeStart)
+            ->where('session_start', '<=', $rangeEnd)
             ->get()
             ->groupBy('cid');
 
@@ -61,7 +67,6 @@ class NetworkController extends Controller
             ->map(function ($member) use ($sessionsByCid) {
                 $requirement = config('currency.'.$member->status);
                 $member->requirement = $requirement;
-                $member->meets_requirement = $requirement === null ? null : $member->currency >= $requirement;
 
                 $ratingShortName = $member->user && $member->user->rating ? $member->user->rating->getShortName() : null;
                 $member->rating_short_name = $ratingShortName;
@@ -93,19 +98,24 @@ class NetworkController extends Controller
                 $member->position_breakdown = $breakdown;
                 $member->qualifying_hours = $qualifyingHours;
                 $member->total_logged_hours = $totalLoggedHours;
+                $member->non_fir_hours = $totalLoggedHours - $qualifyingHours;
+                $member->meets_requirement = $requirement === null ? null : $totalLoggedHours >= $requirement;
                 $member->meets_position_requirement = $ratingTier === null ? null
                     : ($requirement === null ? null : $qualifyingHours >= $requirement);
 
                 return $member;
             })
-            ->sortBy('currency')
+            ->sortBy('total_logged_hours')
             ->values();
 
         $totalMembers = $members->count();
         $meetingRequirement = $members->where('meets_requirement', true)->count();
         $belowRequirement = $members->where('meets_requirement', false)->count();
 
-        return view('dashboard.network.activity.index', compact('members', 'quarterLabel', 'totalMembers', 'meetingRequirement', 'belowRequirement'));
+        return view('dashboard.network.activity.index', compact(
+            'members', 'quarterLabel', 'totalMembers', 'meetingRequirement', 'belowRequirement',
+            'rangeStart', 'rangeEnd', 'isCustomRange'
+        ));
     }
 
     public function monitoredPositionsIndex()
