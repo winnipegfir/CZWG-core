@@ -110,7 +110,7 @@
             @forelse ($members as $member)
                 <tr class="activity-row" data-toggle-target="#breakdown-{{ $member->id }}">
                     <td><strong class="roster-cid-plain">{{ $member->cid }}</strong></td>
-                    <td class="roster-name">{{ $member->user ? $member->user->fullName('FL') : $member->full_name }}</td>
+                    <td class="roster-name">{{ $member->user ? trim($member->user->fname.' '.$member->user->lname) : $member->full_name }}</td>
                     <td class="text-capitalize">{{ $member->status }}</td>
                     <td><span class="rating-badge">{{ $member->rating_short_name ?? 'N/A' }}</span></td>
                     <td data-sort="{{ $member->total_logged_hours }}">{{ decimal_to_hm($member->total_logged_hours) }}</td>
