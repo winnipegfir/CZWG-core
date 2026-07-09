@@ -1,6 +1,16 @@
 <!DOCTYPE HTML>
 <html lang="en">
     <head>
+        <script>
+        (function() {
+            try {
+                var theme = localStorage.getItem('czwg-theme');
+                if (theme === 'dark') {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                }
+            } catch (e) {}
+        })();
+        </script>
         <!--
         {{App\Models\Settings\CoreSettings::where('id', 1)->firstOrFail()->sys_name}}
         {{App\Models\Settings\CoreSettings::where('id', 1)->firstOrFail()->release}} ({{App\Models\Settings\CoreSettings::where('id', 1)->firstOrFail()->sys_build}})
@@ -45,13 +55,13 @@
         @if (Auth::check())
         @switch (Auth::user()->preferences)
             @case("default")
-            <link href="{{ asset('css/czqomd.css') }}?v=11" rel="stylesheet">
+            <link href="{{ asset('css/czqomd.css') }}?v=21" rel="stylesheet">
             @break
             @default
-            <link href="{{ asset('css/czqomd.css') }}?v=11" rel="stylesheet">
+            <link href="{{ asset('css/czqomd.css') }}?v=21" rel="stylesheet">
         @endswitch
         @else
-        <link href="{{ asset('css/czqomd.css') }}?v=11" rel="stylesheet">
+        <link href="{{ asset('css/czqomd.css') }}?v=21" rel="stylesheet">
         @endif
         <!--Leaflet-->
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin=""/>
@@ -202,6 +212,11 @@
                     <ul class="navbar-nav ml-auto align-items-center">
                         <li class="nav-item d-none d-lg-flex align-items-center mr-2">
                             <span id="utc-clock" style="font-size:0.8rem; font-weight:600; letter-spacing:0.04em; opacity:0.75; color:#fff; font-variant-numeric:tabular-nums;"></span>
+                        </li>
+                        <li class="nav-item nav-social">
+                            <a href="javascript:void(0)" id="czwg-theme-toggle" class="nav-link" title="Toggle dark mode">
+                                <i class="fas fa-moon" id="czwg-theme-icon"></i>
+                            </a>
                         </li>
                         @unless (Auth::check())
                             <li class="nav-item nav-social">
@@ -497,6 +512,30 @@
         }
         window.czwgCheckVersion = checkVersion;
         setInterval(checkVersion, 5000); // TEST: change back to 60000
+    })();
+    </script>
+    <script>
+    (function() {
+        var toggle = document.getElementById('czwg-theme-toggle');
+        var icon = document.getElementById('czwg-theme-icon');
+        if (!toggle || !icon) return;
+        function applyIcon() {
+            var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            icon.classList.toggle('fa-moon', !isDark);
+            icon.classList.toggle('fa-sun', isDark);
+        }
+        applyIcon();
+        toggle.addEventListener('click', function() {
+            var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            if (isDark) {
+                document.documentElement.removeAttribute('data-theme');
+                localStorage.setItem('czwg-theme', 'light');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('czwg-theme', 'dark');
+            }
+            applyIcon();
+        });
     })();
     </script>
     <script>
