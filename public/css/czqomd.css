@@ -1597,6 +1597,10 @@ html[data-theme="dark"] .roster-cid:hover {
     color: #9cc4f0 !important;
 }
 
+html[data-theme="dark"] .roster-cid-plain {
+    color: #6ea8e6 !important;
+}
+
 html[data-theme="dark"] .rating-badge {
     background: #262b32 !important;
     color: #d7dade !important;

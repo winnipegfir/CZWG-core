@@ -245,6 +245,9 @@ Route::group(['middleware' => 'auth'], function () {
     Route::group(['middleware' => 'staff'], function () {
         Route::post('/atcresources', 'Publications\AtcResourcesController@uploadResource')->name('atcresources.upload');
         Route::get('/atcresources/delete/{id}', 'Publications\AtcResourcesController@deleteResource')->name('atcresources.delete');
+
+        // Network activity is available to staff; broader network management stays admin-only below.
+        Route::get('/admin/network/activity', 'Network\NetworkController@activityIndex')->name('network.activity.index');
     });
 
     //ADMIN ONLY
@@ -255,7 +258,6 @@ Route::group(['middleware' => 'auth'], function () {
 
         //Network
         Route::get('/admin/network', 'Network\NetworkController@index')->name('network.index');
-        Route::get('/admin/network/activity', 'Network\NetworkController@activityIndex')->name('network.activity.index');
         Route::get('/admin/network/monitoredpositions', 'Network\NetworkController@monitoredPositionsIndex')->name('network.monitoredpositions.index');
         Route::get('/admin/network/monitoredpositions/{position}', 'Network\NetworkController@viewMonitoredPosition')->name('network.monitoredpositions.view');
         Route::post('/admin/network/monitoredpositions/create', 'Network\NetworkController@createMonitoredPosition')->name('network.monitoredpositions.create');

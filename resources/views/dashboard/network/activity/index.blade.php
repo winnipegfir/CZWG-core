@@ -72,7 +72,7 @@
         </div>
         @if ($dataUnavailable > 0)
             <div class="activity-summary-card">
-                <div class="activity-summary-value" style="color:#92400e;">{{ $dataUnavailable }}</div>
+                <div class="activity-summary-value activity-summary-value-warning">{{ $dataUnavailable }}</div>
                 <div class="activity-summary-label">Data Unavailable</div>
             </div>
         @endif
@@ -206,6 +206,10 @@
     line-height: 1.2;
 }
 
+.activity-summary-value-warning {
+    color: #92400e;
+}
+
 .activity-summary-label {
     font-size: 0.8rem;
     color: #64748b;
@@ -291,6 +295,69 @@
     color: #94a3b8;
     margin-top: 0.25rem;
     white-space: nowrap;
+}
+
+html[data-theme="dark"] .activity-range-form label {
+    color: #9aa1ab !important;
+}
+
+html[data-theme="dark"] .activity-policy-note {
+    background: #17283d !important;
+    border-color: #2f537a !important;
+    color: #c8ddf2 !important;
+}
+
+html[data-theme="dark"] .activity-policy-note > i {
+    color: #6ea8e6 !important;
+}
+
+html[data-theme="dark"] .activity-summary-card {
+    background: #1f232a !important;
+    border-color: #33383f !important;
+}
+
+html[data-theme="dark"] .activity-summary-value {
+    color: #d7dade !important;
+}
+
+html[data-theme="dark"] .activity-summary-value.text-success {
+    color: #5fd88a !important;
+}
+
+html[data-theme="dark"] .activity-summary-value.text-danger {
+    color: #f1919b !important;
+}
+
+html[data-theme="dark"] .activity-summary-value-warning {
+    color: #f0c96a !important;
+}
+
+html[data-theme="dark"] .activity-summary-label {
+    color: #9aa1ab !important;
+}
+
+html[data-theme="dark"] .activity-breakdown-row td {
+    background: #191d23 !important;
+    color: #d7dade !important;
+}
+
+html[data-theme="dark"] .activity-chip-ok {
+    background: #143e24 !important;
+    color: #5fd88a !important;
+}
+
+html[data-theme="dark"] .activity-chip-bad {
+    background: #3a1418 !important;
+    color: #f1919b !important;
+}
+
+html[data-theme="dark"] .activity-status-unknown {
+    background: #3d3212 !important;
+    color: #f0c96a !important;
+}
+
+html[data-theme="dark"] .activity-result-note {
+    color: #9aa1ab !important;
 }
 </style>
 
