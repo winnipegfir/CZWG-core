@@ -429,9 +429,9 @@ div.notes{
 /* === Dashboard (light) navbar === */
 
 #czwgDashHeader {
-    background: #fff;
-    border-bottom: 1px solid rgba(0,0,0,0.08);
-    box-shadow: 0 1px 12px rgba(0,0,0,0.07);
+    background: linear-gradient(180deg, #0d2035 0%, #122b44 100%) !important;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    box-shadow: 0 2px 18px rgba(0,0,0,0.28);
     padding: 0;
     min-height: 62px;
 }
@@ -442,7 +442,7 @@ div.notes{
 }
 
 #czwgDashHeader .navbar-nav .nav-link {
-    color: rgba(18,43,68,0.88) !important;
+    color: rgba(255,255,255,0.72) !important;
     font-size: 0.875rem;
     font-weight: 500;
     padding: 0 0.9rem !important;
@@ -461,13 +461,13 @@ div.notes{
     transform: translateX(-50%);
     width: 0;
     height: 2px;
-    background: #122b44;
+    background: #fff;
     border-radius: 2px 2px 0 0;
     transition: width 0.2s ease;
 }
 
 #czwgDashHeader .navbar-nav > .nav-item > .nav-link:hover {
-    color: #122b44 !important;
+    color: #fff !important;
     text-decoration: none;
 }
 
@@ -511,7 +511,7 @@ div.notes{
 }
 
 #czwgDashHeader .dash-nav-social .nav-link {
-    color: rgba(18,43,68,0.5) !important;
+    color: rgba(255,255,255,0.6) !important;
     font-size: 0.95rem !important;
     padding: 0 0.45rem !important;
     height: 62px;
@@ -519,7 +519,7 @@ div.notes{
 }
 
 #czwgDashHeader .dash-nav-social .nav-link:hover {
-    color: #122b44 !important;
+    color: #fff !important;
 }
 
 #czwgDashHeader .dash-nav-social .nav-link::before {
@@ -1905,6 +1905,109 @@ html[data-theme="dark"] .wl-filter-tab.active {
     border-color: #6ea8e6 !important;
 }
 
+/* Policies page */
+html[data-theme="dark"] .policy-admin-bar {
+    background-color: #1f232a !important;
+    border-color: #33383f !important;
+}
+
+html[data-theme="dark"] .policy-name {
+    color: #d7dade !important;
+}
+
+html[data-theme="dark"] .policy-date,
+html[data-theme="dark"] .policy-chevron {
+    color: #7a828c !important;
+}
+
+html[data-theme="dark"] .policy-card-body,
+html[data-theme="dark"] .policy-admin-actions {
+    border-color: #262b32 !important;
+}
+
+html[data-theme="dark"] .policy-details {
+    color: #c3c8ce !important;
+}
+
+html[data-theme="dark"] .policy-pdf-link {
+    color: #8fbef0 !important;
+    border-color: rgba(110,168,230,0.35) !important;
+}
+
+html[data-theme="dark"] .policy-pdf-link:hover {
+    background-color: rgba(110,168,230,0.1) !important;
+    color: #8fbef0 !important;
+}
+
+/* Airports page */
+html[data-theme="dark"] .airport-sidebar {
+    background-color: #1a1d23 !important;
+    border-right-color: #2a2f37 !important;
+}
+
+html[data-theme="dark"] .sidebar-province,
+html[data-theme="dark"] .sidebar-icao,
+html[data-theme="dark"] .no-scenery {
+    color: #7a828c !important;
+}
+
+html[data-theme="dark"] .sidebar-link {
+    color: #b8bec7 !important;
+}
+
+html[data-theme="dark"] .sidebar-link:hover {
+    color: #8fbef0 !important;
+    background-color: rgba(110,168,230,0.08) !important;
+}
+
+html[data-theme="dark"] .sidebar-link.active {
+    color: #8fbef0 !important;
+    border-left-color: #6ea8e6 !important;
+    background-color: rgba(110,168,230,0.1) !important;
+}
+
+html[data-theme="dark"] .sidebar-link.active .sidebar-icao {
+    color: rgba(110,168,230,0.6) !important;
+}
+
+html[data-theme="dark"] .airport-panel-title {
+    color: #8fbef0 !important;
+}
+
+html[data-theme="dark"] .section-label {
+    border-bottom-color: #262b32 !important;
+}
+
+html[data-theme="dark"] .hours-list {
+    color: #c3c8ce !important;
+}
+
+html[data-theme="dark"] .uncontrolled-note {
+    background-color: #262b32 !important;
+    color: #9aa1ab !important;
+}
+
+html[data-theme="dark"] .scenery-item {
+    background-color: #1f232a !important;
+    border-color: #33383f !important;
+}
+
+html[data-theme="dark"] .airport-mobile-select-wrap select {
+    background-color: #262b32 !important;
+    border-color: #3a4048 !important;
+    color: #d7dade !important;
+}
+
+/* Feedback / data submission steppers (MDB .grey.lighten-3 utility) */
+html[data-theme="dark"] .grey.lighten-3 {
+    background-color: #1f232a !important;
+    color: #d7dade !important;
+}
+
+html[data-theme="dark"] .stepper .label {
+    color: #d7dade !important;
+}
+
 html[data-theme="dark"] .au-row {
     border-bottom-color: #262b32 !important;
 }
@@ -2055,54 +2158,6 @@ html[data-theme="dark"] .minutes-view-btn:hover {
     color: #8fbef0 !important;
 }
 
-/* Dashboard homepage navbar (layouts/dashboard.blade.php, light-themed by default) */
-html[data-theme="dark"] #czwgDashHeader {
-    background-color: #1a1d23 !important;
-    border-bottom-color: #2a2f37 !important;
-}
-
-html[data-theme="dark"] #czwgDashHeader .navbar-nav .nav-link {
-    color: rgba(215,218,222,0.85) !important;
-}
-
-html[data-theme="dark"] #czwgDashHeader .navbar-nav > .nav-item > .nav-link:hover {
-    color: #8fbef0 !important;
-}
-
-html[data-theme="dark"] #czwgDashHeader .navbar-nav > .nav-item > .nav-link::before {
-    background: #6ea8e6 !important;
-}
-
-html[data-theme="dark"] #czwgDashHeader .dropdown-menu {
-    background: #1f232a !important;
-    border-color: #33383f !important;
-}
-
-html[data-theme="dark"] #czwgDashHeader .dropdown-menu .dropdown-item {
-    background-color: #1f232a !important;
-    color: rgba(215,218,222,0.85) !important;
-}
-
-html[data-theme="dark"] #czwgDashHeader .dropdown-menu .dropdown-item:hover {
-    background-color: #262b32 !important;
-    color: #8fbef0 !important;
-}
-
-html[data-theme="dark"] #czwgDashHeader .dropdown-divider {
-    border-top-color: #33383f !important;
-}
-
-html[data-theme="dark"] #czwgDashHeader .dash-nav-social .nav-link {
-    color: rgba(215,218,222,0.5) !important;
-}
-
-html[data-theme="dark"] #czwgDashHeader .dash-nav-social .nav-link:hover {
-    color: #8fbef0 !important;
-}
-
-html[data-theme="dark"] #czwgDashHeader #utc-clock {
-    color: #9aa1ab !important;
-}
 
 html[data-theme="dark"] .db-tile {
     background-color: #1f232a !important;

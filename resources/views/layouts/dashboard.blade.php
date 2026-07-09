@@ -55,13 +55,13 @@
         @if (Auth::check())
         @switch (Auth::user()->preferences)
             @case("default")
-            <link href="{{ asset('css/czqomd.css') }}?v=21" rel="stylesheet">
+            <link href="{{ asset('css/czqomd.css') }}?v=22" rel="stylesheet">
             @break
             @default
-            <link href="{{ asset('css/czqomd.css') }}?v=21" rel="stylesheet">
+            <link href="{{ asset('css/czqomd.css') }}?v=22" rel="stylesheet">
         @endswitch
         @else
-        <link href="{{ asset('css/czqomd.css') }}?v=21" rel="stylesheet">
+        <link href="{{ asset('css/czqomd.css') }}?v=22" rel="stylesheet">
         @endif
         <!--Leaflet-->
         <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin=""/>
@@ -117,7 +117,7 @@
         </div>
     @endif
     <header>
-        <nav id="czwgDashHeader" class="navbar navbar-expand-lg navbar-light">
+        <nav id="czwgDashHeader" class="navbar navbar-expand-lg navbar-dark">
             <div class="container">
                 <a class="navbar-brand" href="{{route('index')}}">
                     <img src="https://winnipegfir.ca/storage/files/uploads/1667526972.png" alt="Winnipeg FIR">
@@ -216,7 +216,7 @@
 
                     <ul class="navbar-nav ml-auto align-items-center">
                         <li class="nav-item d-none d-lg-flex align-items-center mr-2">
-                            <span id="utc-clock" style="font-size:0.8rem; font-weight:600; letter-spacing:0.04em; opacity:0.65; color:#122b44; font-variant-numeric:tabular-nums;"></span>
+                            <span id="utc-clock" style="font-size:0.8rem; font-weight:600; letter-spacing:0.04em; opacity:0.75; color:#fff; font-variant-numeric:tabular-nums;"></span>
                         </li>
                         <li class="nav-item dash-nav-social">
                             <a href="javascript:void(0)" id="czwg-theme-toggle" class="nav-link" title="Toggle dark mode">
