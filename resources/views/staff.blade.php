@@ -85,6 +85,16 @@
                                                 @if($member->description)
                                                     <p style="font-size:0.85rem; color:#495057; margin-bottom:0.4rem; line-height:1.5;">{{ $member->description }}</p>
                                                 @endif
+
+                                                @if($member->isOutOfOffice())
+                                                    <div style="background:#fff3cd; border:1px solid #ffe69c; border-radius:0.35rem; padding:0.4rem 0.6rem; margin-bottom:0.5rem; font-size:0.8rem; color:#664d03;">
+                                                        <i class="fas fa-plane-departure fa-xs mr-1"></i>
+                                                        Out of office until {{ $member->out_until->format('M j, Y') }}
+                                                        @if($member->contact && $member->contact->user_id != 1)
+                                                            &mdash; contact {{ $member->contact->user->fullName('FL') }} ({{ $member->contact->shortform }}) in the meantime
+                                                        @endif
+                                                    </div>
+                                                @endif
             
                                                 <div style="display:flex; gap:0.75rem; flex-wrap:wrap; align-items:center;">
                                                     @if($member->email)

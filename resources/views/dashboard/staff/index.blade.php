@@ -50,6 +50,20 @@
                         <input type="email" class="form-control" name="email" value="{{$s->email}}">
                         <br/>
 
+                        <label>Out of office until</label>
+                        <input type="date" class="form-control" name="out_until" value="{{ optional($s->out_until)->format('Y-m-d') }}">
+                        <br/>
+                        <label>Contact in the meantime</label>
+                        <select class="custom-select form-control" name="contact_staff_member_id">
+                            <option value="">-- None --</option>
+                            @foreach($staff as $otherStaff)
+                                @if($otherStaff->id != $s->id)
+                                    <option value="{{ $otherStaff->id }}" @if($s->contact_staff_member_id == $otherStaff->id) selected @endif>{{ $otherStaff->position }} ({{ $otherStaff->shortform }})</option>
+                                @endif
+                            @endforeach
+                        </select>
+                        <br/>
+
                         <div class="row">
                             <div class="col-lg-4">
 

@@ -88,6 +88,10 @@ class StaffListController extends Controller
         $staff->description = $request->get('description');
         $staff->email = $request->get('email');
 
+        //Update out of office
+        $staff->out_until = $request->get('out_until') ?: null;
+        $staff->contact_staff_member_id = $request->get('contact_staff_member_id') ?: null;
+
         //Save it
         $staff->save();
 
