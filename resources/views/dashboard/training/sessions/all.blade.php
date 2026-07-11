@@ -87,7 +87,7 @@
                                         <select name="student_id" class="form-control">
                                             <option value="">Unbooked</option>
                                             @foreach ($students as $student)
-                                                <option value="{{ $student->id }}" @selected($session->student_id === $student->id)>
+                                                <option value="{{ $student->id }}" data-instructor="{{ $student->instructor_id }}" @selected($session->student_id === $student->id)>
                                                     {{ $student->user_id }} &ndash; {{ $student->user ? $student->user->fullName('FL') : 'Unknown' }}
                                                 </option>
                                             @endforeach
@@ -170,5 +170,34 @@
     });
     </script>
 @endif
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.ts-reassign').forEach(function (form) {
+        var instructorSelect = form.querySelector('select[name="instructor_id"]');
+        var studentSelect = form.querySelector('select[name="student_id"]');
+        var initialStudentValue = studentSelect.value;
+
+        function filterStudents(resetSelection) {
+            var instructorId = instructorSelect.value;
+            Array.prototype.forEach.call(studentSelect.options, function (opt) {
+                if (opt.value === '') {
+                    opt.hidden = false;
+                    return;
+                }
+                var matches = opt.getAttribute('data-instructor') === instructorId;
+                var isUnchangedSelection = !resetSelection && opt.value === initialStudentValue;
+                opt.hidden = !matches && !isUnchangedSelection;
+            });
+            if (resetSelection && studentSelect.selectedOptions[0] && studentSelect.selectedOptions[0].hidden) {
+                studentSelect.value = '';
+            }
+        }
+
+        filterStudents(false);
+        instructorSelect.addEventListener('change', function () { filterStudents(true); });
+    });
+});
+</script>
 
 @stop
