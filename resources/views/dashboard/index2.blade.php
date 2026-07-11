@@ -201,7 +201,7 @@
                         <h3 class="font-weight-bold blue-text pb-2">
                             Upcoming Events
                             @if($userTz !== 'UTC')
-                                <small class="text-muted" style="font-weight:400;">&middot; times also shown in {{ \App\Models\Users\User::timezoneShortLabel($userTz) }}</small>
+                                <small class="text-muted" style="font-weight:400;">&middot; times also shown in your local time</small>
                             @endif
                         </h3>
                         @if (count($confirmedevent) < 1)

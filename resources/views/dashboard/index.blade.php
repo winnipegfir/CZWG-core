@@ -531,7 +531,7 @@
                 <div class="db-card-label">
                     Upcoming Events
                     @if($userTz !== 'UTC')
-                        <span style="font-weight:400; text-transform:none; letter-spacing:normal; color:#94a3b8;">&middot; times also shown in {{ \App\Models\Users\User::timezoneShortLabel($userTz) }}</span>
+                        <span style="font-weight:400; text-transform:none; letter-spacing:normal; color:#94a3b8;">&middot; times also shown in your local time</span>
                     @endif
                 </div>
                 @if(count($confirmedevent) < 1)

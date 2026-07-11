@@ -35,7 +35,7 @@
                 <span style="opacity:0.8;">
                     ({{ \Carbon\Carbon::create($event->start_timestamp)->setTimezone($userTz)->format('M j, g:i A') }}
                     – {{ \Carbon\Carbon::create($event->end_timestamp)->setTimezone($userTz)->format('g:i A') }}
-                    {{ \App\Models\Users\User::timezoneLabel($userTz) }})
+                    local)
                 </span>
             @endif
             @if($event->departure_icao && $event->arrival_icao)
