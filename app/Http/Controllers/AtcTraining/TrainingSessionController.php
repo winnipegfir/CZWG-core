@@ -7,6 +7,7 @@ use App\Models\AtcTraining\Instructor;
 use App\Models\AtcTraining\Student;
 use App\Models\AtcTraining\TrainingSession;
 use Auth;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -99,18 +100,58 @@ class TrainingSessionController extends Controller
         return view('dashboard.training.sessions.student', compact('student', 'openSlots', 'myBookings'));
     }
 
-    public function book($id)
+    /**
+     * Students book in fixed 1-hour windows. The chosen window must fall
+     * entirely within a still-open slot; that slot is resized down to the
+     * booked hour, and whatever's left before/after is split off into new
+     * open slots so the rest of the instructor's availability stays bookable.
+     */
+    public function book(Request $request)
     {
         $student = Auth::user()->studentProfile;
         abort_if(!$student, 403, 'You do not have a student profile.');
 
-        $booked = DB::transaction(function () use ($id, $student) {
-            $slot = TrainingSession::where('id', $id)->lockForUpdate()->first();
+        $request->validate([
+            'start_time' => 'required|date',
+        ]);
 
-            if (!$slot || $slot->status !== 'open' || $slot->instructor_id !== $student->instructor_id) {
+        $start = Carbon::parse($request->input('start_time'))->second(0);
+        $end = $start->copy()->addHour();
+
+        $booked = DB::transaction(function () use ($student, $start, $end) {
+            $slot = TrainingSession::where('instructor_id', $student->instructor_id)
+                ->where('status', 'open')
+                ->where('start_time', '<=', $start)
+                ->where('end_time', '>=', $end)
+                ->lockForUpdate()
+                ->first();
+
+            if (!$slot) {
                 return false;
             }
 
+            if ($slot->start_time->lt($start)) {
+                TrainingSession::create([
+                    'instructor_id' => $slot->instructor_id,
+                    'start_time' => $slot->start_time,
+                    'end_time' => $start,
+                    'type' => $slot->type,
+                    'status' => 'open',
+                ]);
+            }
+
+            if ($slot->end_time->gt($end)) {
+                TrainingSession::create([
+                    'instructor_id' => $slot->instructor_id,
+                    'start_time' => $end,
+                    'end_time' => $slot->end_time,
+                    'type' => $slot->type,
+                    'status' => 'open',
+                ]);
+            }
+
+            $slot->start_time = $start;
+            $slot->end_time = $end;
             $slot->student_id = $student->id;
             $slot->status = 'booked';
             $slot->booked_at = now();
@@ -120,7 +161,7 @@ class TrainingSessionController extends Controller
         });
 
         if (!$booked) {
-            return redirect()->back()->withError('That slot is no longer available.');
+            return redirect()->back()->withError('That time is no longer available.');
         }
 
         return redirect()->back()->withSuccess('Session booked.');

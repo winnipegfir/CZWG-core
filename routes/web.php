@@ -330,7 +330,7 @@ Route::prefix('dashboard/training')->middleware('instructor')->group(function ()
 
 Route::prefix('dashboard/training/book')->middleware('auth')->group(function () {
     Route::get('/', 'AtcTraining\TrainingSessionController@studentIndex')->name('training.book.index');
-    Route::post('/{id}', 'AtcTraining\TrainingSessionController@book')->name('training.book.store');
+    Route::post('/', 'AtcTraining\TrainingSessionController@book')->name('training.book.store');
     Route::post('/{id}/cancel', 'AtcTraining\TrainingSessionController@studentCancel')->name('training.book.cancel');
 });
 

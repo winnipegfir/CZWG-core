@@ -25,7 +25,7 @@
     <div class="d-flex align-items-center mb-4">
         <div>
             <h2 class="font-weight-bold mb-0" style="color:#122b44;">Training Slots</h2>
-            <p class="text-muted mb-0" style="font-size:0.875rem;">{{ $slots->count() }} slot{{ $slots->count() != 1 ? 's' : '' }} posted &mdash; click an empty time to add a slot, click a slot to manage it</p>
+            <p class="text-muted mb-0" style="font-size:0.875rem;">{{ $slots->count() }} slot{{ $slots->count() != 1 ? 's' : '' }} posted &mdash; click an empty time to add a slot, click a slot to manage it &mdash; all times Zulu (UTC)</p>
         </div>
         <button type="button" class="btn btn-sm btn-primary ml-auto" data-toggle="modal" data-target="#addSlot">
             <i class="fas fa-plus fa-xs mr-1"></i> Add Slot
@@ -51,7 +51,7 @@
                 <table class="table table-hover mb-0" style="font-size:0.875rem;">
                     <thead style="background:#f8fafc; border-bottom:2px solid #e2e8f0;">
                         <tr>
-                            <th style="color:#64748b; font-weight:600; border-top:none;">When</th>
+                            <th style="color:#64748b; font-weight:600; border-top:none;">When (Zulu)</th>
                             <th style="color:#64748b; font-weight:600; border-top:none;">Type</th>
                             <th style="color:#64748b; font-weight:600; border-top:none;">Status</th>
                             <th style="color:#64748b; font-weight:600; border-top:none;">Student</th>
@@ -113,11 +113,11 @@
                 @csrf
                 <div class="modal-body">
                     <div class="form-group mb-3">
-                        <label class="font-weight-bold small">Start</label>
+                        <label class="font-weight-bold small">Start <span class="text-muted font-weight-normal">(Zulu / UTC)</span></label>
                         <input type="datetime-local" name="start_time" id="addSlotStart" class="form-control" required>
                     </div>
                     <div class="form-group mb-3">
-                        <label class="font-weight-bold small">End</label>
+                        <label class="font-weight-bold small">End <span class="text-muted font-weight-normal">(Zulu / UTC)</span></label>
                         <input type="datetime-local" name="end_time" id="addSlotEnd" class="form-control" required>
                     </div>
                     <div class="form-group mb-0">
@@ -170,21 +170,32 @@ document.addEventListener('DOMContentLoaded', function () {
     var removeUrlTemplate = "{{ route('training.sessions.destroy', ['id' => '__ID__']) }}";
     var cancelUrlTemplate = "{{ route('training.sessions.cancel', ['id' => '__ID__']) }}";
 
+    function pad(n) { return String(n).padStart(2, '0'); }
+    function formatZulu(d) {
+        return d.getUTCFullYear() + '-' + pad(d.getUTCMonth() + 1) + '-' + pad(d.getUTCDate()) + 'T' + pad(d.getUTCHours()) + ':' + pad(d.getUTCMinutes());
+    }
+    function displayZulu(d) {
+        return formatZulu(d).replace('T', ' ') + 'Z';
+    }
+
     var calendarEl = document.getElementById('slotsCalendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
+        timeZone: 'UTC',
         initialView: 'timeGridWeek',
         headerToolbar: { left: 'prev,next today', center: 'title', right: 'timeGridWeek,dayGridMonth' },
         height: 'auto',
         nowIndicator: true,
         events: events,
         dateClick: function (info) {
-            document.getElementById('addSlotStart').value = info.dateStr.slice(0, 16);
-            document.getElementById('addSlotEnd').value = '';
+            var start = info.date;
+            var end = new Date(start.getTime() + 3600000);
+            document.getElementById('addSlotStart').value = formatZulu(start);
+            document.getElementById('addSlotEnd').value = formatZulu(end);
             $('#addSlot').modal('show');
         },
         eventClick: function (info) {
             var status = info.event.extendedProps.status;
-            var when = info.event.start.toLocaleString();
+            var when = displayZulu(info.event.start);
             if (status === 'open') {
                 if (confirm('Remove this open slot (' + when + ')?')) {
                     document.getElementById('calRemoveForm').action = removeUrlTemplate.replace('__ID__', info.event.id);

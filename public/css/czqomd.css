@@ -2350,7 +2350,8 @@ html[data-theme="dark"] .site-topbar-info    { background-color: #1e3a5f !import
    the dark modal background. Force a clearly legible color,
    declared last so it wins the tie-break against that rule.
    ============================================================ */
-html[data-theme="dark"] .modal-title {
+html[data-theme="dark"] .modal-title,
+html[data-theme="dark"] .modal-content .modal-header h5.modal-title {
     color: #f4f7fb !important;
 }
 
@@ -2361,13 +2362,26 @@ html[data-theme="dark"] .modal-title {
    color overrides since they don't read the variables.
    ============================================================ */
 html[data-theme="dark"] .fc {
-    --fc-border-color: #33383f;
+    --fc-border-color: #454b55;
     --fc-page-bg-color: #1f232a;
     --fc-neutral-bg-color: #262b32;
     --fc-list-event-hover-bg-color: #262b32;
-    --fc-today-bg-color: rgba(110, 168, 230, 0.12);
+    --fc-today-bg-color: rgba(110, 168, 230, 0.10);
     --fc-event-text-color: #fff;
     color: #d7dade;
+}
+/* The today-column tint sits close in luminance to the border color,
+   so grid lines nearly vanish inside it — force a brighter, semi-opaque
+   border specifically within that column so the grid stays legible. */
+html[data-theme="dark"] .fc .fc-day-today {
+    background-color: var(--fc-today-bg-color) !important;
+}
+html[data-theme="dark"] .fc .fc-day-today.fc-timegrid-col .fc-timegrid-slot-lane,
+html[data-theme="dark"] .fc .fc-day-today.fc-timegrid-col .fc-timegrid-slot-minor {
+    border-color: rgba(255, 255, 255, 0.16) !important;
+}
+html[data-theme="dark"] .fc .fc-day-today.fc-daygrid-day {
+    border-color: rgba(255, 255, 255, 0.16) !important;
 }
 html[data-theme="dark"] .fc .fc-toolbar-title,
 html[data-theme="dark"] .fc .fc-col-header-cell-cushion,

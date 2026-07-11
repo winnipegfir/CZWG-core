@@ -26,7 +26,7 @@
     <div class="mb-4">
         <h2 class="font-weight-bold mb-0" style="color:#122b44;">All Sessions</h2>
         <p class="text-muted mb-0" style="font-size:0.875rem;">
-            {{ $sessions->count() }} session{{ $sessions->count() != 1 ? 's' : '' }} across every instructor &mdash; click a session on the calendar to jump to it below
+            {{ $sessions->count() }} session{{ $sessions->count() != 1 ? 's' : '' }} across every instructor &mdash; click a session on the calendar to jump to it below &mdash; all times Zulu (UTC)
         </p>
     </div>
 
@@ -51,7 +51,7 @@
                 <table class="table table-hover mb-0" style="font-size:0.875rem;">
                     <thead style="background:#f8fafc; border-bottom:2px solid #e2e8f0;">
                         <tr>
-                            <th style="color:#64748b; font-weight:600; border-top:none;">When</th>
+                            <th style="color:#64748b; font-weight:600; border-top:none;">When (Zulu)</th>
                             <th style="color:#64748b; font-weight:600; border-top:none;">Type</th>
                             <th style="color:#64748b; font-weight:600; border-top:none;">Status</th>
                             <th style="color:#64748b; font-weight:600; border-top:none; min-width:280px;">Instructor / Student</th>
@@ -153,6 +153,7 @@
 
         var calendarEl = document.getElementById('allSessionsCalendar');
         var calendar = new FullCalendar.Calendar(calendarEl, {
+            timeZone: 'UTC',
             initialView: 'timeGridWeek',
             headerToolbar: { left: 'prev,next today', center: 'title', right: 'timeGridWeek,dayGridMonth' },
             height: 'auto',
