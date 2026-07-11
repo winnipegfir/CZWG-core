@@ -2406,3 +2406,17 @@ html[data-theme="dark"] .fc .fc-button-primary:not(:disabled):active {
     border-color: #122b44;
     color: #fff;
 }
+
+/* Month-view event blocks default to a cramped single-line abbreviation
+   (e.g. "12a"). Give them room to show a readable time range + title. */
+.fc .fc-daygrid-event {
+    white-space: normal;
+    padding: 0.2rem 0.35rem;
+    line-height: 1.3;
+}
+.fc .fc-daygrid-event .fc-event-time {
+    font-weight: 700;
+}
+.fc .fc-daygrid-event .fc-event-title {
+    font-weight: 600;
+}

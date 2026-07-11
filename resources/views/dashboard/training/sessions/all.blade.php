@@ -97,10 +97,12 @@
                                 </td>
                                 <td style="vertical-align:middle;">
                                     <div class="d-flex align-items-center" style="gap:0.35rem;">
+                                        <a href="#" data-toggle="modal" data-target="#editSession{{ $session->id }}"
+                                           class="btn btn-sm btn-outline-secondary py-0 px-2" style="font-size:0.78rem;">Edit</a>
                                         @if ($session->status !== 'cancelled')
                                             <form method="POST" action="{{ route('training.sessions.admin.cancel', $session->id) }}" onsubmit="return confirm('Cancel this session?')">
                                                 @csrf
-                                                <button type="submit" class="btn btn-sm btn-outline-danger py-0 px-2" style="font-size:0.78rem;">Cancel</button>
+                                                <button type="submit" class="btn btn-sm btn-outline-warning py-0 px-2" style="font-size:0.78rem;">Cancel</button>
                                             </form>
                                         @endif
                                         @if ($session->status === 'open')
@@ -117,6 +119,41 @@
                 </table>
             </div>
         </div>
+
+        @foreach ($sessions as $session)
+            {{-- Edit Session modal --}}
+            <div class="modal fade" id="editSession{{ $session->id }}" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title font-weight-bold" style="color:#122b44;">Edit Session</h5>
+                            <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                        </div>
+                        <form method="POST" action="{{ route('training.sessions.admin.update', $session->id) }}">
+                            @csrf
+                            <div class="modal-body">
+                                <div class="form-group mb-3">
+                                    <label class="font-weight-bold small">Start <span class="text-muted font-weight-normal">(Zulu / UTC)</span></label>
+                                    <input type="datetime-local" name="start_time" class="form-control" value="{{ $session->start_time->format('Y-m-d\TH:i') }}" required>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label class="font-weight-bold small">End <span class="text-muted font-weight-normal">(Zulu / UTC)</span></label>
+                                    <input type="datetime-local" name="end_time" class="form-control" value="{{ $session->end_time->format('Y-m-d\TH:i') }}" required>
+                                </div>
+                                <div class="form-group mb-0">
+                                    <label class="font-weight-bold small">Note (optional)</label>
+                                    <input type="text" name="note" class="form-control" value="{{ $session->note }}" placeholder="e.g. S1 Practical">
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        @endforeach
     @endif
 
 </div>
@@ -155,6 +192,10 @@
             initialView: 'timeGridWeek',
             headerToolbar: { left: 'prev,next today', center: 'title', right: 'timeGridWeek,dayGridMonth' },
             height: 'auto',
+            eventTimeFormat: { hour: 'numeric', minute: '2-digit', meridiem: 'short' },
+            views: {
+                dayGridMonth: { displayEventEnd: true },
+            },
             nowIndicator: true,
             events: events,
             eventClick: function (info) {

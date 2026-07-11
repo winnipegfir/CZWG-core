@@ -184,6 +184,10 @@ document.addEventListener('DOMContentLoaded', function () {
         initialView: 'timeGridWeek',
         headerToolbar: { left: 'prev,next today', center: 'title', right: 'timeGridWeek,dayGridMonth' },
         height: 'auto',
+        eventTimeFormat: { hour: 'numeric', minute: '2-digit', meridiem: 'short' },
+        views: {
+            dayGridMonth: { displayEventEnd: true },
+        },
         nowIndicator: true,
         events: events,
         dateClick: function (info) {

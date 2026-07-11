@@ -340,6 +340,7 @@ Route::prefix('dashboard/training/sessions/all')->middleware('staff')->group(fun
     Route::delete('/{id}', 'AtcTraining\TrainingSessionController@adminDestroy')->name('training.sessions.admin.destroy');
     Route::post('/{id}/cancel', 'AtcTraining\TrainingSessionController@adminCancel')->name('training.sessions.admin.cancel');
     Route::post('/{id}/reassign', 'AtcTraining\TrainingSessionController@adminReassign')->name('training.sessions.admin.reassign');
+    Route::post('/{id}/edit', 'AtcTraining\TrainingSessionController@adminUpdate')->name('training.sessions.admin.update');
 });
 //Admin and CI
 Route::group(['middleware' => ['executive']], function () {

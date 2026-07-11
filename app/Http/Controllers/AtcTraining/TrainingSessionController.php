@@ -217,6 +217,23 @@ class TrainingSessionController extends Controller
         return redirect()->back()->withSuccess('Session cancelled.');
     }
 
+    public function adminUpdate(Request $request, $id)
+    {
+        $request->validate([
+            'start_time' => 'required|date',
+            'end_time'   => 'required|date|after:start_time',
+            'note'       => 'nullable|string|max:255',
+        ]);
+
+        $slot = TrainingSession::findOrFail($id);
+        $slot->start_time = $request->input('start_time');
+        $slot->end_time = $request->input('end_time');
+        $slot->note = $request->input('note');
+        $slot->save();
+
+        return redirect()->back()->withSuccess('Session updated.');
+    }
+
     public function adminReassign(Request $request, $id)
     {
         $request->validate([
