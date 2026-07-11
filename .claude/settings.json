@@ -66,7 +66,13 @@
       "Bash(php -l app/Models/Events/EventConfirm.php)",
       "Bash(php -l app/Http/Controllers/DashboardController.php)",
       "Bash(git rev-list *)",
-      "Bash(php -l resources/views/layouts/master.blade.php)"
+      "Bash(php -l resources/views/layouts/master.blade.php)",
+      "Bash(nslookup github.com)",
+      "Bash(ping -n 2 github.com)",
+      "Bash(curl -sI https://github.com --max-time 5)",
+      "PowerShell(Resolve-DnsName github.com -ErrorAction SilentlyContinue)",
+      "PowerShell(Get-DnsClientServerAddress -AddressFamily IPv4)",
+      "PowerShell(Test-Connection github.com -Count 2 -ErrorAction SilentlyContinue)"
     ],
     "additionalDirectories": [
       "c:\\laragon\\www\\winnipegfir\\\nVATCAN_API_KEY=fYKopA4iUT1Ul5lG1GJz4lcjx6KYcILAS5jabHUq7dY3wgCUNQ\nVATCAN_API_URL=https:"
