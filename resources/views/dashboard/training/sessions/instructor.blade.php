@@ -138,25 +138,34 @@
 <form id="calRemoveForm" method="POST" style="display:none;">@csrf @method('DELETE')</form>
 <form id="calCancelForm" method="POST" style="display:none;">@csrf</form>
 
+@php
+    $calendarEvents = [];
+    foreach ($slots as $slot) {
+        $studentName = $slot->student && $slot->student->user ? $slot->student->user->fullName('FL') : null;
+        $title = ($slot->status === 'booked' ? ($studentName ?: 'Booked') : 'Open');
+        if ($slot->type) {
+            $title .= ' — ' . $slot->type;
+        }
+        $color = $slot->status === 'booked' ? '#16a34a' : '#64748b';
+        $calendarEvents[] = [
+            'id' => $slot->id,
+            'title' => $title,
+            'start' => $slot->start_time->toIso8601String(),
+            'end' => $slot->end_time->toIso8601String(),
+            'backgroundColor' => $color,
+            'borderColor' => $color,
+            'extendedProps' => [
+                'status' => $slot->status,
+                'student' => $studentName,
+            ],
+        ];
+    }
+@endphp
+
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    var events = @json($slots->map(function ($slot) {
-        return [
-            'id' => $slot->id,
-            'title' => ($slot->status === 'booked'
-                    ? ($slot->student && $slot->student->user ? $slot->student->user->fullName('FL') : 'Booked')
-                    : 'Open') . ($slot->type ? ' — ' . $slot->type : ''),
-            'start' => $slot->start_time->toIso8601String(),
-            'end' => $slot->end_time->toIso8601String(),
-            'backgroundColor' => $slot->status === 'booked' ? '#16a34a' : '#64748b',
-            'borderColor' => $slot->status === 'booked' ? '#16a34a' : '#64748b',
-            'extendedProps' => [
-                'status' => $slot->status,
-                'student' => $slot->student && $slot->student->user ? $slot->student->user->fullName('FL') : null,
-            ],
-        ];
-    }));
+    var events = {!! json_encode($calendarEvents) !!};
 
     var removeUrlTemplate = "{{ route('training.sessions.destroy', ['id' => '__ID__']) }}";
     var cancelUrlTemplate = "{{ route('training.sessions.cancel', ['id' => '__ID__']) }}";

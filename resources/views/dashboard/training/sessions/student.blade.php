@@ -88,32 +88,44 @@
         <form id="calBookForm" method="POST" style="display:none;">@csrf</form>
         <form id="calCancelForm" method="POST" style="display:none;">@csrf</form>
 
-        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
-        <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var openEvents = @json($openSlots->map(function ($slot) {
-                return [
+        @php
+            $calendarEvents = [];
+            foreach ($openSlots as $slot) {
+                $title = 'Open';
+                if ($slot->type) {
+                    $title .= ' — ' . $slot->type;
+                }
+                $calendarEvents[] = [
                     'id' => $slot->id,
-                    'title' => 'Open' . ($slot->type ? ' — ' . $slot->type : ''),
+                    'title' => $title,
                     'start' => $slot->start_time->toIso8601String(),
                     'end' => $slot->end_time->toIso8601String(),
                     'backgroundColor' => '#64748b',
                     'borderColor' => '#64748b',
                     'extendedProps' => ['kind' => 'open'],
                 ];
-            }));
-            var bookedEvents = @json($myBookings->map(function ($slot) {
-                return [
+            }
+            foreach ($myBookings as $slot) {
+                $title = 'Booked';
+                if ($slot->type) {
+                    $title .= ' — ' . $slot->type;
+                }
+                $calendarEvents[] = [
                     'id' => $slot->id,
-                    'title' => 'Booked' . ($slot->type ? ' — ' . $slot->type : ''),
+                    'title' => $title,
                     'start' => $slot->start_time->toIso8601String(),
                     'end' => $slot->end_time->toIso8601String(),
                     'backgroundColor' => '#16a34a',
                     'borderColor' => '#16a34a',
                     'extendedProps' => ['kind' => 'booked'],
                 ];
-            }));
-            var events = openEvents.concat(bookedEvents);
+            }
+        @endphp
+
+        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+        <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var events = {!! json_encode($calendarEvents) !!};
 
             var bookUrlTemplate = "{{ route('training.book.store', ['id' => '__ID__']) }}";
             var cancelUrlTemplate = "{{ route('training.book.cancel', ['id' => '__ID__']) }}";

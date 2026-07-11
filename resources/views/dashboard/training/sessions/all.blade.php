@@ -125,27 +125,31 @@
 </div>
 
 @if (!$sessions->isEmpty())
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
-    <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var statusColors = { open: '#64748b', booked: '#16a34a', cancelled: '#b91c1c' };
-        var events = @json($sessions->map(function ($session) {
+    @php
+        $statusColors = ['open' => '#64748b', 'booked' => '#16a34a', 'cancelled' => '#b91c1c'];
+        $calendarEvents = [];
+        foreach ($sessions as $session) {
             $who = $session->instructor && $session->instructor->user ? $session->instructor->user->fullName('FL') : 'Unknown';
             if ($session->student && $session->student->user) {
                 $who .= ' / ' . $session->student->user->fullName('FL');
             }
-            return [
+            $color = $statusColors[$session->status] ?? '#64748b';
+            $calendarEvents[] = [
                 'id' => $session->id,
                 'title' => ucfirst($session->status) . ' — ' . $who,
                 'start' => $session->start_time->toIso8601String(),
                 'end' => $session->end_time->toIso8601String(),
+                'backgroundColor' => $color,
+                'borderColor' => $color,
                 'extendedProps' => ['status' => $session->status],
             ];
-        }));
-        events.forEach(function (e) {
-            e.backgroundColor = statusColors[e.extendedProps.status] || '#64748b';
-            e.borderColor = e.backgroundColor;
-        });
+        }
+    @endphp
+
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var events = {!! json_encode($calendarEvents) !!};
 
         var calendarEl = document.getElementById('allSessionsCalendar');
         var calendar = new FullCalendar.Calendar(calendarEl, {
