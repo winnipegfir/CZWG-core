@@ -4,7 +4,7 @@
             <a href="{{ route('training.index') }}" style="color:#fff; font-weight:700; font-size:1rem; text-decoration:none; margin-right:0.5rem; white-space:nowrap; flex-shrink:0;">
                 Training
             </a>
-            <nav class="training-subnav d-flex align-items-center" style="gap:0.1rem; flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch; min-width:0;">
+            <nav class="training-subnav d-flex align-items-center" style="gap:0.1rem; flex-wrap:wrap; min-width:0;">
                 <a href="{{ route('training.index') }}"
                    style="color:{{ Request::is('dashboard/training') ? '#fff' : 'rgba(255,255,255,0.6)' }}; font-size:0.85rem; padding:0.3rem 0.65rem; border-radius:0.3rem; text-decoration:none; white-space:nowrap; flex-shrink:0; {{ Request::is('dashboard/training') ? 'background:rgba(255,255,255,0.12);' : '' }}">
                     Home
@@ -60,7 +60,3 @@
         </div>
     </div>
 </div>
-<style>
-.training-subnav::-webkit-scrollbar { height: 0; }
-.training-subnav { scrollbar-width: none; }
-</style>
