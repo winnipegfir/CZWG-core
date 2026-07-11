@@ -15,6 +15,7 @@
     letter-spacing: 0.02em;
 }
 .ts-badge-open      { background:#f1f5f9; color:#64748b; }
+.ts-badge-pending   { background:#fef3c7; color:#92400e; }
 .ts-badge-booked    { background:#dcfce7; color:#15803d; }
 .ts-badge-cancelled { background:#fee2e2; color:#b91c1c; }
 .ts-reassign select { font-size:0.8rem; padding:0.15rem 0.4rem; height:auto; }
@@ -72,6 +73,8 @@
                                 <td style="vertical-align:middle;">
                                     @if ($session->status === 'booked')
                                         <span class="ts-badge ts-badge-booked">Booked</span>
+                                    @elseif ($session->status === 'pending')
+                                        <span class="ts-badge ts-badge-pending">Pending</span>
                                     @elseif ($session->status === 'open')
                                         <span class="ts-badge ts-badge-open">Open</span>
                                     @else
@@ -98,12 +101,15 @@
                                         </select>
                                         <button type="submit" class="btn btn-sm btn-outline-primary py-0 px-2" style="font-size:0.78rem;">Save</button>
                                     </form>
+                                    @if ($session->status === 'pending')
+                                        <div class="text-muted" style="font-size:0.7rem; margin-top:0.2rem;">Saving confirms this pending session.</div>
+                                    @endif
                                 </td>
                                 <td style="vertical-align:middle;">
                                     <div class="d-flex align-items-center" style="gap:0.35rem;">
                                         <a href="#" data-toggle="modal" data-target="#editSession{{ $session->id }}"
                                            class="btn btn-sm btn-outline-secondary py-0 px-2" style="font-size:0.78rem;">Edit</a>
-                                        @if ($session->status === 'booked')
+                                        @if ($session->status === 'booked' || $session->status === 'pending')
                                             <form method="POST" action="{{ route('training.sessions.admin.cancel', $session->id) }}" onsubmit="return confirm('Cancel this session? The booking record will be kept as cancelled.')">
                                                 @csrf
                                                 <button type="submit" class="btn btn-sm btn-outline-warning py-0 px-2" style="font-size:0.78rem;">Cancel</button>
@@ -164,7 +170,7 @@
 
 @if (!$sessions->isEmpty())
     @php
-        $statusColors = ['open' => '#64748b', 'booked' => '#16a34a', 'cancelled' => '#b91c1c'];
+        $statusColors = ['open' => '#64748b', 'pending' => '#d97706', 'booked' => '#16a34a', 'cancelled' => '#b91c1c'];
         $calendarEvents = [];
         foreach ($sessions as $session) {
             $who = $session->instructor && $session->instructor->user ? $session->instructor->user->fullName('FL') : 'Unknown';

@@ -304,6 +304,7 @@ Route::prefix('dashboard/training')->middleware('instructor')->group(function ()
     Route::post('/sessions', 'AtcTraining\TrainingSessionController@store')->name('training.sessions.store');
     Route::delete('/sessions/{id}', 'AtcTraining\TrainingSessionController@destroy')->name('training.sessions.destroy');
     Route::post('/sessions/{id}/cancel', 'AtcTraining\TrainingSessionController@cancel')->name('training.sessions.cancel');
+    Route::post('/sessions/{id}/confirm', 'AtcTraining\TrainingSessionController@confirm')->name('training.sessions.confirm');
     Route::get('/instructors', 'AtcTraining\TrainingController@instructorsIndex')->name('training.instructors');
     Route::get('/reconcile', 'AtcTraining\TrainingController@reconcile')->name('training.reconcile');
     Route::get('/students/current', 'AtcTraining\TrainingController@currentStudents')->name('training.students.current');

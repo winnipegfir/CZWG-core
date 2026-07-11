@@ -15,6 +15,7 @@
     letter-spacing: 0.02em;
 }
 .ts-badge-open      { background:#f1f5f9; color:#64748b; }
+.ts-badge-pending   { background:#fef3c7; color:#92400e; }
 .ts-badge-booked    { background:#dcfce7; color:#15803d; }
 .ts-badge-cancelled { background:#fee2e2; color:#b91c1c; }
 </style>
@@ -76,6 +77,8 @@
                                 <td style="vertical-align:middle;">
                                     @if($slot->status === 'booked')
                                         <span class="ts-badge ts-badge-booked">Booked</span>
+                                    @elseif($slot->status === 'pending')
+                                        <span class="ts-badge ts-badge-pending">Pending Confirmation</span>
                                     @else
                                         <span class="ts-badge ts-badge-open">Open</span>
                                     @endif
@@ -89,6 +92,17 @@
                                             @csrf @method('DELETE')
                                             <button type="submit" class="btn btn-sm btn-outline-danger py-0 px-2" style="font-size:0.78rem;">Remove</button>
                                         </form>
+                                    @elseif ($slot->status === 'pending')
+                                        <div class="d-flex align-items-center" style="gap:0.35rem;">
+                                            <form method="POST" action="{{ route('training.sessions.confirm', $slot->id) }}">
+                                                @csrf
+                                                <button type="submit" class="btn btn-sm btn-primary py-0 px-2" style="font-size:0.78rem;">Confirm</button>
+                                            </form>
+                                            <form method="POST" action="{{ route('training.sessions.cancel', $slot->id) }}" onsubmit="return confirm('Cancel this session? The booking record will be kept as cancelled.')">
+                                                @csrf
+                                                <button type="submit" class="btn btn-sm btn-outline-warning py-0 px-2" style="font-size:0.78rem;">Cancel</button>
+                                            </form>
+                                        </div>
                                     @elseif ($slot->status === 'booked')
                                         <form method="POST" action="{{ route('training.sessions.cancel', $slot->id) }}" onsubmit="return confirm('Cancel this session? The booking record will be kept as cancelled.')">
                                             @csrf
@@ -143,16 +157,19 @@
 {{-- Hidden forms used by the calendar's click actions --}}
 <form id="calRemoveForm" method="POST" style="display:none;">@csrf @method('DELETE')</form>
 <form id="calCancelForm" method="POST" style="display:none;">@csrf</form>
+<form id="calConfirmForm" method="POST" style="display:none;">@csrf</form>
 
 @php
     $calendarEvents = [];
     foreach ($slots as $slot) {
         $studentName = $slot->student && $slot->student->user ? $slot->student->user->fullName('FL') : null;
-        $title = ($slot->status === 'booked' ? ($studentName ?: 'Booked') : 'Open');
+        $statusLabels = ['booked' => $studentName ?: 'Booked', 'pending' => 'Pending — ' . ($studentName ?: 'Student')];
+        $title = $statusLabels[$slot->status] ?? 'Open';
         if ($slot->note) {
             $title .= ' — ' . $slot->note;
         }
-        $color = $slot->status === 'booked' ? '#16a34a' : '#64748b';
+        $statusColors = ['booked' => '#16a34a', 'pending' => '#d97706'];
+        $color = $statusColors[$slot->status] ?? '#64748b';
         $calendarEvents[] = [
             'id' => $slot->id,
             'title' => $title,
@@ -175,6 +192,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     var removeUrlTemplate = "{{ route('training.sessions.destroy', ['id' => '__ID__']) }}";
     var cancelUrlTemplate = "{{ route('training.sessions.cancel', ['id' => '__ID__']) }}";
+    var confirmUrlTemplate = "{{ route('training.sessions.confirm', ['id' => '__ID__']) }}";
 
     function pad(n) { return String(n).padStart(2, '0'); }
     function formatLocalTz(d) {
@@ -210,6 +228,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (confirm('Remove this open slot (' + when + ')?')) {
                     document.getElementById('calRemoveForm').action = removeUrlTemplate.replace('__ID__', info.event.id);
                     document.getElementById('calRemoveForm').submit();
+                }
+            } else if (status === 'pending') {
+                var pendingStudent = info.event.extendedProps.student || 'this student';
+                if (confirm('Confirm the session with ' + pendingStudent + ' (' + when + ')?')) {
+                    document.getElementById('calConfirmForm').action = confirmUrlTemplate.replace('__ID__', info.event.id);
+                    document.getElementById('calConfirmForm').submit();
                 }
             } else if (status === 'booked') {
                 var student = info.event.extendedProps.student || 'this student';

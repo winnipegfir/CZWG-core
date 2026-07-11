@@ -83,6 +83,24 @@ class TrainingSessionController extends Controller
         return redirect()->back()->withSuccess('Session cancelled.');
     }
 
+    public function confirm($id)
+    {
+        $instructor = Auth::user()->instructorProfile;
+        abort_if(!$instructor, 403, 'You do not have an instructor profile.');
+
+        $slot = TrainingSession::where('id', $id)->firstOrFail();
+        abort_if($slot->instructor_id !== $instructor->id, 403);
+
+        if ($slot->status !== 'pending') {
+            return redirect()->back()->withError('Only pending sessions can be confirmed.');
+        }
+
+        $slot->status = 'booked';
+        $slot->save();
+
+        return redirect()->back()->withSuccess('Session confirmed.');
+    }
+
     public function studentIndex()
     {
         $student = Auth::user()->studentProfile;
@@ -97,7 +115,7 @@ class TrainingSessionController extends Controller
         }
 
         $myBookings = TrainingSession::where('student_id', $student->id)
-            ->where('status', 'booked')
+            ->whereIn('status', ['booked', 'pending'])
             ->orderBy('start_time')
             ->get();
 
@@ -160,7 +178,7 @@ class TrainingSessionController extends Controller
             $slot->start_time = $start;
             $slot->end_time = $end;
             $slot->student_id = $student->id;
-            $slot->status = 'booked';
+            $slot->status = 'pending';
             $slot->booked_at = now();
             $slot->save();
 
@@ -171,7 +189,7 @@ class TrainingSessionController extends Controller
             return redirect()->back()->withError('That time is no longer available.');
         }
 
-        return redirect()->back()->withSuccess('Session booked.');
+        return redirect()->back()->withSuccess('Session booked — waiting on your instructor to confirm.');
     }
 
     public function studentCancel($id)
@@ -207,8 +225,8 @@ class TrainingSessionController extends Controller
     {
         $slot = TrainingSession::where('id', $id)->firstOrFail();
 
-        if ($slot->status === 'booked') {
-            return redirect()->back()->withError('Cancel a booked session before deleting it.');
+        if (in_array($slot->status, ['booked', 'pending'])) {
+            return redirect()->back()->withError('Cancel a booked or pending session before deleting it.');
         }
 
         $slot->delete();

@@ -96,7 +96,11 @@
                                             @if($slot->note) &middot; {{ $slot->note }} @endif
                                         </div>
                                     </div>
-                                    <span class="mr-2" style="background:#dcfce7; color:#15803d; font-size:0.7rem; font-weight:700; padding:0.2em 0.55em; border-radius:0.3rem;">Booked</span>
+                                    @if($slot->status === 'pending')
+                                        <span class="mr-2" style="background:#fef3c7; color:#92400e; font-size:0.7rem; font-weight:700; padding:0.2em 0.55em; border-radius:0.3rem; white-space:nowrap;">Pending Confirmation</span>
+                                    @else
+                                        <span class="mr-2" style="background:#dcfce7; color:#15803d; font-size:0.7rem; font-weight:700; padding:0.2em 0.55em; border-radius:0.3rem;">Booked</span>
+                                    @endif
                                     <form method="POST" action="{{ route('training.book.cancel', $slot->id) }}" onsubmit="return confirm('Cancel this session?')">
                                         @csrf
                                         <button type="submit" class="btn btn-sm btn-outline-danger py-0 px-2" style="font-size:0.78rem;">Cancel</button>
@@ -150,17 +154,18 @@
                 ];
             }
             foreach ($myBookings as $slot) {
-                $title = 'Booked';
+                $title = $slot->status === 'pending' ? 'Pending' : 'Booked';
                 if ($slot->note) {
                     $title .= ' — ' . $slot->note;
                 }
+                $color = $slot->status === 'pending' ? '#d97706' : '#16a34a';
                 $calendarEvents[] = [
                     'id' => $slot->id,
                     'title' => $title,
                     'start' => $slot->start_time->copy()->setTimezone($userTz)->format('Y-m-d\TH:i:s'),
                     'end' => $slot->end_time->copy()->setTimezone($userTz)->format('Y-m-d\TH:i:s'),
-                    'backgroundColor' => '#16a34a',
-                    'borderColor' => '#16a34a',
+                    'backgroundColor' => $color,
+                    'borderColor' => $color,
                     'extendedProps' => ['kind' => 'booked'],
                 ];
             }
