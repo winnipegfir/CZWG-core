@@ -353,7 +353,7 @@
                     </ul>
                 </div>
 
-                <div class="col-lg-3">
+                <div class="col-lg-3" style="align-self:flex-start;">
                     <div style="background:linear-gradient(135deg, #122b44, #1d3f63); border-radius:0.6rem; padding:1.25rem;">
                         <div style="font-size:0.7rem; font-weight:700; letter-spacing:0.07em; text-transform:uppercase; color:#7dd3a8; margin-bottom:0.5rem;">
                             <i class="fas fa-rss fa-xs mr-1"></i> From The Blog

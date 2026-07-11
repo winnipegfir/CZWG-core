@@ -334,7 +334,7 @@
                         For Flight Simulation Use Only &mdash; Not to be used for real-world navigation. By using this site, you agree to hold harmless and indemnify the owners and authors of these web pages, those listed on these pages, and all pages that this site that may be pointed to (i.e. external links).
                     </p>
                     <p style="color:rgba(255,255,255,0.35); font-size:0.78rem; margin-top:0.75rem; margin-bottom:0;">
-                        Copyright &copy; {{App\Models\Settings\CoreSettings::where('id', 1)->firstOrFail()->copyright_year}} Winnipeg FIR. All Rights Reserved.
+                        Copyright &copy; {{ date('Y') }} Winnipeg FIR. All Rights Reserved.
                     </p>
                 </div>
 
@@ -356,7 +356,7 @@
                     </ul>
                 </div>
 
-                <div class="col-lg-3">
+                <div class="col-lg-3" style="align-self:flex-start;">
                     <div style="background:linear-gradient(135deg, #122b44, #1d3f63); border-radius:0.6rem; padding:1.25rem;">
                         <div style="font-size:0.7rem; font-weight:700; letter-spacing:0.07em; text-transform:uppercase; color:#7dd3a8; margin-bottom:0.5rem;">
                             <i class="fas fa-rss fa-xs mr-1"></i> From The Blog
