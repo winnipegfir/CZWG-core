@@ -324,8 +324,8 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-5 mb-4 mb-lg-0">
-                    <a href="{{ route('index') }}" style="color:#fff; font-weight:700; font-size:1.2rem; text-decoration:none; display:inline-flex; align-items:center; gap:0.5rem;">
-                        <i class="fas fa-plane" style="font-size:0.95rem; transform:rotate(-45deg);"></i> Winnipeg FIR
+                    <a href="{{ route('index') }}" style="display:inline-block;">
+                        <img src="https://winnipegfir.ca/storage/files/uploads/1667584791.png" alt="Winnipeg FIR" style="height:34px;">
                     </a>
                     <p style="color:rgba(255,255,255,0.5); font-size:0.8rem; margin-top:0.9rem; line-height:1.6;">
                         For Flight Simulation Use Only &mdash; Not to be used for real-world navigation. By using this site, you agree to hold harmless and indemnify the owners and authors of these web pages, those listed on these pages, and all pages that this site that may be pointed to (i.e. external links).
