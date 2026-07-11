@@ -1,35 +1,35 @@
 <div style="background:#272727; border-bottom:1px solid #1a1a1a;">
     <div class="container">
-        <div class="d-flex align-items-center" style="height:38px; gap:0.25rem;">
-            <a href="{{ route('training.index') }}" style="color:#fff; font-weight:700; font-size:1rem; text-decoration:none; margin-right:0.75rem; white-space:nowrap;">
+        <div class="d-flex align-items-center" style="min-height:38px; gap:0.25rem; padding:0.3rem 0;">
+            <a href="{{ route('training.index') }}" style="color:#fff; font-weight:700; font-size:1rem; text-decoration:none; margin-right:0.5rem; white-space:nowrap; flex-shrink:0;">
                 Training
             </a>
-            <nav class="d-flex align-items-center" style="gap:0.1rem; flex-wrap:wrap;">
+            <nav class="training-subnav d-flex align-items-center" style="gap:0.1rem; flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch; min-width:0;">
                 <a href="{{ route('training.index') }}"
-                   style="color:{{ Request::is('dashboard/training') ? '#fff' : 'rgba(255,255,255,0.6)' }}; font-size:0.85rem; padding:0.3rem 0.65rem; border-radius:0.3rem; text-decoration:none; {{ Request::is('dashboard/training') ? 'background:rgba(255,255,255,0.12);' : '' }}">
+                   style="color:{{ Request::is('dashboard/training') ? '#fff' : 'rgba(255,255,255,0.6)' }}; font-size:0.85rem; padding:0.3rem 0.65rem; border-radius:0.3rem; text-decoration:none; white-space:nowrap; flex-shrink:0; {{ Request::is('dashboard/training') ? 'background:rgba(255,255,255,0.12);' : '' }}">
                     Home
                 </a>
 
                 @if(Auth::user()->instructorProfile !== null)
                 @php $onOwnSessions = Request::is('dashboard/training/sessions') || (Request::is('dashboard/training/sessions*') && !Request::is('dashboard/training/sessions/all*')); @endphp
                 <a href="{{ route('training.sessions.index') }}"
-                   style="color:{{ $onOwnSessions ? '#fff' : 'rgba(255,255,255,0.6)' }}; font-size:0.85rem; padding:0.3rem 0.65rem; border-radius:0.3rem; text-decoration:none; {{ $onOwnSessions ? 'background:rgba(255,255,255,0.12);' : '' }}">
+                   style="color:{{ $onOwnSessions ? '#fff' : 'rgba(255,255,255,0.6)' }}; font-size:0.85rem; padding:0.3rem 0.65rem; border-radius:0.3rem; text-decoration:none; white-space:nowrap; flex-shrink:0; {{ $onOwnSessions ? 'background:rgba(255,255,255,0.12);' : '' }}">
                     Sessions
                 </a>
                 @endif
 
                 @if(Auth::user()->instructorProfile !== null || Auth::user()->permissions >= 4)
                 <a href="{{ route('training.instructors') }}"
-                   style="color:{{ Request::is('dashboard/training/instructors*') ? '#fff' : 'rgba(255,255,255,0.6)' }}; font-size:0.85rem; padding:0.3rem 0.65rem; border-radius:0.3rem; text-decoration:none; {{ Request::is('dashboard/training/instructors*') ? 'background:rgba(255,255,255,0.12);' : '' }}">
+                   style="color:{{ Request::is('dashboard/training/instructors*') ? '#fff' : 'rgba(255,255,255,0.6)' }}; font-size:0.85rem; padding:0.3rem 0.65rem; border-radius:0.3rem; text-decoration:none; white-space:nowrap; flex-shrink:0; {{ Request::is('dashboard/training/instructors*') ? 'background:rgba(255,255,255,0.12);' : '' }}">
                     Instructors
                 </a>
 
                 @endif
 
                 @if(Auth::user()->permissions >= 3 || Auth::user()->instructorProfile !== null)
-                <div class="dropdown">
+                <div class="dropdown" style="flex-shrink:0;">
                     <a href="#" data-toggle="dropdown"
-                       style="color:{{ Request::is('dashboard/training/students*') ? '#fff' : 'rgba(255,255,255,0.6)' }}; font-size:0.85rem; padding:0.3rem 0.65rem; border-radius:0.3rem; text-decoration:none; {{ Request::is('dashboard/training/students*') ? 'background:rgba(255,255,255,0.12);' : '' }}">
+                       style="color:{{ Request::is('dashboard/training/students*') ? '#fff' : 'rgba(255,255,255,0.6)' }}; font-size:0.85rem; padding:0.3rem 0.65rem; border-radius:0.3rem; text-decoration:none; white-space:nowrap; {{ Request::is('dashboard/training/students*') ? 'background:rgba(255,255,255,0.12);' : '' }}">
                         Students <i class="fas fa-chevron-down fa-xs ml-1"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" style="min-width:160px;">
@@ -45,14 +45,14 @@
 
                 @if(Auth::user()->permissions >= 4)
                 <a href="{{ route('training.sessions.all') }}"
-                   style="color:{{ Request::is('dashboard/training/sessions/all*') ? '#fff' : 'rgba(255,255,255,0.6)' }}; font-size:0.85rem; padding:0.3rem 0.65rem; border-radius:0.3rem; text-decoration:none; {{ Request::is('dashboard/training/sessions/all*') ? 'background:rgba(255,255,255,0.12);' : '' }}">
+                   style="color:{{ Request::is('dashboard/training/sessions/all*') ? '#fff' : 'rgba(255,255,255,0.6)' }}; font-size:0.85rem; padding:0.3rem 0.65rem; border-radius:0.3rem; text-decoration:none; white-space:nowrap; flex-shrink:0; {{ Request::is('dashboard/training/sessions/all*') ? 'background:rgba(255,255,255,0.12);' : '' }}">
                     All Sessions
                 </a>
                 @endif
 
                 @if(Auth::user()->permissions >= 4)
                 <a href="{{ route('training.reconcile') }}"
-                   style="color:{{ Request::is('dashboard/training/reconcile') ? '#fff' : 'rgba(255,255,255,0.6)' }}; font-size:0.85rem; padding:0.3rem 0.65rem; border-radius:0.3rem; text-decoration:none; {{ Request::is('dashboard/training/reconcile') ? 'background:rgba(255,255,255,0.12);' : '' }}">
+                   style="color:{{ Request::is('dashboard/training/reconcile') ? '#fff' : 'rgba(255,255,255,0.6)' }}; font-size:0.85rem; padding:0.3rem 0.65rem; border-radius:0.3rem; text-decoration:none; white-space:nowrap; flex-shrink:0; {{ Request::is('dashboard/training/reconcile') ? 'background:rgba(255,255,255,0.12);' : '' }}">
                     Reconcile
                 </a>
                 @endif
@@ -60,3 +60,7 @@
         </div>
     </div>
 </div>
+<style>
+.training-subnav::-webkit-scrollbar { height: 0; }
+.training-subnav { scrollbar-width: none; }
+</style>
