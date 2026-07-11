@@ -52,7 +52,7 @@
                     <thead style="background:#f8fafc; border-bottom:2px solid #e2e8f0;">
                         <tr>
                             <th style="color:#64748b; font-weight:600; border-top:none;">When (Zulu)</th>
-                            <th style="color:#64748b; font-weight:600; border-top:none;">Type</th>
+                            <th style="color:#64748b; font-weight:600; border-top:none;">Note</th>
                             <th style="color:#64748b; font-weight:600; border-top:none;">Status</th>
                             <th style="color:#64748b; font-weight:600; border-top:none;">Student</th>
                             <th style="width:100px; border-top:none;"></th>
@@ -66,7 +66,7 @@
                                     <br>
                                     <span class="text-muted" style="font-size:0.78rem;">{{ $slot->start_time->format('g:i A') }} &ndash; {{ $slot->end_time->format('g:i A') }}</span>
                                 </td>
-                                <td style="vertical-align:middle; color:#495057;">{{ $slot->type ?? '—' }}</td>
+                                <td style="vertical-align:middle; color:#495057;">{{ $slot->note ?? '—' }}</td>
                                 <td style="vertical-align:middle;">
                                     @if($slot->status === 'booked')
                                         <span class="ts-badge ts-badge-booked">Booked</span>
@@ -121,8 +121,8 @@
                         <input type="datetime-local" name="end_time" id="addSlotEnd" class="form-control" required>
                     </div>
                     <div class="form-group mb-0">
-                        <label class="font-weight-bold small">Type (optional)</label>
-                        <input type="text" name="type" class="form-control" placeholder="e.g. S1 Practical">
+                        <label class="font-weight-bold small">Note (optional)</label>
+                        <input type="text" name="note" class="form-control" placeholder="e.g. S1 Practical">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -143,8 +143,8 @@
     foreach ($slots as $slot) {
         $studentName = $slot->student && $slot->student->user ? $slot->student->user->fullName('FL') : null;
         $title = ($slot->status === 'booked' ? ($studentName ?: 'Booked') : 'Open');
-        if ($slot->type) {
-            $title .= ' — ' . $slot->type;
+        if ($slot->note) {
+            $title .= ' — ' . $slot->note;
         }
         $color = $slot->status === 'booked' ? '#16a34a' : '#64748b';
         $calendarEvents[] = [

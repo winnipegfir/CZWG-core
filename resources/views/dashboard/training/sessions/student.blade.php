@@ -50,7 +50,7 @@
                                         <div style="font-weight:600; font-size:0.875rem; color:#122b44;">{{ $slot->start_time->format('D, M j') }}</div>
                                         <div style="font-size:0.78rem; color:#64748b;">
                                             {{ $slot->start_time->format('g:i A') }} &ndash; {{ $slot->end_time->format('g:i A') }}
-                                            @if($slot->type) &middot; {{ $slot->type }} @endif
+                                            @if($slot->note) &middot; {{ $slot->note }} @endif
                                         </div>
                                     </div>
                                     <form method="POST" action="{{ route('training.book.store') }}" class="d-flex align-items-center" style="gap:0.3rem;">
@@ -85,7 +85,7 @@
                                         <div style="font-weight:600; font-size:0.875rem; color:#122b44;">{{ $slot->start_time->format('D, M j') }}</div>
                                         <div style="font-size:0.78rem; color:#64748b;">
                                             {{ $slot->start_time->format('g:i A') }} &ndash; {{ $slot->end_time->format('g:i A') }}
-                                            @if($slot->type) &middot; {{ $slot->type }} @endif
+                                            @if($slot->note) &middot; {{ $slot->note }} @endif
                                         </div>
                                     </div>
                                     <span class="mr-2" style="background:#dcfce7; color:#15803d; font-size:0.7rem; font-weight:700; padding:0.2em 0.55em; border-radius:0.3rem;">Booked</span>
@@ -128,8 +128,8 @@
             $calendarEvents = [];
             foreach ($openSlots as $slot) {
                 $title = 'Open';
-                if ($slot->type) {
-                    $title .= ' — ' . $slot->type;
+                if ($slot->note) {
+                    $title .= ' — ' . $slot->note;
                 }
                 $calendarEvents[] = [
                     'id' => $slot->id,
@@ -143,8 +143,8 @@
             }
             foreach ($myBookings as $slot) {
                 $title = 'Booked';
-                if ($slot->type) {
-                    $title .= ' — ' . $slot->type;
+                if ($slot->note) {
+                    $title .= ' — ' . $slot->note;
                 }
                 $calendarEvents[] = [
                     'id' => $slot->id,

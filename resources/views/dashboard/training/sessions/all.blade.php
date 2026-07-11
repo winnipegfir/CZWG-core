@@ -52,7 +52,6 @@
                     <thead style="background:#f8fafc; border-bottom:2px solid #e2e8f0;">
                         <tr>
                             <th style="color:#64748b; font-weight:600; border-top:none;">When (Zulu)</th>
-                            <th style="color:#64748b; font-weight:600; border-top:none;">Type</th>
                             <th style="color:#64748b; font-weight:600; border-top:none;">Status</th>
                             <th style="color:#64748b; font-weight:600; border-top:none; min-width:280px;">Instructor / Student</th>
                             <th style="border-top:none;"></th>
@@ -66,7 +65,6 @@
                                     <br>
                                     <span class="text-muted" style="font-size:0.78rem;">{{ $session->start_time->format('g:i A') }} &ndash; {{ $session->end_time->format('g:i A') }}</span>
                                 </td>
-                                <td style="vertical-align:middle; color:#495057;">{{ $session->type ?? '—' }}</td>
                                 <td style="vertical-align:middle;">
                                     @if ($session->status === 'booked')
                                         <span class="ts-badge ts-badge-booked">Booked</span>
@@ -82,7 +80,7 @@
                                         <select name="instructor_id" class="form-control">
                                             @foreach ($instructors as $instructor)
                                                 <option value="{{ $instructor->id }}" @selected($session->instructor_id === $instructor->id)>
-                                                    {{ $instructor->user ? $instructor->user->fullName('FL') : $instructor->email }}
+                                                    {{ $instructor->user_id }} &ndash; {{ $instructor->user ? $instructor->user->fullName('FL') : $instructor->email }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -90,7 +88,7 @@
                                             <option value="">Unbooked</option>
                                             @foreach ($students as $student)
                                                 <option value="{{ $student->id }}" @selected($session->student_id === $student->id)>
-                                                    {{ $student->user ? $student->user->fullName('FL') : 'CID ' . $student->user_id }}
+                                                    {{ $student->user_id }} &ndash; {{ $student->user ? $student->user->fullName('FL') : 'Unknown' }}
                                                 </option>
                                             @endforeach
                                         </select>

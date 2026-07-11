@@ -34,14 +34,14 @@ class TrainingSessionController extends Controller
         $request->validate([
             'start_time' => 'required|date',
             'end_time'   => 'required|date|after:start_time',
-            'type'       => 'nullable|string|max:255',
+            'note'       => 'nullable|string|max:255',
         ]);
 
         TrainingSession::create([
             'instructor_id' => $instructor->id,
             'start_time'    => $request->input('start_time'),
             'end_time'      => $request->input('end_time'),
-            'type'          => $request->input('type'),
+            'note'          => $request->input('note'),
             'status'        => 'open',
         ]);
 
@@ -135,7 +135,7 @@ class TrainingSessionController extends Controller
                     'instructor_id' => $slot->instructor_id,
                     'start_time' => $slot->start_time,
                     'end_time' => $start,
-                    'type' => $slot->type,
+                    'note' => $slot->note,
                     'status' => 'open',
                 ]);
             }
@@ -145,7 +145,7 @@ class TrainingSessionController extends Controller
                     'instructor_id' => $slot->instructor_id,
                     'start_time' => $end,
                     'end_time' => $slot->end_time,
-                    'type' => $slot->type,
+                    'note' => $slot->note,
                     'status' => 'open',
                 ]);
             }
