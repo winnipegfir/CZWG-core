@@ -2457,3 +2457,42 @@ html[data-theme="dark"] .fc .fc-button-primary:not(:disabled):active {
 .fc .fc-daygrid-event .fc-event-title {
     font-weight: 600;
 }
+
+/* ============================================================
+   select2 (used for searchable dropdowns, e.g. student pickers
+   and the timezone preference selector). select2 renders its own
+   DOM outside the normal Bootstrap component classes, so it never
+   picked up any dark-mode styling and has always rendered as an
+   unreadable white-on-white/light-gray popup in dark mode.
+   ============================================================ */
+html[data-theme="dark"] .select2-container--default .select2-selection--single {
+    background-color: #1f232a;
+    border-color: #33383f;
+}
+html[data-theme="dark"] .select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #d7dade;
+}
+html[data-theme="dark"] .select2-container--default .select2-selection--single .select2-selection__arrow b {
+    border-color: #d7dade transparent transparent transparent;
+}
+html[data-theme="dark"] .select2-dropdown {
+    background-color: #1f232a;
+    border-color: #33383f;
+    color: #d7dade;
+}
+html[data-theme="dark"] .select2-search--dropdown .select2-search__field {
+    background-color: #262b32;
+    border-color: #33383f;
+    color: #d7dade;
+}
+html[data-theme="dark"] .select2-results__option {
+    color: #d7dade;
+}
+html[data-theme="dark"] .select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: #122b44;
+    color: #fff;
+}
+html[data-theme="dark"] .select2-container--default .select2-results__option[aria-selected="true"] {
+    background-color: #262b32;
+    color: #d7dade;
+}

@@ -595,7 +595,16 @@
                     </div>
                     <div style="flex:1; min-width:0;">
                         <div style="font-size:0.82rem; font-weight:600; color:#1e293b;">Preferences</div>
-                        <div style="font-size:0.72rem; color:#94a3b8;">Email notifications, timezone</div>
+                        <div style="font-size:0.72rem; color:#94a3b8; display:flex; align-items:center; gap:0.4rem; flex-wrap:wrap;">
+                            <span>
+                                Email
+                                <span style="font-weight:700; color:{{ Auth::user()->gdpr_subscribed_emails ? '#16a34a' : '#94a3b8' }};">
+                                    {{ Auth::user()->gdpr_subscribed_emails ? 'On' : 'Off' }}
+                                </span>
+                            </span>
+                            <span>&middot;</span>
+                            <span>{{ Auth::user()->timezone ?: 'Zulu (UTC)' }}</span>
+                        </div>
                     </div>
                     <a href="{{ route('me.preferences') }}" style="font-size:0.72rem; color:#2563eb; text-decoration:none; white-space:nowrap;">Manage &rarr;</a>
                 </div>
