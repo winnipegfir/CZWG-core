@@ -190,7 +190,11 @@
                                     <td style="padding:0.6rem 1rem; vertical-align:middle; color:#6c757d; font-size:0.82rem;">
                                         {{ $roster->start_timestamp }}z – {{ $roster->end_timestamp }}z
                                     </td>
-                                    <td style="padding:0.6rem 1rem; vertical-align:middle; text-align:right;">
+                                    <td style="padding:0.6rem 1rem; vertical-align:middle; text-align:right; white-space:nowrap;">
+                                        <a href="#" data-toggle="modal" data-target="#editController{{ $roster->id }}"
+                                           style="color:#122b44; font-size:0.8rem; font-weight:500; text-decoration:none; margin-right:0.9rem;">
+                                            <i class="fas fa-pencil-alt fa-xs mr-1"></i>Edit
+                                        </a>
                                         <form method="POST" action="{{ route('event.deletecontroller', $roster->user_id) }}" style="display:inline;">
                                             @csrf
                                             <input type="hidden" name="id" value="{{ $roster->event_id }}">
@@ -205,6 +209,77 @@
                         </tbody>
                     </table>
                 </div>
+
+                @foreach($eventroster as $roster)
+                    {{-- Edit Controller modal --}}
+                    <div class="modal fade" id="editController{{ $roster->id }}" tabindex="-1" role="dialog">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content" style="border-radius:0.5rem;">
+                                <div class="modal-header" style="border-bottom:1px solid #e9ecef;">
+                                    <h5 class="modal-title font-weight-bold" style="color:#122b44;">Edit Roster Assignment</h5>
+                                    <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
+                                </div>
+                                <form method="POST" action="{{ route('event.editcontroller', $roster->id) }}">
+                                    @csrf
+                                    <div class="modal-body" style="font-size:0.875rem;">
+                                        <div class="form-group">
+                                            <label style="font-size:0.85rem; font-weight:600; color:#343a40;">Controller</label>
+                                            <select class="form-control custom-select" name="user_cid">
+                                                @foreach($users as $user)
+                                                    <option value="{{ $user->id }}" @selected($user->id === $roster->user_id)>{{ $user->id }} – {{ $user->fname }} {{ $user->lname }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="form-group">
+                                                    <label style="font-size:0.85rem; font-weight:600; color:#343a40;">Start (zulu)</label>
+                                                    <input type="text" name="start_timestamp" class="form-control" id="ctrl_edit_start_{{ $roster->id }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="form-group">
+                                                    <label style="font-size:0.85rem; font-weight:600; color:#343a40;">End (zulu)</label>
+                                                    <input type="text" name="end_timestamp" class="form-control" id="ctrl_edit_end_{{ $roster->id }}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <div class="form-group">
+                                                    <label style="font-size:0.85rem; font-weight:600; color:#343a40;">Airport</label>
+                                                    <input type="text" name="airport" class="form-control" value="{{ $roster->airport }}" placeholder="CYWG">
+                                                </div>
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="form-group">
+                                                    <label style="font-size:0.85rem; font-weight:600; color:#343a40;">Position</label>
+                                                    <select name="position" class="form-control custom-select">
+                                                        <option value="Delivery" @selected($roster->position === 'Delivery')>Delivery</option>
+                                                        <option value="Ground" @selected($roster->position === 'Ground')>Ground</option>
+                                                        <option value="Tower" @selected($roster->position === 'Tower')>Tower</option>
+                                                        <option value="Departure" @selected($roster->position === 'Departure')>Departure</option>
+                                                        <option value="Arrival" @selected($roster->position === 'Arrival')>Arrival</option>
+                                                        <option value="Centre" @selected($roster->position === 'Centre')>Centre</option>
+                                                        <option value="Relief" @selected($roster->position === 'Relief')>Relief (Stand-by)</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <script>
+                                            flatpickr('#ctrl_edit_start_{{ $roster->id }}', { enableTime: true, noCalendar: true, dateFormat: "H:i", time_24hr: true, defaultDate: "{{ $roster->start_timestamp }}" });
+                                            flatpickr('#ctrl_edit_end_{{ $roster->id }}',   { enableTime: true, noCalendar: true, dateFormat: "H:i", time_24hr: true, defaultDate: "{{ $roster->end_timestamp }}" });
+                                        </script>
+                                    </div>
+                                    <div class="modal-footer" style="border-top:1px solid #e9ecef;">
+                                        <button type="button" class="btn btn-light btn-sm" data-dismiss="modal">Cancel</button>
+                                        <button type="submit" class="btn btn-sm" style="background:#122b44; color:#fff; border-radius:0.375rem;">Save Changes</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
             @endif
         </div>
 

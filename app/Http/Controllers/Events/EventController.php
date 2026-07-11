@@ -152,6 +152,25 @@ class EventController extends Controller
         return redirect()->back()->with('success', 'Controller has been removed from the event!');
     }
 
+    public function editController(Request $request, $id)
+    {
+        $this->validate($request, [
+            'start_timestamp' => 'required',
+            'end_timestamp' => 'required',
+            'position' => 'required',
+        ]);
+
+        $confirm = EventConfirm::findOrFail($id);
+        $confirm->user_id = $request->input('user_cid');
+        $confirm->start_timestamp = $request->input('start_timestamp');
+        $confirm->end_timestamp = $request->input('end_timestamp');
+        $confirm->airport = $request->input('airport');
+        $confirm->position = $request->input('position');
+        $confirm->save();
+
+        return redirect()->route('events.admin.view', $confirm->event->slug)->with('success', 'Roster assignment updated!');
+    }
+
     public function adminIndex()
     {
         $events = Event::all()->sortByDesc('created_at');

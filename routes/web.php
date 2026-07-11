@@ -139,6 +139,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/applications/confirm/{id}', 'Events\EventController@confirmController')->name('event.confirmapplication');
         Route::post('/applications/manualconfirm/{id}', 'Events\EventController@addController')->name('event.addcontroller');
         Route::post('/applications/manualconfirm/delete/{id}', 'Events\EventController@deleteController')->name('event.deletecontroller');
+        Route::post('/applications/manualconfirm/edit/{id}', 'Events\EventController@editController')->name('event.editcontroller');
     });
 
     //Dashboard
