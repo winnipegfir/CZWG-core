@@ -287,13 +287,17 @@ class User extends Authenticatable
             return 'Zulu (UTC)';
         }
 
+        if (!class_exists(\IntlDateFormatter::class)) {
+            return $tz;
+        }
+
         try {
             $zone = new \DateTimeZone($tz);
             $formatter = new \IntlDateFormatter('en_US', \IntlDateFormatter::FULL, \IntlDateFormatter::FULL, $zone, \IntlDateFormatter::GREGORIAN, 'vvvv');
-            $name = $formatter->format(new \DateTime('now', $zone));
+            $name = $formatter ? $formatter->format(new \DateTime('now', $zone)) : false;
 
-            return $tz . ' — ' . $name;
-        } catch (\Exception $e) {
+            return $name ? $tz . ' — ' . $name : $tz;
+        } catch (\Throwable $e) {
             return $tz;
         }
     }
