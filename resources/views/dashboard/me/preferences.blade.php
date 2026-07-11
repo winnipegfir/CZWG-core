@@ -6,6 +6,35 @@
     <h1 class="blue-text font-weight-bold mt-2">Preferences</h1>
     <hr>
     <p>Customise your Winnipeg web experience.</p>
+
+    <h3 class="font-weight-bold blue-text">Display Timezone</h3>
+    <p>
+        Choose the timezone you'd like training session times shown in (e.g. on the training scheduling pages).
+        Leave blank to keep seeing Zulu (UTC), the ATC-standard default.
+    </p>
+    <form method="POST" action="{{ route('me.preferences.post') }}" class="mb-3" style="max-width:420px;">
+        @csrf
+        <div class="form-group">
+            <select name="timezone" class="js-timezone-select form-control">
+                <option value="">Zulu (UTC) &mdash; default</option>
+                @foreach($timezones as $tz)
+                    <option value="{{ $tz }}" @selected(Auth::user()->timezone === $tz)>{{ $tz }}</option>
+                @endforeach
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Save Timezone</button>
+    </form>
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+    <style>.select2-container { width: 100% !important; }</style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.js-timezone-select').select2({ width: '100%' });
+        });
+    </script>
+
+    <hr>
     <h3 class="font-weight-bold blue-text">Current email subscription status</h3>
     @if (Auth::user()->gdpr_subscribed_emails == 0)
         <h3>

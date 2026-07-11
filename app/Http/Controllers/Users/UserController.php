@@ -661,7 +661,21 @@ class UserController extends Controller
     public function preferences()
     {
         $preferences = Auth::user()->preferences;
+        $timezones = \DateTimeZone::listIdentifiers();
 
-        return view('dashboard.me.preferences', compact('preferences'));
+        return view('dashboard.me.preferences', compact('preferences', 'timezones'));
+    }
+
+    public function preferencesPost(Request $request)
+    {
+        $request->validate([
+            'timezone' => 'nullable|timezone',
+        ]);
+
+        $user = Auth::user();
+        $user->timezone = $request->input('timezone');
+        $user->save();
+
+        return redirect()->route('me.preferences')->with('success', 'Preferences updated.');
     }
 }

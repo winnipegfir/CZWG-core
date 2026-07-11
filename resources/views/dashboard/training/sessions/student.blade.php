@@ -10,7 +10,12 @@
     <div class="mb-4">
         <h2 class="font-weight-bold mb-0" style="color:#122b44;">Book Training</h2>
         @if($student->instructor_id && $student->instructor)
-            <p class="text-muted mb-0" style="font-size:0.875rem;">with {{ $student->instructor->user ? $student->instructor->user->fullName('FL') : 'your instructor' }} &mdash; sessions are booked in 1-hour windows &mdash; all times Zulu (UTC)</p>
+            <p class="text-muted mb-0" style="font-size:0.875rem;">
+                with {{ $student->instructor->user ? $student->instructor->user->fullName('FL') : 'your instructor' }} &mdash; sessions are booked in 1-hour windows &mdash; times shown in {{ $userTz }}
+                @if($userTz === 'UTC')
+                    &mdash; <a href="{{ route('me.preferences') }}">set your timezone</a>
+                @endif
+            </p>
         @endif
     </div>
 
@@ -32,24 +37,26 @@
             <div class="col-md-6 mb-4">
                 <div class="card h-100">
                     <div class="card-body">
-                        <h5 class="font-weight-bold mb-3" style="color:#122b44;">Open Slots <span class="text-muted font-weight-normal" style="font-size:0.75rem;">(Zulu)</span></h5>
+                        <h5 class="font-weight-bold mb-3" style="color:#122b44;">Open Slots <span class="text-muted font-weight-normal" style="font-size:0.75rem;">({{ $userTz }})</span></h5>
                         @if ($openSlots->isEmpty())
                             <p class="text-muted mb-0" style="font-size:0.875rem;">No open slots right now. Check back later.</p>
                         @else
                             @foreach ($openSlots as $slot)
                                 @php
+                                    $startLocal = $slot->start_time->copy()->setTimezone($userTz);
+                                    $endLocal = $slot->end_time->copy()->setTimezone($userTz);
                                     $hourOptions = [];
-                                    $cursor = $slot->start_time->copy();
-                                    while ($cursor->copy()->addHour()->lte($slot->end_time)) {
+                                    $cursor = $startLocal->copy();
+                                    while ($cursor->copy()->addHour()->lte($endLocal)) {
                                         $hourOptions[] = $cursor->copy();
                                         $cursor->addHour();
                                     }
                                 @endphp
                                 <div style="display:flex; align-items:center; padding:0.6rem 0; border-bottom:1px solid #f1f5f9;">
                                     <div style="flex:1; min-width:0;">
-                                        <div style="font-weight:600; font-size:0.875rem; color:#122b44;">{{ $slot->start_time->format('D, M j') }}</div>
+                                        <div style="font-weight:600; font-size:0.875rem; color:#122b44;">{{ $startLocal->format('D, M j') }}</div>
                                         <div style="font-size:0.78rem; color:#64748b;">
-                                            {{ $slot->start_time->format('g:i A') }} &ndash; {{ $slot->end_time->format('g:i A') }}
+                                            {{ $startLocal->format('g:i A') }} &ndash; {{ $endLocal->format('g:i A') }}
                                             @if($slot->note) &middot; {{ $slot->note }} @endif
                                         </div>
                                     </div>
@@ -62,7 +69,7 @@
                                                 @endforeach
                                             </select>
                                         @else
-                                            <input type="hidden" name="start_time" value="{{ $slot->start_time->format('Y-m-d\TH:i') }}">
+                                            <input type="hidden" name="start_time" value="{{ $startLocal->format('Y-m-d\TH:i') }}">
                                         @endif
                                         <button type="submit" class="btn btn-sm btn-primary py-0 px-2" style="font-size:0.78rem;">Book</button>
                                     </form>
@@ -75,16 +82,17 @@
             <div class="col-md-6 mb-4">
                 <div class="card h-100">
                     <div class="card-body">
-                        <h5 class="font-weight-bold mb-3" style="color:#122b44;">Your Upcoming Sessions <span class="text-muted font-weight-normal" style="font-size:0.75rem;">(Zulu)</span></h5>
+                        <h5 class="font-weight-bold mb-3" style="color:#122b44;">Your Upcoming Sessions <span class="text-muted font-weight-normal" style="font-size:0.75rem;">({{ $userTz }})</span></h5>
                         @if ($myBookings->isEmpty())
                             <p class="text-muted mb-0" style="font-size:0.875rem;">You have no upcoming booked sessions.</p>
                         @else
                             @foreach ($myBookings as $slot)
+                                @php $startLocal = $slot->start_time->copy()->setTimezone($userTz); $endLocal = $slot->end_time->copy()->setTimezone($userTz); @endphp
                                 <div style="display:flex; align-items:center; padding:0.6rem 0; border-bottom:1px solid #f1f5f9;">
                                     <div style="flex:1; min-width:0;">
-                                        <div style="font-weight:600; font-size:0.875rem; color:#122b44;">{{ $slot->start_time->format('D, M j') }}</div>
+                                        <div style="font-weight:600; font-size:0.875rem; color:#122b44;">{{ $startLocal->format('D, M j') }}</div>
                                         <div style="font-size:0.78rem; color:#64748b;">
-                                            {{ $slot->start_time->format('g:i A') }} &ndash; {{ $slot->end_time->format('g:i A') }}
+                                            {{ $startLocal->format('g:i A') }} &ndash; {{ $endLocal->format('g:i A') }}
                                             @if($slot->note) &middot; {{ $slot->note }} @endif
                                         </div>
                                     </div>
@@ -134,8 +142,8 @@
                 $calendarEvents[] = [
                     'id' => $slot->id,
                     'title' => $title,
-                    'start' => $slot->start_time->toIso8601String(),
-                    'end' => $slot->end_time->toIso8601String(),
+                    'start' => $slot->start_time->copy()->setTimezone($userTz)->format('Y-m-d\TH:i:s'),
+                    'end' => $slot->end_time->copy()->setTimezone($userTz)->format('Y-m-d\TH:i:s'),
                     'backgroundColor' => '#64748b',
                     'borderColor' => '#64748b',
                     'extendedProps' => ['kind' => 'open'],
@@ -149,8 +157,8 @@
                 $calendarEvents[] = [
                     'id' => $slot->id,
                     'title' => $title,
-                    'start' => $slot->start_time->toIso8601String(),
-                    'end' => $slot->end_time->toIso8601String(),
+                    'start' => $slot->start_time->copy()->setTimezone($userTz)->format('Y-m-d\TH:i:s'),
+                    'end' => $slot->end_time->copy()->setTimezone($userTz)->format('Y-m-d\TH:i:s'),
                     'backgroundColor' => '#16a34a',
                     'borderColor' => '#16a34a',
                     'extendedProps' => ['kind' => 'booked'],
@@ -166,16 +174,16 @@
             var cancelUrlTemplate = "{{ route('training.book.cancel', ['id' => '__ID__']) }}";
 
             function pad(n) { return String(n).padStart(2, '0'); }
-            function formatZulu(d) {
+            function formatLocalTz(d) {
                 return d.getUTCFullYear() + '-' + pad(d.getUTCMonth() + 1) + '-' + pad(d.getUTCDate()) + 'T' + pad(d.getUTCHours()) + ':' + pad(d.getUTCMinutes());
             }
-            function displayZulu(d, opts) {
+            function displayLocalTz(d, opts) {
                 opts = opts || { dateStyle: 'medium', timeStyle: 'short' };
                 opts.timeZone = 'UTC';
-                return d.toLocaleString([], opts) + ' Z';
+                return d.toLocaleString([], opts);
             }
             function submitBooking(startDate) {
-                document.getElementById('calBookStartInput').value = formatZulu(startDate);
+                document.getElementById('calBookStartInput').value = formatLocalTz(startDate);
                 document.getElementById('calBookForm').submit();
             }
             function hourlyStarts(start, end) {
@@ -194,7 +202,7 @@
                     var btn = document.createElement('button');
                     btn.type = 'button';
                     btn.className = 'btn btn-outline-primary';
-                    btn.textContent = displayZulu(d, { hour: 'numeric', minute: '2-digit' });
+                    btn.textContent = displayLocalTz(d, { hour: 'numeric', minute: '2-digit' });
                     btn.onclick = function () {
                         $('#pickTimeModal').modal('hide');
                         submitBooking(d);
@@ -221,14 +229,14 @@
                     if (kind === 'open') {
                         var options = hourlyStarts(info.event.start, info.event.end);
                         if (options.length <= 1) {
-                            if (options.length === 1 && confirm('Book this slot (' + displayZulu(options[0]) + ')?')) {
+                            if (options.length === 1 && confirm('Book this slot (' + displayLocalTz(options[0]) + ')?')) {
                                 submitBooking(options[0]);
                             }
                         } else {
                             showPickTimeModal(options);
                         }
                     } else if (kind === 'booked') {
-                        var when = displayZulu(info.event.start);
+                        var when = displayLocalTz(info.event.start);
                         if (confirm('Cancel this session (' + when + ')?')) {
                             document.getElementById('calCancelForm').action = cancelUrlTemplate.replace('__ID__', info.event.id);
                             document.getElementById('calCancelForm').submit();

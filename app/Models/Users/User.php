@@ -31,7 +31,7 @@ class User extends Authenticatable
     protected $fillable = [
         'id', 'fname', 'lname', 'email', 'rating_id',
         'reg_date', 'permissions', 'init', 'gdpr_subscribed_emails', 'avatar', 'bio', 'display_cid_only', 'display_fname', 'display_last_name',
-        'discord_user_id', 'discord_dm_channel_id', 'avatar_mode'
+        'discord_user_id', 'discord_dm_channel_id', 'avatar_mode', 'timezone'
     ];
 
     /**
@@ -269,6 +269,11 @@ class User extends Authenticatable
     public function preferences()
     {
         return $this->hasOne(UserPreferences::class);
+    }
+
+    public function displayTimezone(): string
+    {
+        return $this->timezone ?: 'UTC';
     }
 
     protected function rating(): Attribute

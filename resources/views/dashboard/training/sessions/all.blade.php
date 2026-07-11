@@ -26,7 +26,10 @@
     <div class="mb-4">
         <h2 class="font-weight-bold mb-0" style="color:#122b44;">All Sessions</h2>
         <p class="text-muted mb-0" style="font-size:0.875rem;">
-            {{ $sessions->count() }} session{{ $sessions->count() != 1 ? 's' : '' }} across every instructor &mdash; click a session on the calendar to jump to it below &mdash; all times Zulu (UTC)
+            {{ $sessions->count() }} session{{ $sessions->count() != 1 ? 's' : '' }} across every instructor &mdash; click a session on the calendar to jump to it below &mdash; times shown in {{ $userTz }}
+            @if($userTz === 'UTC')
+                &mdash; <a href="{{ route('me.preferences') }}">set your timezone</a>
+            @endif
         </p>
     </div>
 
@@ -51,7 +54,7 @@
                 <table class="table table-hover mb-0" style="font-size:0.875rem;">
                     <thead style="background:#f8fafc; border-bottom:2px solid #e2e8f0;">
                         <tr>
-                            <th style="color:#64748b; font-weight:600; border-top:none;">When (Zulu)</th>
+                            <th style="color:#64748b; font-weight:600; border-top:none;">When ({{ $userTz }})</th>
                             <th style="color:#64748b; font-weight:600; border-top:none;">Status</th>
                             <th style="color:#64748b; font-weight:600; border-top:none; min-width:280px;">Instructor / Student</th>
                             <th style="border-top:none;"></th>
@@ -61,9 +64,10 @@
                         @foreach ($sessions as $session)
                             <tr id="session-row-{{ $session->id }}" style="transition:background-color 0.6s ease;">
                                 <td style="vertical-align:middle;">
-                                    <span style="color:#122b44; font-weight:600;">{{ $session->start_time->format('D, M j') }}</span>
+                                    @php $startLocal = $session->start_time->copy()->setTimezone($userTz); $endLocal = $session->end_time->copy()->setTimezone($userTz); @endphp
+                                    <span style="color:#122b44; font-weight:600;">{{ $startLocal->format('D, M j') }}</span>
                                     <br>
-                                    <span class="text-muted" style="font-size:0.78rem;">{{ $session->start_time->format('g:i A') }} &ndash; {{ $session->end_time->format('g:i A') }}</span>
+                                    <span class="text-muted" style="font-size:0.78rem;">{{ $startLocal->format('g:i A') }} &ndash; {{ $endLocal->format('g:i A') }}</span>
                                 </td>
                                 <td style="vertical-align:middle;">
                                     @if ($session->status === 'booked')
@@ -132,12 +136,12 @@
                             @csrf
                             <div class="modal-body">
                                 <div class="form-group mb-3">
-                                    <label class="font-weight-bold small">Start <span class="text-muted font-weight-normal">(Zulu / UTC)</span></label>
-                                    <input type="datetime-local" name="start_time" class="form-control" value="{{ $session->start_time->format('Y-m-d\TH:i') }}" required>
+                                    <label class="font-weight-bold small">Start <span class="text-muted font-weight-normal">({{ $userTz }})</span></label>
+                                    <input type="datetime-local" name="start_time" class="form-control" value="{{ $session->start_time->copy()->setTimezone($userTz)->format('Y-m-d\TH:i') }}" required>
                                 </div>
                                 <div class="form-group mb-3">
-                                    <label class="font-weight-bold small">End <span class="text-muted font-weight-normal">(Zulu / UTC)</span></label>
-                                    <input type="datetime-local" name="end_time" class="form-control" value="{{ $session->end_time->format('Y-m-d\TH:i') }}" required>
+                                    <label class="font-weight-bold small">End <span class="text-muted font-weight-normal">({{ $userTz }})</span></label>
+                                    <input type="datetime-local" name="end_time" class="form-control" value="{{ $session->end_time->copy()->setTimezone($userTz)->format('Y-m-d\TH:i') }}" required>
                                 </div>
                                 <div class="form-group mb-0">
                                     <label class="font-weight-bold small">Note (optional)</label>
@@ -171,8 +175,8 @@
             $calendarEvents[] = [
                 'id' => $session->id,
                 'title' => ucfirst($session->status) . ' — ' . $who,
-                'start' => $session->start_time->toIso8601String(),
-                'end' => $session->end_time->toIso8601String(),
+                'start' => $session->start_time->copy()->setTimezone($userTz)->format('Y-m-d\TH:i:s'),
+                'end' => $session->end_time->copy()->setTimezone($userTz)->format('Y-m-d\TH:i:s'),
                 'backgroundColor' => $color,
                 'borderColor' => $color,
                 'extendedProps' => ['status' => $session->status],

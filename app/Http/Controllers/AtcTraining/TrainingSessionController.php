@@ -23,7 +23,9 @@ class TrainingSessionController extends Controller
             ->orderBy('start_time')
             ->get();
 
-        return view('dashboard.training.sessions.instructor', compact('slots'));
+        $userTz = Auth::user()->displayTimezone();
+
+        return view('dashboard.training.sessions.instructor', compact('slots', 'userTz'));
     }
 
     public function store(Request $request)
@@ -37,10 +39,12 @@ class TrainingSessionController extends Controller
             'note'       => 'nullable|string|max:255',
         ]);
 
+        $userTz = Auth::user()->displayTimezone();
+
         TrainingSession::create([
             'instructor_id' => $instructor->id,
-            'start_time'    => $request->input('start_time'),
-            'end_time'      => $request->input('end_time'),
+            'start_time'    => Carbon::parse($request->input('start_time'), $userTz)->setTimezone('UTC'),
+            'end_time'      => Carbon::parse($request->input('end_time'), $userTz)->setTimezone('UTC'),
             'note'          => $request->input('note'),
             'status'        => 'open',
         ]);
@@ -97,7 +101,9 @@ class TrainingSessionController extends Controller
             ->orderBy('start_time')
             ->get();
 
-        return view('dashboard.training.sessions.student', compact('student', 'openSlots', 'myBookings'));
+        $userTz = Auth::user()->displayTimezone();
+
+        return view('dashboard.training.sessions.student', compact('student', 'openSlots', 'myBookings', 'userTz'));
     }
 
     /**
@@ -115,7 +121,8 @@ class TrainingSessionController extends Controller
             'start_time' => 'required|date',
         ]);
 
-        $start = Carbon::parse($request->input('start_time'))->second(0);
+        $userTz = Auth::user()->displayTimezone();
+        $start = Carbon::parse($request->input('start_time'), $userTz)->setTimezone('UTC')->second(0);
         $end = $start->copy()->addHour();
 
         $booked = DB::transaction(function () use ($student, $start, $end) {
@@ -191,8 +198,9 @@ class TrainingSessionController extends Controller
 
         $instructors = Instructor::with('user')->get();
         $students = Student::with('user')->get();
+        $userTz = Auth::user()->displayTimezone();
 
-        return view('dashboard.training.sessions.all', compact('sessions', 'instructors', 'students'));
+        return view('dashboard.training.sessions.all', compact('sessions', 'instructors', 'students', 'userTz'));
     }
 
     public function adminDestroy($id)
@@ -225,9 +233,11 @@ class TrainingSessionController extends Controller
             'note'       => 'nullable|string|max:255',
         ]);
 
+        $userTz = Auth::user()->displayTimezone();
+
         $slot = TrainingSession::findOrFail($id);
-        $slot->start_time = $request->input('start_time');
-        $slot->end_time = $request->input('end_time');
+        $slot->start_time = Carbon::parse($request->input('start_time'), $userTz)->setTimezone('UTC');
+        $slot->end_time = Carbon::parse($request->input('end_time'), $userTz)->setTimezone('UTC');
         $slot->note = $request->input('note');
         $slot->save();
 
