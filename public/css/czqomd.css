@@ -2361,6 +2361,43 @@ html[data-theme="dark"] .modal-content .modal-header h5.modal-title {
    covers most of the chrome; a few text elements need direct
    color overrides since they don't read the variables.
    ============================================================ */
+
+/* Toolbar buttons (prev/next/today/week/month) ship with FullCalendar's
+   own default Bootstrap-ish look, which clashes with the site's style
+   and makes "today" look randomly disabled/mismatched next to the rest.
+   Unify them all to the same navy/muted-gray treatment used elsewhere
+   on these pages, in both themes. */
+.fc .fc-toolbar-title {
+    font-weight: 700;
+    color: #122b44;
+    font-size: 1.15rem;
+}
+.fc .fc-button {
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    color: #475569;
+    box-shadow: none !important;
+    text-transform: capitalize;
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding: 0.35rem 0.75rem;
+}
+.fc .fc-button:hover:not(:disabled) {
+    background: #e2e8f0;
+    color: #1e293b;
+    border-color: #e2e8f0;
+}
+.fc .fc-button:disabled {
+    opacity: 0.45;
+    box-shadow: none !important;
+}
+.fc .fc-button-primary:not(:disabled).fc-button-active,
+.fc .fc-button-primary:not(:disabled):active {
+    background: #122b44;
+    border-color: #122b44;
+    color: #fff;
+}
+
 html[data-theme="dark"] .fc {
     --fc-border-color: #454b55;
     --fc-page-bg-color: #1f232a;

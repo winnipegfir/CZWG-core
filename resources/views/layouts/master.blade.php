@@ -44,13 +44,13 @@
         @if (Auth::check())
         @switch (Auth::user()->preferences)
             @case("default")
-            <link href="{{ asset('css/czqomd.css') }}?v=28" rel="stylesheet">
+            <link href="{{ asset('css/czqomd.css') }}?v=29" rel="stylesheet">
             @break
             @default
-            <link href="{{ asset('css/czqomd.css') }}?v=28" rel="stylesheet">
+            <link href="{{ asset('css/czqomd.css') }}?v=29" rel="stylesheet">
         @endswitch
         @else
-        <link href="{{ asset('css/czqomd.css') }}?v=28" rel="stylesheet">
+        <link href="{{ asset('css/czqomd.css') }}?v=29" rel="stylesheet">
         @endif
         <!--SimpleMDE Editor-->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
