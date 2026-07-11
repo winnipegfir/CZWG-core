@@ -277,9 +277,111 @@ class User extends Authenticatable
     }
 
     /**
+     * Common IANA timezone ids -> friendly generic name, e.g. "Mountain Time".
+     * Hand-maintained rather than sourced from the PHP intl extension so this
+     * works the same everywhere regardless of server config (intl isn't
+     * reliably installable on every host — see production incident notes).
+     * Covers Canada/US comprehensively plus the major world regions; anything
+     * not listed just falls back to showing the plain IANA id.
+     */
+    protected static array $timezoneNames = [
+        // Canada / US
+        'America/St_Johns' => 'Newfoundland Time',
+        'America/Halifax' => 'Atlantic Time',
+        'America/Glace_Bay' => 'Atlantic Time',
+        'America/Moncton' => 'Atlantic Time',
+        'America/Goose_Bay' => 'Atlantic Time',
+        'America/Toronto' => 'Eastern Time',
+        'America/New_York' => 'Eastern Time',
+        'America/Detroit' => 'Eastern Time',
+        'America/Nassau' => 'Eastern Time',
+        'America/Iqaluit' => 'Eastern Time',
+        'America/Nipigon' => 'Eastern Time',
+        'America/Thunder_Bay' => 'Eastern Time',
+        'America/Winnipeg' => 'Central Time',
+        'America/Chicago' => 'Central Time',
+        'America/Mexico_City' => 'Central Time',
+        'America/Regina' => 'Central Time',
+        'America/Swift_Current' => 'Central Time',
+        'America/Rainy_River' => 'Central Time',
+        'America/Resolute' => 'Central Time',
+        'America/Edmonton' => 'Mountain Time',
+        'America/Denver' => 'Mountain Time',
+        'America/Phoenix' => 'Mountain Time',
+        'America/Yellowknife' => 'Mountain Time',
+        'America/Cambridge_Bay' => 'Mountain Time',
+        'America/Boise' => 'Mountain Time',
+        'America/Vancouver' => 'Pacific Time',
+        'America/Los_Angeles' => 'Pacific Time',
+        'America/Tijuana' => 'Pacific Time',
+        'America/Whitehorse' => 'Yukon Time',
+        'America/Dawson' => 'Yukon Time',
+        'America/Anchorage' => 'Alaska Time',
+        'America/Juneau' => 'Alaska Time',
+        'America/Sitka' => 'Alaska Time',
+        'Pacific/Honolulu' => 'Hawaii Time',
+        // Central / South America
+        'America/Sao_Paulo' => 'Brasília Time',
+        'America/Argentina/Buenos_Aires' => 'Argentina Time',
+        'America/Bogota' => 'Colombia Time',
+        'America/Lima' => 'Peru Time',
+        'America/Santiago' => 'Chile Time',
+        'America/Panama' => 'Panama Time',
+        // Europe
+        'Europe/London' => 'United Kingdom Time',
+        'Europe/Dublin' => 'Ireland Time',
+        'Europe/Lisbon' => 'Western European Time',
+        'Europe/Paris' => 'Central European Time',
+        'Europe/Berlin' => 'Central European Time',
+        'Europe/Madrid' => 'Central European Time',
+        'Europe/Rome' => 'Central European Time',
+        'Europe/Amsterdam' => 'Central European Time',
+        'Europe/Brussels' => 'Central European Time',
+        'Europe/Zurich' => 'Central European Time',
+        'Europe/Vienna' => 'Central European Time',
+        'Europe/Warsaw' => 'Central European Time',
+        'Europe/Prague' => 'Central European Time',
+        'Europe/Stockholm' => 'Central European Time',
+        'Europe/Oslo' => 'Central European Time',
+        'Europe/Copenhagen' => 'Central European Time',
+        'Europe/Athens' => 'Eastern European Time',
+        'Europe/Helsinki' => 'Eastern European Time',
+        'Europe/Bucharest' => 'Eastern European Time',
+        'Europe/Kyiv' => 'Eastern European Time',
+        'Europe/Moscow' => 'Moscow Time',
+        // Asia / Middle East
+        'Asia/Dubai' => 'Gulf Time',
+        'Asia/Kolkata' => 'India Time',
+        'Asia/Karachi' => 'Pakistan Time',
+        'Asia/Dhaka' => 'Bangladesh Time',
+        'Asia/Bangkok' => 'Indochina Time',
+        'Asia/Jakarta' => 'Western Indonesia Time',
+        'Asia/Singapore' => 'Singapore Time',
+        'Asia/Hong_Kong' => 'Hong Kong Time',
+        'Asia/Shanghai' => 'China Time',
+        'Asia/Taipei' => 'Taipei Time',
+        'Asia/Tokyo' => 'Japan Time',
+        'Asia/Seoul' => 'Korea Time',
+        'Asia/Manila' => 'Philippine Time',
+        // Australia / Pacific
+        'Australia/Perth' => 'Australian Western Time',
+        'Australia/Adelaide' => 'Australian Central Time',
+        'Australia/Darwin' => 'Australian Central Time',
+        'Australia/Sydney' => 'Australian Eastern Time',
+        'Australia/Melbourne' => 'Australian Eastern Time',
+        'Australia/Brisbane' => 'Australian Eastern Time',
+        'Pacific/Auckland' => 'New Zealand Time',
+        // Africa
+        'Africa/Cairo' => 'Eastern European Time',
+        'Africa/Johannesburg' => 'South Africa Time',
+        'Africa/Lagos' => 'West Africa Time',
+        'Africa/Nairobi' => 'East Africa Time',
+    ];
+
+    /**
      * A friendly label for an IANA timezone id, e.g. "America/Edmonton — Mountain Time".
-     * Uses ICU's generic (non-DST-specific) name so it doesn't flip between
-     * "Standard"/"Daylight" wording depending on the time of year.
+     * Looks up a hand-maintained table first (works everywhere, no server
+     * dependency); falls back to the raw id for anything not in that list.
      */
     public static function timezoneLabel(string $tz): string
     {
@@ -287,19 +389,11 @@ class User extends Authenticatable
             return 'Zulu (UTC)';
         }
 
-        if (!class_exists(\IntlDateFormatter::class)) {
-            return $tz;
+        if (isset(self::$timezoneNames[$tz])) {
+            return $tz . ' — ' . self::$timezoneNames[$tz];
         }
 
-        try {
-            $zone = new \DateTimeZone($tz);
-            $formatter = new \IntlDateFormatter('en_US', \IntlDateFormatter::FULL, \IntlDateFormatter::FULL, $zone, \IntlDateFormatter::GREGORIAN, 'vvvv');
-            $name = $formatter ? $formatter->format(new \DateTime('now', $zone)) : false;
-
-            return $name ? $tz . ' — ' . $name : $tz;
-        } catch (\Throwable $e) {
-            return $tz;
-        }
+        return $tz;
     }
 
     protected function rating(): Attribute
