@@ -18,7 +18,7 @@
             <select name="timezone" class="js-timezone-select form-control">
                 <option value="">Zulu (UTC) &mdash; default</option>
                 @foreach($timezones as $tz)
-                    <option value="{{ $tz }}" @selected(Auth::user()->timezone === $tz)>{{ $tz }}</option>
+                    <option value="{{ $tz }}" @selected(Auth::user()->timezone === $tz)>{{ \App\Models\Users\User::timezoneLabel($tz) }}</option>
                 @endforeach
             </select>
         </div>

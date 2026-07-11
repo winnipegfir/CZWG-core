@@ -11,7 +11,7 @@
         <h2 class="font-weight-bold mb-0" style="color:#122b44;">Book Training</h2>
         @if($student->instructor_id && $student->instructor)
             <p class="text-muted mb-0" style="font-size:0.875rem;">
-                with {{ $student->instructor->user ? $student->instructor->user->fullName('FL') : 'your instructor' }} &mdash; sessions are booked in 1-hour windows &mdash; times shown in {{ $userTz }}
+                with {{ $student->instructor->user ? $student->instructor->user->fullName('FL') : 'your instructor' }} &mdash; sessions are booked in 1-hour windows &mdash; times shown in {{ \App\Models\Users\User::timezoneLabel($userTz) }}
                 @if($userTz === 'UTC')
                     &mdash; <a href="{{ route('me.preferences') }}">set your timezone</a>
                 @endif
@@ -37,7 +37,7 @@
             <div class="col-md-6 mb-4">
                 <div class="card h-100">
                     <div class="card-body">
-                        <h5 class="font-weight-bold mb-3" style="color:#122b44;">Open Slots <span class="text-muted font-weight-normal" style="font-size:0.75rem;">({{ $userTz }})</span></h5>
+                        <h5 class="font-weight-bold mb-3" style="color:#122b44;">Open Slots <span class="text-muted font-weight-normal" style="font-size:0.75rem;">({{ \App\Models\Users\User::timezoneLabel($userTz) }})</span></h5>
                         @if ($openSlots->isEmpty())
                             <p class="text-muted mb-0" style="font-size:0.875rem;">No open slots right now. Check back later.</p>
                         @else
@@ -82,7 +82,7 @@
             <div class="col-md-6 mb-4">
                 <div class="card h-100">
                     <div class="card-body">
-                        <h5 class="font-weight-bold mb-3" style="color:#122b44;">Your Upcoming Sessions <span class="text-muted font-weight-normal" style="font-size:0.75rem;">({{ $userTz }})</span></h5>
+                        <h5 class="font-weight-bold mb-3" style="color:#122b44;">Your Upcoming Sessions <span class="text-muted font-weight-normal" style="font-size:0.75rem;">({{ \App\Models\Users\User::timezoneLabel($userTz) }})</span></h5>
                         @if ($myBookings->isEmpty())
                             <p class="text-muted mb-0" style="font-size:0.875rem;">You have no upcoming booked sessions.</p>
                         @else

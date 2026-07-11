@@ -26,7 +26,7 @@
         <div>
             <h2 class="font-weight-bold mb-0" style="color:#122b44;">Training Slots</h2>
             <p class="text-muted mb-0" style="font-size:0.875rem;">
-                {{ $slots->count() }} slot{{ $slots->count() != 1 ? 's' : '' }} posted &mdash; click an empty time to add a slot, click a slot to manage it &mdash; times shown in {{ $userTz }}
+                {{ $slots->count() }} slot{{ $slots->count() != 1 ? 's' : '' }} posted &mdash; click an empty time to add a slot, click a slot to manage it &mdash; times shown in {{ \App\Models\Users\User::timezoneLabel($userTz) }}
                 @if($userTz === 'UTC')
                     &mdash; <a href="{{ route('me.preferences') }}">set your timezone</a>
                 @endif
@@ -56,7 +56,7 @@
                 <table class="table table-hover mb-0" style="font-size:0.875rem;">
                     <thead style="background:#f8fafc; border-bottom:2px solid #e2e8f0;">
                         <tr>
-                            <th style="color:#64748b; font-weight:600; border-top:none;">When ({{ $userTz }})</th>
+                            <th style="color:#64748b; font-weight:600; border-top:none;">When ({{ \App\Models\Users\User::timezoneLabel($userTz) }})</th>
                             <th style="color:#64748b; font-weight:600; border-top:none;">Note</th>
                             <th style="color:#64748b; font-weight:600; border-top:none;">Status</th>
                             <th style="color:#64748b; font-weight:600; border-top:none;">Student</th>
@@ -119,11 +119,11 @@
                 @csrf
                 <div class="modal-body">
                     <div class="form-group mb-3">
-                        <label class="font-weight-bold small">Start <span class="text-muted font-weight-normal">({{ $userTz }})</span></label>
+                        <label class="font-weight-bold small">Start <span class="text-muted font-weight-normal">({{ \App\Models\Users\User::timezoneLabel($userTz) }})</span></label>
                         <input type="datetime-local" name="start_time" id="addSlotStart" class="form-control" required>
                     </div>
                     <div class="form-group mb-3">
-                        <label class="font-weight-bold small">End <span class="text-muted font-weight-normal">({{ $userTz }})</span></label>
+                        <label class="font-weight-bold small">End <span class="text-muted font-weight-normal">({{ \App\Models\Users\User::timezoneLabel($userTz) }})</span></label>
                         <input type="datetime-local" name="end_time" id="addSlotEnd" class="form-control" required>
                     </div>
                     <div class="form-group mb-0">

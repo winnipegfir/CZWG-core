@@ -603,7 +603,7 @@
                                 </span>
                             </span>
                             <span>&middot;</span>
-                            <span>{{ Auth::user()->timezone ?: 'Zulu (UTC)' }}</span>
+                            <span>{{ \App\Models\Users\User::timezoneLabel(Auth::user()->displayTimezone()) }}</span>
                         </div>
                     </div>
                     <a href="{{ route('me.preferences') }}" style="font-size:0.72rem; color:#2563eb; text-decoration:none; white-space:nowrap;">Manage &rarr;</a>

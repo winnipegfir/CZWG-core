@@ -26,7 +26,7 @@
     <div class="mb-4">
         <h2 class="font-weight-bold mb-0" style="color:#122b44;">All Sessions</h2>
         <p class="text-muted mb-0" style="font-size:0.875rem;">
-            {{ $sessions->count() }} session{{ $sessions->count() != 1 ? 's' : '' }} across every instructor &mdash; click a session on the calendar to jump to it below &mdash; times shown in {{ $userTz }}
+            {{ $sessions->count() }} session{{ $sessions->count() != 1 ? 's' : '' }} across every instructor &mdash; click a session on the calendar to jump to it below &mdash; times shown in {{ \App\Models\Users\User::timezoneLabel($userTz) }}
             @if($userTz === 'UTC')
                 &mdash; <a href="{{ route('me.preferences') }}">set your timezone</a>
             @endif
@@ -54,7 +54,7 @@
                 <table class="table table-hover mb-0" style="font-size:0.875rem;">
                     <thead style="background:#f8fafc; border-bottom:2px solid #e2e8f0;">
                         <tr>
-                            <th style="color:#64748b; font-weight:600; border-top:none;">When ({{ $userTz }})</th>
+                            <th style="color:#64748b; font-weight:600; border-top:none;">When ({{ \App\Models\Users\User::timezoneLabel($userTz) }})</th>
                             <th style="color:#64748b; font-weight:600; border-top:none;">Status</th>
                             <th style="color:#64748b; font-weight:600; border-top:none; min-width:280px;">Instructor / Student</th>
                             <th style="border-top:none;"></th>
@@ -136,11 +136,11 @@
                             @csrf
                             <div class="modal-body">
                                 <div class="form-group mb-3">
-                                    <label class="font-weight-bold small">Start <span class="text-muted font-weight-normal">({{ $userTz }})</span></label>
+                                    <label class="font-weight-bold small">Start <span class="text-muted font-weight-normal">({{ \App\Models\Users\User::timezoneLabel($userTz) }})</span></label>
                                     <input type="datetime-local" name="start_time" class="form-control" value="{{ $session->start_time->copy()->setTimezone($userTz)->format('Y-m-d\TH:i') }}" required>
                                 </div>
                                 <div class="form-group mb-3">
-                                    <label class="font-weight-bold small">End <span class="text-muted font-weight-normal">({{ $userTz }})</span></label>
+                                    <label class="font-weight-bold small">End <span class="text-muted font-weight-normal">({{ \App\Models\Users\User::timezoneLabel($userTz) }})</span></label>
                                     <input type="datetime-local" name="end_time" class="form-control" value="{{ $session->end_time->copy()->setTimezone($userTz)->format('Y-m-d\TH:i') }}" required>
                                 </div>
                                 <div class="form-group mb-0">

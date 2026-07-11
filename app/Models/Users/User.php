@@ -276,6 +276,28 @@ class User extends Authenticatable
         return $this->timezone ?: 'UTC';
     }
 
+    /**
+     * A friendly label for an IANA timezone id, e.g. "America/Edmonton — Mountain Time".
+     * Uses ICU's generic (non-DST-specific) name so it doesn't flip between
+     * "Standard"/"Daylight" wording depending on the time of year.
+     */
+    public static function timezoneLabel(string $tz): string
+    {
+        if ($tz === 'UTC') {
+            return 'Zulu (UTC)';
+        }
+
+        try {
+            $zone = new \DateTimeZone($tz);
+            $formatter = new \IntlDateFormatter('en_US', \IntlDateFormatter::FULL, \IntlDateFormatter::FULL, $zone, \IntlDateFormatter::GREGORIAN, 'vvvv');
+            $name = $formatter->format(new \DateTime('now', $zone));
+
+            return $tz . ' — ' . $name;
+        } catch (\Exception $e) {
+            return $tz;
+        }
+    }
+
     protected function rating(): Attribute
     {
         return Attribute::make(
