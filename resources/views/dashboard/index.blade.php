@@ -535,14 +535,23 @@
                     @foreach($confirmedevent as $cevent)
                     <div class="db-event-row">
                         <div style="font-weight:700; font-size:0.9rem; color:#1e293b;">{{ $cevent->name }}</div>
-                        <div style="font-size:0.76rem; color:#64748b; margin-top:0.15rem;">{{ $cevent->start_timestamp_pretty() }}</div>
+                        <div style="font-size:0.76rem; color:#64748b; margin-top:0.15rem;">
+                            {{ $cevent->start_timestamp_pretty() }}
+                            @if($userTz !== 'UTC')
+                                <br>{{ \Carbon\Carbon::create($cevent->start_timestamp)->setTimezone($userTz)->format('M j, g:i A') }} {{ \App\Models\Users\User::timezoneLabel($userTz) }}
+                            @endif
+                        </div>
                         @foreach($confirmedapp as $capp)
                             @if($cevent->id == $capp->event->id)
+                            @php $localStart = $capp->startAtUtc()?->copy()->setTimezone($userTz); $localEnd = $capp->endAtUtc()?->copy()->setTimezone($userTz); @endphp
                             <div style="font-size:0.76rem; color:#475569; margin-top:0.3rem; padding-left:0.6rem; border-left:2px solid #e2e8f0;">
                                 <i class="fas fa-map-marker-alt fa-xs" style="color:#94a3b8;"></i>
                                 {{ $capp->airport }}
                                 @if($capp->position != 'Relief') {{ $capp->position }} @endif
                                 {{ $capp->start_timestamp }}z &ndash; {{ $capp->end_timestamp }}z
+                                @if($userTz !== 'UTC' && $localStart && $localEnd)
+                                    <br><span style="padding-left:1.1rem;">{{ $localStart->format('g:i A') }} &ndash; {{ $localEnd->format('g:i A') }} {{ \App\Models\Users\User::timezoneLabel($userTz) }}</span>
+                                @endif
                             </div>
                             @endif
                         @endforeach

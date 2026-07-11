@@ -204,6 +204,11 @@
                         @else
                             @foreach($confirmedevent as $e)
                                 <h5><b>{{$e->name}}</b> on {{$e->start_timestamp_pretty()}}</h5>
+                                @if($userTz !== 'UTC')
+                                    <p class="text-muted mb-0" style="font-size:0.85rem;">
+                                        {{ \Carbon\Carbon::create($e->start_timestamp)->setTimezone($userTz)->format('M j, g:i A') }} {{ \App\Models\Users\User::timezoneLabel($userTz) }}
+                                    </p>
+                                @endif
                                 <br>
                             @endforeach
                         @endif

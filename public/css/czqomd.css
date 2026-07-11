@@ -1727,7 +1727,9 @@ html[data-theme="dark"] [style*="color: #212529"] {
 html[data-theme="dark"] [style*="color:#495057"],
 html[data-theme="dark"] [style*="color: #495057"],
 html[data-theme="dark"] [style*="color:#555555"],
-html[data-theme="dark"] [style*="color: #555555"] {
+html[data-theme="dark"] [style*="color: #555555"],
+html[data-theme="dark"] [style*="color:#475569"],
+html[data-theme="dark"] [style*="color: #475569"] {
     color: #c3c8ce !important;
 }
 
