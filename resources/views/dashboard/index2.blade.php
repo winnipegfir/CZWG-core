@@ -198,17 +198,22 @@
                 <br>
                 <div class="card">
                     <div class="card-body">
-                        <h3 class="font-weight-bold blue-text pb-2">Upcoming Events</h3>
+                        <h3 class="font-weight-bold blue-text pb-2">
+                            Upcoming Events
+                            @if($userTz !== 'UTC')
+                                <small class="text-muted" style="font-weight:400;">&middot; times also shown in {{ \App\Models\Users\User::timezoneShortLabel($userTz) }}</small>
+                            @endif
+                        </h3>
                         @if (count($confirmedevent) < 1)
                             <h5>There are no scheduled events!</h5>
                         @else
                             @foreach($confirmedevent as $e)
-                                <h5><b>{{$e->name}}</b> on {{$e->start_timestamp_pretty()}}</h5>
-                                @if($userTz !== 'UTC')
-                                    <p class="text-muted mb-0" style="font-size:0.85rem;">
-                                        {{ \Carbon\Carbon::create($e->start_timestamp)->setTimezone($userTz)->format('M j, g:i A') }} {{ \App\Models\Users\User::timezoneLabel($userTz) }}
-                                    </p>
-                                @endif
+                                <h5>
+                                    <b>{{$e->name}}</b> on {{$e->start_timestamp_pretty()}}
+                                    @if($userTz !== 'UTC')
+                                        <span class="text-muted" style="font-size:0.8rem; font-weight:400;">({{ \Carbon\Carbon::create($e->start_timestamp)->setTimezone($userTz)->format('g:i A') }})</span>
+                                    @endif
+                                </h5>
                                 <br>
                             @endforeach
                         @endif

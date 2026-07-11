@@ -64,7 +64,9 @@
       "Bash(grep -E \"\\\\.php$\")",
       "Bash(grep -E \"\\\\.php$|\\\\.sql$\")",
       "Bash(php -l app/Models/Events/EventConfirm.php)",
-      "Bash(php -l app/Http/Controllers/DashboardController.php)"
+      "Bash(php -l app/Http/Controllers/DashboardController.php)",
+      "Bash(git rev-list *)",
+      "Bash(php -l resources/views/layouts/master.blade.php)"
     ],
     "additionalDirectories": [
       "c:\\laragon\\www\\winnipegfir\\\nVATCAN_API_KEY=fYKopA4iUT1Ul5lG1GJz4lcjx6KYcILAS5jabHUq7dY3wgCUNQ\nVATCAN_API_URL=https:"

@@ -396,6 +396,20 @@ class User extends Authenticatable
         return $tz;
     }
 
+    /**
+     * Just the friendly name ("Mountain Time"), no IANA id — for compact
+     * inline display where the id would just be visual noise (e.g. a
+     * dashboard list showing the same zone repeated many times).
+     */
+    public static function timezoneShortLabel(string $tz): string
+    {
+        if ($tz === 'UTC') {
+            return 'Zulu';
+        }
+
+        return self::$timezoneNames[$tz] ?? $tz;
+    }
+
     protected function rating(): Attribute
     {
         return Attribute::make(

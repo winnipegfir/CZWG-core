@@ -528,7 +528,12 @@
 
             {{-- Upcoming Events --}}
             <div class="db-card">
-                <div class="db-card-label">Upcoming Events</div>
+                <div class="db-card-label">
+                    Upcoming Events
+                    @if($userTz !== 'UTC')
+                        <span style="font-weight:400; text-transform:none; letter-spacing:normal; color:#94a3b8;">&middot; times also shown in {{ \App\Models\Users\User::timezoneShortLabel($userTz) }}</span>
+                    @endif
+                </div>
                 @if(count($confirmedevent) < 1)
                     <p style="font-size:0.875rem; color:#94a3b8; margin:0;">No scheduled events right now.</p>
                 @else
@@ -538,7 +543,7 @@
                         <div style="font-size:0.76rem; color:#64748b; margin-top:0.15rem;">
                             {{ $cevent->start_timestamp_pretty() }}
                             @if($userTz !== 'UTC')
-                                <br>{{ \Carbon\Carbon::create($cevent->start_timestamp)->setTimezone($userTz)->format('M j, g:i A') }} {{ \App\Models\Users\User::timezoneLabel($userTz) }}
+                                <span style="opacity:0.75;">({{ \Carbon\Carbon::create($cevent->start_timestamp)->setTimezone($userTz)->format('g:i A') }})</span>
                             @endif
                         </div>
                         @foreach($confirmedapp as $capp)
@@ -550,7 +555,7 @@
                                 @if($capp->position != 'Relief') {{ $capp->position }} @endif
                                 {{ $capp->start_timestamp }}z &ndash; {{ $capp->end_timestamp }}z
                                 @if($userTz !== 'UTC' && $localStart && $localEnd)
-                                    <br><span style="padding-left:1.1rem;">{{ $localStart->format('g:i A') }} &ndash; {{ $localEnd->format('g:i A') }} {{ \App\Models\Users\User::timezoneLabel($userTz) }}</span>
+                                    <span style="opacity:0.75;">({{ $localStart->format('g:i A') }} &ndash; {{ $localEnd->format('g:i A') }})</span>
                                 @endif
                             </div>
                             @endif
