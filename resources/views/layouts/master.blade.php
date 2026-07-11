@@ -320,40 +320,59 @@
         @yield('content')
     </div>
     <!-- Footer -->
-    <footer class="page-footer text-light font-small py-4 bg-dark {{Request::is('/dashboard') ? 'mt-5' : ''}}">
+    <footer class="page-footer text-light font-small py-5 bg-dark {{Request::is('/dashboard') ? 'mt-5' : ''}}">
         <div class="container">
-            <p style="color:white">For Flight Simulation Use Only - Not to be used for real-world navigation. By using this site, you agree to hold harmless and indemnify the owners and authors of these web pages, those listed on these pages, and all pages that this site that may be pointed to (i.e. external links).</p>
-            <p style="color:white">Copyright © {{ date('Y') }} Winnipeg FIR | All Rights Reserved.</p>
-            <div class="flex-left mt-3">
-            <a href="{{route('about')}}">GitHub</a>
-                &nbsp;
-                •
-                &nbsp;
-                <a href="{{route('feedback.create')}}">Feedback</a>
-                &nbsp;
-                •
-                &nbsp;
-                <a href="{{route('privacy')}}">Privacy Policy</a>
-                &nbsp;
-                •
-                &nbsp;
-                <a href="{{route('branding')}}">Branding</a>
-                &nbsp;
-                •
-                &nbsp;
-                <a target="_blank" rel="noopener noreferrer" href="https://blog.winnipegfir.ca">Blog</a>
-                &nbsp;
-                •
-                &nbsp;
-                <a href="https://www.vatcan.ca">VATCAN</a>
-                &nbsp;
-                •
-                &nbsp;
-                <a href="https://www.vatsim.net">VATSIM</a>
+            <div class="row">
+                <div class="col-lg-5 mb-4 mb-lg-0">
+                    <a href="{{ route('index') }}" style="color:#fff; font-weight:700; font-size:1.2rem; text-decoration:none; display:inline-flex; align-items:center; gap:0.5rem;">
+                        <i class="fas fa-plane" style="font-size:0.95rem; transform:rotate(-45deg);"></i> Winnipeg FIR
+                    </a>
+                    <p style="color:rgba(255,255,255,0.5); font-size:0.8rem; margin-top:0.9rem; line-height:1.6;">
+                        For Flight Simulation Use Only &mdash; Not to be used for real-world navigation. By using this site, you agree to hold harmless and indemnify the owners and authors of these web pages, those listed on these pages, and all pages that this site that may be pointed to (i.e. external links).
+                    </p>
+                    <p style="color:rgba(255,255,255,0.35); font-size:0.78rem; margin-top:0.75rem; margin-bottom:0;">
+                        Copyright &copy; {{ date('Y') }} Winnipeg FIR. All Rights Reserved.
+                    </p>
+                </div>
+
+                <div class="col-6 col-lg-2 mb-4 mb-lg-0">
+                    <div style="font-size:0.7rem; font-weight:700; letter-spacing:0.07em; text-transform:uppercase; color:rgba(255,255,255,0.35); margin-bottom:0.85rem;">Site</div>
+                    <ul class="list-unstyled" style="font-size:0.85rem;">
+                        <li class="mb-2"><a href="{{route('about')}}" style="color:rgba(255,255,255,0.7); text-decoration:none;">GitHub</a></li>
+                        <li class="mb-2"><a href="{{route('feedback.create')}}" style="color:rgba(255,255,255,0.7); text-decoration:none;">Feedback</a></li>
+                        <li class="mb-2"><a href="{{route('privacy')}}" style="color:rgba(255,255,255,0.7); text-decoration:none;">Privacy Policy</a></li>
+                        <li class="mb-2"><a href="{{route('branding')}}" style="color:rgba(255,255,255,0.7); text-decoration:none;">Branding</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-6 col-lg-2 mb-4 mb-lg-0">
+                    <div style="font-size:0.7rem; font-weight:700; letter-spacing:0.07em; text-transform:uppercase; color:rgba(255,255,255,0.35); margin-bottom:0.85rem;">Community</div>
+                    <ul class="list-unstyled" style="font-size:0.85rem;">
+                        <li class="mb-2"><a href="https://www.vatcan.ca" style="color:rgba(255,255,255,0.7); text-decoration:none;">VATCAN</a></li>
+                        <li class="mb-2"><a href="https://www.vatsim.net" style="color:rgba(255,255,255,0.7); text-decoration:none;">VATSIM</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-3">
+                    <div style="background:linear-gradient(135deg, #122b44, #1d3f63); border-radius:0.6rem; padding:1.25rem;">
+                        <div style="font-size:0.7rem; font-weight:700; letter-spacing:0.07em; text-transform:uppercase; color:#7dd3a8; margin-bottom:0.5rem;">
+                            <i class="fas fa-rss fa-xs mr-1"></i> From The Blog
+                        </div>
+                        <p style="color:rgba(255,255,255,0.7); font-size:0.85rem; margin-bottom:1rem; line-height:1.5;">
+                            News and behind-the-scenes updates from the Winnipeg FIR team.
+                        </p>
+                        <a target="_blank" rel="noopener noreferrer" href="https://blog.winnipegfir.ca"
+                           style="display:inline-flex; align-items:center; gap:0.4rem; background:#fff; color:#122b44; font-weight:600; font-size:0.85rem; padding:0.45rem 1.1rem; border-radius:999px; text-decoration:none;">
+                            Read the Blog <i class="fas fa-arrow-right fa-xs"></i>
+                        </a>
+                    </div>
+                </div>
             </div>
 
-            <div class="mt-3">
-                <p>The Winnipeg FIR stands with the LGBTQIA+ community on VATSIM.</p>
+            <hr style="border-color:rgba(255,255,255,0.1); margin:2.25rem 0 1.25rem;">
+
+            <div class="d-flex align-items-center justify-content-between flex-wrap" style="gap:0.75rem;">
+                <p style="color:rgba(255,255,255,0.45); font-size:0.8rem; margin:0;">The Winnipeg FIR stands with the LGBTQIA+ community on VATSIM.</p>
                 <a href="{{route('about')}}"><small class="text-muted">{{App\Models\Settings\CoreSettings::where('id', 1)->firstOrFail()->sys_name}} {{App\Models\Settings\CoreSettings::where('id', 1)->firstOrFail()->release}} ({{App\Models\Settings\CoreSettings::where('id', 1)->firstOrFail()->sys_build}})</small></a>
             </div>
         </div>
