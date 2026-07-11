@@ -39,13 +39,14 @@ class EventController extends Controller
         $event = Event::where('slug', $slug)->firstOrFail();
         $timeNow = Carbon::now();
         $updates = $event->updates;
+        $userTz = Auth::check() ? Auth::user()->displayTimezone() : 'UTC';
         if (Auth::check() && ControllerApplication::where('user_id', Auth::id())->where('event_id', $event->id)) {
             $app = ControllerApplication::where('user_id', Auth::id())->where('event_id', $event->id)->first();
 
-            return view('events.view', compact('event', 'updates', 'app', 'timeNow'));
+            return view('events.view', compact('event', 'updates', 'app', 'timeNow', 'userTz'));
         }
 
-        return view('events.view', compact('event', 'updates', 'timeNow'));
+        return view('events.view', compact('event', 'updates', 'timeNow', 'userTz'));
     }
 
     public function viewControllers()
@@ -187,8 +188,9 @@ class EventController extends Controller
         $eventroster = EventConfirm::where('event_id', $event->id)->get();
         $rosterMembers = RosterMember::all()->toArray();
         $users = User::all();
+        $userTz = Auth::user()->displayTimezone();
 
-        return view('admin.events.view', compact('event', 'applications', 'updates', 'eventroster', 'rosterMembers', 'users', 'positions'));
+        return view('admin.events.view', compact('event', 'applications', 'updates', 'eventroster', 'rosterMembers', 'users', 'positions', 'userTz'));
     }
 
     public function adminCreateEvent()

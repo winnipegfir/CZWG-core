@@ -150,7 +150,12 @@
         {{-- Event roster --}}
         <div style="margin-bottom:2rem;">
             <div class="d-flex align-items-center justify-content-between mb-3">
-                <h6 style="color:#6c757d; font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0;">Event Roster</h6>
+                <div>
+                    <h6 style="color:#6c757d; font-size:0.72rem; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:0;">Event Roster</h6>
+                    @if($userTz === 'UTC')
+                        <a href="{{ route('me.preferences') }}" style="font-size:0.72rem; color:#2563eb; text-decoration:none;">set your timezone to see local times &rarr;</a>
+                    @endif
+                </div>
                 <a href="#" data-toggle="modal" data-target="#confirmController"
                    style="font-size:0.8rem; color:#122b44; text-decoration:none; border:1px solid #ced4da; border-radius:0.375rem; padding:0.3rem 0.75rem;">
                     <i class="fas fa-plus fa-xs mr-1"></i> Add Controller
@@ -188,7 +193,11 @@
                                         @endif
                                     </td>
                                     <td style="padding:0.6rem 1rem; vertical-align:middle; color:#6c757d; font-size:0.82rem;">
+                                        @php $localStart = $roster->startAtUtc()?->copy()->setTimezone($userTz); $localEnd = $roster->endAtUtc()?->copy()->setTimezone($userTz); @endphp
                                         {{ $roster->start_timestamp }}z – {{ $roster->end_timestamp }}z
+                                        @if($userTz !== 'UTC' && $localStart && $localEnd)
+                                            <br><span style="font-size:0.75rem; color:#94a3b8;">{{ $localStart->format('g:i A') }} – {{ $localEnd->format('g:i A') }} {{ \App\Models\Users\User::timezoneLabel($userTz) }}</span>
+                                        @endif
                                     </td>
                                     <td style="padding:0.6rem 1rem; vertical-align:middle; text-align:right; white-space:nowrap;">
                                         <a href="#" data-toggle="modal" data-target="#editController{{ $roster->id }}"

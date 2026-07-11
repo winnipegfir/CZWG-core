@@ -31,6 +31,13 @@
         </h1>
         <div style="display:flex; gap:1.25rem; flex-wrap:wrap; align-items:center; color:rgba(255,255,255,0.65); font-size:0.85rem;">
             <span><i class="far fa-clock mr-1"></i>{{ $event->start_timestamp_pretty() }} – {{ $event->end_timestamp_pretty() }}</span>
+            @if($userTz !== 'UTC')
+                <span style="opacity:0.8;">
+                    ({{ \Carbon\Carbon::create($event->start_timestamp)->setTimezone($userTz)->format('M j, g:i A') }}
+                    – {{ \Carbon\Carbon::create($event->end_timestamp)->setTimezone($userTz)->format('g:i A') }}
+                    {{ \App\Models\Users\User::timezoneLabel($userTz) }})
+                </span>
+            @endif
             @if($event->departure_icao && $event->arrival_icao)
                 <span style="opacity:0.4;">•</span>
                 <span><i class="fas fa-plane mr-1" style="font-size:0.75rem;"></i>{{ $event->departure_icao }} → {{ $event->arrival_icao }}</span>
@@ -96,12 +103,14 @@
                                         <div class="form-group">
                                             <label style="font-size:0.85rem; font-weight:600; color:#343a40;">Availability start (zulu)</label>
                                             <input type="text" name="availability_start" class="form-control" id="availability_start">
+                                            <small class="text-muted" id="availability_start_local"></small>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label style="font-size:0.85rem; font-weight:600; color:#343a40;">Availability end (zulu)</label>
                                             <input type="text" name="availability_end" class="form-control" id="availability_end">
+                                            <small class="text-muted" id="availability_end_local"></small>
                                         </div>
                                     </div>
                                 </div>
@@ -134,8 +143,34 @@
                                 </button>
                             </form>
                             <script>
-                                flatpickr('#availability_start', { enableTime: true, noCalendar: true, dateFormat: "H:i", time_24hr: true, defaultDate: "{{ $event->flatpickr_limits()[0] }}" });
-                                flatpickr('#availability_end',   { enableTime: true, noCalendar: true, dateFormat: "H:i", time_24hr: true, defaultDate: "{{ $event->flatpickr_limits()[1] }}" });
+                                var eventDateStr = "{{ \Carbon\Carbon::create($event->start_timestamp)->format('Y-m-d') }}";
+
+                                function pad2(n) { return String(n).padStart(2, '0'); }
+                                function updateLocalPreview(timeStr, targetId, addDay) {
+                                    var el = document.getElementById(targetId);
+                                    if (!timeStr || !/^\d{1,2}:\d{2}$/.test(timeStr)) { el.textContent = ''; return; }
+                                    var parts = timeStr.split(':');
+                                    var d = new Date(eventDateStr + 'T' + pad2(parts[0]) + ':' + pad2(parts[1]) + ':00Z');
+                                    if (addDay) { d = new Date(d.getTime() + 86400000); }
+                                    el.textContent = '≈ ' + d.toLocaleString([], { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }) + ' your time';
+                                }
+
+                                flatpickr('#availability_start', {
+                                    enableTime: true, noCalendar: true, dateFormat: "H:i", time_24hr: true,
+                                    defaultDate: "{{ $event->flatpickr_limits()[0] }}",
+                                    onChange: function (selectedDates, dateStr) { updateLocalPreview(dateStr, 'availability_start_local', false); },
+                                });
+                                flatpickr('#availability_end', {
+                                    enableTime: true, noCalendar: true, dateFormat: "H:i", time_24hr: true,
+                                    defaultDate: "{{ $event->flatpickr_limits()[1] }}",
+                                    onChange: function (selectedDates, dateStr) {
+                                        var startVal = document.getElementById('availability_start').value;
+                                        updateLocalPreview(dateStr, 'availability_end_local', !!(startVal && dateStr < startVal));
+                                    },
+                                });
+
+                                updateLocalPreview("{{ $event->flatpickr_limits()[0] }}", 'availability_start_local', false);
+                                updateLocalPreview("{{ $event->flatpickr_limits()[1] }}", 'availability_end_local', false);
                             </script>
                         </div>
                     @endif
