@@ -10,6 +10,14 @@
                     Home
                 </a>
 
+                @if(Auth::user()->instructorProfile !== null)
+                @php $onOwnSessions = Request::is('dashboard/training/sessions') || (Request::is('dashboard/training/sessions*') && !Request::is('dashboard/training/sessions/all*')); @endphp
+                <a href="{{ route('training.sessions.index') }}"
+                   style="color:{{ $onOwnSessions ? '#fff' : 'rgba(255,255,255,0.6)' }}; font-size:0.85rem; padding:0.3rem 0.65rem; border-radius:0.3rem; text-decoration:none; {{ $onOwnSessions ? 'background:rgba(255,255,255,0.12);' : '' }}">
+                    Sessions
+                </a>
+                @endif
+
                 @if(Auth::user()->instructorProfile !== null || Auth::user()->permissions >= 4)
                 <a href="{{ route('training.instructors') }}"
                    style="color:{{ Request::is('dashboard/training/instructors*') ? '#fff' : 'rgba(255,255,255,0.6)' }}; font-size:0.85rem; padding:0.3rem 0.65rem; border-radius:0.3rem; text-decoration:none; {{ Request::is('dashboard/training/instructors*') ? 'background:rgba(255,255,255,0.12);' : '' }}">
@@ -33,6 +41,13 @@
                         </a>
                     </div>
                 </div>
+                @endif
+
+                @if(Auth::user()->permissions >= 4)
+                <a href="{{ route('training.sessions.all') }}"
+                   style="color:{{ Request::is('dashboard/training/sessions/all*') ? '#fff' : 'rgba(255,255,255,0.6)' }}; font-size:0.85rem; padding:0.3rem 0.65rem; border-radius:0.3rem; text-decoration:none; {{ Request::is('dashboard/training/sessions/all*') ? 'background:rgba(255,255,255,0.12);' : '' }}">
+                    All Sessions
+                </a>
                 @endif
 
                 @if(Auth::user()->permissions >= 4)

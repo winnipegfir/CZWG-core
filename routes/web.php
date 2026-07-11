@@ -299,10 +299,10 @@ Route::group(['middleware' => 'auth'], function () {
 Route::post('/training', 'AtcTraining\TrainingController@editTrainingTime')->middleware('staff')->name('waittime.edit');
 Route::prefix('dashboard/training')->middleware('instructor')->group(function () {
     Route::get('/', 'AtcTraining\TrainingController@index')->name('training.index');
-    Route::get('/sessions', 'AtcTraining\TrainingController@instructingSessionsIndex')->name('training.instructingsessions.index');
-    Route::get('/sessions/{id}', 'AtcTraining\TrainingController@viewInstructingSession')->name('training.instructingsessions.viewsession');
-    Route::view('/sessions/create', 'dashboard.training.instructingsessions.create')->name('training.instructingsessions.createsessionindex');
-    Route::get('/sessions/create', 'AtcTraining\TrainingController@createInstructingSession')->name('training.instructingsessions.createsession');
+    Route::get('/sessions', 'AtcTraining\TrainingSessionController@instructorIndex')->name('training.sessions.index');
+    Route::post('/sessions', 'AtcTraining\TrainingSessionController@store')->name('training.sessions.store');
+    Route::delete('/sessions/{id}', 'AtcTraining\TrainingSessionController@destroy')->name('training.sessions.destroy');
+    Route::post('/sessions/{id}/cancel', 'AtcTraining\TrainingSessionController@cancel')->name('training.sessions.cancel');
     Route::get('/instructors', 'AtcTraining\TrainingController@instructorsIndex')->name('training.instructors');
     Route::get('/reconcile', 'AtcTraining\TrainingController@reconcile')->name('training.reconcile');
     Route::get('/students/current', 'AtcTraining\TrainingController@currentStudents')->name('training.students.current');
@@ -326,6 +326,19 @@ Route::prefix('dashboard/training')->middleware('instructor')->group(function ()
     //AtcTraining
     Route::post('/dashboard/training/instructors', 'AtcTraining\TrainingController@addInstructor')->name('training.instructors.add');
     Route::delete('/instructors/{id}', 'AtcTraining\TrainingController@removeInstructor')->name('training.instructors.remove');
+});
+
+Route::prefix('dashboard/training/book')->middleware('auth')->group(function () {
+    Route::get('/', 'AtcTraining\TrainingSessionController@studentIndex')->name('training.book.index');
+    Route::post('/{id}', 'AtcTraining\TrainingSessionController@book')->name('training.book.store');
+    Route::post('/{id}/cancel', 'AtcTraining\TrainingSessionController@studentCancel')->name('training.book.cancel');
+});
+
+Route::prefix('dashboard/training/sessions/all')->middleware('staff')->group(function () {
+    Route::get('/', 'AtcTraining\TrainingSessionController@adminIndex')->name('training.sessions.all');
+    Route::delete('/{id}', 'AtcTraining\TrainingSessionController@adminDestroy')->name('training.sessions.admin.destroy');
+    Route::post('/{id}/cancel', 'AtcTraining\TrainingSessionController@adminCancel')->name('training.sessions.admin.cancel');
+    Route::post('/{id}/reassign', 'AtcTraining\TrainingSessionController@adminReassign')->name('training.sessions.admin.reassign');
 });
 //Admin and CI
 Route::group(['middleware' => ['executive']], function () {

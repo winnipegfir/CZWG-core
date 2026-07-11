@@ -497,6 +497,7 @@
                         <div style="font-size:0.7rem; font-weight:700; letter-spacing:0.07em; text-transform:uppercase; color:#94a3b8; margin-bottom:0.15rem;">Your Instructor</div>
                         <div style="font-size:0.875rem; font-weight:600; color:#1e293b;">{{ $yourinstructor->instructor->user->fullName('FL') }}</div>
                         <div style="font-size:0.72rem; color:#94a3b8;">{{ $yourinstructor->instructor->email }}</div>
+                        <a href="{{ route('training.book.index') }}" style="font-size:0.75rem;">Book a training slot &rarr;</a>
                     </div>
                 </div>
                 @elseif($certification == 'training' && !($yourinstructor && $yourinstructor->status == 0))

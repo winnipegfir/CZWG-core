@@ -39,7 +39,7 @@ class Student extends Model
 
     public function instructingSessions()
     {
-        return $this->hasMany(InstructingSession::class);
+        return $this->hasMany(TrainingSession::class);
     }
 
     public function trainingNotes()

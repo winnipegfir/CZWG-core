@@ -138,6 +138,15 @@
                             </div>
                         </div>
                     </div>
+                @elseif($yourinstructor != null && $yourinstructor->status != 0 && $yourinstructor->instructor != null)
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h3 class="font-weight-bold blue-text pb-2">Training</h3>
+                            <p class="mb-1" style="font-size:0.78rem; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; color:#64748b;">Your Instructor</p>
+                            <p class="mb-2" style="font-size:1rem; font-weight:600;">{{ $yourinstructor->instructor->user->fullName('FL') }}</p>
+                            <a href="{{ route('training.book.index') }}" class="btn btn-sm btn-primary">Book a training slot</a>
+                        </div>
+                    </div>
                 @endif
 
                 {{-- Tickets --}}

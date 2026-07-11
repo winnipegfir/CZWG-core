@@ -33,7 +33,7 @@ class Instructor extends Model
 
     public function sessions()
     {
-        return $this->hasMany(InstructingSession::class);
+        return $this->hasMany(TrainingSession::class);
     }
 
     public function CbtModuleAssign()
