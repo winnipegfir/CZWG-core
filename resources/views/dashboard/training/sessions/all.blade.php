@@ -26,9 +26,17 @@
     <div class="mb-4">
         <h2 class="font-weight-bold mb-0" style="color:#122b44;">All Sessions</h2>
         <p class="text-muted mb-0" style="font-size:0.875rem;">
-            {{ $sessions->count() }} session{{ $sessions->count() != 1 ? 's' : '' }} across every instructor
+            {{ $sessions->count() }} session{{ $sessions->count() != 1 ? 's' : '' }} across every instructor &mdash; click a session on the calendar to jump to it below
         </p>
     </div>
+
+    @if (!$sessions->isEmpty())
+        <div class="card mb-4">
+            <div class="card-body">
+                <div id="allSessionsCalendar"></div>
+            </div>
+        </div>
+    @endif
 
     @if ($sessions->isEmpty())
         <div class="card">
@@ -52,7 +60,7 @@
                     </thead>
                     <tbody>
                         @foreach ($sessions as $session)
-                            <tr>
+                            <tr id="session-row-{{ $session->id }}" style="transition:background-color 0.6s ease;">
                                 <td style="vertical-align:middle;">
                                     <span style="color:#122b44; font-weight:600;">{{ $session->start_time->format('D, M j') }}</span>
                                     <br>
@@ -115,4 +123,49 @@
 
 </div>
 </div>
+
+@if (!$sessions->isEmpty())
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var statusColors = { open: '#64748b', booked: '#16a34a', cancelled: '#b91c1c' };
+        var events = @json($sessions->map(function ($session) {
+            $who = $session->instructor && $session->instructor->user ? $session->instructor->user->fullName('FL') : 'Unknown';
+            if ($session->student && $session->student->user) {
+                $who .= ' / ' . $session->student->user->fullName('FL');
+            }
+            return [
+                'id' => $session->id,
+                'title' => ucfirst($session->status) . ' — ' . $who,
+                'start' => $session->start_time->toIso8601String(),
+                'end' => $session->end_time->toIso8601String(),
+                'extendedProps' => ['status' => $session->status],
+            ];
+        }));
+        events.forEach(function (e) {
+            e.backgroundColor = statusColors[e.extendedProps.status] || '#64748b';
+            e.borderColor = e.backgroundColor;
+        });
+
+        var calendarEl = document.getElementById('allSessionsCalendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'timeGridWeek',
+            headerToolbar: { left: 'prev,next today', center: 'title', right: 'timeGridWeek,dayGridMonth' },
+            height: 'auto',
+            nowIndicator: true,
+            events: events,
+            eventClick: function (info) {
+                var row = document.getElementById('session-row-' + info.event.id);
+                if (row) {
+                    row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    row.style.backgroundColor = '#fef3c7';
+                    setTimeout(function () { row.style.backgroundColor = ''; }, 1500);
+                }
+            },
+        });
+        calendar.render();
+    });
+    </script>
+@endif
+
 @stop

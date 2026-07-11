@@ -2314,3 +2314,81 @@ html[data-theme="dark"] .article-prose code,
 html[data-theme="dark"] .article-prose pre {
     background-color: #1f232a !important;
 }
+
+/* ============================================================
+   Site announcement banner (top of page, above the navbar)
+   Colors are dedicated to this component so dark mode can give
+   it a clean color per mode instead of the generic tint remap
+   used elsewhere on the site.
+   ============================================================ */
+.site-topbar {
+    padding: 0.55rem 1rem;
+    text-align: center;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-bottom: 1px solid;
+}
+.site-topbar a {
+    text-decoration: underline;
+    color: inherit;
+}
+.site-topbar-success { background: #d4edda; color: #155724; border-color: #c3e6cb; }
+.site-topbar-danger  { background: #f8d7da; color: #721c24; border-color: #f5c6cb; }
+.site-topbar-warning { background: #fff3cd; color: #856404; border-color: #ffeeba; }
+.site-topbar-info    { background: #d1ecf1; color: #0c5460; border-color: #bee5eb; }
+
+html[data-theme="dark"] .site-topbar-success { background-color: #14351f !important; color: #5fd88a !important; border-color: #1f4a2c !important; }
+html[data-theme="dark"] .site-topbar-danger  { background-color: #3a1418 !important; color: #f1919b !important; border-color: #4a1f24 !important; }
+html[data-theme="dark"] .site-topbar-warning { background-color: #3a2f0f !important; color: #f0c96a !important; border-color: #4a3d14 !important; }
+html[data-theme="dark"] .site-topbar-info    { background-color: #1e3a5f !important; color: #7ec8ff !important; border-color: #2a4d78 !important; }
+
+/* ============================================================
+   Modal headers: titles are frequently hardcoded with
+   style="color:#122b44" (the light-mode navy brand color).
+   The generic tint-remap rule lightens that to a pale blue,
+   but on some modals that still reads too low-contrast against
+   the dark modal background. Force a clearly legible color,
+   declared last so it wins the tie-break against that rule.
+   ============================================================ */
+html[data-theme="dark"] .modal-title {
+    color: #f4f7fb !important;
+}
+
+/* ============================================================
+   FullCalendar (training slot calendars). FullCalendar v6 themes
+   itself via CSS custom properties on .fc, so overriding those
+   covers most of the chrome; a few text elements need direct
+   color overrides since they don't read the variables.
+   ============================================================ */
+html[data-theme="dark"] .fc {
+    --fc-border-color: #33383f;
+    --fc-page-bg-color: #1f232a;
+    --fc-neutral-bg-color: #262b32;
+    --fc-list-event-hover-bg-color: #262b32;
+    --fc-today-bg-color: rgba(110, 168, 230, 0.12);
+    --fc-event-text-color: #fff;
+    color: #d7dade;
+}
+html[data-theme="dark"] .fc .fc-toolbar-title,
+html[data-theme="dark"] .fc .fc-col-header-cell-cushion,
+html[data-theme="dark"] .fc .fc-daygrid-day-number,
+html[data-theme="dark"] .fc .fc-timegrid-slot-label-cushion,
+html[data-theme="dark"] .fc .fc-timegrid-axis-cushion {
+    color: #d7dade !important;
+}
+html[data-theme="dark"] .fc .fc-button-primary {
+    background-color: #1f232a;
+    border-color: #33383f;
+    color: #d7dade;
+}
+html[data-theme="dark"] .fc .fc-button-primary:hover {
+    background-color: #262b32;
+    border-color: #33383f;
+    color: #fff;
+}
+html[data-theme="dark"] .fc .fc-button-primary:not(:disabled).fc-button-active,
+html[data-theme="dark"] .fc .fc-button-primary:not(:disabled):active {
+    background-color: #122b44;
+    border-color: #122b44;
+    color: #fff;
+}

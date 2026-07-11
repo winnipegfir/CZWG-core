@@ -25,11 +25,17 @@
     <div class="d-flex align-items-center mb-4">
         <div>
             <h2 class="font-weight-bold mb-0" style="color:#122b44;">Training Slots</h2>
-            <p class="text-muted mb-0" style="font-size:0.875rem;">{{ $slots->count() }} slot{{ $slots->count() != 1 ? 's' : '' }} posted</p>
+            <p class="text-muted mb-0" style="font-size:0.875rem;">{{ $slots->count() }} slot{{ $slots->count() != 1 ? 's' : '' }} posted &mdash; click an empty time to add a slot, click a slot to manage it</p>
         </div>
         <button type="button" class="btn btn-sm btn-primary ml-auto" data-toggle="modal" data-target="#addSlot">
             <i class="fas fa-plus fa-xs mr-1"></i> Add Slot
         </button>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <div id="slotsCalendar"></div>
+        </div>
     </div>
 
     @if($slots->isEmpty())
@@ -103,16 +109,16 @@
                 <h5 class="modal-title font-weight-bold" style="color:#122b44;">Add a Training Slot</h5>
                 <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
             </div>
-            <form method="POST" action="{{ route('training.sessions.store') }}">
+            <form method="POST" action="{{ route('training.sessions.store') }}" id="addSlotForm">
                 @csrf
                 <div class="modal-body">
                     <div class="form-group mb-3">
                         <label class="font-weight-bold small">Start</label>
-                        <input type="datetime-local" name="start_time" class="form-control" required>
+                        <input type="datetime-local" name="start_time" id="addSlotStart" class="form-control" required>
                     </div>
                     <div class="form-group mb-3">
                         <label class="font-weight-bold small">End</label>
-                        <input type="datetime-local" name="end_time" class="form-control" required>
+                        <input type="datetime-local" name="end_time" id="addSlotEnd" class="form-control" required>
                     </div>
                     <div class="form-group mb-0">
                         <label class="font-weight-bold small">Type (optional)</label>
@@ -127,5 +133,65 @@
         </div>
     </div>
 </div>
+
+{{-- Hidden forms used by the calendar's click actions --}}
+<form id="calRemoveForm" method="POST" style="display:none;">@csrf @method('DELETE')</form>
+<form id="calCancelForm" method="POST" style="display:none;">@csrf</form>
+
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var events = @json($slots->map(function ($slot) {
+        return [
+            'id' => $slot->id,
+            'title' => ($slot->status === 'booked'
+                    ? ($slot->student && $slot->student->user ? $slot->student->user->fullName('FL') : 'Booked')
+                    : 'Open') . ($slot->type ? ' — ' . $slot->type : ''),
+            'start' => $slot->start_time->toIso8601String(),
+            'end' => $slot->end_time->toIso8601String(),
+            'backgroundColor' => $slot->status === 'booked' ? '#16a34a' : '#64748b',
+            'borderColor' => $slot->status === 'booked' ? '#16a34a' : '#64748b',
+            'extendedProps' => [
+                'status' => $slot->status,
+                'student' => $slot->student && $slot->student->user ? $slot->student->user->fullName('FL') : null,
+            ],
+        ];
+    }));
+
+    var removeUrlTemplate = "{{ route('training.sessions.destroy', ['id' => '__ID__']) }}";
+    var cancelUrlTemplate = "{{ route('training.sessions.cancel', ['id' => '__ID__']) }}";
+
+    var calendarEl = document.getElementById('slotsCalendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'timeGridWeek',
+        headerToolbar: { left: 'prev,next today', center: 'title', right: 'timeGridWeek,dayGridMonth' },
+        height: 'auto',
+        nowIndicator: true,
+        events: events,
+        dateClick: function (info) {
+            document.getElementById('addSlotStart').value = info.dateStr.slice(0, 16);
+            document.getElementById('addSlotEnd').value = '';
+            $('#addSlot').modal('show');
+        },
+        eventClick: function (info) {
+            var status = info.event.extendedProps.status;
+            var when = info.event.start.toLocaleString();
+            if (status === 'open') {
+                if (confirm('Remove this open slot (' + when + ')?')) {
+                    document.getElementById('calRemoveForm').action = removeUrlTemplate.replace('__ID__', info.event.id);
+                    document.getElementById('calRemoveForm').submit();
+                }
+            } else if (status === 'booked') {
+                var student = info.event.extendedProps.student || 'this student';
+                if (confirm('Cancel the session with ' + student + ' (' + when + ')?')) {
+                    document.getElementById('calCancelForm').action = cancelUrlTemplate.replace('__ID__', info.event.id);
+                    document.getElementById('calCancelForm').submit();
+                }
+            }
+        },
+    });
+    calendar.render();
+});
+</script>
 
 @stop

@@ -44,13 +44,13 @@
         @if (Auth::check())
         @switch (Auth::user()->preferences)
             @case("default")
-            <link href="{{ asset('css/czqomd.css') }}?v=22" rel="stylesheet">
+            <link href="{{ asset('css/czqomd.css') }}?v=25" rel="stylesheet">
             @break
             @default
-            <link href="{{ asset('css/czqomd.css') }}?v=22" rel="stylesheet">
+            <link href="{{ asset('css/czqomd.css') }}?v=25" rel="stylesheet">
         @endswitch
         @else
-        <link href="{{ asset('css/czqomd.css') }}?v=22" rel="stylesheet">
+        <link href="{{ asset('css/czqomd.css') }}?v=25" rel="stylesheet">
         @endif
         <!--SimpleMDE Editor-->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
@@ -100,17 +100,12 @@
     @php $__cs = \App\Models\Settings\CoreSettings::where('id', 1)->firstOrFail(); @endphp
     @if($__cs->banner)
         @php
-            $__colors = [
-                'success' => ['bg'=>'#d4edda','color'=>'#155724','border'=>'#c3e6cb'],
-                'danger'  => ['bg'=>'#f8d7da','color'=>'#721c24','border'=>'#f5c6cb'],
-                'warning' => ['bg'=>'#fff3cd','color'=>'#856404','border'=>'#ffeeba'],
-                'info'    => ['bg'=>'#d1ecf1','color'=>'#0c5460','border'=>'#bee5eb'],
-            ];
-            $__c = $__colors[$__cs->bannerMode] ?? $__colors['info'];
+            $__validModes = ['success', 'danger', 'warning', 'info'];
+            $__mode = in_array($__cs->bannerMode, $__validModes) ? $__cs->bannerMode : 'info';
         @endphp
-        <div style="background:{{ $__c['bg'] }}; border-bottom:1px solid {{ $__c['border'] }}; padding:0.55rem 1rem; text-align:center; font-size:0.85rem; font-weight:600; color:{{ $__c['color'] }};">
+        <div class="site-topbar site-topbar-{{ $__mode }}">
             @if($__cs->bannerLink)
-                <a href="{{ $__cs->bannerLink }}" target="_blank" style="color:{{ $__c['color'] }}; text-decoration:underline;">{{ $__cs->banner }}</a>
+                <a href="{{ $__cs->bannerLink }}" target="_blank">{{ $__cs->banner }}</a>
             @else
                 {{ $__cs->banner }}
             @endif

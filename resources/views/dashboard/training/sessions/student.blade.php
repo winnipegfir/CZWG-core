@@ -10,7 +10,7 @@
     <div class="mb-4">
         <h2 class="font-weight-bold mb-0" style="color:#122b44;">Book Training</h2>
         @if($student->instructor_id && $student->instructor)
-            <p class="text-muted mb-0" style="font-size:0.875rem;">with {{ $student->instructor->user ? $student->instructor->user->fullName('FL') : 'your instructor' }}</p>
+            <p class="text-muted mb-0" style="font-size:0.875rem;">with {{ $student->instructor->user ? $student->instructor->user->fullName('FL') : 'your instructor' }} &mdash; click an open slot on the calendar to book it</p>
         @endif
     </div>
 
@@ -22,6 +22,12 @@
             </div>
         </div>
     @else
+        <div class="card mb-4">
+            <div class="card-body">
+                <div id="bookingCalendar"></div>
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-md-6 mb-4">
                 <div class="card h-100">
@@ -77,6 +83,67 @@
                 </div>
             </div>
         </div>
+
+        {{-- Hidden forms used by the calendar's click actions --}}
+        <form id="calBookForm" method="POST" style="display:none;">@csrf</form>
+        <form id="calCancelForm" method="POST" style="display:none;">@csrf</form>
+
+        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+        <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var openEvents = @json($openSlots->map(function ($slot) {
+                return [
+                    'id' => $slot->id,
+                    'title' => 'Open' . ($slot->type ? ' — ' . $slot->type : ''),
+                    'start' => $slot->start_time->toIso8601String(),
+                    'end' => $slot->end_time->toIso8601String(),
+                    'backgroundColor' => '#64748b',
+                    'borderColor' => '#64748b',
+                    'extendedProps' => ['kind' => 'open'],
+                ];
+            }));
+            var bookedEvents = @json($myBookings->map(function ($slot) {
+                return [
+                    'id' => $slot->id,
+                    'title' => 'Booked' . ($slot->type ? ' — ' . $slot->type : ''),
+                    'start' => $slot->start_time->toIso8601String(),
+                    'end' => $slot->end_time->toIso8601String(),
+                    'backgroundColor' => '#16a34a',
+                    'borderColor' => '#16a34a',
+                    'extendedProps' => ['kind' => 'booked'],
+                ];
+            }));
+            var events = openEvents.concat(bookedEvents);
+
+            var bookUrlTemplate = "{{ route('training.book.store', ['id' => '__ID__']) }}";
+            var cancelUrlTemplate = "{{ route('training.book.cancel', ['id' => '__ID__']) }}";
+
+            var calendarEl = document.getElementById('bookingCalendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'timeGridWeek',
+                headerToolbar: { left: 'prev,next today', center: 'title', right: 'timeGridWeek,dayGridMonth' },
+                height: 'auto',
+                nowIndicator: true,
+                events: events,
+                eventClick: function (info) {
+                    var kind = info.event.extendedProps.kind;
+                    var when = info.event.start.toLocaleString();
+                    if (kind === 'open') {
+                        if (confirm('Book this slot (' + when + ')?')) {
+                            document.getElementById('calBookForm').action = bookUrlTemplate.replace('__ID__', info.event.id);
+                            document.getElementById('calBookForm').submit();
+                        }
+                    } else if (kind === 'booked') {
+                        if (confirm('Cancel this session (' + when + ')?')) {
+                            document.getElementById('calCancelForm').action = cancelUrlTemplate.replace('__ID__', info.event.id);
+                            document.getElementById('calCancelForm').submit();
+                        }
+                    }
+                },
+            });
+            calendar.render();
+        });
+        </script>
     @endif
 
 </div>
