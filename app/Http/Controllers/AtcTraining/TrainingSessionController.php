@@ -199,8 +199,8 @@ class TrainingSessionController extends Controller
     {
         $slot = TrainingSession::where('id', $id)->firstOrFail();
 
-        if ($slot->status !== 'open') {
-            return redirect()->back()->withError('Only open (unbooked) slots can be deleted. Cancel a booked slot instead.');
+        if ($slot->status === 'booked') {
+            return redirect()->back()->withError('Cancel a booked session before deleting it.');
         }
 
         $slot->delete();

@@ -84,9 +84,9 @@
                                             <button type="submit" class="btn btn-sm btn-outline-danger py-0 px-2" style="font-size:0.78rem;">Remove</button>
                                         </form>
                                     @elseif ($slot->status === 'booked')
-                                        <form method="POST" action="{{ route('training.sessions.cancel', $slot->id) }}" onsubmit="return confirm('Cancel this session?')">
+                                        <form method="POST" action="{{ route('training.sessions.cancel', $slot->id) }}" onsubmit="return confirm('Cancel this session? The booking record will be kept as cancelled.')">
                                             @csrf
-                                            <button type="submit" class="btn btn-sm btn-outline-danger py-0 px-2" style="font-size:0.78rem;">Cancel</button>
+                                            <button type="submit" class="btn btn-sm btn-outline-warning py-0 px-2" style="font-size:0.78rem;">Cancel</button>
                                         </form>
                                     @endif
                                 </td>

@@ -99,14 +99,13 @@
                                     <div class="d-flex align-items-center" style="gap:0.35rem;">
                                         <a href="#" data-toggle="modal" data-target="#editSession{{ $session->id }}"
                                            class="btn btn-sm btn-outline-secondary py-0 px-2" style="font-size:0.78rem;">Edit</a>
-                                        @if ($session->status !== 'cancelled')
-                                            <form method="POST" action="{{ route('training.sessions.admin.cancel', $session->id) }}" onsubmit="return confirm('Cancel this session?')">
+                                        @if ($session->status === 'booked')
+                                            <form method="POST" action="{{ route('training.sessions.admin.cancel', $session->id) }}" onsubmit="return confirm('Cancel this session? The booking record will be kept as cancelled.')">
                                                 @csrf
                                                 <button type="submit" class="btn btn-sm btn-outline-warning py-0 px-2" style="font-size:0.78rem;">Cancel</button>
                                             </form>
-                                        @endif
-                                        @if ($session->status === 'open')
-                                            <form method="POST" action="{{ route('training.sessions.admin.destroy', $session->id) }}" onsubmit="return confirm('Delete this slot?')">
+                                        @else
+                                            <form method="POST" action="{{ route('training.sessions.admin.destroy', $session->id) }}" onsubmit="return confirm('Delete this slot permanently?')">
                                                 @csrf @method('DELETE')
                                                 <button type="submit" class="btn btn-sm btn-outline-danger py-0 px-2" style="font-size:0.78rem;">Delete</button>
                                             </form>
