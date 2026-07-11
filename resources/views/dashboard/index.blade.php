@@ -588,22 +588,6 @@
                 </div>
                 @endif
 
-                {{-- Emails --}}
-                <div style="display:flex; align-items:center; gap:0.75rem; padding:0.6rem 0; border-bottom:1px solid #f1f5f9;">
-                    <div style="width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; {{ Auth::user()->gdpr_subscribed_emails ? 'background:#f0fdf4;' : 'background:#fef2f2;' }}">
-                        <i class="fas fa-envelope" style="font-size:0.82rem; {{ Auth::user()->gdpr_subscribed_emails ? 'color:#16a34a;' : 'color:#ef4444;' }}"></i>
-                    </div>
-                    <div style="flex:1;">
-                        <div style="font-size:0.82rem; font-weight:600; color:#1e293b;">Email notifications</div>
-                        <div style="font-size:0.72rem; color:#94a3b8;">{{ Auth::user()->gdpr_subscribed_emails ? 'Subscribed' : 'Not subscribed' }}</div>
-                    </div>
-                    @if(Auth::user()->gdpr_subscribed_emails == 0)
-                        <a href="{{ url('/dashboard/emailpref/subscribe') }}" style="font-size:0.72rem; color:#16a34a; text-decoration:none; white-space:nowrap;">Subscribe &rarr;</a>
-                    @else
-                        <a href="{{ url('/dashboard/emailpref/unsubscribe') }}" style="font-size:0.72rem; color:#ef4444; text-decoration:none; white-space:nowrap;">Unsubscribe</a>
-                    @endif
-                </div>
-
                 {{-- Preferences --}}
                 <div style="display:flex; align-items:center; gap:0.75rem; padding:0.6rem 0; border-bottom:1px solid #f1f5f9;">
                     <div style="width:32px; height:32px; border-radius:8px; background:#f8fafc; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
@@ -611,7 +595,7 @@
                     </div>
                     <div style="flex:1; min-width:0;">
                         <div style="font-size:0.82rem; font-weight:600; color:#1e293b;">Preferences</div>
-                        <div style="font-size:0.72rem; color:#94a3b8;">Timezone: {{ Auth::user()->timezone ?: 'Zulu (UTC) — default' }}</div>
+                        <div style="font-size:0.72rem; color:#94a3b8;">Email notifications, timezone</div>
                     </div>
                     <a href="{{ route('me.preferences') }}" style="font-size:0.72rem; color:#2563eb; text-decoration:none; white-space:nowrap;">Manage &rarr;</a>
                 </div>
