@@ -329,6 +329,7 @@ Route::prefix('dashboard/training')->middleware('instructor')->group(function ()
     Route::post('/students/{id}/setstatus', 'AtcTraining\TrainingController@changeStudentStatus')->name('training.students.setstatus');
     Route::post('/students/{id}/activate', 'AtcTraining\TrainingController@activateWithInstructor')->name('training.students.activate');
     Route::post('/students/{id}/entrytype', 'AtcTraining\TrainingController@updateEntryType')->name('training.students.entrytype');
+    Route::post('/students/{id}/mentorable', 'AtcTraining\TrainingController@updateMentorable')->name('training.students.mentorable');
     Route::post('/students/{id}/waitlistdate', 'AtcTraining\TrainingController@updateWaitlistDate')->name('training.students.waitlistdate');
     Route::delete('/students/{id}', 'AtcTraining\TrainingController@removeStudent')->name('training.students.remove');
     Route::post('notes/add/{id}', 'AtcTraining\TrainingController@addNote')->name('add.trainingnote');

@@ -438,6 +438,17 @@ class TrainingController extends Controller
         return redirect()->back()->withSuccess('Entry type updated.');
     }
 
+    public function updateMentorable(Request $request, $id)
+    {
+        abort_if(Auth::user()->permissions < 3 && !Auth::user()->instructorProfile, 403);
+        $student = Student::where('id', $id)->firstOrFail();
+        $student->mentorable = $request->boolean('mentorable');
+        $student->save();
+
+        $name = $student->user ? $student->user->fullName('FLC') : 'CID ' . $student->user_id;
+        return redirect()->back()->withSuccess(($student->mentorable ? 'Marked ' : 'Unmarked ') . $name . ' as mentorable.');
+    }
+
     public function bulkRemoveStudents(Request $request)
     {
         $ids = $request->input('student_ids', []);

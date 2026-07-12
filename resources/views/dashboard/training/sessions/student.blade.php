@@ -9,9 +9,14 @@
 
     <div class="mb-4">
         <h2 class="font-weight-bold mb-0" style="color:#122b44;">Book Training</h2>
-        @if($student->instructor_id && $student->instructor)
+        @if($student->instructor_id && $student->instructor || $student->mentorable)
             <p class="text-muted mb-0" style="font-size:0.875rem;">
-                with {{ $student->instructor->user ? $student->instructor->user->fullName('FL') : 'your instructor' }} &mdash; sessions are booked in 1-hour windows &mdash; times shown in {{ \App\Models\Users\User::timezoneLabel($userTz) }}
+                @if($student->mentorable)
+                    open to all instructors
+                @else
+                    with {{ $student->instructor->user ? $student->instructor->user->fullName('FL') : 'your instructor' }}
+                @endif
+                &mdash; sessions are booked in 1-hour windows &mdash; times shown in {{ \App\Models\Users\User::timezoneLabel($userTz) }}
                 @if($userTz === 'UTC')
                     &mdash; <a href="{{ route('me.preferences') }}">set your timezone</a>
                 @endif
@@ -19,7 +24,7 @@
         @endif
     </div>
 
-    @if (!$student->instructor_id)
+    @if (!$student->instructor_id && !$student->mentorable)
         <div class="card">
             <div class="card-body text-center text-muted py-5">
                 <i class="fas fa-chalkboard-teacher fa-2x mb-2" style="color:#cbd5e1;"></i>
@@ -57,11 +62,15 @@
                                         <div style="font-weight:600; font-size:0.875rem; color:#122b44;">{{ $startLocal->format('D, M j') }}</div>
                                         <div style="font-size:0.78rem; color:#64748b;">
                                             {{ $startLocal->format('g:i A') }} &ndash; {{ $endLocal->format('g:i A') }}
+                                            @if($student->mentorable && $slot->instructor && $slot->instructor->user)
+                                                &middot; {{ $slot->instructor->user->fullName('FL') }}
+                                            @endif
                                             @if($slot->note) &middot; {{ $slot->note }} @endif
                                         </div>
                                     </div>
                                     <form method="POST" action="{{ route('training.book.store') }}" class="d-flex align-items-center" style="gap:0.3rem;">
                                         @csrf
+                                        <input type="hidden" name="instructor_id" value="{{ $slot->instructor_id }}">
                                         @if(count($hourOptions) > 1)
                                             <select name="start_time" class="form-control form-control-sm" style="width:auto; font-size:0.78rem;">
                                                 @foreach($hourOptions as $opt)
@@ -117,6 +126,7 @@
         <form id="calBookForm" method="POST" action="{{ route('training.book.store') }}" style="display:none;">
             @csrf
             <input type="hidden" name="start_time" id="calBookStartInput">
+            <input type="hidden" name="instructor_id" id="calBookInstructorInput">
         </form>
         <form id="calCancelForm" method="POST" style="display:none;">@csrf</form>
 
@@ -150,7 +160,7 @@
                     'end' => $slot->end_time->copy()->setTimezone($userTz)->format('Y-m-d\TH:i:s'),
                     'backgroundColor' => '#64748b',
                     'borderColor' => '#64748b',
-                    'extendedProps' => ['kind' => 'open'],
+                    'extendedProps' => ['kind' => 'open', 'instructorId' => $slot->instructor_id],
                 ];
             }
             foreach ($myBookings as $slot) {
@@ -187,8 +197,9 @@
                 opts.timeZone = 'UTC';
                 return d.toLocaleString([], opts);
             }
-            function submitBooking(startDate) {
+            function submitBooking(startDate, instructorId) {
                 document.getElementById('calBookStartInput').value = formatLocalTz(startDate);
+                document.getElementById('calBookInstructorInput').value = instructorId || '';
                 document.getElementById('calBookForm').submit();
             }
             function hourlyStarts(start, end) {
@@ -200,7 +211,7 @@
                 }
                 return options;
             }
-            function showPickTimeModal(options) {
+            function showPickTimeModal(options, instructorId) {
                 var list = document.getElementById('pickTimeList');
                 list.innerHTML = '';
                 options.forEach(function (d) {
@@ -210,7 +221,7 @@
                     btn.textContent = displayLocalTz(d, { hour: 'numeric', minute: '2-digit' });
                     btn.onclick = function () {
                         $('#pickTimeModal').modal('hide');
-                        submitBooking(d);
+                        submitBooking(d, instructorId);
                     };
                     list.appendChild(btn);
                 });
@@ -243,13 +254,14 @@
                 eventClick: function (info) {
                     var kind = info.event.extendedProps.kind;
                     if (kind === 'open') {
+                        var instructorId = info.event.extendedProps.instructorId;
                         var options = hourlyStarts(info.event.start, info.event.end);
                         if (options.length <= 1) {
                             if (options.length === 1 && confirm('Book this slot (' + displayLocalTz(options[0]) + ')?')) {
-                                submitBooking(options[0]);
+                                submitBooking(options[0], instructorId);
                             }
                         } else {
-                            showPickTimeModal(options);
+                            showPickTimeModal(options, instructorId);
                         }
                     } else if (kind === 'booked') {
                         var when = displayLocalTz(info.event.start);

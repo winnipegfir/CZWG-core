@@ -120,7 +120,12 @@ class TrainingSessionController extends Controller
         abort_if(!$student, 403, 'You do not have a student profile.');
 
         $openSlots = collect();
-        if ($student->instructor_id) {
+        if ($student->mentorable) {
+            $openSlots = TrainingSession::open()
+                ->with('instructor.user')
+                ->orderBy('start_time')
+                ->get();
+        } elseif ($student->instructor_id) {
             $openSlots = TrainingSession::open()
                 ->where('instructor_id', $student->instructor_id)
                 ->orderBy('start_time')
@@ -150,14 +155,21 @@ class TrainingSessionController extends Controller
 
         $request->validate([
             'start_time' => 'required|date',
+            'instructor_id' => 'nullable|exists:instructors,id',
         ]);
+
+        // Mentorable students may book with any instructor; everyone else is
+        // locked to their own assigned instructor regardless of what's posted.
+        $instructorId = ($student->mentorable && $request->filled('instructor_id'))
+            ? (int) $request->input('instructor_id')
+            : $student->instructor_id;
 
         $userTz = Auth::user()->displayTimezone();
         $start = Carbon::parse($request->input('start_time'), $userTz)->setTimezone('UTC')->second(0);
         $end = $start->copy()->addHour();
 
-        $booked = DB::transaction(function () use ($student, $start, $end) {
-            $slot = TrainingSession::where('instructor_id', $student->instructor_id)
+        $booked = DB::transaction(function () use ($student, $start, $end, $instructorId) {
+            $slot = TrainingSession::where('instructor_id', $instructorId)
                 ->where('status', 'open')
                 ->where('start_time', '<=', $start)
                 ->where('end_time', '>=', $end)

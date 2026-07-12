@@ -24,11 +24,14 @@
                 @endif
             </p>
         </div>
-        <div class="ml-auto">
+        <div class="ml-auto text-right">
             @if($student->instructor_id)
                 <span style="background:#dcfce7; color:#15803d; font-size:0.8rem; font-weight:700; padding:0.3em 0.75em; border-radius:0.4rem;">Linked</span>
             @else
                 <span style="background:#fef3c7; color:#92400e; font-size:0.8rem; font-weight:700; padding:0.3em 0.75em; border-radius:0.4rem;">Waitlisted</span>
+            @endif
+            @if($student->mentorable)
+                <span class="d-block mt-1" style="background:#dbeafe; color:#1d4ed8; font-size:0.75rem; font-weight:700; padding:0.25em 0.6em; border-radius:0.4rem;">Mentorable</span>
             @endif
         </div>
     </div>
@@ -154,9 +157,10 @@
             @endif
 
             {{-- Actions --}}
-            @if(Auth::user()->permissions >= 4)
+            @if(Auth::user()->permissions >= 3 || Auth::user()->instructorProfile)
             <div class="card mb-4">
                 <div class="card-body">
+                    @if(Auth::user()->permissions >= 4)
                     <h5 class="font-weight-bold mb-1" style="color:#122b44;">Instructor</h5>
                     <p class="text-muted mb-2" style="font-size:0.78rem;">Assigning an instructor links the student. Removing one returns them to the waitlist.</p>
                     <form action="{{ route('training.students.assigninstructor', $student->id) }}" method="POST">
@@ -171,6 +175,17 @@
                                 @endforeach
                             </select>
                             <button type="submit" class="btn btn-sm btn-success flex-shrink-0" style="font-size:0.8rem;">Save</button>
+                        </div>
+                    </form>
+                    @endif
+
+                    <p class="mb-1" style="font-size:0.78rem; font-weight:700; text-transform:uppercase; letter-spacing:.4px; color:#94a3b8;">Mentorable</p>
+                    <p class="text-muted mb-2" style="font-size:0.78rem;">If enabled, this student's bookable slots include every instructor, not just their assigned one.</p>
+                    <form action="{{ route('training.students.mentorable', $student->id) }}" method="POST">
+                        @csrf
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input" id="mentorableSwitch" name="mentorable" value="1" onchange="this.form.submit()" {{ $student->mentorable ? 'checked' : '' }}>
+                            <label class="custom-control-label" for="mentorableSwitch" style="font-size:0.85rem;">{{ $student->mentorable ? 'Open to all instructors' : 'Limited to assigned instructor' }}</label>
                         </div>
                     </form>
                 </div>
