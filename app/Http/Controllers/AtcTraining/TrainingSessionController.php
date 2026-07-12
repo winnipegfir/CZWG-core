@@ -87,9 +87,60 @@ class TrainingSessionController extends Controller
         $slot->student_id = null;
         $slot->status = 'open';
         $slot->booked_at = null;
-        $slot->save();
+
+        DB::transaction(fn () => $this->mergeAdjacentOpenSlots($slot));
 
         return redirect()->back()->withSuccess('Session cancelled — the time is open again.');
+    }
+
+    /**
+     * When a slot becomes open again (cancellation, unassignment), fold it
+     * into any touching open slots from the same instructor with the same
+     * note so booking one hour at a time doesn't fragment availability into
+     * a pile of adjacent slivers.
+     */
+    private function mergeAdjacentOpenSlots(TrainingSession $slot): TrainingSession
+    {
+        $matchesNote = function ($query) use ($slot) {
+            return is_null($slot->note) ? $query->whereNull('note') : $query->where('note', $slot->note);
+        };
+
+        $merged = true;
+        while ($merged) {
+            $merged = false;
+
+            $left = $matchesNote(
+                TrainingSession::where('instructor_id', $slot->instructor_id)
+                    ->where('status', 'open')
+                    ->where('id', '!=', $slot->id)
+                    ->where('end_time', $slot->start_time)
+                    ->lockForUpdate()
+            )->first();
+
+            if ($left) {
+                $slot->start_time = $left->start_time;
+                $left->delete();
+                $merged = true;
+            }
+
+            $right = $matchesNote(
+                TrainingSession::where('instructor_id', $slot->instructor_id)
+                    ->where('status', 'open')
+                    ->where('id', '!=', $slot->id)
+                    ->where('start_time', $slot->end_time)
+                    ->lockForUpdate()
+            )->first();
+
+            if ($right) {
+                $slot->end_time = $right->end_time;
+                $right->delete();
+                $merged = true;
+            }
+        }
+
+        $slot->save();
+
+        return $slot;
     }
 
     public function confirm($id)
@@ -236,7 +287,8 @@ class TrainingSessionController extends Controller
         $slot->student_id = null;
         $slot->status = 'open';
         $slot->booked_at = null;
-        $slot->save();
+
+        DB::transaction(fn () => $this->mergeAdjacentOpenSlots($slot));
 
         return redirect()->back()->withSuccess('Booking cancelled.');
     }
@@ -309,13 +361,14 @@ class TrainingSessionController extends Controller
             $slot->student_id = $request->input('student_id');
             $slot->status = 'booked';
             $slot->booked_at = $slot->booked_at ?: now();
+            $slot->save();
         } else {
             $slot->student_id = null;
             $slot->status = 'open';
             $slot->booked_at = null;
-        }
 
-        $slot->save();
+            DB::transaction(fn () => $this->mergeAdjacentOpenSlots($slot));
+        }
 
         return redirect()->back()->withSuccess('Session updated.');
     }

@@ -297,7 +297,7 @@
                     dayGridMonth: { displayEventEnd: true },
                 },
                 nowIndicator: true,
-                events: events,
+                events: visibleEvents(),
                 eventClick: function (info) {
                     var kind = info.event.extendedProps.kind;
                     if (kind === 'open') {
@@ -320,6 +320,13 @@
                 },
             });
             calendar.render();
+
+            document.querySelectorAll('.instructor-filter-checkbox').forEach(function (cb) {
+                cb.addEventListener('change', function () {
+                    calendar.removeAllEventSources();
+                    calendar.addEventSource(visibleEvents());
+                });
+            });
         });
         </script>
     @endif
