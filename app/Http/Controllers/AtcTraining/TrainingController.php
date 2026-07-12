@@ -471,6 +471,8 @@ class TrainingController extends Controller
                 $vatcan->unassignInstructor($student->user_id);
             }
             $student->instructor_id = $instructorInput;
+            $student->status = '1';
+            $student->last_status_change = Carbon::now()->toDateTimeString();
             $student->save();
             $vatcan->assignInstructor($student->user_id, $student->instructor->user->id, Auth::id());
 
