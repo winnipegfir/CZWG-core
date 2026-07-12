@@ -102,7 +102,7 @@
                                         @csrf
                                         <input type="hidden" name="instructor_id" value="{{ $slot->instructor_id }}">
                                         @if(count($hourOptions) > 1)
-                                            <select name="start_time" class="form-control form-control-sm" style="width:auto; font-size:0.78rem;">
+                                            <select name="start_time" class="form-control form-control-sm" style="width:auto; min-width:6.5rem; font-size:0.78rem; padding-right:1.6rem;">
                                                 @foreach($hourOptions as $opt)
                                                     <option value="{{ $opt->format('Y-m-d\TH:i') }}">{{ $opt->format('g:i A') }}</option>
                                                 @endforeach
@@ -170,7 +170,7 @@
                     </div>
                     <div class="modal-body">
                         <p class="text-muted" style="font-size:0.8rem;">Sessions are booked in 1-hour windows.</p>
-                        <div id="pickTimeList" style="display:flex; flex-direction:column; gap:0.4rem;"></div>
+                        <div id="pickTimeList" style="display:grid; grid-template-columns:repeat(3, 1fr); gap:0.5rem;"></div>
                     </div>
                 </div>
             </div>
@@ -262,7 +262,9 @@
                 options.forEach(function (d) {
                     var btn = document.createElement('button');
                     btn.type = 'button';
-                    btn.className = 'btn btn-outline-primary';
+                    btn.className = 'btn btn-outline-primary btn-sm';
+                    btn.style.fontSize = '0.8rem';
+                    btn.style.padding = '0.5rem 0.25rem';
                     btn.textContent = displayLocalTz(d, { hour: 'numeric', minute: '2-digit' });
                     btn.onclick = function () {
                         $('#pickTimeModal').modal('hide');
