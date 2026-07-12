@@ -3,12 +3,13 @@
 namespace App\Notifications;
 
 use App\Models\AtcTraining\TrainingSession;
+use App\Notifications\Concerns\SendsDiscordDm;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 
 class TrainingSessionCancelled extends Notification
 {
-    use Queueable;
+    use Queueable, SendsDiscordDm;
 
     /**
      * @param string $cancelledBy Label for who cancelled, e.g. "Your instructor" or "The student".
@@ -20,7 +21,7 @@ class TrainingSessionCancelled extends Notification
 
     public function via($notifiable)
     {
-        return ['database'];
+        return $this->viaChannels($notifiable);
     }
 
     public function toArray($notifiable)

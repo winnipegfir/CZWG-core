@@ -2,13 +2,14 @@
 
 namespace App\Notifications;
 
+use App\Notifications\Concerns\SendsDiscordDm;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 class TicketReply extends Notification
 {
-    use Queueable;
+    use Queueable, SendsDiscordDm;
 
     /**
      * Create a new notification instance.
@@ -30,7 +31,7 @@ class TicketReply extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail', 'database'];
+        return $this->viaChannels($notifiable, ['mail', 'database']);
     }
 
     /**

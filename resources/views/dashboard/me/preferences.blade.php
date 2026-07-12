@@ -25,6 +25,23 @@
         <button type="submit" class="btn btn-primary">Save Timezone</button>
     </form>
 
+    <hr>
+    <h3 class="font-weight-bold blue-text">Discord Notifications</h3>
+    @if(Auth::user()->hasDiscord())
+        <p>Get a Discord DM whenever you receive a notification on the site (training sessions, event rosters, certifications, tickets).</p>
+        <form method="POST" action="{{ route('me.preferences.post') }}" style="max-width:420px;">
+            @csrf
+            <input type="hidden" name="timezone" value="{{ Auth::user()->timezone }}">
+            <div class="custom-control custom-switch mb-3">
+                <input type="checkbox" class="custom-control-input" id="discordNotifySwitch" name="discord_notify" value="1" @checked(optional(Auth::user()->preferences)->enable_discord_notifications)>
+                <label class="custom-control-label" for="discordNotifySwitch">DM me on Discord for notifications</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </form>
+    @else
+        <p class="text-muted">Link your Discord account to get notifications sent as a DM. You can link it from your dashboard.</p>
+    @endif
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
     <style>.select2-container { width: 100% !important; }</style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>

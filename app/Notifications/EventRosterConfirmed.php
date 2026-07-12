@@ -3,12 +3,13 @@
 namespace App\Notifications;
 
 use App\Models\Events\EventConfirm;
+use App\Notifications\Concerns\SendsDiscordDm;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 
 class EventRosterConfirmed extends Notification
 {
-    use Queueable;
+    use Queueable, SendsDiscordDm;
 
     public function __construct(protected EventConfirm $confirm)
     {
@@ -16,7 +17,7 @@ class EventRosterConfirmed extends Notification
 
     public function via($notifiable)
     {
-        return ['database'];
+        return $this->viaChannels($notifiable);
     }
 
     public function toArray($notifiable)

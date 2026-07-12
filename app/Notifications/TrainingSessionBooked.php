@@ -3,12 +3,13 @@
 namespace App\Notifications;
 
 use App\Models\AtcTraining\TrainingSession;
+use App\Notifications\Concerns\SendsDiscordDm;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 
 class TrainingSessionBooked extends Notification
 {
-    use Queueable;
+    use Queueable, SendsDiscordDm;
 
     public function __construct(protected TrainingSession $session)
     {
@@ -16,7 +17,7 @@ class TrainingSessionBooked extends Notification
 
     public function via($notifiable)
     {
-        return ['database'];
+        return $this->viaChannels($notifiable);
     }
 
     public function toArray($notifiable)

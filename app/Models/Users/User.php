@@ -207,6 +207,13 @@ class User extends Authenticatable
         return true;
     }
 
+    public function wantsDiscordNotifications()
+    {
+        return $this->hasDiscord()
+            && $this->discord_dm_channel_id
+            && optional($this->preferences)->enable_discord_notifications;
+    }
+
     public function getDiscordUser()
     {
         return Cache::remember('users.discorduserdata.'.$this->id, 84600, function () {

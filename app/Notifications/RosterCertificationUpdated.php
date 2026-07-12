@@ -2,12 +2,13 @@
 
 namespace App\Notifications;
 
+use App\Notifications\Concerns\SendsDiscordDm;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 
 class RosterCertificationUpdated extends Notification
 {
-    use Queueable;
+    use Queueable, SendsDiscordDm;
 
     /**
      * @param array<int, string> $changes Human-readable lines describing what changed, e.g. "TWR: Solo → Certified".
@@ -18,7 +19,7 @@ class RosterCertificationUpdated extends Notification
 
     public function via($notifiable)
     {
-        return ['database'];
+        return $this->viaChannels($notifiable);
     }
 
     public function toArray($notifiable)

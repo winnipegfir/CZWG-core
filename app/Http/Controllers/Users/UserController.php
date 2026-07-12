@@ -676,6 +676,14 @@ class UserController extends Controller
         $user->timezone = $request->input('timezone');
         $user->save();
 
+        $prefs = $user->preferences;
+        if (! $prefs) {
+            $prefs = new UserPreferences();
+            $prefs->user_id = $user->id;
+        }
+        $prefs->enable_discord_notifications = $request->boolean('discord_notify');
+        $prefs->save();
+
         return redirect()->route('me.preferences')->with('success', 'Preferences updated.');
     }
 }
