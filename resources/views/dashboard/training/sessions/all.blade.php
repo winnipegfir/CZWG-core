@@ -82,27 +82,9 @@
                                     @endif
                                 </td>
                                 <td style="vertical-align:middle;">
-                                    <form method="POST" action="{{ route('training.sessions.admin.reassign', $session->id) }}" class="ts-reassign d-flex align-items-center flex-wrap" style="gap:0.3rem;">
-                                        @csrf
-                                        <select name="instructor_id" class="form-control">
-                                            @foreach ($instructors as $instructor)
-                                                <option value="{{ $instructor->id }}" @selected($session->instructor_id === $instructor->id)>
-                                                    {{ $instructor->user_id }} &ndash; {{ $instructor->user ? $instructor->user->fullName('FL') : $instructor->email }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        <select name="student_id" class="form-control">
-                                            <option value="">Unbooked</option>
-                                            @foreach ($students as $student)
-                                                <option value="{{ $student->id }}" data-instructor="{{ $student->instructor_id }}" @selected($session->student_id === $student->id)>
-                                                    {{ $student->user_id }} &ndash; {{ $student->user ? $student->user->fullName('FL') : 'Unknown' }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                        <button type="submit" class="btn btn-sm btn-outline-primary py-0 px-2" style="font-size:0.78rem;">Save</button>
-                                    </form>
-                                    @if ($session->status === 'pending')
-                                        <div class="text-muted" style="font-size:0.7rem; margin-top:0.2rem;">Saving confirms this pending session.</div>
+                                    <span style="color:#122b44; font-weight:600;">{{ $session->instructor && $session->instructor->user ? $session->instructor->user->fullName('FL') : ($session->instructor ? $session->instructor->email : 'Unassigned') }}</span>
+                                    @if ($session->student)
+                                        <br><span class="text-muted" style="font-size:0.78rem;">{{ $session->student->user ? $session->student->user->fullName('FL') : 'Unknown' }}</span>
                                     @endif
                                 </td>
                                 <td style="vertical-align:middle;">
@@ -138,9 +120,9 @@
                             <h5 class="modal-title font-weight-bold" style="color:#122b44;">Edit Session</h5>
                             <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
                         </div>
-                        <form method="POST" action="{{ route('training.sessions.admin.update', $session->id) }}">
-                            @csrf
-                            <div class="modal-body">
+                        <div class="modal-body">
+                            <form method="POST" action="{{ route('training.sessions.admin.update', $session->id) }}" class="mb-4 pb-4" style="border-bottom:1px solid #e9ecef;">
+                                @csrf
                                 <div class="form-group mb-3">
                                     <label class="font-weight-bold small">Start <span class="text-muted font-weight-normal">({{ \App\Models\Users\User::timezoneLabel($userTz) }})</span></label>
                                     <input type="datetime-local" name="start_time" class="form-control" value="{{ $session->start_time->copy()->setTimezone($userTz)->format('Y-m-d\TH:i') }}" required>
@@ -149,16 +131,44 @@
                                     <label class="font-weight-bold small">End <span class="text-muted font-weight-normal">({{ \App\Models\Users\User::timezoneLabel($userTz) }})</span></label>
                                     <input type="datetime-local" name="end_time" class="form-control" value="{{ $session->end_time->copy()->setTimezone($userTz)->format('Y-m-d\TH:i') }}" required>
                                 </div>
-                                <div class="form-group mb-0">
+                                <div class="form-group mb-3">
                                     <label class="font-weight-bold small">Note (optional)</label>
                                     <input type="text" name="note" class="form-control" value="{{ $session->note }}" placeholder="e.g. S1 Practical">
                                 </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
-                                <button type="submit" class="btn btn-primary">Save Changes</button>
-                            </div>
-                        </form>
+                                <button type="submit" class="btn btn-primary btn-sm">Save Times</button>
+                            </form>
+
+                            <form method="POST" action="{{ route('training.sessions.admin.reassign', $session->id) }}" class="ts-reassign mb-0">
+                                @csrf
+                                <label class="font-weight-bold small d-block mb-2">Instructor / Student</label>
+                                <div class="form-group mb-2">
+                                    <select name="instructor_id" class="form-control">
+                                        @foreach ($instructors as $instructor)
+                                            <option value="{{ $instructor->id }}" @selected($session->instructor_id === $instructor->id)>
+                                                {{ $instructor->user_id }} &ndash; {{ $instructor->user ? $instructor->user->fullName('FL') : $instructor->email }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group mb-2">
+                                    <select name="student_id" class="form-control">
+                                        <option value="">Unbooked</option>
+                                        @foreach ($students as $student)
+                                            <option value="{{ $student->id }}" data-instructor="{{ $student->instructor_id }}" @selected($session->student_id === $student->id)>
+                                                {{ $student->user_id }} &ndash; {{ $student->user ? $student->user->fullName('FL') : 'Unknown' }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                @if ($session->status === 'pending')
+                                    <div class="text-muted mb-2" style="font-size:0.75rem;">Saving confirms this pending session.</div>
+                                @endif
+                                <button type="submit" class="btn btn-outline-primary btn-sm">Save Assignment</button>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+                        </div>
                     </div>
                 </div>
             </div>

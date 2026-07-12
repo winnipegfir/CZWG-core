@@ -37,8 +37,30 @@
             </div>
         </div>
     @else
+        @php
+            $instructorPalette = ['#2563eb', '#7c3aed', '#0891b2', '#db2777', '#4f46e5', '#059669', '#ea580c', '#65a30d'];
+            $instructorColors = [];
+            if ($student->mentorable) {
+                foreach ($openSlots->pluck('instructor_id')->unique()->values() as $i => $iid) {
+                    $instructorColors[$iid] = $instructorPalette[$i % count($instructorPalette)];
+                }
+            }
+        @endphp
+
         <div class="card mb-4">
             <div class="card-body">
+                @if($student->mentorable && count($instructorColors) > 1)
+                    <div class="d-flex flex-wrap align-items-center mb-3" style="gap:0.5rem;">
+                        <span class="text-muted" style="font-size:0.78rem; font-weight:600;">Show:</span>
+                        @foreach($instructorColors as $iid => $color)
+                            @php $iuser = optional(optional($openSlots->firstWhere('instructor_id', $iid))->instructor)->user; @endphp
+                            <label style="cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem; font-size:0.78rem; padding:0.25em 0.65em; border-radius:999px; border:1px solid {{ $color }}; color:{{ $color }}; margin-bottom:0;">
+                                <input type="checkbox" class="instructor-filter-checkbox" value="{{ $iid }}" checked style="accent-color: {{ $color }};">
+                                {{ $iuser ? $iuser->fullName('FL') : 'Instructor' }}
+                            </label>
+                        @endforeach
+                    </div>
+                @endif
                 <div id="bookingCalendar"></div>
             </div>
         </div>
@@ -63,6 +85,9 @@
                                     }
                                 @endphp
                                 <div style="display:flex; align-items:center; padding:0.6rem 0; border-bottom:1px solid #f1f5f9;">
+                                    @if($student->mentorable)
+                                        <span style="width:8px; height:8px; border-radius:50%; background:{{ $instructorColors[$slot->instructor_id] ?? '#64748b' }}; margin-right:0.6rem; flex-shrink:0;"></span>
+                                    @endif
                                     <div style="flex:1; min-width:0;">
                                         <div style="font-weight:600; font-size:0.875rem; color:#122b44;">{{ $startLocal->format('D, M j') }}</div>
                                         <div style="font-size:0.78rem; color:#64748b;">
@@ -155,16 +180,20 @@
             $calendarEvents = [];
             foreach ($openSlots as $slot) {
                 $title = 'Open';
+                if ($student->mentorable && $slot->instructor && $slot->instructor->user) {
+                    $title = $slot->instructor->user->fullName('FL');
+                }
                 if ($slot->note) {
                     $title .= ' — ' . $slot->note;
                 }
+                $color = $instructorColors[$slot->instructor_id] ?? '#64748b';
                 $calendarEvents[] = [
                     'id' => $slot->id,
                     'title' => $title,
                     'start' => $slot->start_time->copy()->setTimezone($userTz)->format('Y-m-d\TH:i:s'),
                     'end' => $slot->end_time->copy()->setTimezone($userTz)->format('Y-m-d\TH:i:s'),
-                    'backgroundColor' => '#64748b',
-                    'borderColor' => '#64748b',
+                    'backgroundColor' => $color,
+                    'borderColor' => $color,
                     'extendedProps' => ['kind' => 'open', 'instructorId' => $slot->instructor_id],
                 ];
             }
@@ -190,6 +219,17 @@
         <script>
         document.addEventListener('DOMContentLoaded', function () {
             var events = {!! json_encode($calendarEvents) !!};
+
+            function visibleEvents() {
+                var hidden = {};
+                document.querySelectorAll('.instructor-filter-checkbox').forEach(function (cb) {
+                    if (!cb.checked) hidden[cb.value] = true;
+                });
+                if (Object.keys(hidden).length === 0) return events;
+                return events.filter(function (e) {
+                    return e.extendedProps.kind !== 'open' || !hidden[String(e.extendedProps.instructorId)];
+                });
+            }
 
             var cancelUrlTemplate = "{{ route('training.book.cancel', ['id' => '__ID__']) }}";
 
