@@ -8,7 +8,12 @@
 <div class="container">
 
     <div class="mb-4">
-        <h2 class="font-weight-bold mb-0" style="color:#122b44;">Book Training</h2>
+        <div class="d-flex align-items-center" style="gap:0.6rem;">
+            <h2 class="font-weight-bold mb-0" style="color:#122b44;">Book Training</h2>
+            @if($student->mentorable)
+                <span style="background:#dbeafe; color:#1d4ed8; font-size:0.75rem; font-weight:700; padding:0.25em 0.6em; border-radius:0.4rem;" title="Your instructor has marked you mentorable — you can book with any instructor.">Mentorable</span>
+            @endif
+        </div>
         @if($student->instructor_id && $student->instructor || $student->mentorable)
             <p class="text-muted mb-0" style="font-size:0.875rem;">
                 @if($student->mentorable)

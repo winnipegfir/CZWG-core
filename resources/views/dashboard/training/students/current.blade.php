@@ -102,6 +102,9 @@
                                 @else
                                     <span class="text-muted">—</span>
                                 @endif
+                                @if($student->mentorable)
+                                    <span style="background:#dbeafe; color:#1d4ed8; font-size:0.68rem; font-weight:700; padding:0.15em 0.45em; border-radius:0.3rem; margin-left:0.35rem;" title="Open to booking with any instructor">Mentorable</span>
+                                @endif
                             </td>
                             <td style="vertical-align:middle;">
                                 <div class="d-flex align-items-center" style="gap:0.35rem;">

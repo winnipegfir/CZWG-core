@@ -124,6 +124,9 @@
                                 <div style="font-weight:600; font-size:0.875rem;">{{ $student->user ? $student->user->fullName('FL') : 'CID ' . $student->user_id }}</div>
                                 <div style="font-size:0.75rem; color:#64748b;">{{ $student->user ? $student->user->rating->getShortName() : '—' }} &middot; {{ $student->entry_type }}</div>
                             </div>
+                            @if($student->mentorable)
+                                <span style="background:#dbeafe; color:#1d4ed8; font-size:0.7rem; font-weight:700; padding:0.2em 0.55em; border-radius:0.3rem; margin-right:0.35rem;">Mentorable</span>
+                            @endif
                             @if($student->instructor_id)
                                 <span style="background:#dcfce7; color:#15803d; font-size:0.7rem; font-weight:700; padding:0.2em 0.55em; border-radius:0.3rem;">Linked</span>
                             @else
