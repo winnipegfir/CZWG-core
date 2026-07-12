@@ -2,7 +2,7 @@
 
 namespace App\Notifications\Concerns;
 
-use NotificationChannels\Discord\DiscordChannel;
+use App\Notifications\Channels\SafeDiscordChannel;
 use NotificationChannels\Discord\DiscordMessage;
 
 trait SendsDiscordDm
@@ -10,7 +10,7 @@ trait SendsDiscordDm
     protected function viaChannels($notifiable, array $default = ['database'])
     {
         if ($notifiable->wantsDiscordNotifications()) {
-            $default[] = DiscordChannel::class;
+            $default[] = SafeDiscordChannel::class;
         }
 
         return $default;
