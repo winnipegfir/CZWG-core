@@ -8,6 +8,15 @@ return new class extends Migration
 {
     public function up(): void
     {
+        // Some environments have a leftover `notifications` table from an
+        // unrelated, never-wired-up feature (columns like user_id/content/link
+        // instead of Laravel's polymorphic notifiable_type/notifiable_id).
+        // It's unused (empty) wherever this has been checked, so replace it
+        // rather than leaving the new notification system unable to write to it.
+        if (Schema::hasTable('notifications') && !Schema::hasColumn('notifications', 'notifiable_type')) {
+            Schema::drop('notifications');
+        }
+
         if (Schema::hasTable('notifications')) {
             return;
         }
