@@ -48,4 +48,16 @@ class NotificationController extends Controller
 
         return redirect()->back();
     }
+
+    public function destroy(Request $request, $id)
+    {
+        $notification = Auth::user()->notifications()->where('id', $id)->firstOrFail();
+        $notification->delete();
+
+        if ($request->wantsJson() || $request->ajax()) {
+            return response()->json(['ok' => true]);
+        }
+
+        return redirect()->back();
+    }
 }

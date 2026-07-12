@@ -25,21 +25,29 @@
     @else
         <div class="card">
             @foreach ($notifications as $n)
-                <a href="{{ route('notifications.open', $n->id) }}"
-                   class="d-flex align-items-start"
-                   style="gap:0.75rem; padding:0.9rem 1.1rem; text-decoration:none; color:inherit; border-bottom:1px solid #f1f5f9; {{ $n->read_at ? '' : 'background:rgba(37,99,235,0.06);' }}">
-                    <div style="width:32px; height:32px; border-radius:8px; background:#eff6ff; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                        <i class="fas {{ $n->data['icon'] ?? 'fa-bell' }}" style="color:#2563eb; font-size:0.8rem;"></i>
-                    </div>
-                    <div style="flex:1; min-width:0;">
-                        <div style="font-weight:600; font-size:0.9rem; color:#1e293b;">{{ $n->data['title'] ?? '' }}</div>
-                        <div style="font-size:0.82rem; color:#64748b;">{{ $n->data['body'] ?? '' }}</div>
-                        <div style="font-size:0.72rem; color:#94a3b8; margin-top:0.2rem;">{{ $n->created_at->diffForHumans() }}</div>
-                    </div>
-                    @unless($n->read_at)
-                        <span style="width:8px; height:8px; border-radius:50%; background:#2563eb; margin-top:0.4rem; flex-shrink:0;"></span>
-                    @endunless
-                </a>
+                <div class="d-flex align-items-start notif-page-row" style="gap:0.75rem; padding:0.9rem 1.1rem; border-bottom:1px solid #f1f5f9;">
+                    <a href="{{ route('notifications.open', $n->id) }}" class="d-flex align-items-start" style="flex:1; min-width:0; gap:0.75rem; text-decoration:none; color:inherit;">
+                        <div style="width:32px; height:32px; border-radius:8px; background:#eff6ff; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                            <i class="fas {{ $n->data['icon'] ?? 'fa-bell' }}" style="color:#2563eb; font-size:0.8rem;"></i>
+                        </div>
+                        <div style="flex:1; min-width:0;">
+                            <div style="display:flex; align-items:center; gap:0.4rem; font-weight:600; font-size:0.9rem; color:#1e293b;">
+                                {{ $n->data['title'] ?? '' }}
+                                @unless($n->read_at)
+                                    <span style="width:6px; height:6px; border-radius:50%; background:#2563eb; flex-shrink:0;"></span>
+                                @endunless
+                            </div>
+                            <div style="font-size:0.82rem; color:#64748b;">{{ $n->data['body'] ?? '' }}</div>
+                            <div style="font-size:0.72rem; color:#94a3b8; margin-top:0.2rem;">{{ $n->created_at->diffForHumans() }}</div>
+                        </div>
+                    </a>
+                    <form method="POST" action="{{ route('notifications.destroy', $n->id) }}" onsubmit="return confirm('Delete this notification?')">
+                        @csrf @method('DELETE')
+                        <button type="submit" class="btn btn-sm" title="Delete" style="color:#adb5bd; border:none; background:none; padding:0.2rem 0.4rem;">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </form>
+                </div>
             @endforeach
         </div>
 

@@ -219,6 +219,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/poll', 'NotificationController@poll')->name('poll');
             Route::get('/{id}/open', 'NotificationController@open')->name('open');
             Route::post('/read-all', 'NotificationController@readAll')->name('readall');
+            Route::delete('/{id}', 'NotificationController@destroy')->name('destroy');
         });
     });
 
