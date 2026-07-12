@@ -5,7 +5,7 @@
 @section('content')
 
 <div style="background:#f8fafc; padding:2rem 0;">
-<div class="container" style="max-width:720px;">
+<div class="container">
 
     <div class="d-flex align-items-center mb-4">
         <h2 class="font-weight-bold mb-0" style="color:#122b44;">Notifications</h2>

@@ -1,7 +1,7 @@
 <li class="nav-item dropdown mr-1">
     <a class="nav-link dropdown-toggle" href="#" id="notifBellToggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Notifications" style="position:relative;">
         <i class="fas fa-bell"></i>
-        <span id="notifBadge" class="badge badge-danger" style="display:none; position:absolute; top:2px; right:-4px; font-size:0.6rem; line-height:1; padding:0.28em 0.4em; border-radius:50%;">0</span>
+        <span id="notifBadge" class="notif-badge" style="display:none;">0</span>
     </a>
     <div class="dropdown-menu dropdown-menu-right notif-dropdown" aria-labelledby="notifBellToggle">
         <div class="notif-header">

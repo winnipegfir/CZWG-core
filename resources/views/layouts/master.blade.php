@@ -11,6 +11,11 @@
             } catch (e) {}
         })();
         </script>
+        <!--Critical dark-mode background, inlined so it applies instantly and doesn't wait on the CDN stylesheets below (avoids a flash of light content before czqomd.css loads)-->
+        <style>
+        html[data-theme="dark"] { background-color: #16181d; }
+        html[data-theme="dark"] body { background-color: #16181d !important; color: #d7dade !important; }
+        </style>
         <!--
         {{App\Models\Settings\CoreSettings::where('id', 1)->firstOrFail()->sys_name}}
         {{App\Models\Settings\CoreSettings::where('id', 1)->firstOrFail()->release}} ({{App\Models\Settings\CoreSettings::where('id', 1)->firstOrFail()->sys_build}})
@@ -44,13 +49,13 @@
         @if (Auth::check())
         @switch (Auth::user()->preferences)
             @case("default")
-            <link href="{{ asset('css/czqomd.css') }}?v=31" rel="stylesheet">
+            <link href="{{ asset('css/czqomd.css') }}?v=32" rel="stylesheet">
             @break
             @default
-            <link href="{{ asset('css/czqomd.css') }}?v=31" rel="stylesheet">
+            <link href="{{ asset('css/czqomd.css') }}?v=32" rel="stylesheet">
         @endswitch
         @else
-        <link href="{{ asset('css/czqomd.css') }}?v=31" rel="stylesheet">
+        <link href="{{ asset('css/czqomd.css') }}?v=32" rel="stylesheet">
         @endif
         <!--SimpleMDE Editor-->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
