@@ -26,7 +26,7 @@ class RosterCertificationUpdated extends Notification
         return [
             'title' => 'Your roster record was updated',
             'body'  => implode(', ', $this->changes),
-            'url'   => route('roster.index'),
+            'url'   => route('profile.view', $notifiable->id),
             'icon'  => 'fa-id-badge',
         ];
     }
