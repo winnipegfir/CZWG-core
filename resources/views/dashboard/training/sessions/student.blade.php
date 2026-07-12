@@ -220,6 +220,17 @@
             var calendarEl = document.getElementById('bookingCalendar');
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 timeZone: 'UTC',
+                now: function () {
+                    var parts = new Intl.DateTimeFormat('en-CA', {
+                        timeZone: '{{ $userTz }}',
+                        hourCycle: 'h23',
+                        year: 'numeric', month: '2-digit', day: '2-digit',
+                        hour: '2-digit', minute: '2-digit', second: '2-digit',
+                    }).formatToParts(new Date());
+                    var p = {};
+                    parts.forEach(function (part) { p[part.type] = part.value; });
+                    return Date.UTC(p.year, p.month - 1, p.day, p.hour, p.minute, p.second);
+                },
                 initialView: 'timeGridWeek',
                 headerToolbar: { left: 'prev,next today', center: 'title', right: 'timeGridWeek,dayGridMonth' },
                 height: 'auto',
