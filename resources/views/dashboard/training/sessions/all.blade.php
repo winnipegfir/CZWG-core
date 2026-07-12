@@ -19,6 +19,8 @@
 .ts-badge-booked    { background:#dcfce7; color:#15803d; }
 .ts-badge-cancelled { background:#fee2e2; color:#b91c1c; }
 .ts-reassign select { font-size:0.8rem; padding:0.15rem 0.4rem; height:auto; }
+.ts-sortable:hover { color:#122b44 !important; }
+.ts-sort-arrow { font-size:0.7rem; opacity:0.5; }
 </style>
 
 <div style="background:#f8fafc; padding:2rem 0;">
@@ -55,15 +57,18 @@
                 <table class="table table-hover mb-0" style="font-size:0.875rem;">
                     <thead style="background:#f8fafc; border-bottom:2px solid #e2e8f0;">
                         <tr>
-                            <th style="color:#64748b; font-weight:600; border-top:none;">When ({{ \App\Models\Users\User::timezoneLabel($userTz) }})</th>
-                            <th style="color:#64748b; font-weight:600; border-top:none;">Status</th>
-                            <th style="color:#64748b; font-weight:600; border-top:none; min-width:280px;">Instructor / Student</th>
+                            <th class="ts-sortable" data-sort="when" style="color:#64748b; font-weight:600; border-top:none; cursor:pointer; user-select:none;">When ({{ \App\Models\Users\User::timezoneLabel($userTz) }}) <span class="ts-sort-arrow"></span></th>
+                            <th class="ts-sortable" data-sort="status" style="color:#64748b; font-weight:600; border-top:none; cursor:pointer; user-select:none;">Status <span class="ts-sort-arrow"></span></th>
+                            <th class="ts-sortable" data-sort="who" style="color:#64748b; font-weight:600; border-top:none; min-width:280px; cursor:pointer; user-select:none;">Instructor / Student <span class="ts-sort-arrow"></span></th>
                             <th style="border-top:none;"></th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="sessionsTableBody">
                         @foreach ($sessions as $session)
-                            <tr id="session-row-{{ $session->id }}" style="transition:background-color 0.6s ease;">
+                            <tr id="session-row-{{ $session->id }}" style="transition:background-color 0.6s ease;"
+                                data-when="{{ $session->start_time->timestamp }}"
+                                data-status="{{ $session->status }}"
+                                data-who="{{ strtolower(($session->instructor && $session->instructor->user ? $session->instructor->user->fullName('FL') : 'zzz') . ' ' . ($session->student && $session->student->user ? $session->student->user->fullName('FL') : '')) }}">
                                 <td style="vertical-align:middle;">
                                     @php $startLocal = $session->start_time->copy()->setTimezone($userTz); $endLocal = $session->end_time->copy()->setTimezone($userTz); @endphp
                                     <span style="color:#122b44; font-weight:600;">{{ $startLocal->format('D, M j') }}</span>
@@ -267,6 +272,46 @@ document.addEventListener('DOMContentLoaded', function () {
 
         filterStudents(false);
         instructorSelect.addEventListener('change', function () { filterStudents(true); });
+    });
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var statusOrder = { open: 0, pending: 1, booked: 2, cancelled: 3 };
+    var tbody = document.getElementById('sessionsTableBody');
+    var currentSort = { key: 'when', dir: 'desc' };
+
+    function sortRows(key, dir) {
+        var rows = Array.prototype.slice.call(tbody.querySelectorAll('tr'));
+        rows.sort(function (a, b) {
+            var av = a.getAttribute('data-' + key);
+            var bv = b.getAttribute('data-' + key);
+            if (key === 'when') {
+                av = parseInt(av, 10);
+                bv = parseInt(bv, 10);
+            } else if (key === 'status') {
+                av = statusOrder[av] !== undefined ? statusOrder[av] : 99;
+                bv = statusOrder[bv] !== undefined ? statusOrder[bv] : 99;
+            }
+            if (av < bv) return dir === 'asc' ? -1 : 1;
+            if (av > bv) return dir === 'asc' ? 1 : -1;
+            return 0;
+        });
+        rows.forEach(function (row) { tbody.appendChild(row); });
+    }
+
+    document.querySelectorAll('.ts-sortable').forEach(function (th) {
+        th.addEventListener('click', function () {
+            var key = th.getAttribute('data-sort');
+            var dir = (currentSort.key === key && currentSort.dir === 'asc') ? 'desc' : 'asc';
+            currentSort = { key: key, dir: dir };
+
+            document.querySelectorAll('.ts-sort-arrow').forEach(function (arrow) { arrow.textContent = ''; });
+            th.querySelector('.ts-sort-arrow').textContent = dir === 'asc' ? '▲' : '▼';
+
+            sortRows(key, dir);
+        });
     });
 });
 </script>
