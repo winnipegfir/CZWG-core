@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use LasseRafn\InitialAvatarGenerator\InitialAvatar;
 use App\Classes\DiscordClient;
+use NotificationChannels\Discord\Discord;
 
 class User extends Authenticatable
 {
@@ -195,7 +196,32 @@ class User extends Authenticatable
 
     public function routeNotificationForDiscord()
     {
-        return $this->discord_dm_channel_id;
+        if ($this->discord_dm_channel_id) {
+            return $this->discord_dm_channel_id;
+        }
+
+        if (! $this->discord_user_id) {
+            return null;
+        }
+
+        // Older links (or a link attempt that failed silently) may have set
+        // discord_user_id without ever getting a DM channel. Backfill it here
+        // instead of forcing every affected user to unlink/relink — cache the
+        // outcome (success or failure) so a persistently broken bot token
+        // doesn't hammer the Discord API on every notification.
+        return Cache::remember('users.discord_dm_backfill.' . $this->id, 3600, function () {
+            try {
+                $channelId = app(Discord::class)->getPrivateChannel($this->discord_user_id);
+                $this->discord_dm_channel_id = $channelId;
+                $this->save();
+
+                return $channelId;
+            } catch (\Throwable $e) {
+                Log::warning('Could not backfill Discord DM channel: ' . $e->getMessage(), ['user_id' => $this->id]);
+
+                return null;
+            }
+        });
     }
 
     public function hasDiscord()
@@ -209,9 +235,10 @@ class User extends Authenticatable
 
     public function wantsDiscordNotifications()
     {
-        return $this->hasDiscord()
-            && $this->discord_dm_channel_id
-            && optional($this->preferences)->enable_discord_notifications;
+        // Don't gate on discord_dm_channel_id here — routeNotificationForDiscord()
+        // lazily backfills it for users who linked before that channel ID was
+        // captured, so requiring it upfront would permanently exclude them.
+        return $this->hasDiscord() && optional($this->preferences)->enable_discord_notifications;
     }
 
     public function getDiscordUser()
