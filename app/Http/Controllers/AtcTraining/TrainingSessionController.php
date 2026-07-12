@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\AtcTraining\Instructor;
 use App\Models\AtcTraining\Student;
 use App\Models\AtcTraining\TrainingSession;
+use App\Notifications\TrainingSessionBooked;
+use App\Notifications\TrainingSessionCancelled;
+use App\Notifications\TrainingSessionConfirmed;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -77,10 +80,16 @@ class TrainingSessionController extends Controller
         $slot = TrainingSession::where('id', $id)->firstOrFail();
         abort_if($slot->instructor_id !== $instructor->id, 403);
 
-        $slot->status = 'cancelled';
+        if ($slot->student && $slot->student->user) {
+            $slot->student->user->notify(new TrainingSessionCancelled($slot, 'Your instructor', 'student'));
+        }
+
+        $slot->student_id = null;
+        $slot->status = 'open';
+        $slot->booked_at = null;
         $slot->save();
 
-        return redirect()->back()->withSuccess('Session cancelled.');
+        return redirect()->back()->withSuccess('Session cancelled — the time is open again.');
     }
 
     public function confirm($id)
@@ -97,6 +106,10 @@ class TrainingSessionController extends Controller
 
         $slot->status = 'booked';
         $slot->save();
+
+        if ($slot->student && $slot->student->user) {
+            $slot->student->user->notify(new TrainingSessionConfirmed($slot));
+        }
 
         return redirect()->back()->withSuccess('Session confirmed.');
     }
@@ -182,11 +195,15 @@ class TrainingSessionController extends Controller
             $slot->booked_at = now();
             $slot->save();
 
-            return true;
+            return $slot;
         });
 
         if (!$booked) {
             return redirect()->back()->withError('That time is no longer available.');
+        }
+
+        if ($booked->instructor && $booked->instructor->user) {
+            $booked->instructor->user->notify(new TrainingSessionBooked($booked));
         }
 
         return redirect()->back()->withSuccess('Session booked — waiting on your instructor to confirm.');
@@ -199,6 +216,10 @@ class TrainingSessionController extends Controller
 
         $slot = TrainingSession::where('id', $id)->firstOrFail();
         abort_if($slot->student_id !== $student->id, 403);
+
+        if ($slot->instructor && $slot->instructor->user) {
+            $slot->instructor->user->notify(new TrainingSessionCancelled($slot, 'The student', 'instructor'));
+        }
 
         $slot->student_id = null;
         $slot->status = 'open';

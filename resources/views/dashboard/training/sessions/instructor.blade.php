@@ -98,13 +98,13 @@
                                                 @csrf
                                                 <button type="submit" class="btn btn-sm btn-primary py-0 px-2" style="font-size:0.78rem;">Confirm</button>
                                             </form>
-                                            <form method="POST" action="{{ route('training.sessions.cancel', $slot->id) }}" onsubmit="return confirm('Cancel this session? The booking record will be kept as cancelled.')">
+                                            <form method="POST" action="{{ route('training.sessions.cancel', $slot->id) }}" onsubmit="return confirm('Cancel this session? The time will go back to open availability.')">
                                                 @csrf
                                                 <button type="submit" class="btn btn-sm btn-outline-warning py-0 px-2" style="font-size:0.78rem;">Cancel</button>
                                             </form>
                                         </div>
                                     @elseif ($slot->status === 'booked')
-                                        <form method="POST" action="{{ route('training.sessions.cancel', $slot->id) }}" onsubmit="return confirm('Cancel this session? The booking record will be kept as cancelled.')">
+                                        <form method="POST" action="{{ route('training.sessions.cancel', $slot->id) }}" onsubmit="return confirm('Cancel this session? The time will go back to open availability.')">
                                             @csrf
                                             <button type="submit" class="btn btn-sm btn-outline-warning py-0 px-2" style="font-size:0.78rem;">Cancel</button>
                                         </form>

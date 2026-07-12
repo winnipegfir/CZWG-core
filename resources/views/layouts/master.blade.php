@@ -221,6 +221,7 @@
                             </li>
                         @endunless
                         @auth
+                            @include('includes.notificationBell')
                             <li class="nav-item dropdown mr-1">
                                 <a class="nav-link nav-user-toggle dropdown-toggle" id="navUserDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <img src="{{Auth::user()->avatar()}}" class="nav-avatar" alt="">

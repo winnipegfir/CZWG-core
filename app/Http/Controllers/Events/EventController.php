@@ -13,6 +13,8 @@ use App\Models\Publications\UploadedImage;
 use App\Models\Settings\AuditLogEntry;
 use App\Models\Users\User;
 use App\Notifications\events\EventSignup;
+use App\Notifications\EventRosterConfirmed;
+use App\Notifications\EventRosterRemoved;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -118,6 +120,10 @@ class EventController extends Controller
         $applications = ControllerApplication::where('user_id', $request->input('user_cid'))->firstorFail();
         $applications->delete();
 
+        if ($controllerconfirm->user) {
+            $controllerconfirm->user->notify(new EventRosterConfirmed($controllerconfirm));
+        }
+
         return redirect()->route('events.admin.view', $event->slug)->with('success', 'Controller Confirmed for Event!');
     }
 
@@ -139,6 +145,10 @@ class EventController extends Controller
             'position' => $request->input('position'),
         ]);
 
+        if ($controllerconfirm->user) {
+            $controllerconfirm->user->notify(new EventRosterConfirmed($controllerconfirm));
+        }
+
         return redirect()->route('events.admin.view', $event->slug)->with('success', 'Controller Confirmed for Event!');
     }
 
@@ -148,6 +158,11 @@ class EventController extends Controller
             ['user_id', $cid],
             ['event_id', $request->input('id')],
         ])->firstorFail();
+
+        if ($controller->user && $controller->event) {
+            $controller->user->notify(new EventRosterRemoved($controller->event));
+        }
+
         $controller->delete();
 
         return redirect()->back()->with('success', 'Controller has been removed from the event!');

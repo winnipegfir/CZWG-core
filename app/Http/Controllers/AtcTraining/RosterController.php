@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\AtcTraining\RosterMember;
 use App\Models\Network\SessionLog;
 use App\Models\Users\User;
+use App\Notifications\RosterCertificationUpdated;
 use Illuminate\Http\Request;
 
 class RosterController extends Controller
@@ -92,6 +93,22 @@ class RosterController extends Controller
     {
         $roster = RosterMember::where('cid', $cid)->first();
         if ($roster != null) {
+            $certLabels = ['2' => 'Training', '3' => 'Solo', '4' => 'Certified'];
+            $certLabel = fn ($v) => $certLabels[(string) $v] ?? 'Not Certified';
+            $positions = ['del' => 'DEL', 'gnd' => 'GND', 'twr' => 'TWR', 'dep' => 'DEP', 'app' => 'APP', 'ctr' => 'CTR'];
+
+            $changes = [];
+            foreach ($positions as $field => $label) {
+                $old = $roster->$field;
+                $new = $request->input($field);
+                if ((string) $old !== (string) $new) {
+                    $changes[] = $label . ': ' . $certLabel($old) . ' → ' . $certLabel($new);
+                }
+            }
+
+            $oldActive = $roster->active;
+            $newActive = $request->input('active');
+
             $roster->del = $request->input('del');
             $roster->gnd = $request->input('gnd');
             $roster->twr = $request->input('twr');
@@ -102,8 +119,16 @@ class RosterController extends Controller
             if ($request->input('rating_hours') == 'true') {
                 $roster->rating_hours = 0;
             }
-            $roster->active = $request->input('active');
+            $roster->active = $newActive;
             $roster->save();
+
+            if ((string) $oldActive !== (string) $newActive) {
+                $changes[] = 'Status: ' . ($newActive == '1' ? 'Active' : 'Inactive');
+            }
+
+            if ($changes && $roster->user) {
+                $roster->user->notify(new RosterCertificationUpdated($changes));
+            }
         }
 
         return redirect('/dashboard/roster')->withSuccess('Successfully edited!');

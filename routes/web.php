@@ -212,6 +212,14 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/data', 'Users\DataController@index')->name('me.data');
             Route::post('/data/export/all', 'Users\DataController@exportAllData')->name('me.data.export.all');
         });
+
+        // Notifications
+        Route::prefix('notifications')->name('notifications.')->group(function () {
+            Route::get('/', 'NotificationController@index')->name('index');
+            Route::get('/poll', 'NotificationController@poll')->name('poll');
+            Route::get('/{id}/open', 'NotificationController@open')->name('open');
+            Route::post('/read-all', 'NotificationController@readAll')->name('readall');
+        });
     });
 
     //Users View/Edit

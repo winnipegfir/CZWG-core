@@ -224,6 +224,7 @@
                             </a>
                         </li>
                         @auth
+                            @include('includes.notificationBell')
                             <li class="nav-item dropdown mr-1">
                                 <a class="nav-link dropdown-toggle dash-user-toggle" id="dashUserDrop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <img src="{{Auth::user()->avatar()}}" class="dash-nav-avatar" alt="">

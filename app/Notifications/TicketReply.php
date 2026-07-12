@@ -30,7 +30,7 @@ class TicketReply extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['mail', 'database'];
     }
 
     /**
@@ -55,7 +55,10 @@ class TicketReply extends Notification
     public function toArray($notifiable)
     {
         return [
-            //
+            'title' => 'New reply on ticket #' . $this->ticket->ticket_id,
+            'body'  => $this->reply->user->fullName('FL') . ' replied to your ticket.',
+            'url'   => route('tickets.viewticket', $this->ticket->id),
+            'icon'  => 'fa-life-ring',
         ];
     }
 }
