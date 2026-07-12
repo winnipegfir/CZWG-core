@@ -397,8 +397,8 @@
                 </div>
             </div>
 
-            {{-- Instructor tools (instructor role, not full staff) --}}
-            @if(Auth::user()->instructorProfile !== null && Auth::user()->permissions < 4)
+            {{-- Instructor tools (shown to anyone with a linked instructor profile) --}}
+            @if(Auth::user()->instructorProfile !== null)
             <div class="db-card">
                 <div class="db-card-label">Instructor</div>
                 <div class="db-tile-grid db-tile-grid-3">
