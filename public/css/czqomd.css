@@ -2519,8 +2519,8 @@ html[data-theme="dark"] .select2-container--default .select2-results__option[ari
    ============================================================ */
 .notif-badge {
     position: absolute;
-    top: -2px;
-    right: -8px;
+    top: 6px;
+    right: 6px;
     min-width: 16px;
     height: 16px;
     padding: 0 3px;
@@ -2532,6 +2532,8 @@ html[data-theme="dark"] .select2-container--default .select2-results__option[ari
     line-height: 16px;
     text-align: center;
     box-sizing: border-box;
+    z-index: 5;
+    pointer-events: none;
 }
 
 .notif-dropdown {

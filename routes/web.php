@@ -159,8 +159,8 @@ Route::group(['middleware' => 'auth'], function () {
             return false;
         });
 
-        //Roster
-        Route::group(['middleware' => 'instructor'], function () {
+        //Roster (staff only — edits/deletes everyone's certifications, not for general instructor access)
+        Route::group(['middleware' => 'staff'], function () {
             Route::get('/roster', 'AtcTraining\RosterController@index')->name('roster.index');
             Route::post('/roster/controller/add/', 'AtcTraining\RosterController@addController')->name('roster.addcontroller');
             Route::post('/roster/controller/addv/', 'AtcTraining\RosterController@addVisitController')->name('roster.addvisitcontroller');
