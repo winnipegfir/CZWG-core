@@ -43,6 +43,21 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    protected static function booted()
+    {
+        static::updated(function (User $user) {
+            if (! $user->wasChanged('rating_id')) {
+                return;
+            }
+
+            $student = $user->studentProfile;
+            if ($student && $student->mentorable) {
+                $student->mentorable = false;
+                $student->save();
+            }
+        });
+    }
+
     /**
      * Return articles that the user has written.
      *

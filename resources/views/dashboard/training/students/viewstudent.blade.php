@@ -185,7 +185,7 @@
                         @csrf
                         <div class="custom-control custom-switch">
                             <input type="checkbox" class="custom-control-input" id="mentorableSwitch" name="mentorable" value="1" onchange="this.form.submit()" {{ $student->mentorable ? 'checked' : '' }}>
-                            <label class="custom-control-label" for="mentorableSwitch" style="font-size:0.85rem;">{{ $student->mentorable ? 'Open to all instructors' : 'Limited to assigned instructor' }}</label>
+                            <label class="custom-control-label" for="mentorableSwitch" style="font-size:0.85rem;">Mentorable</label>
                         </div>
                     </form>
                 </div>
