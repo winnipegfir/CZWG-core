@@ -206,6 +206,7 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/discord/link/redirect', 'Users\UserController@linkDiscordRedirect')->name('me.discord.link.redirect');
             Route::get('/discord/server/join', 'Users\UserController@joinDiscordServerRedirect')->name('me.discord.join');
             Route::get('/discord/server/join/redirect', 'Users\UserController@joinDiscordServer');
+            Route::post('/discord/sync', 'Users\UserController@syncDiscordRoles')->name('me.discord.sync');
             Route::get('/preferences', 'Users\UserController@preferences')->name('me.preferences');
             Route::post('/preferences', 'Users\UserController@preferencesPost')->name('me.preferences.post');
             //GDPR

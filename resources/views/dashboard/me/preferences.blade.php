@@ -38,6 +38,13 @@
             </div>
             <button type="submit" class="btn btn-primary">Save</button>
         </form>
+
+        <h4 class="font-weight-bold blue-text mt-4" style="font-size:1.1rem;">Discord Roles</h4>
+        <p>Force the bot to re-apply your rating and roster (home/visiting) role on Discord — useful if it didn't update automatically.</p>
+        <form method="POST" action="{{ route('me.discord.sync') }}" style="max-width:420px;">
+            @csrf
+            <button type="submit" class="btn btn-outline-primary">Sync Discord Roles</button>
+        </form>
     @else
         <p class="text-muted">Link your Discord account to get notifications sent as a DM. You can link it from your dashboard.</p>
     @endif

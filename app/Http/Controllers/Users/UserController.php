@@ -30,6 +30,7 @@ use NotificationChannels\Discord\Exceptions\CouldNotSendNotification;
 use SocialiteProviders\Manager\Config;
 
 use App\Classes\DiscordClient;
+use App\Classes\VatsimRating;
 
 class UserController extends Controller
 {
@@ -604,20 +605,17 @@ class UserController extends Controller
         return Socialite::with('discord')->setConfig($config)->setScopes(['identify', 'guilds.join'])->redirect();
     }
 
-    public function joinDiscordServer()
+    /**
+     * The rating role (e.g. "S1"/"C3"/"I1") and roster role ("Home
+     * Controllers"/"Visiting Controllers") this user should have, matched by
+     * name against whatever actually exists in the guild — rather than
+     * hardcoding role IDs — so the site stays the source of truth and role
+     * renames don't need a code change here.
+     *
+     * @param \Illuminate\Support\Collection $roleIdsByName Guild role name => id.
+     */
+    private function discordManagedRoleIds(User $user, $roleIdsByName): array
     {
-        $discord = new DiscordClient(config('services.discord.token'));
-        $config = new Config(config('services.discord.client_id'), config('services.discord.client_secret'), config('services.discord.redirect_join'));
-        $discordUser = Socialite::driver('discord')->setConfig($config)->user();
-        $user = Auth::user();
-
-        // Match roles by name against whatever actually exists in the guild
-        // (rating roles like "S1"/"C3"/"I1", plus "Home Controllers" /
-        // "Visiting Controllers") rather than hardcoding role IDs, so the
-        // site stays the source of truth and role renames don't need a
-        // code change here.
-        $roleIdsByName = collect($discord->GetGuildRoles())->pluck('id', 'name');
-
         $roles = [];
 
         if ($ratingRoleId = $roleIdsByName->get($user->rating_short)) {
@@ -631,6 +629,19 @@ class UserController extends Controller
             }
         }
 
+        return $roles;
+    }
+
+    public function joinDiscordServer()
+    {
+        $discord = new DiscordClient(config('services.discord.token'));
+        $config = new Config(config('services.discord.client_id'), config('services.discord.client_secret'), config('services.discord.redirect_join'));
+        $discordUser = Socialite::driver('discord')->setConfig($config)->user();
+        $user = Auth::user();
+
+        $roleIdsByName = collect($discord->GetGuildRoles())->pluck('id', 'name');
+        $roles = $this->discordManagedRoleIds($user, $roleIdsByName);
+
         // Add to server
         $discord->AddGuildMember($discordUser->id, $discordUser->token, Auth::user()->fullName('FL'), $roles);
 
@@ -643,6 +654,45 @@ class UserController extends Controller
         $discord->SendAuditMessage('<@'.$discordUser->id.'> ('.Auth::id().') has joined.');
 
         return redirect()->route('dashboard.index')->with('success', 'You have joined the Winnipeg Discord server!');
+    }
+
+    /**
+     * Manual "force sync" button on the preferences page — re-applies the
+     * correct rating/roster role in case the bot missed it (didn't fire on
+     * join, rating changed since, etc.) without touching any other roles
+     * the member has (staff, event, custom color, etc.).
+     */
+    public function syncDiscordRoles()
+    {
+        $user = Auth::user();
+        abort_if(!$user->hasDiscord(), 403, 'Link your Discord account first.');
+
+        $discord = new DiscordClient(config('services.discord.token'));
+        $roleIdsByName = collect($discord->GetGuildRoles())->pluck('id', 'name');
+
+        $member = $discord->GetGuildMember($user->discord_user_id);
+        if (!$member) {
+            return redirect()->route('me.preferences')->with('error-modal', 'Could not find you in the Discord server — make sure you have joined it first.');
+        }
+
+        // Everything this app is allowed to add/remove automatically: every
+        // rating role plus the two roster roles. Anything else the member
+        // has is left completely untouched.
+        $managedRoleNames = collect(VatsimRating::cases())
+            ->map(fn ($rating) => $rating->getShortName())
+            ->push('Home Controllers')
+            ->push('Visiting Controllers');
+        $managedRoleIds = $roleIdsByName->only($managedRoleNames)->values();
+
+        $currentRoleIds = collect($member->roles ?? []);
+        $keptRoleIds = $currentRoleIds->reject(fn ($id) => $managedRoleIds->contains($id));
+        $desiredRoleIds = $this->discordManagedRoleIds($user, $roleIdsByName);
+
+        $finalRoleIds = $keptRoleIds->merge($desiredRoleIds)->unique()->values()->all();
+
+        $discord->ModifyGuildMemberRoles($user->discord_user_id, $finalRoleIds);
+
+        return redirect()->route('me.preferences')->with('success', 'Discord roles synced.');
     }
 
     public function unlinkDiscord()

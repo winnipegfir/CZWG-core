@@ -65,6 +65,20 @@ class DiscordClient
         return [];
     }
 
+    // Replaces a member's full role list — unlike AddGuildMember (which only
+    // sets initial roles when someone first joins), this overwrites whatever
+    // roles they currently have. Callers must merge in any roles they want
+    // to preserve themselves.
+    function ModifyGuildMemberRoles(int $user_id, array $roles): void {
+        try {
+            $this->http->patch("guilds/" . self::WINNIPEG_GUILD . "/members/$user_id", [
+                'json' => [ 'roles' => array_map('strval', $roles) ]
+            ]);
+        } catch (GuzzleException $e) {
+            Log::error($e->getMessage());
+        }
+    }
+
     function GetGuildMember(int $user_id) : object|null {
         try {
             $response = $this->http->get("guilds/" . self::WINNIPEG_GUILD . "/members/$user_id");
