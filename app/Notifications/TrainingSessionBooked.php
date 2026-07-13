@@ -6,6 +6,7 @@ use App\Models\AtcTraining\TrainingSession;
 use App\Notifications\Concerns\SendsDiscordDm;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\URL;
 
 class TrainingSessionBooked extends Notification
 {
@@ -33,6 +34,14 @@ class TrainingSessionBooked extends Notification
             'body'  => $studentName . ' booked ' . $when . ' — confirm it to lock it in.',
             'url'   => route('training.sessions.index'),
             'icon'  => 'fa-calendar-check',
+        ];
+    }
+
+    public function discordButton($notifiable)
+    {
+        return [
+            'label' => 'Confirm Slot',
+            'url'   => URL::temporarySignedRoute('training.sessions.discordconfirm', now()->addDays(3), ['id' => $this->session->id]),
         ];
     }
 }

@@ -165,6 +165,40 @@ class TrainingSessionController extends Controller
         return redirect()->back()->withSuccess('Session confirmed.');
     }
 
+    /**
+     * One-click confirm from the "Confirm Slot" button in the Discord DM.
+     * Authorization here is the signature itself (the link is only ever
+     * handed out privately, scoped to one session, and time-limited) rather
+     * than the logged-in session, so this works even from a phone that isn't
+     * logged into the site.
+     */
+    public function discordConfirm($id)
+    {
+        $slot = TrainingSession::where('id', $id)->firstOrFail();
+
+        if ($slot->status !== 'pending') {
+            return view('dashboard.training.sessions.discord-confirm-result', [
+                'success' => $slot->status === 'booked',
+                'message' => $slot->status === 'booked'
+                    ? 'This session was already confirmed.'
+                    : 'This session can no longer be confirmed — it may have been cancelled.',
+            ]);
+        }
+
+        $slot->status = 'booked';
+        $slot->save();
+
+        if ($slot->student && $slot->student->user) {
+            $slot->student->user->notify(new TrainingSessionConfirmed($slot));
+        }
+
+        return view('dashboard.training.sessions.discord-confirm-result', [
+            'success' => true,
+            'message' => 'Session confirmed'
+                . ($slot->student && $slot->student->user ? ' — ' . $slot->student->user->fullName('FL') . ' has been notified.' : '.'),
+        ]);
+    }
+
     public function studentIndex()
     {
         $student = Auth::user()->studentProfile;

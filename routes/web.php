@@ -306,6 +306,9 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 //AtcTraining
+Route::get('/training/sessions/{id}/discord-confirm', 'AtcTraining\TrainingSessionController@discordConfirm')
+    ->name('training.sessions.discordconfirm')
+    ->middleware('signed');
 Route::post('/training', 'AtcTraining\TrainingController@editTrainingTime')->middleware('staff')->name('waittime.edit');
 Route::prefix('dashboard/training')->middleware('instructor')->group(function () {
     Route::get('/', 'AtcTraining\TrainingController@index')->name('training.index');
