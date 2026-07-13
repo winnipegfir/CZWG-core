@@ -435,6 +435,10 @@
                         <div class="db-tile-icon" style="background:#fffbeb; color:#d97706;"><i class="fas fa-comment-alt"></i></div>
                         <span class="db-tile-label">Feedback Inbox</span>
                     </a>
+                    <a href="{{ route('tickets.staff') }}" class="db-tile">
+                        <div class="db-tile-icon" style="background:#fdf4ff; color:#9333ea;"><i class="fas fa-ticket-alt"></i></div>
+                        <span class="db-tile-label">All Tickets</span>
+                    </a>
                     <a href="{{ route('users.viewall') }}" class="db-tile">
                         <div class="db-tile-icon" style="background:#f8fafc; color:#64748b;"><i class="fas fa-user-cog"></i></div>
                         <span class="db-tile-label">Manage Users</span>
