@@ -183,7 +183,7 @@
                     <p class="text-muted mb-2" style="font-size:0.78rem;">If enabled, this student's bookable slots include every instructor, not just their assigned one.</p>
                     <form action="{{ route('training.students.mentorable', $student->id) }}" method="POST">
                         @csrf
-                        <div class="custom-control custom-switch">
+                        <div class="custom-control custom-checkbox">
                             <input type="checkbox" class="custom-control-input" id="mentorableSwitch" name="mentorable" value="1" onchange="this.form.submit()" {{ $student->mentorable ? 'checked' : '' }}>
                             <label class="custom-control-label" for="mentorableSwitch" style="font-size:0.85rem;">Mentorable</label>
                         </div>

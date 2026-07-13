@@ -32,7 +32,7 @@
         <form method="POST" action="{{ route('me.preferences.post') }}" style="max-width:420px;">
             @csrf
             <input type="hidden" name="timezone" value="{{ Auth::user()->timezone }}">
-            <div class="custom-control custom-switch mb-3">
+            <div class="custom-control custom-checkbox mb-3">
                 <input type="checkbox" class="custom-control-input" id="discordNotifySwitch" name="discord_notify" value="1" @checked(optional(Auth::user()->preferences)->enable_discord_notifications)>
                 <label class="custom-control-label" for="discordNotifySwitch">DM me on Discord for notifications</label>
             </div>
