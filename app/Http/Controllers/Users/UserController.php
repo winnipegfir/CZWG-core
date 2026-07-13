@@ -618,7 +618,11 @@ class UserController extends Controller
     {
         $roles = [];
 
-        if ($ratingRoleId = $roleIdsByName->get($user->rating_short)) {
+        // rating_short is a denormalized column only written when RatingUpdate
+        // detects a change — it's NULL for anyone whose rating hasn't changed
+        // since that column existed. rating_id (and the rating accessor built
+        // from it) is set on every login, so it's always accurate.
+        if ($ratingRoleId = $roleIdsByName->get($user->rating->getShortName())) {
             $roles[] = $ratingRoleId;
         }
 
