@@ -28,6 +28,6 @@ class TrainingSession extends Model
 
     public function scopeOpen($query)
     {
-        return $query->where('status', 'open');
+        return $query->where('status', 'open')->where('end_time', '>', now());
     }
 }

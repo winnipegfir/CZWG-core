@@ -75,8 +75,12 @@
                         @else
                             @foreach ($openSlots as $slot)
                                 @php
-                                    $startLocal = $slot->start_time->copy()->setTimezone($userTz);
                                     $endLocal = $slot->end_time->copy()->setTimezone($userTz);
+                                    // A slot can span across "now" (started in the past, still open);
+                                    // clip the bookable start to now so past hours aren't offered.
+                                    $startLocal = $slot->start_time->isPast()
+                                        ? now()->setTimezone($userTz)
+                                        : $slot->start_time->copy()->setTimezone($userTz);
                                     $hourOptions = [];
                                     $cursor = $startLocal->copy();
                                     while ($cursor->copy()->addHour()->lte($endLocal)) {
@@ -84,6 +88,9 @@
                                         $cursor->addHour();
                                     }
                                 @endphp
+                                @if(empty($hourOptions))
+                                    @continue
+                                @endif
                                 <div style="display:flex; align-items:center; padding:0.6rem 0; border-bottom:1px solid #f1f5f9;">
                                     @if($student->mentorable)
                                         <span style="width:8px; height:8px; border-radius:50%; background:{{ $instructorColors[$slot->instructor_id] ?? '#64748b' }}; margin-right:0.6rem; flex-shrink:0;"></span>
@@ -187,10 +194,13 @@
                     $title .= ' — ' . $slot->note;
                 }
                 $color = $instructorColors[$slot->instructor_id] ?? '#64748b';
+                // Clip the visible/clickable start to now for slots that span across it,
+                // so the already-elapsed portion isn't shown as bookable.
+                $eventStart = $slot->start_time->isPast() ? now() : $slot->start_time;
                 $calendarEvents[] = [
                     'id' => $slot->id,
                     'title' => $title,
-                    'start' => $slot->start_time->copy()->setTimezone($userTz)->format('Y-m-d\TH:i:s'),
+                    'start' => $eventStart->copy()->setTimezone($userTz)->format('Y-m-d\TH:i:s'),
                     'end' => $slot->end_time->copy()->setTimezone($userTz)->format('Y-m-d\TH:i:s'),
                     'backgroundColor' => $color,
                     'borderColor' => $color,

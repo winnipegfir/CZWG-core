@@ -39,12 +39,30 @@ class DiscordClient
                 'json' => [
                     'access_token' => $access_token,
                     'nick' => $nickname,
-                    'roles' => /*$roles*/ null // TODO: Fix this, idk why discord doesn't like how I send the roles from the UserController
+                    // Discord expects a flat array of role ID snowflakes (as strings).
+                    // The caller used to build a nested array (e.g. [[123]] instead of
+                    // [123]), which Discord rejected — cast/flatten defensively here too.
+                    'roles' => array_map('strval', $roles),
                 ]
             ]);
         } catch (GuzzleException $e) {
             Log::error($e->getMessage());
         }
+    }
+
+    function GetGuildRoles(): array {
+        try {
+            $response = $this->http->get("guilds/" . self::WINNIPEG_GUILD . "/roles");
+
+            if ($response->getStatusCode() !== 200)
+                return [];
+
+            return json_decode($response->getBody()->getContents(), true);
+        } catch (GuzzleException $e) {
+            Log::error($e->getMessage());
+        }
+
+        return [];
     }
 
     function GetGuildMember(int $user_id) : object|null {

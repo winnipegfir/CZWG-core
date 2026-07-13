@@ -253,6 +253,10 @@ class TrainingSessionController extends Controller
         $start = Carbon::parse($request->input('start_time'), $userTz)->setTimezone('UTC')->second(0);
         $end = $start->copy()->addHour();
 
+        if ($start->lt(now())) {
+            return redirect()->back()->withError('That time is in the past.');
+        }
+
         $booked = DB::transaction(function () use ($student, $start, $end, $instructorId) {
             $slot = TrainingSession::where('instructor_id', $instructorId)
                 ->where('status', 'open')

@@ -609,17 +609,26 @@ class UserController extends Controller
         $discord = new DiscordClient(config('services.discord.token'));
         $config = new Config(config('services.discord.client_id'), config('services.discord.client_secret'), config('services.discord.redirect_join'));
         $discordUser = Socialite::driver('discord')->setConfig($config)->user();
+        $user = Auth::user();
+
+        // Match roles by name against whatever actually exists in the guild
+        // (rating roles like "S1"/"C3"/"I1", plus "Home Controllers" /
+        // "Visiting Controllers") rather than hardcoding role IDs, so the
+        // site stays the source of truth and role renames don't need a
+        // code change here.
+        $roleIdsByName = collect($discord->GetGuildRoles())->pluck('id', 'name');
+
         $roles = [];
-        if (Auth::user()->rosterProfile) {
-            if (Auth::user()->rosterProfile->status == 'training') {
-                $roles[] = [717155319981146182];
-            } elseif (Auth::user()->rosterProfile->status == 'home') {
-                $roles[] = [713914598750683157];
-            } elseif (Auth::id() == '1427371') {
-                $roles[] = [673731111171391518];
+
+        if ($ratingRoleId = $roleIdsByName->get($user->rating_short)) {
+            $roles[] = $ratingRoleId;
+        }
+
+        if ($roster = $user->rosterProfile) {
+            $rosterRoleName = $roster->visit == 1 ? 'Visiting Controllers' : 'Home Controllers';
+            if ($rosterRoleId = $roleIdsByName->get($rosterRoleName)) {
+                $roles[] = $rosterRoleId;
             }
-        } else {
-            $roles[] = [482835389640343562];
         }
 
         // Add to server
