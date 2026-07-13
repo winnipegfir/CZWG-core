@@ -39,6 +39,9 @@
                         <a class="dropdown-item {{ Request::is('dashboard/training/students/current') ? 'active' : '' }}" href="{{ route('training.students.current') }}">
                             Linked
                         </a>
+                        <a class="dropdown-item {{ Request::is('dashboard/training/students/mentorable') ? 'active' : '' }}" href="{{ route('training.students.mentorablelist') }}">
+                            Mentorable
+                        </a>
                     </div>
                 </div>
                 @endif

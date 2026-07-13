@@ -274,6 +274,14 @@ class TrainingController extends Controller
         return view('dashboard.training.students.current', compact('students', 'instructors', 'potentialstudent', 'vatcanOnlyCount'));
     }
 
+    public function mentorableStudents()
+    {
+        $students = Student::where('mentorable', true)->orderBy('created_at', 'asc')->get();
+        $instructors = Instructor::all();
+
+        return view('dashboard.training.students.mentorable', compact('students', 'instructors'));
+    }
+
     public function newLinkedStudent(Request $request)
     {
         $userId = $request->input('add_method') === 'cid'
