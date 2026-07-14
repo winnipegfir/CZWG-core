@@ -1711,8 +1711,21 @@ html[data-theme="dark"] [style*="background: #dbeafe"],
 html[data-theme="dark"] [style*="background:#eff6ff"],
 html[data-theme="dark"] [style*="background: #eff6ff"],
 html[data-theme="dark"] [style*="background:#d1ecf1"],
-html[data-theme="dark"] [style*="background: #d1ecf1"] {
+html[data-theme="dark"] [style*="background: #d1ecf1"],
+html[data-theme="dark"] [style*="background:#f0f4ff"],
+html[data-theme="dark"] [style*="background: #f0f4ff"] {
     background-color: #123138 !important;
+}
+
+html[data-theme="dark"] [style*="background:#e0e7ff"],
+html[data-theme="dark"] [style*="background: #e0e7ff"] {
+    background-color: #2a2f6b !important;
+    color: #c7cdfa !important;
+}
+
+html[data-theme="dark"] [style*="color:#4338ca"],
+html[data-theme="dark"] [style*="color: #4338ca"] {
+    color: #c7cdfa !important;
 }
 
 /* Neutral text colors -> lightened for dark backgrounds */
