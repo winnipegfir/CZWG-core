@@ -15,6 +15,7 @@ use App\Models\Users\User;
 use App\Notifications\events\EventSignup;
 use App\Notifications\EventRosterConfirmed;
 use App\Notifications\EventRosterRemoved;
+use App\Notifications\EventRosterUpdated;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -183,6 +184,10 @@ class EventController extends Controller
         $confirm->airport = $request->input('airport');
         $confirm->position = $request->input('position');
         $confirm->save();
+
+        if ($confirm->user) {
+            $confirm->user->notify(new EventRosterUpdated($confirm));
+        }
 
         return redirect()->route('events.admin.view', $confirm->event->slug)->with('success', 'Roster assignment updated!');
     }
