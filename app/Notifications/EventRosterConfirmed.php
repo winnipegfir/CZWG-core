@@ -23,10 +23,13 @@ class EventRosterConfirmed extends Notification
     public function toArray($notifiable)
     {
         $event = $this->confirm->event;
+        $start = $this->confirm->startAtUtc();
+        $end = $this->confirm->endAtUtc();
+        $timeframe = $start && $end ? ' from ' . $start->format('H:i') . 'z to ' . $end->format('H:i') . 'z' : '';
 
         return [
             'title' => 'Added to event roster',
-            'body'  => 'You\'re confirmed for ' . ($event ? $event->name : 'an event') . ' as ' . $this->confirm->position . '.',
+            'body'  => 'You\'re confirmed for ' . ($event ? $event->name : 'an event') . ' as ' . $this->confirm->position . $timeframe . '.',
             'url'   => $event ? route('events.view', $event->slug) : route('dashboard.index'),
             'icon'  => 'fa-calendar-check',
         ];
