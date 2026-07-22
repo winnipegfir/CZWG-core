@@ -1274,7 +1274,7 @@ html[data-theme="dark"] #czwgDashHeader .dropdown-menu .dropdown-item:hover {
 .evtl-track {
     position: relative;
     flex: 1;
-    height: 32px;
+    min-height: 32px;
     background: #f1f5f9;
     border-radius: 6px;
     overflow: hidden;
@@ -1304,8 +1304,7 @@ html[data-theme="dark"] #czwgDashHeader .dropdown-menu .dropdown-item:hover {
 
 .evtl-seg {
     position: absolute;
-    top: 3px;
-    bottom: 3px;
+    height: 28px;
     background: #1d4ed8;
     border-radius: 4px;
     color: #fff;
@@ -1314,14 +1313,25 @@ html[data-theme="dark"] #czwgDashHeader .dropdown-menu .dropdown-item:hover {
     padding: 0 0.45rem;
     display: flex;
     align-items: center;
+    gap: 0.35rem;
     overflow: hidden;
     box-shadow: 0 1px 2px rgba(0,0,0,0.15);
 }
 
-.evtl-seg span {
+.evtl-seg-name {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.evtl-seg-airport {
+    flex: 0 0 auto;
+    background: rgba(255,255,255,0.22);
+    font-size: 0.62rem;
+    font-weight: 700;
+    padding: 0.05rem 0.3rem;
+    border-radius: 3px;
+    letter-spacing: 0.3px;
 }
 
 /* === Dashboard Roster (admin index) === */

@@ -60,14 +60,47 @@ function eventTimelineRows($event, $positions)
 
         usort($segments, fn ($a, $b) => $a['left'] <=> $b['left']);
 
-        // Walk the sorted segments to find uncovered gaps in the row.
+        // Segments for the same position (e.g. Tower staffed at two
+        // airports at once) can overlap in time, so greedily pack them
+        // into lanes rather than letting them render on top of each other.
+        $laneEnds = [];
+        foreach ($segments as &$s) {
+            $lane = null;
+            foreach ($laneEnds as $i => $end) {
+                if ($s['left'] >= $end - 0.5) {
+                    $lane = $i;
+                    break;
+                }
+            }
+            if ($lane === null) {
+                $lane = count($laneEnds);
+            }
+            $laneEnds[$lane] = $s['left'] + $s['width'];
+            $s['lane'] = $lane;
+        }
+        unset($s);
+        $laneCount = max(1, count($laneEnds));
+
+        // Merge overlapping segments (across lanes) to find the time that
+        // truly has nobody covering it, so gaps aren't reported where a
+        // second airport's controller already has it covered.
+        $merged = [];
+        foreach ($segments as $s) {
+            $last = count($merged) - 1;
+            if ($last >= 0 && $s['left'] <= $merged[$last]['end'] + 0.5) {
+                $merged[$last]['end'] = max($merged[$last]['end'], $s['left'] + $s['width']);
+            } else {
+                $merged[] = ['start' => $s['left'], 'end' => $s['left'] + $s['width']];
+            }
+        }
+
         $gaps = [];
         $cursor = 0;
-        foreach ($segments as $s) {
-            if ($s['left'] > $cursor + 0.5) {
-                $gaps[] = ['left' => $cursor, 'width' => $s['left'] - $cursor];
+        foreach ($merged as $m) {
+            if ($m['start'] > $cursor + 0.5) {
+                $gaps[] = ['left' => $cursor, 'width' => $m['start'] - $cursor];
             }
-            $cursor = max($cursor, $s['left'] + $s['width']);
+            $cursor = max($cursor, $m['end']);
         }
         if ($cursor < 100 - 0.5) {
             $gaps[] = ['left' => $cursor, 'width' => 100 - $cursor];
@@ -77,6 +110,7 @@ function eventTimelineRows($event, $positions)
             'position' => $p->position,
             'segments' => $segments,
             'gaps' => $gaps,
+            'laneCount' => $laneCount,
             'unstaffed' => count($segments) === 0,
         ];
     }
@@ -214,7 +248,7 @@ function eventTimelineTicks($eventStart, $totalMinutes)
                                                 <i class="fas {{eventPositionIcon($row['position'])}}"></i>
                                                 {{$row['position']}}
                                             </div>
-                                            <div class="evtl-track">
+                                            <div class="evtl-track" style="height: {{$row['laneCount'] * 34 + 4}}px;">
                                                 @if($row['unstaffed'])
                                                     <div class="evtl-gap" style="left: 0%; width: 100%;">
                                                         <span>Not staffed</span>
@@ -224,9 +258,12 @@ function eventTimelineTicks($eventStart, $totalMinutes)
                                                         <div class="evtl-gap" style="left: {{$gap['left']}}%; width: {{$gap['width']}}%;"></div>
                                                     @endforeach
                                                     @foreach($row['segments'] as $seg)
-                                                        <div class="evtl-seg" style="left: {{$seg['left']}}%; width: {{$seg['width']}}%;"
+                                                        <div class="evtl-seg" style="left: {{$seg['left']}}%; width: {{$seg['width']}}%; top: {{$seg['lane'] * 34 + 3}}px;"
                                                              title="{{$seg['name']}} &mdash; {{$seg['airport'] ? $seg['airport'].' ' : ''}}{{$row['position']}} ({{$seg['start']}}z&ndash;{{$seg['end']}}z)">
-                                                            <span>{{$seg['name']}}</span>
+                                                            @if($seg['airport'] && strlen($seg['airport']) <= 10)
+                                                                <span class="evtl-seg-airport">{{$seg['airport']}}</span>
+                                                            @endif
+                                                            <span class="evtl-seg-name">{{$seg['name']}}</span>
                                                         </div>
                                                     @endforeach
                                                 @endif
