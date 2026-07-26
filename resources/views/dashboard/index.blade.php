@@ -238,37 +238,35 @@
                         Apply to join &rarr;
                     </a>
                 </div>
-            @elseif(Auth::user()->rosterProfile && Auth::user()->rosterProfile->status != 'not_certified')
+            @elseif(Auth::user()->rosterProfile && Auth::user()->rosterProfile->status != 'not_certified' && $myActivity)
                 @php
-                    $hours    = Auth::user()->rosterProfile->currency ?? 0;
-                    $reqHours = 3;
-                    $pct      = min(100, ($hours / $reqHours) * 100);
-                    $met      = $hours >= $reqHours;
-                    $fillColor = $met ? '#4ade80' : ($pct > 0 ? '#fbbf24' : '#f87171');
+                    $reqHours = $myActivity->requirement;
+                    $hours    = $myActivity->qualifying_hours;
+                    $pct      = $reqHours ? min(100, ($hours / $reqHours) * 100) : 0;
+                    $met      = $myActivity->meets_requirement === true;
+                    $fillColor = $myActivity->vatsim_data_unavailable ? '#94a3b8' : ($met ? '#4ade80' : ($pct > 0 ? '#fbbf24' : '#f87171'));
                 @endphp
                 <div class="db-activity">
                     <div class="db-activity-label">Activity This Quarter</div>
                     <div style="display:flex; align-items:baseline; gap:1rem; flex-wrap:wrap;">
                         <div>
                             <span class="db-activity-hours">{{ $hours < 0.1 ? '0:00' : decimal_to_hm($hours) }}</span>
-                            <span class="db-activity-of">/ {{ decimal_to_hm($reqHours) }}</span>
+                            <span class="db-activity-of">/ {{ $reqHours === null ? 'N/A' : decimal_to_hm($reqHours) }}</span>
                         </div>
-                        @if($totalVatsimHours !== null)
-                        @php
-                            $effectiveTotal = max($totalVatsimHours, $hours);
-                            $outsideHours = max(0, $effectiveTotal - $hours);
-                            $firRatio = $effectiveTotal > 0 ? min(1, $hours / $effectiveTotal) : null;
-                            $meetsFirReq = $firRatio !== null && $firRatio >= 0.5;
-                        @endphp
+                        @if($myActivity->vatsim_data_unavailable)
                         <div style="font-size:0.7rem; color:rgba(255,255,255,0.4); white-space:nowrap;">
-                            <span style="color:rgba(255,255,255,0.75); font-weight:600;">{{ decimal_to_hm($outsideHours) }}</span> outside CZWG
+                            <i class="fas fa-triangle-exclamation" style="color:#fbbf24;"></i> VATSIM data unavailable
+                        </div>
+                        @else
+                        <div style="font-size:0.7rem; color:rgba(255,255,255,0.4); white-space:nowrap;">
+                            <span style="color:rgba(255,255,255,0.75); font-weight:600;">{{ decimal_to_hm($myActivity->non_fir_hours) }}</span> outside CZWG
                             &nbsp;·&nbsp;
-                            <span style="color:rgba(255,255,255,0.75); font-weight:600;">{{ decimal_to_hm($effectiveTotal) }}</span> total
-                            @if($firRatio !== null)
+                            <span style="color:rgba(255,255,255,0.75); font-weight:600;">{{ decimal_to_hm($myActivity->total_logged_hours) }}</span> total
+                            @if($myActivity->is_home_type)
                             &nbsp;
-                            <span title="{{ $meetsFirReq ? '50% FIR requirement met' : '50% FIR requirement not met' }}"
-                                  style="color:{{ $meetsFirReq ? '#4ade80' : '#f87171' }};">
-                                <i class="fas {{ $meetsFirReq ? 'fa-check-circle' : 'fa-times-circle' }} fa-xs"></i>
+                            <span title="{{ $myActivity->fir_percentage >= 0.5 ? '50% FIR requirement met' : '50% FIR requirement not met' }}"
+                                  style="color:{{ $myActivity->fir_percentage >= 0.5 ? '#4ade80' : '#f87171' }};">
+                                <i class="fas {{ $myActivity->fir_percentage >= 0.5 ? 'fa-check-circle' : 'fa-times-circle' }} fa-xs"></i>
                             </span>
                             @endif
                         </div>
@@ -281,6 +279,8 @@
                         <span class="db-activity-end">Ends {{ \Carbon\Carbon::now()->endOfQuarter()->format('M j, Y') }}</span>
                         @if($met)
                             <span class="db-activity-met"><i class="fas fa-check-circle fa-xs"></i> Requirement met</span>
+                        @elseif($myActivity->fails_percentage_only)
+                            <span class="db-activity-met" style="color:#f87171;"><i class="fas fa-triangle-exclamation fa-xs"></i> Below 50% in-FIR</span>
                         @endif
                     </div>
                 </div>

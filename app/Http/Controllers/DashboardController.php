@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\AtcTraining\RosterMember;
+use App\Services\ControllerActivityService;
 use App\Services\VatsimBookingService;
 use App\Models\AtcTraining\Student;
 use App\Models\Events\ControllerApplication;
@@ -12,9 +13,7 @@ use App\Models\Publications\AtcResource;
 use App\Models\Tickets\Ticket;
 use Auth;
 use Carbon\Carbon;
-use GuzzleHttp\Client;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 
 class DashboardController extends Controller
 {
@@ -71,34 +70,13 @@ class DashboardController extends Controller
                 ->values();
         }
 
-        $totalVatsimHours = null;
-        if ($potentialRosterMember && in_array($potentialRosterMember->status, ['home', 'instructor'])) {
-            $quarterStart = Carbon::now()->startOfQuarter()->format('Y-m-d');
-            $cid = $potentialRosterMember->cid;
-            $cacheKey = 'vatsim_total_hours_' . $cid . '_' . $quarterStart;
-
-            $totalVatsimHours = Cache::remember($cacheKey, 3600, function () use ($cid, $quarterStart) {
-                try {
-                    $client = new Client();
-                    $pageNum = 1;
-                    $totalMinutes = 0;
-
-                    do {
-                        $url = sprintf('https://api.vatsim.net/api/ratings/%s/atcsessions/?page=%s&start=%s', $cid, $pageNum, $quarterStart);
-                        $response = $client->request('GET', $url, ['timeout' => 10]);
-                        $data = json_decode($response->getBody()->getContents());
-                        foreach ($data->results as $result) {
-                            $totalMinutes += $result->minutes_on_callsign;
-                        }
-                        $hasNext = !empty($data->next);
-                        $pageNum++;
-                    } while ($hasNext);
-
-                    return $totalMinutes / 60;
-                } catch (\Exception $e) {
-                    return null;
-                }
-            });
+        // Same computation NetworkController's staff-facing activity roster uses, so a
+        // controller's own dashboard never disagrees with what staff see for them.
+        $myActivity = null;
+        if ($potentialRosterMember && $potentialRosterMember->status !== 'not_certified') {
+            $quarterStart = Carbon::now()->startOfQuarter();
+            $quarterEnd = Carbon::now();
+            $myActivity = ControllerActivityService::compute(collect([$potentialRosterMember]), $quarterStart, $quarterEnd)->first();
         }
 
         $userTz = $user->displayTimezone();
@@ -106,7 +84,7 @@ class DashboardController extends Controller
         if ($user->permissions == 0) {
             return view('dashboard.index2', compact('openTickets', 'confirmedevent', 'cbtnotifications', 'yourinstructor', 'waitlistPosition', 'waitlistTypeTotal', 'userTz'));
         } else {
-            return view('dashboard.index', compact('event', 'potentialRosterMember', 'yourinstructor', 'waitlistPosition', 'waitlistTypeTotal', 'openTickets', 'staffTickets', 'certification', 'active', 'atcResources', 'unconfirmedapp', 'confirmedapp', 'confirmedevent', 'cbtnotifications', 'myBookings', 'totalVatsimHours', 'userTz'));
+            return view('dashboard.index', compact('event', 'potentialRosterMember', 'yourinstructor', 'waitlistPosition', 'waitlistTypeTotal', 'openTickets', 'staffTickets', 'certification', 'active', 'atcResources', 'unconfirmedapp', 'confirmedapp', 'confirmedevent', 'cbtnotifications', 'myBookings', 'myActivity', 'userTz'));
         }
     }
 
