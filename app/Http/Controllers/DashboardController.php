@@ -12,7 +12,7 @@ use App\Models\Events\EventConfirm;
 use App\Models\Publications\AtcResource;
 use App\Models\Tickets\Ticket;
 use Auth;
-use Carbon\Carbon;
+use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
 
 class DashboardController extends Controller
