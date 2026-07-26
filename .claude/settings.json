@@ -72,7 +72,8 @@
       "Bash(curl -sI https://github.com --max-time 5)",
       "PowerShell(Resolve-DnsName github.com -ErrorAction SilentlyContinue)",
       "PowerShell(Get-DnsClientServerAddress -AddressFamily IPv4)",
-      "PowerShell(Test-Connection github.com -Count 2 -ErrorAction SilentlyContinue)"
+      "PowerShell(Test-Connection github.com -Count 2 -ErrorAction SilentlyContinue)",
+      "Bash(php -l app/Http/Controllers/Network/NetworkController.php)"
     ],
     "additionalDirectories": [
       "c:\\laragon\\www\\winnipegfir\\\nVATCAN_API_KEY=fYKopA4iUT1Ul5lG1GJz4lcjx6KYcILAS5jabHUq7dY3wgCUNQ\nVATCAN_API_URL=https:"

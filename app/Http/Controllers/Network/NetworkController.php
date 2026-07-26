@@ -130,12 +130,27 @@ class NetworkController extends Controller
                 $member->total_logged_hours = $totalLoggedHours;
                 $member->non_fir_hours = $nonFirHours;
                 $member->off_tier_hours = $totalLoggedHours - $qualifyingHours - $nonFirHours;
+                $member->fir_percentage = $totalLoggedHours > 0 ? ($qualifyingHours / $totalLoggedHours) : 0;
+
+                // Home controllers (and instructors) have to keep the majority of their
+                // hours inside Winnipeg FIR -- a home controller who logs 3+ hours but
+                // mostly at a foreign FIR (e.g. visiting Toronto Center) doesn't count as
+                // active here. Visitors have no such requirement, just the flat hour minimum.
+                $isHomeType = in_array($member->status, ['home', 'instructor']);
+                $member->is_home_type = $isHomeType;
 
                 // Only hours worked at an eligible position within Winnipeg FIR can
                 // ever satisfy the requirement -- raw total hours (which can be 100%
                 // foreign-FIR time) must never be used to decide pass/fail.
-                $member->meets_requirement = $member->vatsim_data_unavailable || $requirement === null
-                    ? null : $qualifyingHours >= $requirement;
+                if ($member->vatsim_data_unavailable || $requirement === null) {
+                    $member->meets_requirement = null;
+                    $member->fails_percentage_only = false;
+                } else {
+                    $meetsHours = $qualifyingHours >= $requirement;
+                    $meetsPercentage = ! $isHomeType || $member->fir_percentage >= 0.5;
+                    $member->meets_requirement = $meetsHours && $meetsPercentage;
+                    $member->fails_percentage_only = $meetsHours && ! $meetsPercentage;
+                }
 
                 return $member;
             })
@@ -147,8 +162,13 @@ class NetworkController extends Controller
         $belowRequirement = $members->where('meets_requirement', false)->count();
         $dataUnavailable = $members->where('vatsim_data_unavailable', true)->count();
 
+        // Home controllers, instructors, and trainees all belong to the FIR itself;
+        // visitors are the only status held to the flat hour minimum with no FIR-share rule.
+        $homeMembers = $members->whereIn('status', ['home', 'instructor', 'training'])->values();
+        $visitingMembers = $members->where('status', 'visit')->values();
+
         return view('dashboard.network.activity.index', compact(
-            'members', 'quarterLabel', 'totalMembers', 'meetingRequirement', 'belowRequirement', 'dataUnavailable',
+            'homeMembers', 'visitingMembers', 'quarterLabel', 'totalMembers', 'meetingRequirement', 'belowRequirement', 'dataUnavailable',
             'rangeStart', 'rangeEnd', 'isCustomRange'
         ));
     }

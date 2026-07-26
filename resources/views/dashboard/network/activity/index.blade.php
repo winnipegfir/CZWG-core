@@ -50,6 +50,8 @@
             <strong>Requirement / Result is judged on Qualifying Hours only</strong> &mdash; the <strong>Total Hours</strong> column is just the raw total
             for the selected date range and can include time that doesn't count. <strong>Non-FIR Hours</strong> is time logged on a position outside
             Winnipeg FIR (e.g. a visiting session at Toronto Center); it never counts toward this requirement no matter how much of it there is.
+            <strong>Home controllers and instructors</strong> also need at least <strong>50% of their total logged hours</strong> to be inside Winnipeg FIR
+            &mdash; 3+ qualifying hours worked mostly at a foreign FIR still shows as below requirement. Visitors have no such split requirement, just the flat hour minimum.
             Requirements are checked quarterly; use the date range above to look at a different period.
             Click <i class="fas fa-chevron-down"></i> on a row to see the breakdown by position.
             Session data is pulled live from VATSIM's own connection history, not our local activity log, so out-of-FIR sessions are counted correctly.
@@ -90,78 +92,11 @@
         </div>
     </div>
 
-    <div class="roster-table-wrap">
-        <table class="table roster-table sortable-table" id="activityTable">
-            <thead>
-                <tr>
-                    <th class="sortable" data-col="0">CID <i class="fas fa-sort sort-icon"></i></th>
-                    <th class="sortable" data-col="1">Controller Name <i class="fas fa-sort sort-icon"></i></th>
-                    <th class="sortable" data-col="2">Status <i class="fas fa-sort sort-icon"></i></th>
-                    <th class="sortable" data-col="3">Rating <i class="fas fa-sort sort-icon"></i></th>
-                    <th class="sortable" data-col="4">Total Hours <i class="fas fa-sort sort-icon"></i></th>
-                    <th class="sortable" data-col="5">Qualifying Hours <i class="fas fa-sort sort-icon"></i></th>
-                    <th class="sortable" data-col="6">Non-FIR Hours <i class="fas fa-sort sort-icon"></i></th>
-                    <th>Requirement</th>
-                    <th>Result</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-            @forelse ($members as $member)
-                <tr class="activity-row" data-toggle-target="#breakdown-{{ $member->id }}">
-                    <td><strong class="roster-cid-plain">{{ $member->cid }}</strong></td>
-                    <td class="roster-name">{{ $member->user ? trim($member->user->fname.' '.$member->user->lname) : $member->full_name }}</td>
-                    <td class="text-capitalize">{{ $member->status }}</td>
-                    <td><span class="rating-badge">{{ $member->rating_short_name ?? 'N/A' }}</span></td>
-                    <td data-sort="{{ $member->total_logged_hours }}">{{ decimal_to_hm($member->total_logged_hours) }}</td>
-                    <td data-sort="{{ $member->qualifying_hours }}">{{ decimal_to_hm($member->qualifying_hours) }}</td>
-                    <td data-sort="{{ $member->non_fir_hours }}">{{ decimal_to_hm($member->non_fir_hours) }}</td>
-                    <td>{{ $member->requirement === null ? 'N/A' : decimal_to_hm($member->requirement) }}</td>
-                    <td>
-                        @if ($member->vatsim_data_unavailable)
-                            <span class="status-badge activity-status-unknown" title="Couldn't reach VATSIM's session history for this CID. Reload to retry.">
-                                <i class="fas fa-triangle-exclamation"></i> Data unavailable
-                            </span>
-                        @elseif ($member->meets_requirement === null)
-                            <span class="status-badge">N/A</span>
-                        @elseif ($member->meets_requirement)
-                            <span class="status-badge status-active">Meets requirement</span>
-                        @else
-                            <span class="status-badge status-inactive">Below requirement</span>
-                        @endif
-                        @if (! $member->vatsim_data_unavailable && $member->non_fir_hours > 0)
-                            <div class="activity-result-note">{{ decimal_to_hm($member->non_fir_hours) }} non-FIR, didn't count</div>
-                        @endif
-                    </td>
-                    <td><i class="fas fa-chevron-down activity-expand-icon"></i></td>
-                </tr>
-                <tr class="activity-breakdown-row" id="breakdown-{{ $member->id }}" style="display:none;">
-                    <td colspan="10">
-                        @if ($member->vatsim_data_unavailable)
-                            <span class="text-muted" style="font-size:0.85rem;"><i class="fas fa-triangle-exclamation text-warning"></i> Couldn't fetch this controller's session history from VATSIM (their CID may currently be online, or the request timed out). Reload the page to retry.</span>
-                        @elseif (empty($member->position_breakdown))
-                            <span class="text-muted" style="font-size:0.85rem;">No sessions logged in this date range.</span>
-                        @else
-                            <div class="activity-breakdown-chips">
-                                @foreach ($member->position_breakdown as $callsign => $data)
-                                    <span class="activity-chip {{ $data['qualifies'] ? 'activity-chip-ok' : 'activity-chip-bad' }}">
-                                        <i class="fas {{ $data['qualifies'] ? 'fa-check' : 'fa-xmark' }}"></i>
-                                        {{ $callsign }} <span class="activity-chip-category">({{ $data['category'] }})</span>: {{ decimal_to_hm($data['hours']) }}
-                                    </span>
-                                @endforeach
-                            </div>
-                        @endif
-                    </td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="10" class="text-center text-muted py-4">No active roster members found.</td>
-                </tr>
-            @endforelse
-            </tbody>
-        </table>
-        <p class="roster-no-results" style="display:none;">No controllers match your search.</p>
-    </div>
+    <h2 class="activity-section-title">Home Controllers</h2>
+    @include('dashboard.network.activity._table', ['tableId' => 'homeActivityTable', 'members' => $homeMembers])
+
+    <h2 class="activity-section-title">Visiting Controllers</h2>
+    @include('dashboard.network.activity._table', ['tableId' => 'visitActivityTable', 'members' => $visitingMembers])
 </div>
 
 <style>
@@ -232,6 +167,17 @@
 .activity-policy-note > i {
     color: #1d4ed8;
     margin-top: 0.15rem;
+}
+
+.activity-section-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #122b44;
+    margin: 1.75rem 0 0.75rem;
+}
+
+html[data-theme="dark"] .activity-section-title {
+    color: #d7dade !important;
 }
 
 .activity-row {
@@ -373,21 +319,24 @@ $(document).ready(function () {
     // ── Live search (matches against the row + its breakdown) ──
     $('#activitySearch').on('input', function () {
         var q = $(this).val().trim().toLowerCase();
-        var visible = 0;
-        $('#activityTable tbody tr.activity-row').each(function () {
-            var row = $(this);
-            var breakdown = $(row.data('toggle-target'));
-            var text = (row.text() + ' ' + breakdown.text()).toLowerCase();
-            var show = !q || text.indexOf(q) > -1;
-            row.toggle(show);
-            // Keep breakdown row hidden unless the user has expanded it
-            if (!show) {
-                breakdown.hide();
-                row.removeClass('expanded');
-            }
-            if (show) visible++;
+        $('.roster-table-wrap').each(function () {
+            var wrap = $(this);
+            var visible = 0;
+            wrap.find('tbody tr.activity-row').each(function () {
+                var row = $(this);
+                var breakdown = $(row.data('toggle-target'));
+                var text = (row.text() + ' ' + breakdown.text()).toLowerCase();
+                var show = !q || text.indexOf(q) > -1;
+                row.toggle(show);
+                // Keep breakdown row hidden unless the user has expanded it
+                if (!show) {
+                    breakdown.hide();
+                    row.removeClass('expanded');
+                }
+                if (show) visible++;
+            });
+            wrap.find('.roster-no-results').toggle(visible === 0);
         });
-        $('.roster-no-results').toggle(visible === 0);
     });
 
     // ── Column sort (keeps each row paired with its breakdown row) ──
@@ -428,8 +377,10 @@ $(document).ready(function () {
         });
     });
 
-    // Default sort by total hours asc (worst first)
-    $('#activityTable .sortable[data-col="4"]').trigger('click');
+    // Default sort by total hours asc (worst first), per table
+    $('.sortable-table').each(function () {
+        $(this).find('.sortable[data-col="4"]').trigger('click');
+    });
 });
 </script>
 
