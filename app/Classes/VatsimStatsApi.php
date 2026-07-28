@@ -8,6 +8,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 
 class VatsimStatsApi
@@ -18,17 +19,24 @@ class VatsimStatsApi
     // on the network -- which is what lets us detect out-of-FIR hours at all.
     const BASE_URL = 'https://api.vatsim.net/api/ratings/';
 
-    // A never-before-cached date range (e.g. a custom "last quarter" pick) means every
-    // roster member misses cache at once. Firing all of them at VATSIM in a single burst
-    // trips their rate limiting / 500-while-online bug for the whole batch, so we fetch
-    // in smaller waves instead and give the ones that failed one retry pass at the end.
-    const BATCH_SIZE = 20;
+    // VATSIM hard-caps this endpoint at 10 requests/minute per IP (confirmed via its
+    // 429 + retry-after response) -- this is a global ceiling, not per-CID, so a full
+    // roster (which can easily be 50-150 people) can never be fetched live in one page
+    // load. We stay one under it as a safety margin and let whatever doesn't fit in the
+    // remaining budget stay uncached; it gets picked up by the cache-warm cron job
+    // (see WarmVatsimActivityCache) or the next page load instead of tripping the limit
+    // for the whole batch.
+    const RATE_LIMIT_KEY = 'vatsim-atcsessions-api';
+
+    const RATE_LIMIT_MAX_PER_MINUTE = 9;
+
+    const CACHE_TTL_MINUTES = 30;
 
     /**
      * Fetch ATC sessions starting on/after $start for each cid.
      *
      * @param  \Illuminate\Support\Collection<int, int|string>  $cids
-     * @return array<string, \Illuminate\Support\Collection|null> keyed by cid; null means the fetch failed
+     * @return array<string, \Illuminate\Support\Collection|null> keyed by cid; null means not cached/fetched (yet)
      */
     public static function getAtcSessionsForMembers($cids, Carbon $start): array
     {
@@ -46,15 +54,9 @@ class VatsimStatsApi
             }
         }
 
-        foreach ($toFetch->chunk(self::BATCH_SIZE) as $batch) {
-            self::fetchBatch($batch, $dateKey, $result);
-        }
-
-        // One retry pass for anything that failed, in case it was a transient
-        // burst/rate-limit failure rather than a real per-CID problem.
-        $failedCids = collect($result)->filter(fn ($sessions) => $sessions === null)->keys();
-        foreach ($failedCids->chunk(self::BATCH_SIZE) as $batch) {
-            self::fetchBatch($batch, $dateKey, $result);
+        $budget = self::remainingRateLimitBudget();
+        if ($budget > 0) {
+            self::fetchBatch($toFetch->take($budget), $dateKey, $result);
         }
 
         return $result;
@@ -64,6 +66,10 @@ class VatsimStatsApi
     {
         if ($cids->isEmpty()) {
             return;
+        }
+
+        foreach ($cids as $cid) {
+            RateLimiter::hit(self::RATE_LIMIT_KEY, 60);
         }
 
         $responses = Http::pool(fn (Pool $pool) => $cids->map(
@@ -80,7 +86,7 @@ class VatsimStatsApi
             // A 404 just means this CID has no ATC history -- that's a valid empty result.
             if ($response instanceof \Illuminate\Http\Client\Response && $response->status() === 404) {
                 $result[$cid] = collect();
-                Cache::put("vatsim.atcsessions.{$cid}.{$dateKey}", $result[$cid], now()->addMinutes(10));
+                Cache::put("vatsim.atcsessions.{$cid}.{$dateKey}", $result[$cid], now()->addMinutes(self::CACHE_TTL_MINUTES));
 
                 continue;
             }
@@ -113,7 +119,17 @@ class VatsimStatsApi
 
             $sessions = collect($response->json('results') ?? []);
             $result[$cid] = $sessions;
-            Cache::put("vatsim.atcsessions.{$cid}.{$dateKey}", $sessions, now()->addMinutes(10));
+            Cache::put("vatsim.atcsessions.{$cid}.{$dateKey}", $sessions, now()->addMinutes(self::CACHE_TTL_MINUTES));
         }
+    }
+
+    /**
+     * How many more requests this endpoint can take this minute before hitting VATSIM's
+     * cap. Used by the cache-warm cron job to know how much budget live page-load
+     * fetches have already spent.
+     */
+    public static function remainingRateLimitBudget(): int
+    {
+        return max(0, self::RATE_LIMIT_MAX_PER_MINUTE - RateLimiter::attempts(self::RATE_LIMIT_KEY));
     }
 }
