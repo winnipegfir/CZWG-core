@@ -83,7 +83,9 @@
       "Bash(time curl -s -m 30 -A \"winnipegfir.ca\" \"https://api.vatsim.net/api/ratings/1272864/atcsessions/?start=2026-04-01\" -o /dev/null -w \"http_code=%{http_code} time=%{time_total}\\\\n\")",
       "Bash(time curl -s -m 30 -A \"winnipegfir.ca\" \"https://api.vatsim.net/api/ratings/1272864/atcsessions/?start=2020-01-01\" -o /dev/null -w \"http_code=%{http_code} time=%{time_total}\\\\n\")",
       "Bash(php -l app/Classes/VatsimStatsApi.php)",
-      "Bash(curl -s -m 20 -A \"winnipegfir.ca\" \"https://api.vatsim.net/api/ratings/1501600/atcsessions/?start=2026-07-01\")"
+      "Bash(curl -s -m 20 -A \"winnipegfir.ca\" \"https://api.vatsim.net/api/ratings/1501600/atcsessions/?start=2026-07-01\")",
+      "Bash(curl -s -m 20 -A \"winnipegfir.ca\" -o /dev/null -w \"http_code=%{http_code} time=%{time_total}\\\\n\" \"https://api.vatsim.net/api/ratings/1501600/atcsessions/?start=2026-04-01\")",
+      "Bash(curl -s -m 20 -A \"winnipegfir.ca\" -o /dev/null -w \"http_code=%{http_code} time=%{time_total}\\\\n\" \"https://api.vatsim.net/api/ratings/1427371/atcsessions/?start=2026-04-01\")"
     ],
     "additionalDirectories": [
       "c:\\laragon\\www\\winnipegfir\\\nVATCAN_API_KEY=fYKopA4iUT1Ul5lG1GJz4lcjx6KYcILAS5jabHUq7dY3wgCUNQ\nVATCAN_API_URL=https:"

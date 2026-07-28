@@ -7,6 +7,8 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class VatsimStatsApi
 {
@@ -16,12 +18,6 @@ class VatsimStatsApi
     // on the network -- which is what lets us detect out-of-FIR hours at all.
     const BASE_URL = 'https://api.vatsim.net/api/ratings/';
 
-    /**
-     * Fetch ATC sessions starting on/after $start for each cid.
-     *
-     * @param  \Illuminate\Support\Collection<int, int|string>  $cids
-     * @return array<string, \Illuminate\Support\Collection|null> keyed by cid; null means the fetch failed
-     */
     // A never-before-cached date range (e.g. a custom "last quarter" pick) means every
     // roster member misses cache at once. Firing all of them at VATSIM in a single burst
     // trips their rate limiting / 500-while-online bug for the whole batch, so we fetch
@@ -93,6 +89,24 @@ class VatsimStatsApi
                 // Network error, timeout, or VATSIM's known 500-while-online bug.
                 // Leave uncached so the next load retries instead of sticking.
                 $result[$cid] = null;
+
+                if ($response instanceof \Illuminate\Http\Client\Response) {
+                    Log::warning('VatsimStatsApi: non-OK response fetching ATC sessions', [
+                        'cid' => $cid,
+                        'status' => $response->status(),
+                        'body' => Str::limit($response->body(), 500),
+                    ]);
+                } elseif ($response instanceof \Illuminate\Http\Client\ConnectionException) {
+                    Log::warning('VatsimStatsApi: connection error fetching ATC sessions', [
+                        'cid' => $cid,
+                        'message' => $response->getMessage(),
+                    ]);
+                } else {
+                    Log::warning('VatsimStatsApi: unexpected pool result fetching ATC sessions', [
+                        'cid' => $cid,
+                        'type' => is_object($response) ? get_class($response) : gettype($response),
+                    ]);
+                }
 
                 continue;
             }
