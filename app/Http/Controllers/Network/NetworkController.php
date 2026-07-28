@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Network;
 
 use App\Http\Controllers\Controller;
 use App\Models\AtcTraining\RosterMember;
+use App\Classes\VatsimStatsApi;
 use App\Models\Network\MonitoredPosition;
 use App\Services\ControllerActivityService;
 use Illuminate\Http\Request;
@@ -27,6 +28,13 @@ class NetworkController extends Controller
         $rangeStart = $request->filled('start') ? Carbon::parse($request->get('start'))->startOfDay() : $defaultStart;
         $rangeEnd = $request->filled('end') ? Carbon::parse($request->get('end'))->endOfDay() : $defaultEnd;
         $isCustomRange = $request->filled('start') || $request->filled('end');
+
+        // Let the cache-warm cron know this range is actually being looked at, so it
+        // backs it in the background instead of leaving it to fight for live-load
+        // rate-limit budget on every reload.
+        if ($isCustomRange) {
+            VatsimStatsApi::rememberRangeStart($rangeStart);
+        }
 
         $roster = RosterMember::where('active', '1')
             ->whereIn('status', ['home', 'visit', 'instructor', 'training'])

@@ -132,4 +132,44 @@ class VatsimStatsApi
     {
         return max(0, self::RATE_LIMIT_MAX_PER_MINUTE - RateLimiter::attempts(self::RATE_LIMIT_KEY));
     }
+
+    // Key for the shared list of custom (non-default-quarter) range starts staff have
+    // actually looked at recently, so the cache-warm cron can back them too instead of
+    // only ever warming the default current-quarter view.
+    const TRACKED_RANGE_STARTS_KEY = 'vatsim.tracked_range_starts';
+
+    const TRACKED_RANGE_MAX_AGE_MINUTES = 180;
+
+    /**
+     * Note that someone just viewed a custom range starting on $start, so the cache-warm
+     * cron picks it up on its next pass instead of leaving it to fight for live-load
+     * rate-limit budget on every reload.
+     */
+    public static function rememberRangeStart(Carbon $start): void
+    {
+        $dateKey = $start->format('Y-m-d');
+        $tracked = Cache::get(self::TRACKED_RANGE_STARTS_KEY, []);
+        $tracked[$dateKey] = now()->timestamp;
+        Cache::put(self::TRACKED_RANGE_STARTS_KEY, $tracked, now()->addMinutes(self::TRACKED_RANGE_MAX_AGE_MINUTES));
+    }
+
+    /**
+     * Date-keys (Y-m-d) for custom ranges viewed within the last
+     * TRACKED_RANGE_MAX_AGE_MINUTES, pruning anything older.
+     *
+     * @return array<int, string>
+     */
+    public static function recentlyViewedRangeStarts(): array
+    {
+        $tracked = Cache::get(self::TRACKED_RANGE_STARTS_KEY, []);
+        $cutoff = now()->subMinutes(self::TRACKED_RANGE_MAX_AGE_MINUTES)->timestamp;
+
+        $fresh = array_filter($tracked, fn ($seenAt) => $seenAt >= $cutoff);
+
+        if ($fresh !== $tracked) {
+            Cache::put(self::TRACKED_RANGE_STARTS_KEY, $fresh, now()->addMinutes(self::TRACKED_RANGE_MAX_AGE_MINUTES));
+        }
+
+        return array_keys($fresh);
+    }
 }

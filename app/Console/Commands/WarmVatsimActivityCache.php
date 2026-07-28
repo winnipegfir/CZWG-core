@@ -40,5 +40,12 @@ class WarmVatsimActivityCache extends Command
         // Same default range NetworkController and DashboardController use when no
         // custom range is picked -- the range almost everyone actually views.
         VatsimStatsApi::getAtcSessionsForMembers($cids, Carbon::now()->startOfQuarter());
+
+        // Any custom ranges staff have actually looked at recently (e.g. a quarterly
+        // review pulling last quarter's dates) get backed too, a few CIDs per run,
+        // instead of only ever fighting for live-load rate-limit budget on reload.
+        foreach (VatsimStatsApi::recentlyViewedRangeStarts() as $dateKey) {
+            VatsimStatsApi::getAtcSessionsForMembers($cids, Carbon::parse($dateKey));
+        }
     }
 }
