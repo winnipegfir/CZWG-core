@@ -74,8 +74,8 @@
         </div>
         @if ($dataUnavailable > 0)
             <div class="activity-summary-card">
-                <div class="activity-summary-value activity-summary-value-warning">{{ $dataUnavailable }}</div>
-                <div class="activity-summary-label">Data Unavailable</div>
+                <div class="activity-summary-value activity-summary-value-warning"><i class="fas fa-circle-notch fa-spin" style="font-size:1.1rem;"></i> {{ $dataUnavailable }}</div>
+                <div class="activity-summary-label">Still Loading</div>
             </div>
         @endif
     </div>
@@ -309,6 +309,13 @@ html[data-theme="dark"] .activity-result-note {
 
 <script>
 $(document).ready(function () {
+    // ── Auto-refresh while VATSIM data is still being pulled in ──
+    // The cache-warm cron fills rows in gradually (rate-limited by VATSIM), so
+    // reload periodically instead of making staff do it by hand.
+    @if ($dataUnavailable > 0)
+    setTimeout(function () { window.location.reload(); }, 20000);
+    @endif
+
     // ── Expand/collapse position breakdown ─────────────────────
     $(document).on('click', '.activity-row', function () {
         var target = $($(this).data('toggle-target'));

@@ -28,8 +28,8 @@
                 <td>{{ $member->requirement === null ? 'N/A' : decimal_to_hm($member->requirement) }}</td>
                 <td>
                     @if ($member->vatsim_data_unavailable)
-                        <span class="status-badge activity-status-unknown" title="Couldn't reach VATSIM's session history for this CID. Reload to retry.">
-                            <i class="fas fa-triangle-exclamation"></i> Data unavailable
+                        <span class="status-badge activity-status-unknown" title="VATSIM limits how fast we can pull session history, so this fills in gradually. No action needed.">
+                            <i class="fas fa-circle-notch fa-spin"></i> Loading&hellip;
                         </span>
                     @elseif ($member->meets_requirement === null)
                         <span class="status-badge">N/A</span>
@@ -51,7 +51,7 @@
             <tr class="activity-breakdown-row" id="breakdown-{{ $member->id }}" style="display:none;">
                 <td colspan="10">
                     @if ($member->vatsim_data_unavailable)
-                        <span class="text-muted" style="font-size:0.85rem;"><i class="fas fa-triangle-exclamation text-warning"></i> Couldn't fetch this controller's session history from VATSIM (their CID may currently be online, or the request timed out). Reload the page to retry.</span>
+                        <span class="text-muted" style="font-size:0.85rem;"><i class="fas fa-circle-notch fa-spin"></i> Still pulling this controller's session history from VATSIM &mdash; it's rate-limited, so this fills in over the next few minutes.</span>
                     @elseif (empty($member->position_breakdown))
                         <span class="text-muted" style="font-size:0.85rem;">No sessions logged in this date range.</span>
                     @else

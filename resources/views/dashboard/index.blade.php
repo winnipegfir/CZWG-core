@@ -255,7 +255,7 @@
                         </div>
                         @if($myActivity->vatsim_data_unavailable)
                         <div style="font-size:0.7rem; color:rgba(255,255,255,0.4); white-space:nowrap;">
-                            <i class="fas fa-triangle-exclamation" style="color:#fbbf24;"></i> VATSIM data unavailable
+                            <i class="fas fa-circle-notch fa-spin" style="color:#fbbf24;"></i> Loading your activity&hellip;
                         </div>
                         @else
                         <div style="font-size:0.7rem; color:rgba(255,255,255,0.4); white-space:nowrap;">
