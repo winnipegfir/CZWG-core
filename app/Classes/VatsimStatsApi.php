@@ -4,6 +4,7 @@ namespace App\Classes;
 
 use Illuminate\Http\Client\Pool;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
@@ -14,6 +15,18 @@ class VatsimStatsApi
     // prefixes), this includes every session a controller has worked anywhere
     // on the network -- which is what lets us detect out-of-FIR hours at all.
     const BASE_URL = 'https://api.vatsim.net/api/ratings/';
+
+    /**
+     * Fetch ATC sessions starting on/after $start for each cid.
+     *
+     * @param  \Illuminate\Support\Collection<int, int|string>  $cids
+     * @return array<string, \Illuminate\Support\Collection|null> keyed by cid; null means the fetch failed
+     */
+    // A never-before-cached date range (e.g. a custom "last quarter" pick) means every
+    // roster member misses cache at once. Firing all of them at VATSIM in a single burst
+    // trips their rate limiting / 500-while-online bug for the whole batch, so we fetch
+    // in smaller waves instead and give the ones that failed one retry pass at the end.
+    const BATCH_SIZE = 20;
 
     /**
      * Fetch ATC sessions starting on/after $start for each cid.
@@ -37,11 +50,27 @@ class VatsimStatsApi
             }
         }
 
-        if ($toFetch->isEmpty()) {
-            return $result;
+        foreach ($toFetch->chunk(self::BATCH_SIZE) as $batch) {
+            self::fetchBatch($batch, $dateKey, $result);
         }
 
-        $responses = Http::pool(fn (Pool $pool) => $toFetch->map(
+        // One retry pass for anything that failed, in case it was a transient
+        // burst/rate-limit failure rather than a real per-CID problem.
+        $failedCids = collect($result)->filter(fn ($sessions) => $sessions === null)->keys();
+        foreach ($failedCids->chunk(self::BATCH_SIZE) as $batch) {
+            self::fetchBatch($batch, $dateKey, $result);
+        }
+
+        return $result;
+    }
+
+    protected static function fetchBatch(Collection $cids, string $dateKey, array &$result): void
+    {
+        if ($cids->isEmpty()) {
+            return;
+        }
+
+        $responses = Http::pool(fn (Pool $pool) => $cids->map(
             fn ($cid) => $pool->as($cid)
                 ->withHeaders(['User-Agent' => 'winnipegfir.ca'])
                 ->connectTimeout(5)
@@ -49,7 +78,7 @@ class VatsimStatsApi
                 ->get(self::BASE_URL.$cid.'/atcsessions/', ['start' => $dateKey])
         )->all());
 
-        foreach ($toFetch as $cid) {
+        foreach ($cids as $cid) {
             $response = $responses[$cid] ?? null;
 
             // A 404 just means this CID has no ATC history -- that's a valid empty result.
@@ -72,7 +101,5 @@ class VatsimStatsApi
             $result[$cid] = $sessions;
             Cache::put("vatsim.atcsessions.{$cid}.{$dateKey}", $sessions, now()->addMinutes(10));
         }
-
-        return $result;
     }
 }

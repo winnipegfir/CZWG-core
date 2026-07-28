@@ -281,6 +281,10 @@
                             <span class="db-activity-met"><i class="fas fa-check-circle fa-xs"></i> Requirement met</span>
                         @elseif($myActivity->fails_percentage_only)
                             <span class="db-activity-met" style="color:#f87171;"><i class="fas fa-triangle-exclamation fa-xs"></i> Below 50% in-FIR</span>
+                        @elseif(!$myActivity->vatsim_data_unavailable && $myActivity->off_tier_hours > 0.1)
+                            <span class="db-activity-met" style="color:#fbbf24;" title="Hours worked at a position tier that doesn't count toward your rating (e.g. TWR time for a C1) don't qualify.">
+                                <i class="fas fa-circle-info fa-xs"></i> {{ decimal_to_hm($myActivity->off_tier_hours) }} at a position that doesn't count
+                            </span>
                         @endif
                     </div>
                 </div>

@@ -42,6 +42,8 @@
                         <div class="activity-result-note">Only {{ round($member->fir_percentage * 100) }}% in-FIR, needs 50%</div>
                     @elseif (! $member->vatsim_data_unavailable && $member->non_fir_hours > 0)
                         <div class="activity-result-note">{{ decimal_to_hm($member->non_fir_hours) }} non-FIR, didn't count</div>
+                    @elseif (! $member->vatsim_data_unavailable && $member->off_tier_hours > 0)
+                        <div class="activity-result-note">{{ decimal_to_hm($member->off_tier_hours) }} at wrong position tier, didn't count</div>
                     @endif
                 </td>
                 <td><i class="fas fa-chevron-down activity-expand-icon"></i></td>
