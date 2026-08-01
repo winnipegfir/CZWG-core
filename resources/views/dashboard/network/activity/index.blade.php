@@ -243,16 +243,24 @@ html[data-theme="dark"] .activity-section-title {
     white-space: nowrap;
 }
 
+.roster-table-wrap {
+    overflow-x: auto !important;
+}
+
 .roster-email-cell {
-    white-space: nowrap;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.4rem;
+    max-width: 170px;
 }
 
 .roster-email-text {
     font-size: 0.82rem;
     color: #475569;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
 }
 
 .roster-email-copy-btn {

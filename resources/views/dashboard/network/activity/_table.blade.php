@@ -49,7 +49,7 @@
                 </td>
                 <td class="roster-email-cell">
                     @if ($member->user && $member->user->email)
-                        <span class="roster-email-text">{{ $member->user->email }}</span>
+                        <span class="roster-email-text" title="{{ $member->user->email }}">{{ $member->user->email }}</span>
                         <button type="button" class="roster-email-copy-btn" title="Copy email" data-email="{{ $member->user->email }}">
                             <i class="fas fa-copy"></i>
                         </button>
