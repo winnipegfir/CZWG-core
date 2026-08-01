@@ -243,6 +243,12 @@ html[data-theme="dark"] .activity-section-title {
     white-space: nowrap;
 }
 
+.roster-page-wrap {
+    max-width: 1600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 .roster-table-wrap {
     overflow-x: auto !important;
 }
