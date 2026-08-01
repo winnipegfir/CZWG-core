@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Classes\VatsimRating;
 use App\Http\Controllers\Controller;
 use App\Models\Users\User;
 
@@ -20,7 +21,7 @@ class DiscordController extends Controller
                 'full_name' => $user->fullName('FLC'),
                 'is_home_controller' => $roster != null && $roster->visit != 1,
                 'is_visiting_controller' => $roster != null && $roster->visit == 1,
-                'rating' => $user->rating_short,
+                'rating' => VatsimRating::tryFrom((int) $user->rating_id)?->getShortName(),
             ];
         }
 

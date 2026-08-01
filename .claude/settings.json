@@ -101,7 +101,8 @@
       "Bash(php -l app/Providers/AppServiceProvider.php)",
       "Bash(php -l app/Console/Commands/SyncPermissions.php)",
       "Bash(php -l app/Console/Commands/RatingUpdate.php)",
-      "Bash(echo \"EXIT: $?\")"
+      "Bash(echo \"EXIT: $?\")",
+      "Bash(php -l app/Http/Controllers/Api/DiscordController.php)"
     ],
     "additionalDirectories": [
       "c:\\laragon\\www\\winnipegfir\\\nVATCAN_API_KEY=fYKopA4iUT1Ul5lG1GJz4lcjx6KYcILAS5jabHUq7dY3wgCUNQ\nVATCAN_API_URL=https:"

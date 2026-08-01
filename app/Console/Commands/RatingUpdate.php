@@ -108,12 +108,14 @@ class RatingUpdate extends Command
             return;
         }
 
-        Log::info('User: '.$user->fname.' '.$user->lname.' updated from '.$user->rating_short.' to '.$rating->getShortName().'.');
+        // rating_short/rating_long/rating_grp were dropped from the users table
+        // (see 2024_01_11_232113_remove_old_fields.php) -- rating_id is the only
+        // column left to write; short/long names are derived from it on read via
+        // the VatsimRating-backed rating() accessor.
+        $previousRating = VatsimRating::tryFrom((int) $user->rating_id);
+        Log::info('User: '.$user->fname.' '.$user->lname.' updated from '.($previousRating?->getShortName() ?? 'unknown').' to '.$rating->getShortName().'.');
 
         $user->rating_id = $rating->value;
-        $user->rating_short = $rating->getShortName();
-        $user->rating_long = $rating->getLongName();
-        $user->rating_grp = $rating->getLongName();
         $user->save();
 
         $rosterMember = $user->rosterProfile()->first();
