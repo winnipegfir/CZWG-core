@@ -97,11 +97,17 @@
         </div>
     </div>
 
+    @php
+        $warningQuarterLabel = $isCustomRange
+            ? $rangeStart->format('M j, Y').' - '.$rangeEnd->format('M j, Y')
+            : $quarterLabel;
+    @endphp
+
     <h2 class="activity-section-title">Home Controllers</h2>
-    @include('dashboard.network.activity._table', ['tableId' => 'homeActivityTable', 'members' => $homeMembers])
+    @include('dashboard.network.activity._table', ['tableId' => 'homeActivityTable', 'members' => $homeMembers, 'rangeStart' => $rangeStart, 'warningQuarterLabel' => $warningQuarterLabel])
 
     <h2 class="activity-section-title">Visiting Controllers</h2>
-    @include('dashboard.network.activity._table', ['tableId' => 'visitActivityTable', 'members' => $visitingMembers])
+    @include('dashboard.network.activity._table', ['tableId' => 'visitActivityTable', 'members' => $visitingMembers, 'rangeStart' => $rangeStart, 'warningQuarterLabel' => $warningQuarterLabel])
 </div>
 
 <style>
@@ -258,6 +264,35 @@ html[data-theme="dark"] .activity-section-title {
     overflow-x: auto !important;
 }
 
+.activity-log-warning-form {
+    margin-top: 0.35rem;
+}
+
+.activity-log-warning-btn {
+    border: 1px solid #fecaca;
+    background: #fff;
+    color: #b91c1c;
+    cursor: pointer;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    font-size: 0.68rem;
+    font-weight: 600;
+}
+
+.activity-log-warning-btn:hover {
+    background: #fee2e2;
+}
+
+html[data-theme="dark"] .activity-log-warning-btn {
+    background: #191d23;
+    border-color: #5c2027;
+    color: #f1919b;
+}
+
+html[data-theme="dark"] .activity-log-warning-btn:hover {
+    background: #3a1418;
+}
+
 .roster-email-cell {
     white-space: nowrap;
     width: 1px;
@@ -371,7 +406,7 @@ $(document).ready(function () {
 
     // ── Expand/collapse position breakdown ─────────────────────
     $(document).on('click', '.activity-row', function (e) {
-        if ($(e.target).closest('.roster-email-copy-btn').length) {
+        if ($(e.target).closest('.roster-email-copy-btn, .activity-log-warning-form').length) {
             return;
         }
         var target = $($(this).data('toggle-target'));

@@ -52,6 +52,15 @@
                         <span class="status-badge status-active">Meets requirement</span>
                     @else
                         <span class="status-badge status-inactive">Below requirement</span>
+                        <form method="POST" action="{{ route('network.warnings.store') }}" class="activity-log-warning-form">
+                            @csrf
+                            <input type="hidden" name="roster_member_id" value="{{ $member->id }}">
+                            <input type="hidden" name="quarter_label" value="{{ $warningQuarterLabel }}">
+                            <input type="hidden" name="quarter_start" value="{{ $rangeStart->format('Y-m-d') }}">
+                            <input type="hidden" name="hours_logged" value="{{ $member->qualifying_hours }}">
+                            <input type="hidden" name="hours_required" value="{{ $member->requirement }}">
+                            <button type="submit" class="activity-log-warning-btn">Log Warning</button>
+                        </form>
                     @endif
                     @if (! $member->vatsim_data_unavailable && $member->fails_percentage_only)
                         <div class="activity-result-note">Only {{ round($member->fir_percentage * 100) }}% in-FIR, needs 50%</div>

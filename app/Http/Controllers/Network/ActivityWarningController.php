@@ -3,12 +3,46 @@
 namespace App\Http\Controllers\Network;
 
 use App\Http\Controllers\Controller;
+use App\Models\AtcTraining\RosterMember;
 use App\Models\Network\ActivityWarning;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ActivityWarningController extends Controller
 {
+    // Logs a warning straight from the Controller Activity page, using the
+    // hours/requirement already computed and shown there for the range being
+    // viewed -- avoids waiting on the quarterly cron for the common case of
+    // a staff member spotting someone below requirement right now.
+    public function store(Request $request)
+    {
+        $request->validate([
+            'roster_member_id' => 'required|exists:roster,id',
+            'quarter_label' => 'required|string',
+            'quarter_start' => 'required|date',
+            'hours_logged' => 'required|numeric',
+            'hours_required' => 'required|numeric',
+        ]);
+
+        $rosterMember = RosterMember::findOrFail($request->input('roster_member_id'));
+
+        $warning = ActivityWarning::firstOrCreate(
+            ['roster_member_id' => $rosterMember->id, 'quarter_label' => $request->input('quarter_label')],
+            [
+                'cid' => $rosterMember->cid,
+                'member_name' => $rosterMember->user ? trim($rosterMember->user->fname.' '.$rosterMember->user->lname) : $rosterMember->full_name,
+                'quarter_start' => $request->input('quarter_start'),
+                'hours_logged' => $request->input('hours_logged'),
+                'hours_required' => $request->input('hours_required'),
+            ]
+        );
+
+        return redirect()->route('network.warnings.index', ['quarter' => $warning->quarter_label])
+            ->with('success', $warning->wasRecentlyCreated
+                ? 'Warning logged for '.$warning->member_name.'.'
+                : $warning->member_name.' already has a warning logged for this period -- edit it below.');
+    }
+
     public function index(Request $request)
     {
         $quarters = ActivityWarning::orderByDesc('quarter_start')->pluck('quarter_label')->unique()->values();
