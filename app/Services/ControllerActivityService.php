@@ -98,8 +98,13 @@ class ControllerActivityService
                     $positionTier = self::POSITION_TIERS[$suffix] ?? null;
                     $category = $positionTier ? self::TIER_LABELS[$positionTier] : 'Other';
 
+                    // Trainees are always working toward the tier directly above their
+                    // current rating, so credit that tier too -- not just their current
+                    // tier and the one below it.
+                    $highTier = $member->status === 'training' ? $ratingTier + 1 : $ratingTier;
+
                     $qualifies = $ratingTier !== null && $positionTier !== null
-                        && ($positionTier === $ratingTier || $positionTier === $ratingTier - 1);
+                        && $positionTier >= $ratingTier - 1 && $positionTier <= $highTier;
                 }
 
                 // Keyed by raw callsign (not just tier) so staff can see exactly
