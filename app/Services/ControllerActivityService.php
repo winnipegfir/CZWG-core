@@ -37,6 +37,17 @@ class ControllerActivityService
         4 => 'CTR',
     ];
 
+    // Maps a position suffix to the roster's per-position endorsement column.
+    // Values on that column: 1 = none, 2 = Training, 3 = Solo, 4 = Certified
+    // (see adminCertBadge() in dashboard.roster.index). FMP has no dedicated
+    // column, so it rides on the CTR endorsement.
+    const SUFFIX_TO_ENDORSEMENT_FIELD = [
+        'GND' => 'gnd', 'DEL' => 'del',
+        'TWR' => 'twr',
+        'APP' => 'app', 'DEP' => 'dep',
+        'CTR' => 'ctr', 'FMP' => 'ctr',
+    ];
+
     // Same prefixes ActivityLog uses to decide a position belongs to Winnipeg FIR.
     // Anything logged on a callsign that doesn't match one of these (e.g. a Toronto
     // position) is a foreign-FIR session and never counts toward this FIR's requirement.
@@ -98,13 +109,18 @@ class ControllerActivityService
                     $positionTier = self::POSITION_TIERS[$suffix] ?? null;
                     $category = $positionTier ? self::TIER_LABELS[$positionTier] : 'Other';
 
-                    // Trainees are always working toward the tier directly above their
-                    // current rating, so credit that tier too -- not just their current
-                    // tier and the one below it.
-                    $highTier = $member->status === 'training' ? $ratingTier + 1 : $ratingTier;
+                    $tierQualifies = $ratingTier !== null && $positionTier !== null
+                        && ($positionTier === $ratingTier || $positionTier === $ratingTier - 1);
 
-                    $qualifies = $ratingTier !== null && $positionTier !== null
-                        && $positionTier >= $ratingTier - 1 && $positionTier <= $highTier;
+                    // A controller actively Training (2), Solo (3), or Certified (4) on
+                    // this specific position is current there regardless of how their
+                    // overall rating tier compares -- this is what lets e.g. an S2
+                    // training toward APP/DEP get credit for those hours.
+                    $endorsementField = self::SUFFIX_TO_ENDORSEMENT_FIELD[$suffix] ?? null;
+                    $endorsementLevel = $endorsementField ? $member->{$endorsementField} : null;
+                    $endorsementQualifies = $endorsementLevel !== null && (int) $endorsementLevel >= 2;
+
+                    $qualifies = $tierQualifies || $endorsementQualifies;
                 }
 
                 // Keyed by raw callsign (not just tier) so staff can see exactly

@@ -47,8 +47,8 @@
             <strong>Position policy:</strong> hours only keep a controller's certification current if they're worked at
             <strong>their own rating's position, or the tier directly below it</strong> &mdash; e.g. a C1 stays current by controlling
             <strong>CTR</strong> or <strong>APP/DEP</strong>, an S3 by controlling <strong>APP/DEP</strong> or <strong>TWR</strong>, and so on.
-            <strong>Trainees</strong> (status: Training) also get credit for the tier directly <strong>above</strong> their current rating, since
-            that's the position they're actively working toward &mdash; e.g. an S2 in training gets credit for GND/DEL, TWR, or APP/DEP.
+            A position the controller is individually marked <strong>Training, Solo, or Certified</strong> on (per the roster's per-position
+            endorsements) also counts, even outside that tier range &mdash; e.g. an S2 marked Training on APP/DEP gets credit for those hours too.
             <strong>Requirement / Result is judged on Qualifying Hours only</strong> &mdash; the <strong>Total Hours</strong> column is just the raw total
             for the selected date range and can include time that doesn't count. <strong>Non-FIR Hours</strong> is time logged on a position outside
             Winnipeg FIR (e.g. a visiting session at Toronto Center); it never counts toward this requirement no matter how much of it there is.
