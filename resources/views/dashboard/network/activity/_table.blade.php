@@ -11,7 +11,7 @@
                 <th class="sortable" data-col="5">Qualifying Hours <i class="fas fa-sort sort-icon"></i></th>
                 <th class="sortable" data-col="6">Non-FIR Hours <i class="fas fa-sort sort-icon"></i></th>
                 <th>Requirement</th>
-                <th>Result</th>
+                <th class="sortable" data-col="7">Result <i class="fas fa-sort sort-icon"></i></th>
                 <th>Email</th>
                 <th></th>
             </tr>
@@ -27,7 +27,19 @@
                 <td data-sort="{{ $member->qualifying_hours }}">{{ decimal_to_hm($member->qualifying_hours) }}</td>
                 <td data-sort="{{ $member->non_fir_hours }}">{{ decimal_to_hm($member->non_fir_hours) }}</td>
                 <td>{{ $member->requirement === null ? 'N/A' : decimal_to_hm($member->requirement) }}</td>
-                <td>
+                @php
+                    // Worst-first rank, matching the default hours sort.
+                    if ($member->vatsim_data_unavailable) {
+                        $resultRank = 1;
+                    } elseif (! $member->has_any_endorsement || $member->meets_requirement === null) {
+                        $resultRank = 2;
+                    } elseif (! $member->meets_requirement) {
+                        $resultRank = 0;
+                    } else {
+                        $resultRank = 3;
+                    }
+                @endphp
+                <td data-sort="{{ $resultRank }}">
                     @if ($member->vatsim_data_unavailable)
                         <span class="status-badge activity-status-unknown" title="VATSIM limits how fast we can pull session history, so this fills in gradually. No action needed.">
                             <i class="fas fa-circle-notch fa-spin"></i> Loading&hellip;
