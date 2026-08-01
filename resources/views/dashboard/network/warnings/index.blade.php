@@ -94,8 +94,16 @@
                         <textarea form="wform-{{ $warning->id }}" name="notes" class="warnings-notes" rows="1" placeholder="Notes&hellip;">{{ $warning->notes }}</textarea>
                     </td>
 
-                    <td>
+                    <td class="warnings-actions">
                         <button type="submit" form="wform-{{ $warning->id }}" class="btn btn-sm bg-czqo-blue-light">Save</button>
+                        <form method="POST" action="{{ route('network.warnings.destroy', $warning) }}"
+                              onsubmit="return confirm('Delete this warning for {{ $warning->member_name }}? This can\'t be undone.');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="warnings-delete-btn" title="Delete this entry">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </form>
                     </td>
                 </tr>
             @empty
@@ -177,6 +185,42 @@
     outline: none;
     border-color: #6ea8e6;
     box-shadow: 0 0 0 3px rgba(110, 168, 230, 0.15);
+}
+
+.warnings-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    white-space: nowrap;
+}
+
+.warnings-actions form {
+    margin: 0;
+}
+
+.warnings-delete-btn {
+    border: 1px solid #fecaca;
+    background: #fff;
+    color: #b91c1c;
+    cursor: pointer;
+    padding: 0.35rem 0.55rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    line-height: 1;
+}
+
+.warnings-delete-btn:hover {
+    background: #fee2e2;
+}
+
+html[data-theme="dark"] .warnings-delete-btn {
+    background: #191d23;
+    border-color: #5c2027;
+    color: #f1919b;
+}
+
+html[data-theme="dark"] .warnings-delete-btn:hover {
+    background: #3a1418;
 }
 
 html[data-theme="dark"] .warnings-table thead th {

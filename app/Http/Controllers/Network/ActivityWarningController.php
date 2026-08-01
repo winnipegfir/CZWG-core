@@ -88,4 +88,14 @@ class ActivityWarningController extends Controller
 
         return redirect()->route('network.warnings.index')->with('success', 'Warning updated.');
     }
+
+    public function destroy(ActivityWarning $warning)
+    {
+        $quarter = $warning->quarter_label;
+        $name = $warning->member_name;
+        $warning->delete();
+
+        return redirect()->route('network.warnings.index', ['quarter' => $quarter])
+            ->with('success', 'Warning for '.$name.' deleted.');
+    }
 }

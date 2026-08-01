@@ -262,6 +262,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::get('/admin/network/warnings', 'Network\ActivityWarningController@index')->name('network.warnings.index');
         Route::post('/admin/network/warnings', 'Network\ActivityWarningController@store')->name('network.warnings.store');
         Route::post('/admin/network/warnings/{warning}', 'Network\ActivityWarningController@update')->name('network.warnings.update');
+        Route::delete('/admin/network/warnings/{warning}', 'Network\ActivityWarningController@destroy')->name('network.warnings.destroy');
     });
 
     //ADMIN ONLY
