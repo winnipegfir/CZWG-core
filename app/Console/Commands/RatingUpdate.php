@@ -2,12 +2,15 @@
 
 namespace App\Console\Commands;
 
-use App\Classes\HttpHelper;
-use App\Classes\VatsimHelper;
+use App\Classes\VatsimRating;
+use App\Classes\VatsimStatsApi;
 use App\Models\Users\User;
-use GuzzleHttp\Client;
 use Illuminate\Console\Command;
+use Illuminate\Http\Client\Pool;
+use Illuminate\Http\Client\Response;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\RateLimiter;
 
 class RatingUpdate extends Command
 {
@@ -42,49 +45,81 @@ class RatingUpdate extends Command
      */
     public function handle()
     {
-        $ratings = [];
+        $users = User::where('id', '!=', 1)->where('id', '!=', 2)->get()->keyBy('id');
 
-        $response = HttpHelper::getClient()->get(VatsimHelper::getDatafeedUrl());
-        $vatsimRatings = $response->object();
+        // This hits the same api.vatsim.net/api/ratings/ endpoint family VatsimStatsApi
+        // does (hard-capped at ~10 requests/minute, per-IP, not per-CID) -- sharing its
+        // rate limiter key keeps the two commands from stacking over that cap if they
+        // ever land in the same minute. Whatever doesn't fit in a minute's budget waits
+        // for the next one instead of firing unthrottled and getting rate-limited.
+        $pending = $users->keys()->values();
 
-        foreach ($vatsimRatings as $r) {
-            $ratings[$r->id] = [
-                'short' => $r->short,
-                'long' => $r->long,
-            ];
+        while ($pending->isNotEmpty()) {
+            $budget = VatsimStatsApi::remainingRateLimitBudget();
+
+            if ($budget <= 0) {
+                sleep(60);
+
+                continue;
+            }
+
+            $batch = $pending->take($budget);
+            $pending = $pending->skip($budget)->values();
+
+            foreach ($batch as $cid) {
+                RateLimiter::hit(VatsimStatsApi::RATE_LIMIT_KEY, 60);
+            }
+
+            $responses = Http::pool(fn (Pool $pool) => $batch->map(
+                fn ($cid) => $pool->as($cid)
+                    ->withHeaders(['User-Agent' => 'winnipegfir.ca'])
+                    ->connectTimeout(5)
+                    ->timeout(15)
+                    ->get('https://api.vatsim.net/api/ratings/'.$cid.'/')
+            )->all());
+
+            foreach ($batch as $cid) {
+                $this->applyRating($users[$cid], $responses[$cid] ?? null);
+            }
+        }
+    }
+
+    protected function applyRating(User $user, $response): void
+    {
+        if (! $response instanceof Response || ! $response->ok()) {
+            // Network error, timeout, or a rate-limited/bad response -- leave the
+            // user's existing rating alone and try again on tomorrow's run rather
+            // than overwriting good data with a failed lookup.
+            Log::warning('RatingUpdate: could not fetch rating', ['cid' => $user->id]);
+
+            return;
         }
 
-        $users = User::where('id', '!=', 1)->where('id', '!=', 2)->get();
+        $ratingId = $response->json('rating');
+        $rating = VatsimRating::tryFrom((int) $ratingId);
 
-        // Check each user to see if their rating has changed
-        foreach ($users as $u) {
-            $getRating = json_decode(file_get_contents('https://api.vatsim.net/api/ratings/'.$u->id.'/'));
-            $ratingID = $getRating->rating;
+        if ($ratingId === null || ! $rating) {
+            Log::warning('RatingUpdate: unrecognized rating in response', ['cid' => $user->id, 'rating' => $ratingId]);
 
-            if ($u->rating_id != $ratingID) {
-                //Log it for when it breaks
-                Log::info('User: '.$u->fname.' '.$u->lname.' updated from '.$u->rating_short.' to '.$ratings[$ratingID]['short'].'.');
+            return;
+        }
 
-                $u->rating_id = $ratingID;
-                $u->rating_short = $ratings[$ratingID]['short'];
-                $u->rating_long = $ratings[$ratingID]['long'];
-                $u->rating_grp = $ratings[$ratingID]['long'];
-                $u->save();
+        if ((int) $user->rating_id === $rating->value) {
+            return;
+        }
 
-                $rosterMember = $u->rosterProfile()->first();
+        Log::info('User: '.$user->fname.' '.$user->lname.' updated from '.$user->rating_short.' to '.$rating->getShortName().'.');
 
-                if ($rosterMember) {
-                    Log::info('--> Setting rating hours to 0');
+        $user->rating_id = $rating->value;
+        $user->rating_short = $rating->getShortName();
+        $user->rating_long = $rating->getLongName();
+        $user->rating_grp = $rating->getLongName();
+        $user->save();
 
-                    $rosterMember->rating_hours = 0;
-                    $rosterMember->save();
-                }
-
-                Log::info('--> Completed!');
-            } else {
-                //Log it for when it breaks
-                Log::info('User: '.$u->fname.' '.$u->lname.' rating is unchanged. Skipping.');
-            }
+        $rosterMember = $user->rosterProfile()->first();
+        if ($rosterMember) {
+            $rosterMember->rating_hours = 0;
+            $rosterMember->save();
         }
     }
 }
