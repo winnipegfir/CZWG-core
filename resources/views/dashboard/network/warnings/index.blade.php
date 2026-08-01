@@ -24,7 +24,7 @@
             <form method="GET" action="{{ route('network.warnings.index') }}" class="activity-range-form">
                 <div class="form-group mb-0">
                     <label for="quarterSelect">Quarter</label>
-                    <select id="quarterSelect" name="quarter" class="form-control form-control-sm" onchange="this.form.submit()">
+                    <select id="quarterSelect" name="quarter" class="warnings-select browser-default" onchange="this.form.submit()">
                         @foreach ($quarters as $quarter)
                             <option value="{{ $quarter }}" {{ $quarter === $selectedQuarter ? 'selected' : '' }}>{{ $quarter }}</option>
                         @endforeach
@@ -83,7 +83,7 @@
                     </td>
 
                     <td>
-                        <select form="wform-{{ $warning->id }}" name="result" class="form-control form-control-sm">
+                        <select form="wform-{{ $warning->id }}" name="result" class="warnings-select browser-default">
                             @foreach (\App\Models\Network\ActivityWarning::RESULTS as $key => $label)
                                 <option value="{{ $key }}" {{ $warning->result === $key ? 'selected' : '' }}>{{ $label }}</option>
                             @endforeach
@@ -91,7 +91,7 @@
                     </td>
 
                     <td>
-                        <textarea form="wform-{{ $warning->id }}" name="notes" class="form-control form-control-sm" rows="1" placeholder="Notes&hellip;">{{ $warning->notes }}</textarea>
+                        <textarea form="wform-{{ $warning->id }}" name="notes" class="warnings-notes" rows="1" placeholder="Notes&hellip;">{{ $warning->notes }}</textarea>
                     </td>
 
                     <td>
@@ -149,19 +149,34 @@
     text-align: left;
 }
 
-.warnings-table select.form-control,
-.warnings-table textarea.form-control {
+.warnings-select,
+.warnings-notes {
     display: block;
     width: 100%;
+    box-sizing: border-box;
+    font-size: 0.85rem;
+    color: #1e293b;
+    background: #fff;
+    border: 1.5px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 0.4rem 0.6rem;
 }
 
-.warnings-table textarea.form-control {
+.warnings-select {
+    min-width: 190px;
+    height: auto;
+}
+
+.warnings-notes {
     resize: vertical;
     min-width: 180px;
 }
 
-.warnings-table select.form-control {
-    min-width: 190px;
+.warnings-select:focus,
+.warnings-notes:focus {
+    outline: none;
+    border-color: #6ea8e6;
+    box-shadow: 0 0 0 3px rgba(110, 168, 230, 0.15);
 }
 
 html[data-theme="dark"] .warnings-table thead th {
@@ -176,6 +191,13 @@ html[data-theme="dark"] .warnings-table tbody tr {
 
 html[data-theme="dark"] .warnings-table tbody tr:hover {
     background: #1f232a !important;
+}
+
+html[data-theme="dark"] .warnings-select,
+html[data-theme="dark"] .warnings-notes {
+    background: #262b32 !important;
+    color: #d7dade !important;
+    border-color: #3a4048 !important;
 }
 </style>
 
