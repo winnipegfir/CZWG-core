@@ -90,7 +90,10 @@
       "Bash(curl -s -m 10 -A \"winnipegfir.ca\" -o /dev/null -w \"%{http_code} \"  \"https://api.vatsim.net/api/ratings/1343013/atcsessions/?start=2026-04-01\")",
       "Bash(php -l app/Console/Commands/WarmVatsimActivityCache.php)",
       "Bash(php -l app/Console/Kernel.php)",
-      "Bash(php -l \"app/Http/Controllers/BookingController.php\")"
+      "Bash(php -l \"app/Http/Controllers/BookingController.php\")",
+      "Bash(php -l app/Http/Controllers/Network/ActivityWarningController.php)",
+      "Bash(php -l app/Models/Network/ActivityWarning.php)",
+      "Bash(php -l app/Console/Commands/CurrencyCheck.php)"
     ],
     "additionalDirectories": [
       "c:\\laragon\\www\\winnipegfir\\\nVATCAN_API_KEY=fYKopA4iUT1Ul5lG1GJz4lcjx6KYcILAS5jabHUq7dY3wgCUNQ\nVATCAN_API_URL=https:"

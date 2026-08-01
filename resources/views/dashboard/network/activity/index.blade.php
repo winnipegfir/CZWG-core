@@ -11,6 +11,9 @@
     <a href="{{ route('network.index') }}" class="dash-back-link">
         <i class="fas fa-arrow-left"></i> Network
     </a>
+    <a href="{{ route('network.warnings.index') }}" class="dash-back-link" style="margin-left:1.25rem;">
+        <i class="fas fa-triangle-exclamation"></i> Inactivity Warnings
+    </a>
 
     {{-- Page header --}}
     <div class="roster-page-header mt-3">

@@ -259,6 +259,8 @@ Route::group(['middleware' => 'auth'], function () {
 
         // Network activity is available to staff; broader network management stays admin-only below.
         Route::get('/admin/network/activity', 'Network\NetworkController@activityIndex')->name('network.activity.index');
+        Route::get('/admin/network/warnings', 'Network\ActivityWarningController@index')->name('network.warnings.index');
+        Route::post('/admin/network/warnings/{warning}', 'Network\ActivityWarningController@update')->name('network.warnings.update');
     });
 
     //ADMIN ONLY

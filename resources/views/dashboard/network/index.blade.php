@@ -15,6 +15,11 @@
             <p>View controller activity statistics against policy requirements</p>
             <a class="text-white font-weight-bold" href="{{route('network.activity.index')}}">Go <i class="fas fa-arrow-right"></i></a>
         </div>
+        <div class="card p-4 blue white-text">
+            <h3>Inactivity Warnings</h3>
+            <p>Track whether the quarterly 14-day warning was sent and how it was resolved</p>
+            <a class="text-white font-weight-bold" href="{{route('network.warnings.index')}}">Go <i class="fas fa-arrow-right"></i></a>
+        </div>
         <div class="card p-4 purple white-text">
             <h3>Overall Statistics</h3>
             <p>View total statistics for Winnipeg positions (Coming Soon)</p>
