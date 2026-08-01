@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Network\NetworkController;
+use App\Services\ControllerActivityService;
 use App\Services\VatsimBookingService;
 use Auth;
 use Carbon\Carbon;
@@ -26,7 +26,7 @@ class BookingController extends Controller
         $bookings = collect($result['data'] ?? [])
             ->filter(fn($b) =>
                 Carbon::parse($b['end'])->isFuture() &&
-                collect(NetworkController::HOME_FIR_PREFIXES)->contains(fn($prefix) => str_starts_with($b['callsign'], $prefix))
+                collect(ControllerActivityService::HOME_FIR_PREFIXES)->contains(fn($prefix) => str_starts_with($b['callsign'], $prefix))
             )
             ->values();
 

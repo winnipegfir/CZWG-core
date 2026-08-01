@@ -18,7 +18,7 @@ class ControllerActivityService
         'GND' => 1, 'DEL' => 1,
         'TWR' => 2,
         'APP' => 3, 'DEP' => 3,
-        'CTR' => 4,
+        'CTR' => 4, 'FMP' => 4,
     ];
 
     const RATING_TIERS = [
