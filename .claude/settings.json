@@ -93,7 +93,13 @@
       "Bash(php -l \"app/Http/Controllers/BookingController.php\")",
       "Bash(php -l app/Http/Controllers/Network/ActivityWarningController.php)",
       "Bash(php -l app/Models/Network/ActivityWarning.php)",
-      "Bash(php -l app/Console/Commands/CurrencyCheck.php)"
+      "Bash(php -l app/Console/Commands/CurrencyCheck.php)",
+      "Bash(php -l app/Services/PermissionSyncService.php)",
+      "Bash(php -l app/Observers/RosterMemberObserver.php)",
+      "Bash(php -l app/Observers/InstructorObserver.php)",
+      "Bash(php -l app/Observers/StaffMemberObserver.php)",
+      "Bash(php -l app/Providers/AppServiceProvider.php)",
+      "Bash(php -l app/Console/Commands/SyncPermissions.php)"
     ],
     "additionalDirectories": [
       "c:\\laragon\\www\\winnipegfir\\\nVATCAN_API_KEY=fYKopA4iUT1Ul5lG1GJz4lcjx6KYcILAS5jabHUq7dY3wgCUNQ\nVATCAN_API_URL=https:"

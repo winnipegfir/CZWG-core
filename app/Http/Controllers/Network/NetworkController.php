@@ -36,8 +36,10 @@ class NetworkController extends Controller
             VatsimStatsApi::rememberRangeStart($rangeStart);
         }
 
-        $roster = RosterMember::where('active', '1')
-            ->whereIn('status', ['home', 'visit', 'instructor', 'training'])
+        // Not filtered by active/inactive -- this should match everyone the Roster
+        // admin page shows, so a pending/inactive member isn't invisible here just
+        // because they haven't been flipped active yet.
+        $roster = RosterMember::whereIn('status', ['home', 'visit', 'instructor', 'training'])
             ->with('user')
             ->get();
 
