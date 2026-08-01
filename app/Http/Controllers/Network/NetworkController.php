@@ -49,6 +49,7 @@ class NetworkController extends Controller
         $meetingRequirement = $members->where('meets_requirement', true)->count();
         $belowRequirement = $members->where('meets_requirement', false)->count();
         $dataUnavailable = $members->where('vatsim_data_unavailable', true)->count();
+        $notOnVatcan = $members->where('vatcan_status', 'none')->count();
 
         // Home controllers, instructors, and trainees all belong to the FIR itself;
         // visitors are the only status held to the flat hour minimum with no FIR-share rule.
@@ -56,7 +57,7 @@ class NetworkController extends Controller
         $visitingMembers = $members->where('status', 'visit')->values();
 
         return view('dashboard.network.activity.index', compact(
-            'homeMembers', 'visitingMembers', 'quarterLabel', 'totalMembers', 'meetingRequirement', 'belowRequirement', 'dataUnavailable',
+            'homeMembers', 'visitingMembers', 'quarterLabel', 'totalMembers', 'meetingRequirement', 'belowRequirement', 'dataUnavailable', 'notOnVatcan',
             'rangeStart', 'rangeEnd', 'isCustomRange'
         ));
     }

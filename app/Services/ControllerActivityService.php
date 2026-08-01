@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Classes\VatsimStatsApi;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
 // Single source of truth for "is this controller active" -- used by both the
@@ -57,12 +58,14 @@ class ControllerActivityService
     // Visitors and trainees have no such split requirement, just the flat hour minimum.
     const HOME_TYPE_STATUSES = ['home', 'instructor'];
 
+    const VATCAN_ROSTER_CACHE_TTL_MINUTES = 30;
+
     /**
      * Compute activity stats for a set of roster members over a date range.
      * Mutates and returns each $rosterMembers item with: requirement, rating_short_name,
      * vatsim_data_unavailable, position_breakdown, qualifying_hours, total_logged_hours,
      * non_fir_hours, off_tier_hours, fir_percentage, is_home_type, meets_requirement,
-     * fails_percentage_only.
+     * fails_percentage_only, vatcan_status ('home'|'visitor'|'none'|null), vatcan_unavailable.
      *
      * @param  \Illuminate\Support\Collection<int, \App\Models\AtcTraining\RosterMember>  $rosterMembers
      */
@@ -74,7 +77,24 @@ class ControllerActivityService
         // controller working a Toronto position never shows up in our own log).
         $vatsimSessionsByCid = VatsimStatsApi::getAtcSessionsForMembers($rosterMembers->pluck('cid')->unique(), $rangeStart);
 
-        return $rosterMembers->map(function ($member) use ($vatsimSessionsByCid, $rangeEnd) {
+        // Cross-check against VATCAN's own FIR roster -- catches people who are
+        // still on our local roster but have fallen off VATCAN's (e.g. a transfer
+        // or removal that never got mirrored here). Cached briefly since this is
+        // one call for the whole batch, not per member.
+        [$vatcanHomeCids, $vatcanVisitorCids, $vatcanUnavailable] = self::vatcanRosterCids();
+
+        return $rosterMembers->map(function ($member) use ($vatsimSessionsByCid, $rangeEnd, $vatcanHomeCids, $vatcanVisitorCids, $vatcanUnavailable) {
+            $member->vatcan_unavailable = $vatcanUnavailable;
+            if ($vatcanUnavailable) {
+                $member->vatcan_status = null;
+            } elseif ($vatcanHomeCids->contains((int) $member->cid)) {
+                $member->vatcan_status = 'home';
+            } elseif ($vatcanVisitorCids->contains((int) $member->cid)) {
+                $member->vatcan_status = 'visitor';
+            } else {
+                $member->vatcan_status = 'none';
+            }
+
             $requirement = config('currency.'.$member->status);
             $member->requirement = $requirement;
 
@@ -172,5 +192,32 @@ class ControllerActivityService
 
             return $member;
         });
+    }
+
+    /**
+     * Home and visitor CIDs from VATCAN's own FIR roster, cached briefly. Returns
+     * [homeCids, visitorCids, unavailable] -- unavailable is true if VATCAN
+     * couldn't be reached, in which case the CID collections are both empty and
+     * callers should treat membership as unknown rather than "not on roster".
+     */
+    protected static function vatcanRosterCids(): array
+    {
+        $cached = Cache::remember('vatcan.fir_roster', now()->addMinutes(self::VATCAN_ROSTER_CACHE_TTL_MINUTES), function () {
+            $result = (new VatcanService)->getRoster();
+            if ($result['status'] !== 'ok') {
+                return null;
+            }
+
+            return [
+                collect($result['data']['controllers'] ?? [])->pluck('cid')->map(fn ($cid) => (int) $cid)->values()->all(),
+                collect($result['data']['visitors'] ?? [])->pluck('cid')->map(fn ($cid) => (int) $cid)->values()->all(),
+            ];
+        });
+
+        if ($cached === null) {
+            return [collect(), collect(), true];
+        }
+
+        return [collect($cached[0]), collect($cached[1]), false];
     }
 }

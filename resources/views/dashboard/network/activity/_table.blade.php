@@ -13,6 +13,7 @@
                 <th>Requirement</th>
                 <th class="sortable" data-col="8">Result <i class="fas fa-sort sort-icon"></i></th>
                 <th>Email</th>
+                <th>VATCAN</th>
                 <th></th>
             </tr>
         </thead>
@@ -79,10 +80,23 @@
                         <span class="text-muted">&mdash;</span>
                     @endif
                 </td>
+                <td>
+                    @if ($member->vatcan_unavailable)
+                        <span class="status-badge activity-status-unknown" title="Could not reach VATCAN's FIR roster to verify.">
+                            <i class="fas fa-circle-question"></i> Unknown
+                        </span>
+                    @elseif ($member->vatcan_status === 'none')
+                        <span class="status-badge status-inactive" title="This CID doesn't appear on VATCAN's home or visiting FIR roster.">
+                            <i class="fas fa-triangle-exclamation"></i> Not on VATCAN
+                        </span>
+                    @else
+                        <span class="status-badge status-active text-capitalize" title="Confirmed on VATCAN's FIR roster.">{{ $member->vatcan_status }}</span>
+                    @endif
+                </td>
                 <td><i class="fas fa-chevron-down activity-expand-icon"></i></td>
             </tr>
             <tr class="activity-breakdown-row" id="breakdown-{{ $member->id }}" style="display:none;">
-                <td colspan="11">
+                <td colspan="12">
                     @if ($member->vatsim_data_unavailable)
                         <span class="text-muted" style="font-size:0.85rem;"><i class="fas fa-circle-notch fa-spin"></i> Still pulling this controller's session history from VATSIM &mdash; it's rate-limited, so this fills in over the next few minutes.</span>
                     @elseif (empty($member->position_breakdown))
@@ -101,7 +115,7 @@
             </tr>
         @empty
             <tr>
-                <td colspan="11" class="text-center text-muted py-4">No roster members found.</td>
+                <td colspan="12" class="text-center text-muted py-4">No roster members found.</td>
             </tr>
         @endforelse
         </tbody>

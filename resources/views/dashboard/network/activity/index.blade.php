@@ -83,6 +83,12 @@
                 <div class="activity-summary-label">Still Loading</div>
             </div>
         @endif
+        @if ($notOnVatcan > 0)
+            <div class="activity-summary-card" title="On our local roster but not found on VATCAN's home or visiting FIR roster.">
+                <div class="activity-summary-value text-danger"><i class="fas fa-triangle-exclamation" style="font-size:1.1rem;"></i> {{ $notOnVatcan }}</div>
+                <div class="activity-summary-label">Not on VATCAN</div>
+            </div>
+        @endif
     </div>
 
     {{-- Legend + Search --}}
