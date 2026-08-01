@@ -5,7 +5,7 @@
 
 @section('content')
 
-<div class="container roster-page-wrap">
+<div class="container-fluid roster-page-wrap">
 
     {{-- Back link --}}
     <a href="{{ route('network.index') }}" class="dash-back-link">
