@@ -5,7 +5,7 @@
 
 @section('content')
 
-<div class="container roster-page-wrap">
+<div class="container-fluid roster-page-wrap">
 
     <a href="{{ route('network.activity.index') }}" class="dash-back-link">
         <i class="fas fa-arrow-left"></i> Controller Activity
@@ -46,7 +46,8 @@
                     <th>Controller</th>
                     <th>Hours</th>
                     <th>Warning Sent</th>
-                    <th>Sent By / Deadline</th>
+                    <th>Sent By</th>
+                    <th>Deadline</th>
                     <th>Result</th>
                     <th>Notes</th>
                     <th></th>
@@ -71,12 +72,18 @@
                         </div>
                     </td>
 
-                    <td class="activity-result-note" style="white-space:normal;">
+                    <td style="white-space:nowrap;">
                         @if ($warning->warning_sent)
-                            {{ $warning->warningSentBy ? $warning->warningSentBy->fullName('FL') : 'Unknown' }} on {{ $warning->warning_sent_at->format('M j, Y') }}
-                            @if ($warning->deadline)
-                                <br>Deadline: {{ $warning->deadline->format('M j, Y') }}
-                            @endif
+                            {{ $warning->warningSentBy ? $warning->warningSentBy->fullName('FL') : 'Unknown' }}
+                            <div class="activity-result-note">{{ $warning->warning_sent_at->format('M j, Y') }}</div>
+                        @else
+                            &mdash;
+                        @endif
+                    </td>
+
+                    <td style="white-space:nowrap;">
+                        @if ($warning->warning_sent && $warning->deadline)
+                            {{ $warning->deadline->format('M j, Y') }}
                         @else
                             &mdash;
                         @endif
@@ -108,7 +115,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="8" class="text-center text-muted py-4">No warnings logged for this quarter.</td>
+                    <td colspan="9" class="text-center text-muted py-4">No warnings logged for this quarter.</td>
                 </tr>
             @endforelse
             </tbody>
@@ -117,6 +124,16 @@
 </div>
 
 <style>
+.roster-page-wrap {
+    max-width: 1600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.roster-table-wrap {
+    overflow-x: auto !important;
+}
+
 .warnings-table {
     font-size: 0.9rem;
     border-collapse: collapse;
