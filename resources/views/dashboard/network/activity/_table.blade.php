@@ -11,7 +11,7 @@
                 <th class="sortable" data-col="5">Qualifying Hours <i class="fas fa-sort sort-icon"></i></th>
                 <th class="sortable" data-col="6">Non-FIR Hours <i class="fas fa-sort sort-icon"></i></th>
                 <th>Requirement</th>
-                <th class="sortable" data-col="7">Result <i class="fas fa-sort sort-icon"></i></th>
+                <th class="sortable" data-col="8">Result <i class="fas fa-sort sort-icon"></i></th>
                 <th>Email</th>
                 <th></th>
             </tr>

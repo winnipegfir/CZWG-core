@@ -435,7 +435,7 @@ $(document).ready(function () {
         rows.sort(function (a, b) {
             var aCell = $(a).find('td').eq(col);
             var bCell = $(b).find('td').eq(col);
-            if (col === 4 || col === 5 || col === 6 || col === 7) {
+            if (col === 4 || col === 5 || col === 6 || col === 8) {
                 var aNum = parseFloat(aCell.data('sort'));
                 var bNum = parseFloat(bCell.data('sort'));
                 return asc ? aNum - bNum : bNum - aNum;
