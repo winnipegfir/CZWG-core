@@ -46,4 +46,19 @@ class RosterMember extends Model
     {
         return $this->hasMany(EventConfirm::class);
     }
+
+    // Per-position endorsement columns are 1 = none, 2 = Training, 3 = Solo,
+    // 4 = Certified (see adminCertBadge() in dashboard.roster.index). A member
+    // sitting at "none" on every position can't actually control anything yet,
+    // so they shouldn't be held to an activity requirement.
+    public function hasAnyEndorsement(): bool
+    {
+        foreach (['del', 'gnd', 'twr', 'dep', 'app', 'ctr'] as $field) {
+            if ((int) $this->{$field} >= 2) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

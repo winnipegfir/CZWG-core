@@ -152,10 +152,15 @@ class ControllerActivityService
             $isHomeType = in_array($member->status, self::HOME_TYPE_STATUSES);
             $member->is_home_type = $isHomeType;
 
+            // A member with no endorsement on any position at all can't actually
+            // control anything yet -- don't flag them as "below requirement" for
+            // hours they have no way to log.
+            $member->has_any_endorsement = $member->hasAnyEndorsement();
+
             // Only hours worked at an eligible position within Winnipeg FIR can
             // ever satisfy the requirement -- raw total hours (which can be 100%
             // foreign-FIR time) must never be used to decide pass/fail.
-            if ($member->vatsim_data_unavailable || $requirement === null) {
+            if ($member->vatsim_data_unavailable || $requirement === null || ! $member->has_any_endorsement) {
                 $member->meets_requirement = null;
                 $member->fails_percentage_only = false;
             } else {

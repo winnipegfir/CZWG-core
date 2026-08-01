@@ -32,6 +32,8 @@
                         <span class="status-badge activity-status-unknown" title="VATSIM limits how fast we can pull session history, so this fills in gradually. No action needed.">
                             <i class="fas fa-circle-notch fa-spin"></i> Loading&hellip;
                         </span>
+                    @elseif (! $member->has_any_endorsement)
+                        <span class="status-badge" title="Not endorsed for any position yet, so there's no activity requirement to meet.">Not yet endorsed</span>
                     @elseif ($member->meets_requirement === null)
                         <span class="status-badge">N/A</span>
                     @elseif ($member->meets_requirement)

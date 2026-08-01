@@ -46,6 +46,12 @@ class CurrencyCheck extends Command
     {
         $badMembers = [];
         foreach (RosterMember::all()->sortBy('currency') as $rosterMember) {
+            // Not endorsed for a single position yet -- they can't control anything,
+            // so there's no activity to be current on in the first place.
+            if (! $rosterMember->hasAnyEndorsement()) {
+                continue;
+            }
+
             if ($rosterMember->currency >= config(sprintf('currency.%s', $rosterMember->status))) {
                 continue;
             }
