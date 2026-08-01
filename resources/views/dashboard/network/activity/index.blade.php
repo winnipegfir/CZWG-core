@@ -248,19 +248,8 @@ html[data-theme="dark"] .activity-section-title {
 }
 
 .roster-email-cell {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    max-width: 170px;
-}
-
-.roster-email-text {
-    font-size: 0.82rem;
-    color: #475569;
-    overflow: hidden;
-    text-overflow: ellipsis;
     white-space: nowrap;
-    min-width: 0;
+    width: 1px;
 }
 
 .roster-email-copy-btn {
@@ -281,10 +270,6 @@ html[data-theme="dark"] .activity-section-title {
 
 .roster-email-copy-btn.copied {
     color: #15803d;
-}
-
-html[data-theme="dark"] .roster-email-text {
-    color: #b7bdc6 !important;
 }
 
 html[data-theme="dark"] .roster-email-copy-btn {
