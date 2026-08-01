@@ -12,6 +12,7 @@
                 <th class="sortable" data-col="6">Non-FIR Hours <i class="fas fa-sort sort-icon"></i></th>
                 <th>Requirement</th>
                 <th>Result</th>
+                <th>Email</th>
                 <th></th>
             </tr>
         </thead>
@@ -46,10 +47,20 @@
                         <div class="activity-result-note">{{ decimal_to_hm($member->off_tier_hours) }} at wrong position tier, didn't count</div>
                     @endif
                 </td>
+                <td class="roster-email-cell">
+                    @if ($member->user && $member->user->email)
+                        <span class="roster-email-text">{{ $member->user->email }}</span>
+                        <button type="button" class="roster-email-copy-btn" title="Copy email" data-email="{{ $member->user->email }}">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    @else
+                        <span class="text-muted">&mdash;</span>
+                    @endif
+                </td>
                 <td><i class="fas fa-chevron-down activity-expand-icon"></i></td>
             </tr>
             <tr class="activity-breakdown-row" id="breakdown-{{ $member->id }}" style="display:none;">
-                <td colspan="10">
+                <td colspan="11">
                     @if ($member->vatsim_data_unavailable)
                         <span class="text-muted" style="font-size:0.85rem;"><i class="fas fa-circle-notch fa-spin"></i> Still pulling this controller's session history from VATSIM &mdash; it's rate-limited, so this fills in over the next few minutes.</span>
                     @elseif (empty($member->position_breakdown))
@@ -68,7 +79,7 @@
             </tr>
         @empty
             <tr>
-                <td colspan="10" class="text-center text-muted py-4">No roster members found.</td>
+                <td colspan="11" class="text-center text-muted py-4">No roster members found.</td>
             </tr>
         @endforelse
         </tbody>

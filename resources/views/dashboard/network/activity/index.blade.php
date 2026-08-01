@@ -243,6 +243,55 @@ html[data-theme="dark"] .activity-section-title {
     white-space: nowrap;
 }
 
+.roster-email-cell {
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.roster-email-text {
+    font-size: 0.82rem;
+    color: #475569;
+}
+
+.roster-email-copy-btn {
+    border: none;
+    background: transparent;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 0.2rem 0.35rem;
+    border-radius: 6px;
+    font-size: 0.78rem;
+    line-height: 1;
+}
+
+.roster-email-copy-btn:hover {
+    color: #1d4ed8;
+    background: #eff6ff;
+}
+
+.roster-email-copy-btn.copied {
+    color: #15803d;
+}
+
+html[data-theme="dark"] .roster-email-text {
+    color: #b7bdc6 !important;
+}
+
+html[data-theme="dark"] .roster-email-copy-btn {
+    color: #7a828e;
+}
+
+html[data-theme="dark"] .roster-email-copy-btn:hover {
+    color: #6ea8e6 !important;
+    background: #17283d !important;
+}
+
+html[data-theme="dark"] .roster-email-copy-btn.copied {
+    color: #5fd88a !important;
+}
+
 html[data-theme="dark"] .activity-range-form label {
     color: #9aa1ab !important;
 }
@@ -317,10 +366,29 @@ $(document).ready(function () {
     @endif
 
     // ── Expand/collapse position breakdown ─────────────────────
-    $(document).on('click', '.activity-row', function () {
+    $(document).on('click', '.activity-row', function (e) {
+        if ($(e.target).closest('.roster-email-copy-btn').length) {
+            return;
+        }
         var target = $($(this).data('toggle-target'));
         target.toggle();
         $(this).toggleClass('expanded');
+    });
+
+    // ── Copy email to clipboard ─────────────────────────────────
+    $(document).on('click', '.roster-email-copy-btn', function (e) {
+        e.stopPropagation();
+        var btn = $(this);
+        var email = btn.data('email');
+        navigator.clipboard.writeText(email).then(function () {
+            var icon = btn.find('i');
+            icon.removeClass('fa-copy').addClass('fa-check');
+            btn.addClass('copied');
+            setTimeout(function () {
+                icon.removeClass('fa-check').addClass('fa-copy');
+                btn.removeClass('copied');
+            }, 1500);
+        });
     });
 
     // ── Live search (matches against the row + its breakdown) ──
