@@ -39,7 +39,7 @@
     @endif
 
     <div class="roster-table-wrap">
-        <table class="table roster-table" id="warningsTable">
+        <table class="table warnings-table" id="warningsTable">
             <thead>
                 <tr>
                     <th>CID</th>
@@ -109,13 +109,73 @@
 </div>
 
 <style>
-.roster-table textarea.form-control {
-    resize: vertical;
-    min-width: 160px;
+.warnings-table {
+    font-size: 0.9rem;
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+    margin: 0;
 }
 
-.roster-table select.form-control {
-    min-width: 170px;
+.warnings-table thead th {
+    background: #f8fafc;
+    color: #64748b;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    padding: 0.7rem 1rem;
+    border-bottom: 1.5px solid #e2e8f0;
+    white-space: nowrap;
+    text-align: left;
+}
+
+.warnings-table tbody tr {
+    border-bottom: 1px solid #f1f5f9;
+    transition: background 0.1s;
+}
+
+.warnings-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.warnings-table tbody tr:hover {
+    background: #f8fafc;
+}
+
+.warnings-table tbody td {
+    padding: 0.75rem 1rem;
+    vertical-align: middle;
+    text-align: left;
+}
+
+.warnings-table select.form-control,
+.warnings-table textarea.form-control {
+    display: block;
+    width: 100%;
+}
+
+.warnings-table textarea.form-control {
+    resize: vertical;
+    min-width: 180px;
+}
+
+.warnings-table select.form-control {
+    min-width: 190px;
+}
+
+html[data-theme="dark"] .warnings-table thead th {
+    background: #1f232a !important;
+    color: #9aa1ab !important;
+    border-bottom-color: #33383f !important;
+}
+
+html[data-theme="dark"] .warnings-table tbody tr {
+    border-bottom-color: #262b32 !important;
+}
+
+html[data-theme="dark"] .warnings-table tbody tr:hover {
+    background: #1f232a !important;
 }
 </style>
 
