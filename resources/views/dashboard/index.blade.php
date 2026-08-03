@@ -300,12 +300,28 @@
     {{-- ── Alerts ── --}}
     @php
         $hasAlerts = ($active === 0 && $certification)
+            || $activityWarning
             || count($openTickets) > 0
             || count($unconfirmedapp) > 0
             || (Auth::user()->permissions >= 4 && count($staffTickets) > 0);
     @endphp
     @if($hasAlerts)
     <div style="margin-bottom:1.5rem;">
+
+        @if($activityWarning)
+        <div class="db-alert" style="background:#fffbeb; border:1px solid #fde68a;">
+            <i class="fas fa-exclamation-triangle db-alert-icon" style="color:#d97706;"></i>
+            <div>
+                <div class="db-alert-title" style="color:#b45309;">Activity warning issued</div>
+                <div class="db-alert-body" style="color:#b45309;">
+                    You logged {{ $activityWarning->hours_logged }}h of {{ $activityWarning->hours_required }}h required for {{ $activityWarning->quarter_label }}.
+                    @if($activityWarning->deadline)
+                        Get current by {{ $activityWarning->deadline->format('M j, Y') }} to avoid removal from the roster.
+                    @endif
+                </div>
+            </div>
+        </div>
+        @endif
 
         @if($active === 0 && $certification)
         <div class="db-alert" style="background:#fef2f2; border:1px solid #fecaca;">

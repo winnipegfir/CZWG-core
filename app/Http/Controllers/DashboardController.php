@@ -9,6 +9,7 @@ use App\Models\AtcTraining\Student;
 use App\Models\Events\ControllerApplication;
 use App\Models\Events\Event;
 use App\Models\Events\EventConfirm;
+use App\Models\Network\ActivityWarning;
 use App\Models\Publications\AtcResource;
 use App\Models\Tickets\Ticket;
 use Auth;
@@ -45,6 +46,12 @@ class DashboardController extends Controller
             $certification = $potentialRosterMember->status;
             $active = $potentialRosterMember->active;
         }
+        $activityWarning = ActivityWarning::where('cid', $user->id)
+            ->where('warning_sent', true)
+            ->where('result', 'pending')
+            ->latest('warning_sent_at')
+            ->first();
+
         $openTickets = Ticket::where('user_id', $user->id)->where('status', 0)->get();
         $staffTickets = Ticket::where('staff_member_cid', $user->id)->where('status', 0)->get();
 
@@ -84,7 +91,7 @@ class DashboardController extends Controller
         if ($user->permissions == 0) {
             return view('dashboard.index2', compact('openTickets', 'confirmedevent', 'cbtnotifications', 'yourinstructor', 'waitlistPosition', 'waitlistTypeTotal', 'userTz'));
         } else {
-            return view('dashboard.index', compact('event', 'potentialRosterMember', 'yourinstructor', 'waitlistPosition', 'waitlistTypeTotal', 'openTickets', 'staffTickets', 'certification', 'active', 'atcResources', 'unconfirmedapp', 'confirmedapp', 'confirmedevent', 'cbtnotifications', 'myBookings', 'myActivity', 'userTz'));
+            return view('dashboard.index', compact('event', 'potentialRosterMember', 'yourinstructor', 'waitlistPosition', 'waitlistTypeTotal', 'openTickets', 'staffTickets', 'certification', 'active', 'atcResources', 'unconfirmedapp', 'confirmedapp', 'confirmedevent', 'cbtnotifications', 'myBookings', 'myActivity', 'userTz', 'activityWarning'));
         }
     }
 

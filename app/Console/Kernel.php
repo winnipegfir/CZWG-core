@@ -7,6 +7,7 @@ use App\Console\Commands\CheckVisitHours;
 use App\Console\Commands\CurrencyCheck;
 use App\Console\Commands\EventReminders;
 use App\Console\Commands\PurgeExpiredBookings;
+use App\Console\Commands\PurgeExpiredTrainingSlots;
 use App\Console\Commands\RatingUpdate;
 use App\Console\Commands\WarmVatsimActivityCache;
 use Illuminate\Console\Scheduling\Schedule;
@@ -35,6 +36,7 @@ class Kernel extends ConsoleKernel
         $schedule->command(ActivityLog::class)->everyMinute()->evenInMaintenanceMode();
         $schedule->command(EventReminders::class)->everyMinute();
         $schedule->command(PurgeExpiredBookings::class)->everyMinute();
+        $schedule->command(PurgeExpiredTrainingSlots::class)->everyMinute();
         $schedule->command(WarmVatsimActivityCache::class)->everyMinute();
         $schedule->call(function () {
             file_get_contents(config('cronurls.minute'));

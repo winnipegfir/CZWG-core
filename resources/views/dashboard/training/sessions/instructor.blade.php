@@ -180,6 +180,7 @@
             'extendedProps' => [
                 'status' => $slot->status,
                 'student' => $studentName,
+                'isPast' => $slot->end_time->isPast(),
             ],
         ];
     }
@@ -201,21 +202,22 @@ document.addEventListener('DOMContentLoaded', function () {
     function displayLocalTz(d) {
         return formatLocalTz(d).replace('T', ' ');
     }
+    function calendarNowMs() {
+        var parts = new Intl.DateTimeFormat('en-CA', {
+            timeZone: '{{ $userTz }}',
+            hourCycle: 'h23',
+            year: 'numeric', month: '2-digit', day: '2-digit',
+            hour: '2-digit', minute: '2-digit', second: '2-digit',
+        }).formatToParts(new Date());
+        var p = {};
+        parts.forEach(function (part) { p[part.type] = part.value; });
+        return Date.UTC(p.year, p.month - 1, p.day, p.hour, p.minute, p.second);
+    }
 
     var calendarEl = document.getElementById('slotsCalendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
         timeZone: 'UTC',
-        now: function () {
-            var parts = new Intl.DateTimeFormat('en-CA', {
-                timeZone: '{{ $userTz }}',
-                hourCycle: 'h23',
-                year: 'numeric', month: '2-digit', day: '2-digit',
-                hour: '2-digit', minute: '2-digit', second: '2-digit',
-            }).formatToParts(new Date());
-            var p = {};
-            parts.forEach(function (part) { p[part.type] = part.value; });
-            return Date.UTC(p.year, p.month - 1, p.day, p.hour, p.minute, p.second);
-        },
+        now: calendarNowMs,
         initialView: 'timeGridWeek',
         headerToolbar: { left: 'prev,next today', center: 'title', right: 'timeGridWeek,dayGridMonth' },
         height: 'auto',
@@ -224,7 +226,17 @@ document.addEventListener('DOMContentLoaded', function () {
             dayGridMonth: { displayEventEnd: true },
         },
         nowIndicator: true,
-        events: events,
+        events: events.concat([{
+            start: '1970-01-01T00:00:00',
+            end: formatLocalTz(new Date(calendarNowMs())) + ':00',
+            display: 'background',
+            backgroundColor: 'rgba(100,116,139,0.15)',
+        }]),
+        eventDidMount: function (info) {
+            if (info.event.extendedProps.isPast) {
+                info.el.style.opacity = '0.45';
+            }
+        },
         dateClick: function (info) {
             var start = info.date;
             var end = new Date(start.getTime() + 3600000);
