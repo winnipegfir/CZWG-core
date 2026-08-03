@@ -410,6 +410,13 @@ $(document).ready(function () {
     setTimeout(function () { window.location.reload(); }, 20000);
     @endif
 
+    // ── Confirm before logging a warning ────────────────────────
+    $(document).on('submit', '.activity-log-warning-form', function (e) {
+        if (!confirm('Log an activity warning for this controller?')) {
+            e.preventDefault();
+        }
+    });
+
     // ── Expand/collapse position breakdown ─────────────────────
     $(document).on('click', '.activity-row', function (e) {
         if ($(e.target).closest('.roster-email-copy-btn, .activity-log-warning-form').length) {
