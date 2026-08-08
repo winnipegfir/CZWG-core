@@ -589,7 +589,7 @@ html[data-theme="dark"] #czwgDashHeader .dropdown-menu .dropdown-item:hover {
         width: 100% !important;
     }
 
-    #dashNavbar .nav-link {
+    #dashNavbar .navbar-nav .nav-link {
         color: #122b44 !important;
         font-size: 1.05rem !important;
         font-weight: 600 !important;
@@ -597,7 +597,7 @@ html[data-theme="dark"] #czwgDashHeader .dropdown-menu .dropdown-item:hover {
         border-bottom: 1px solid rgba(0,0,0,0.06) !important;
     }
 
-    #dashNavbar .nav-link::before { display: none !important; }
+    #dashNavbar .navbar-nav .nav-link::before { display: none !important; }
 
     /* No double separator before user section */
     #dashNavbar .navbar-nav.mr-auto > .nav-item:last-child > .nav-link {
