@@ -54,8 +54,14 @@ jobs:
           extensions: mbstring, pdo_mysql, dom, xml, curl, fileinfo
           coverage: none
 
-      - name: Copy test environment
-        run: cp .env.example .env
+      - name: Create test environment
+        run: |
+          printf '%s\n' \
+            'APP_NAME=CZWG-CI' \
+            'APP_ENV=testing' \
+            'APP_KEY=' \
+            'APP_DEBUG=true' \
+            'APP_URL=http://localhost' > .env
 
       - name: Install Dependencies
         run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
@@ -85,17 +91,23 @@ jobs:
               "DB_CONNECTION", "DB_HOST", "DB_PORT",
               "DB_DATABASE", "DB_USERNAME", "DB_PASSWORD"
           ]
+
           for name in names:
               for element in list(settings):
                   if element.get("name") == name:
                       settings.remove(element)
+
               ET.SubElement(settings, "server", {
                   "name": name,
                   "value": os.environ[name],
                   "force": "true"
               })
 
-          tree.write("phpunit.ci.xml", encoding="utf-8", xml_declaration=True)
+          tree.write(
+              "phpunit.ci.xml",
+              encoding="utf-8",
+              xml_declaration=True
+          )
           PY
 
       - name: Run migrations and seed test database
