@@ -89,6 +89,30 @@ class User extends Authenticatable
         return $this->hasOne(AtcTraining\Instructor::class);
     }
 
+    public function teacherProfile()
+    {
+        return $this->hasOne(\App\Models\Teacher::class, 'user_cid');
+    }
+
+    public function isTrainingInstructor(): bool
+    {
+        if ((int) $this->permissions >= 5 || (int) $this->permissions === 3) {
+            return true;
+        }
+
+        return $this->instructorProfile()->exists()
+            || $this->teacherProfile()->where('is_instructor', true)->exists();
+    }
+
+    public function isTrainingMentor(): bool
+    {
+        if ($this->isTrainingInstructor() || (int) $this->permissions === 2) {
+            return true;
+        }
+
+        return $this->teacherProfile()->exists();
+    }
+
     public function studentProfile()
     {
         return $this->hasOne(AtcTraining\Student::class);

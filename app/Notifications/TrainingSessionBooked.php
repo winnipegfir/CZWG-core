@@ -41,7 +41,10 @@ class TrainingSessionBooked extends Notification
     {
         return [
             'label' => 'Confirm Slot',
-            'url'   => URL::temporarySignedRoute('training.sessions.discordconfirm', now()->addDays(3), ['id' => $this->session->id]),
+            'url'   => URL::temporarySignedRoute('training.sessions.discordconfirm', now()->addDays(3), [
+                'id' => $this->session->id,
+                'booking' => $this->session->confirmationContext(),
+            ]),
         ];
     }
 }
