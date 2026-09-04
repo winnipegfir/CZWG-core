@@ -31,6 +31,6 @@ class MakeUserPreferencesTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('user_preferences');
     }
 }
