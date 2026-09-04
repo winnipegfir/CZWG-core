@@ -157,7 +157,7 @@
             @endif
 
             {{-- Actions --}}
-            @if(Auth::user()->permissions >= 3 || Auth::user()->instructorProfile)
+            @if(Auth::user()->isTrainingInstructor())
             <div class="card mb-4">
                 <div class="card-body">
                     @if(Auth::user()->permissions >= 4)

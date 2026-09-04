@@ -9,7 +9,7 @@
 <div class="container">
 
     {{-- Stats row --}}
-    @if(Auth::user()->permissions >= 3 || Auth::user()->instructorProfile !== null)
+    @if(Auth::user()->isTrainingInstructor())
     @php
         $waitlistCount   = \App\Models\AtcTraining\Student::whereNull('instructor_id')->count();
         $inProgressCount = \App\Models\AtcTraining\Student::whereNotNull('instructor_id')->count();

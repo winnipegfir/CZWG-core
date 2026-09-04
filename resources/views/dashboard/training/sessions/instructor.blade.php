@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('navbarprim') @parent @stop
-@section('title', 'Training Slots — Winnipeg FIR')
+@section('title', 'Training Availability — Winnipeg FIR')
 
 @section('content')
 @include('includes.trainingMenu')
@@ -25,7 +25,7 @@
 
     <div class="d-flex align-items-center mb-4">
         <div>
-            <h2 class="font-weight-bold mb-0" style="color:#122b44;">Training Slots</h2>
+            <h2 class="font-weight-bold mb-0" style="color:#122b44;">Training Availability</h2>
             <p class="text-muted mb-0" style="font-size:0.875rem;">
                 {{ $slots->count() }} slot{{ $slots->count() != 1 ? 's' : '' }} posted &mdash; click an empty time to add a slot, click a slot to manage it &mdash; times shown in {{ \App\Models\Users\User::timezoneLabel($userTz) }}
                 @if($userTz === 'UTC')

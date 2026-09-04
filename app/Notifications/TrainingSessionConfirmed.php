@@ -22,15 +22,15 @@ class TrainingSessionConfirmed extends Notification
 
     public function toArray($notifiable)
     {
-        $instructorName = $this->session->instructor && $this->session->instructor->user
-            ? $this->session->instructor->user->fullName('FL')
-            : 'Your instructor';
+        $providerName = $this->session->provider
+            ? $this->session->provider->fullName('FL')
+            : 'Your training provider';
 
         $when = $this->session->start_time->copy()->setTimezone($notifiable->displayTimezone())->format('D, M j g:i A');
 
         return [
             'title' => 'Training session confirmed',
-            'body'  => $instructorName . ' confirmed your session on ' . $when . '.',
+            'body'  => $providerName . ' confirmed your session on ' . $when . '.',
             'url'   => route('training.book.index'),
             'icon'  => 'fa-chalkboard-teacher',
         ];

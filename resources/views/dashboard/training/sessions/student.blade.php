@@ -11,13 +11,13 @@
         <div class="d-flex align-items-center" style="gap:0.6rem;">
             <h2 class="font-weight-bold mb-0" style="color:#122b44;">Book Training</h2>
             @if($student->mentorable)
-                <span style="background:#dbeafe; color:#1d4ed8; font-size:0.75rem; font-weight:700; padding:0.25em 0.6em; border-radius:0.4rem;" title="Your instructor has marked you mentorable — you can book with any instructor.">Mentorable</span>
+                <span style="background:#dbeafe; color:#1d4ed8; font-size:0.75rem; font-weight:700; padding:0.25em 0.6em; border-radius:0.4rem;" title="You can book with instructors and eligible mentors rated above you (S3 minimum).">Mentorable</span>
             @endif
         </div>
         @if($student->instructor_id && $student->instructor || $student->mentorable)
             <p class="text-muted mb-0" style="font-size:0.875rem;">
                 @if($student->mentorable)
-                    open to all instructors
+                    Open to instructors and eligible higher-rated mentors (S3 minimum)
                 @else
                     with {{ $student->instructor->user ? $student->instructor->user->fullName('FL') : 'your instructor' }}
                 @endif
@@ -41,8 +41,8 @@
             $instructorPalette = ['#2563eb', '#7c3aed', '#0891b2', '#db2777', '#4f46e5', '#059669', '#ea580c', '#65a30d'];
             $instructorColors = [];
             if ($student->mentorable) {
-                foreach ($openSlots->pluck('instructor_id')->unique()->values() as $i => $iid) {
-                    $instructorColors[$iid] = $instructorPalette[$i % count($instructorPalette)];
+                foreach ($openSlots->pluck('provider_user_id')->unique()->values() as $i => $providerId) {
+                    $instructorColors[$providerId] = $instructorPalette[$i % count($instructorPalette)];
                 }
             }
         @endphp
@@ -52,11 +52,11 @@
                 @if($student->mentorable && count($instructorColors) > 1)
                     <div class="d-flex flex-wrap align-items-center mb-3" style="gap:0.5rem;">
                         <span class="text-muted" style="font-size:0.78rem; font-weight:600;">Show:</span>
-                        @foreach($instructorColors as $iid => $color)
-                            @php $iuser = optional(optional($openSlots->firstWhere('instructor_id', $iid))->instructor)->user; @endphp
+                        @foreach($instructorColors as $providerId => $color)
+                            @php $iuser = optional($openSlots->firstWhere('provider_user_id', $providerId))->provider; @endphp
                             <label style="cursor:pointer; display:inline-flex; align-items:center; gap:0.35rem; font-size:0.78rem; padding:0.25em 0.65em; border-radius:999px; border:1px solid {{ $color }}; color:{{ $color }}; margin-bottom:0;">
-                                <input type="checkbox" class="instructor-filter-checkbox" value="{{ $iid }}" checked style="accent-color: {{ $color }};">
-                                {{ $iuser ? $iuser->fullName('FL') : 'Instructor' }}
+                                <input type="checkbox" class="instructor-filter-checkbox" value="{{ $providerId }}" checked style="accent-color: {{ $color }};">
+                                {{ $iuser ? $iuser->fullName('FL') : 'Training provider' }}
                             </label>
                         @endforeach
                     </div>
@@ -93,21 +93,21 @@
                                 @endif
                                 <div style="display:flex; align-items:center; padding:0.6rem 0; border-bottom:1px solid #f1f5f9;">
                                     @if($student->mentorable)
-                                        <span style="width:8px; height:8px; border-radius:50%; background:{{ $instructorColors[$slot->instructor_id] ?? '#64748b' }}; margin-right:0.6rem; flex-shrink:0;"></span>
+                                        <span style="width:8px; height:8px; border-radius:50%; background:{{ $instructorColors[$slot->provider_user_id] ?? '#64748b' }}; margin-right:0.6rem; flex-shrink:0;"></span>
                                     @endif
                                     <div style="flex:1; min-width:0;">
                                         <div style="font-weight:600; font-size:0.875rem; color:#122b44;">{{ $startLocal->format('D, M j') }}</div>
                                         <div style="font-size:0.78rem; color:#64748b;">
                                             {{ $startLocal->format('g:i A') }} &ndash; {{ $endLocal->format('g:i A') }}
-                                            @if($student->mentorable && $slot->instructor && $slot->instructor->user)
-                                                &middot; {{ $slot->instructor->user->fullName('FL') }}
+                                            @if($student->mentorable && $slot->provider)
+                                                &middot; {{ $slot->provider->fullName('FL') }}
                                             @endif
                                             @if($slot->note) &middot; {{ $slot->note }} @endif
                                         </div>
                                     </div>
                                     <form method="POST" action="{{ route('training.book.store') }}" class="d-flex align-items-center" style="gap:0.3rem;">
                                         @csrf
-                                        <input type="hidden" name="instructor_id" value="{{ $slot->instructor_id }}">
+                                        <input type="hidden" name="provider_user_id" value="{{ $slot->provider_user_id }}">
                                         @if(count($hourOptions) > 1)
                                             <select name="start_time" class="form-control form-control-sm" style="width:auto; min-width:6.5rem; font-size:0.78rem; padding-right:1.6rem;">
                                                 @foreach($hourOptions as $opt)
@@ -139,6 +139,7 @@
                                         <div style="font-weight:600; font-size:0.875rem; color:#122b44;">{{ $startLocal->format('D, M j') }}</div>
                                         <div style="font-size:0.78rem; color:#64748b;">
                                             {{ $startLocal->format('g:i A') }} &ndash; {{ $endLocal->format('g:i A') }}
+                                            @if($slot->provider) &middot; {{ $slot->provider->fullName('FL') }} @endif
                                             @if($slot->note) &middot; {{ $slot->note }} @endif
                                         </div>
                                     </div>
@@ -163,7 +164,7 @@
         <form id="calBookForm" method="POST" action="{{ route('training.book.store') }}" style="display:none;">
             @csrf
             <input type="hidden" name="start_time" id="calBookStartInput">
-            <input type="hidden" name="instructor_id" id="calBookInstructorInput">
+            <input type="hidden" name="provider_user_id" id="calBookProviderInput">
         </form>
         <form id="calCancelForm" method="POST" style="display:none;">@csrf</form>
 
@@ -187,13 +188,13 @@
             $calendarEvents = [];
             foreach ($openSlots as $slot) {
                 $title = 'Open';
-                if ($student->mentorable && $slot->instructor && $slot->instructor->user) {
-                    $title = $slot->instructor->user->fullName('FL');
+                if ($student->mentorable && $slot->provider) {
+                    $title = $slot->provider->fullName('FL');
                 }
                 if ($slot->note) {
                     $title .= ' — ' . $slot->note;
                 }
-                $color = $instructorColors[$slot->instructor_id] ?? '#64748b';
+                $color = $instructorColors[$slot->provider_user_id] ?? '#64748b';
                 // Clip the visible/clickable start to now for slots that span across it,
                 // so the already-elapsed portion isn't shown as bookable.
                 $eventStart = $slot->start_time->isPast() ? now() : $slot->start_time;
@@ -204,7 +205,7 @@
                     'end' => $slot->end_time->copy()->setTimezone($userTz)->format('Y-m-d\TH:i:s'),
                     'backgroundColor' => $color,
                     'borderColor' => $color,
-                    'extendedProps' => ['kind' => 'open', 'instructorId' => $slot->instructor_id],
+                    'extendedProps' => ['kind' => 'open', 'providerId' => $slot->provider_user_id],
                 ];
             }
             foreach ($myBookings as $slot) {
@@ -237,7 +238,7 @@
                 });
                 if (Object.keys(hidden).length === 0) return events;
                 return events.filter(function (e) {
-                    return e.extendedProps.kind !== 'open' || !hidden[String(e.extendedProps.instructorId)];
+                    return e.extendedProps.kind !== 'open' || !hidden[String(e.extendedProps.providerId)];
                 });
             }
 
@@ -252,9 +253,9 @@
                 opts.timeZone = 'UTC';
                 return d.toLocaleString([], opts);
             }
-            function submitBooking(startDate, instructorId) {
+            function submitBooking(startDate, providerId) {
                 document.getElementById('calBookStartInput').value = formatLocalTz(startDate);
-                document.getElementById('calBookInstructorInput').value = instructorId || '';
+                document.getElementById('calBookProviderInput').value = providerId || '';
                 document.getElementById('calBookForm').submit();
             }
             function hourlyStarts(start, end) {
@@ -266,7 +267,7 @@
                 }
                 return options;
             }
-            function showPickTimeModal(options, instructorId) {
+            function showPickTimeModal(options, providerId) {
                 var list = document.getElementById('pickTimeList');
                 list.innerHTML = '';
                 options.forEach(function (d) {
@@ -278,7 +279,7 @@
                     btn.textContent = displayLocalTz(d, { hour: 'numeric', minute: '2-digit' });
                     btn.onclick = function () {
                         $('#pickTimeModal').modal('hide');
-                        submitBooking(d, instructorId);
+                        submitBooking(d, providerId);
                     };
                     list.appendChild(btn);
                 });
@@ -311,14 +312,14 @@
                 eventClick: function (info) {
                     var kind = info.event.extendedProps.kind;
                     if (kind === 'open') {
-                        var instructorId = info.event.extendedProps.instructorId;
+                        var providerId = info.event.extendedProps.providerId;
                         var options = hourlyStarts(info.event.start, info.event.end);
                         if (options.length <= 1) {
                             if (options.length === 1 && confirm('Book this slot (' + displayLocalTz(options[0]) + ')?')) {
-                                submitBooking(options[0], instructorId);
+                                submitBooking(options[0], providerId);
                             }
                         } else {
-                            showPickTimeModal(options, instructorId);
+                            showPickTimeModal(options, providerId);
                         }
                     } else if (kind === 'booked') {
                         var when = displayLocalTz(info.event.start);

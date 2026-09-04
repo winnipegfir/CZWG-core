@@ -417,14 +417,14 @@
                 </div>
             </div>
 
-            {{-- Instructor tools (instructor role, not full staff) --}}
-            @if(Auth::user()->instructorProfile !== null && Auth::user()->permissions < 4)
+            {{-- Mentor and instructor availability tools (not full staff) --}}
+            @if(Auth::user()->isTrainingMentor() && Auth::user()->permissions < 4)
             <div class="db-card">
-                <div class="db-card-label">Instructor</div>
+                <div class="db-card-label">{{ Auth::user()->isTrainingInstructor() ? 'Instructor' : 'Mentor' }}</div>
                 <div class="db-tile-grid db-tile-grid-3">
-                    <a href="{{ route('training.index') }}" class="db-tile">
+                    <a href="{{ Auth::user()->isTrainingInstructor() ? route('training.index') : route('training.sessions.index') }}" class="db-tile">
                         <div class="db-tile-icon" style="background:#eff6ff; color:#2563eb;"><i class="fas fa-chalkboard-teacher"></i></div>
-                        <span class="db-tile-label">Training Management</span>
+                        <span class="db-tile-label">{{ Auth::user()->isTrainingInstructor() ? 'Training Management' : 'Training Availability' }}</span>
                     </a>
                 </div>
             </div>
@@ -435,10 +435,12 @@
             <div class="db-card">
                 <div class="db-card-label">Staff</div>
                 <div class="db-tile-grid db-tile-grid-3">
-                    <a href="{{ route('training.index') }}" class="db-tile">
+                    @if(Auth::user()->isTrainingMentor())
+                    <a href="{{ Auth::user()->isTrainingInstructor() ? route('training.index') : route('training.sessions.index') }}" class="db-tile">
                         <div class="db-tile-icon" style="background:#eff6ff; color:#2563eb;"><i class="fas fa-graduation-cap"></i></div>
-                        <span class="db-tile-label">Training Management</span>
+                        <span class="db-tile-label">{{ Auth::user()->isTrainingInstructor() ? 'Training Management' : 'Training Availability' }}</span>
                     </a>
+                    @endif
                     <a href="{{ route('roster.index') }}" class="db-tile">
                         <div class="db-tile-icon" style="background:#f0fdf4; color:#16a34a;"><i class="fas fa-users"></i></div>
                         <span class="db-tile-label">Manage Roster</span>
