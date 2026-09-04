@@ -192,9 +192,9 @@ $(document).ready(function () {
         tbody.append(rows);
     });
 
-    // Default sort home table by CID asc
-    $('#rosterTable .sortable[data-col="0"]').trigger('click');
-    $('#visitRosterTable .sortable[data-col="0"]').trigger('click');
+    // Default both rosters to controller name A-Z.
+    $('#rosterTable .sortable[data-col="1"]').trigger('click');
+    $('#visitRosterTable .sortable[data-col="1"]').trigger('click');
 });
 </script>
 @stop

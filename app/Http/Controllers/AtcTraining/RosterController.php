@@ -13,16 +13,18 @@ class RosterController extends Controller
 {
     public function showPublic()
     {
-        $roster = RosterMember::where('visit', '0')->get()->sortBy('cid');
-        $visitroster = RosterMember::where('visit', '1')->get()->sortBy('cid');
+        $byName = fn ($member) => mb_strtolower($member->user ? $member->user->fullName('FL') : $member->full_name);
+        $roster = RosterMember::with('user')->where('visit', '0')->get()->sortBy($byName)->values();
+        $visitroster = RosterMember::with('user')->where('visit', '1')->get()->sortBy($byName)->values();
 
         return view('roster', compact('roster', 'visitroster'));
     }
 
     public function index()
     {
-        $roster = RosterMember::where('visit', '0')->get()->sortBy('cid');
-        $visitroster2 = RosterMember::where('visit', '1')->get()->sortBy('cid');
+        $byName = fn ($member) => mb_strtolower($member->user ? $member->user->fullName('FL') : $member->full_name);
+        $roster = RosterMember::with('user')->where('visit', '0')->get()->sortBy($byName)->values();
+        $visitroster2 = RosterMember::with('user')->where('visit', '1')->get()->sortBy($byName)->values();
         $users = User::all();
 
         return view('dashboard.roster.index', compact('roster', 'visitroster2', 'users'));

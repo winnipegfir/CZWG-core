@@ -1,16 +1,26 @@
 <div style="background:#272727; border-bottom:1px solid #1a1a1a;">
+    @php $trainingHomeRoute = Auth::user()->isTrainingInstructor() ? 'training.index' : 'training.sessions.index'; @endphp
     <div class="container">
         <div class="d-flex align-items-center" style="min-height:38px; gap:0.25rem; padding:0.3rem 0;">
-            <a href="{{ route('training.index') }}" style="color:#fff; font-weight:700; font-size:1rem; text-decoration:none; margin-right:0.5rem; white-space:nowrap; flex-shrink:0;">
+            <a href="{{ route($trainingHomeRoute) }}" style="color:#fff; font-weight:700; font-size:1rem; text-decoration:none; margin-right:0.5rem; white-space:nowrap; flex-shrink:0;">
                 Training
             </a>
             <nav class="training-subnav d-flex align-items-center" style="gap:0.1rem; flex-wrap:wrap; min-width:0;">
-                <a href="{{ route('training.index') }}"
-                   style="color:{{ Request::is('dashboard/training') ? '#fff' : 'rgba(255,255,255,0.6)' }}; font-size:0.85rem; padding:0.3rem 0.65rem; border-radius:0.3rem; text-decoration:none; white-space:nowrap; flex-shrink:0; {{ Request::is('dashboard/training') ? 'background:rgba(255,255,255,0.12);' : '' }}">
-                    Home
-                </a>
+                @if(Auth::user()->isTrainingInstructor())
+                    <a href="{{ route($trainingHomeRoute) }}"
+                       style="color:{{ Request::is('dashboard/training') ? '#fff' : 'rgba(255,255,255,0.6)' }}; font-size:0.85rem; padding:0.3rem 0.65rem; border-radius:0.3rem; text-decoration:none; white-space:nowrap; flex-shrink:0; {{ Request::is('dashboard/training') ? 'background:rgba(255,255,255,0.12);' : '' }}">
+                        Home
+                    </a>
+                @endif
 
-                @if(Auth::user()->instructorProfile !== null)
+                @if(Auth::user()->isTrainingInstructor())
+                <a href="{{ route('training.sweatbox-files') }}"
+                   style="color:{{ Request::is('dashboard/training/sweatbox-files') ? '#fff' : 'rgba(255,255,255,0.6)' }}; font-size:0.85rem; padding:0.3rem 0.65rem; border-radius:0.3rem; text-decoration:none; white-space:nowrap; flex-shrink:0; {{ Request::is('dashboard/training/sweatbox-files') ? 'background:rgba(255,255,255,0.12);' : '' }}">
+                    Sweatbox Files
+                </a>
+                @endif
+
+                @if(Auth::user()->isTrainingMentor())
                 @php $onOwnSessions = Request::is('dashboard/training/sessions') || (Request::is('dashboard/training/sessions*') && !Request::is('dashboard/training/sessions/all*')); @endphp
                 <a href="{{ route('training.sessions.index') }}"
                    style="color:{{ $onOwnSessions ? '#fff' : 'rgba(255,255,255,0.6)' }}; font-size:0.85rem; padding:0.3rem 0.65rem; border-radius:0.3rem; text-decoration:none; white-space:nowrap; flex-shrink:0; {{ $onOwnSessions ? 'background:rgba(255,255,255,0.12);' : '' }}">
@@ -18,7 +28,7 @@
                 </a>
                 @endif
 
-                @if(Auth::user()->instructorProfile !== null || Auth::user()->permissions >= 4)
+                @if(Auth::user()->isTrainingInstructor())
                 <a href="{{ route('training.instructors') }}"
                    style="color:{{ Request::is('dashboard/training/instructors*') ? '#fff' : 'rgba(255,255,255,0.6)' }}; font-size:0.85rem; padding:0.3rem 0.65rem; border-radius:0.3rem; text-decoration:none; white-space:nowrap; flex-shrink:0; {{ Request::is('dashboard/training/instructors*') ? 'background:rgba(255,255,255,0.12);' : '' }}">
                     Instructors
@@ -26,7 +36,7 @@
 
                 @endif
 
-                @if(Auth::user()->permissions >= 3 || Auth::user()->instructorProfile !== null)
+                @if(Auth::user()->isTrainingInstructor())
                 <div class="dropdown" style="flex-shrink:0;">
                     <a href="#" data-toggle="dropdown"
                        style="color:{{ Request::is('dashboard/training/students*') ? '#fff' : 'rgba(255,255,255,0.6)' }}; font-size:0.85rem; padding:0.3rem 0.65rem; border-radius:0.3rem; text-decoration:none; white-space:nowrap; {{ Request::is('dashboard/training/students*') ? 'background:rgba(255,255,255,0.12);' : '' }}">
@@ -46,7 +56,7 @@
                 </div>
                 @endif
 
-                @if(Auth::user()->permissions >= 4)
+                @if(Auth::user()->isTrainingInstructor())
                 <a href="{{ route('training.sessions.all') }}"
                    style="color:{{ Request::is('dashboard/training/sessions/all*') ? '#fff' : 'rgba(255,255,255,0.6)' }}; font-size:0.85rem; padding:0.3rem 0.65rem; border-radius:0.3rem; text-decoration:none; white-space:nowrap; flex-shrink:0; {{ Request::is('dashboard/training/sessions/all*') ? 'background:rgba(255,255,255,0.12);' : '' }}">
                     All Sessions

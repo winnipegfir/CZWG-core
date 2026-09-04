@@ -9,6 +9,7 @@ use App\Models\AtcTraining\TrainingSession;
 use App\Notifications\TrainingSessionBooked;
 use App\Notifications\TrainingSessionCancelled;
 use App\Notifications\TrainingSessionConfirmed;
+use App\Services\TrainingBookingEligibility;
 use Auth;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -18,10 +19,7 @@ class TrainingSessionController extends Controller
 {
     public function instructorIndex()
     {
-        $instructor = Auth::user()->instructorProfile;
-        abort_if(!$instructor, 403, 'You do not have an instructor profile.');
-
-        $slots = TrainingSession::where('instructor_id', $instructor->id)
+        $slots = TrainingSession::where('provider_user_id', Auth::id())
             ->where('status', '!=', 'cancelled')
             ->orderBy('start_time')
             ->get();
@@ -33,9 +31,6 @@ class TrainingSessionController extends Controller
 
     public function store(Request $request)
     {
-        $instructor = Auth::user()->instructorProfile;
-        abort_if(!$instructor, 403, 'You do not have an instructor profile.');
-
         $request->validate([
             'start_time' => 'required|date',
             'end_time'   => 'required|date|after:start_time',
@@ -45,7 +40,8 @@ class TrainingSessionController extends Controller
         $userTz = Auth::user()->displayTimezone();
 
         TrainingSession::create([
-            'instructor_id' => $instructor->id,
+            'instructor_id' => optional(Auth::user()->instructorProfile)->id,
+            'provider_user_id' => Auth::id(),
             'start_time'    => Carbon::parse($request->input('start_time'), $userTz)->setTimezone('UTC'),
             'end_time'      => Carbon::parse($request->input('end_time'), $userTz)->setTimezone('UTC'),
             'note'          => $request->input('note'),
@@ -57,11 +53,8 @@ class TrainingSessionController extends Controller
 
     public function destroy($id)
     {
-        $instructor = Auth::user()->instructorProfile;
-        abort_if(!$instructor, 403, 'You do not have an instructor profile.');
-
         $slot = TrainingSession::where('id', $id)->firstOrFail();
-        abort_if($slot->instructor_id !== $instructor->id, 403);
+        abort_if((int) $slot->provider_user_id !== (int) Auth::id(), 403);
 
         if ($slot->status !== 'open') {
             return redirect()->back()->withError('Only open (unbooked) slots can be deleted. Cancel a booked slot instead.');
@@ -74,14 +67,11 @@ class TrainingSessionController extends Controller
 
     public function cancel($id)
     {
-        $instructor = Auth::user()->instructorProfile;
-        abort_if(!$instructor, 403, 'You do not have an instructor profile.');
-
         $slot = TrainingSession::where('id', $id)->firstOrFail();
-        abort_if($slot->instructor_id !== $instructor->id, 403);
+        abort_if((int) $slot->provider_user_id !== (int) Auth::id(), 403);
 
         if ($slot->student && $slot->student->user) {
-            $slot->student->user->notify(new TrainingSessionCancelled($slot, 'Your instructor', 'student'));
+            $slot->student->user->notify(new TrainingSessionCancelled($slot, 'Your training provider', 'student'));
         }
 
         $slot->student_id = null;
@@ -95,7 +85,7 @@ class TrainingSessionController extends Controller
 
     /**
      * When a slot becomes open again (cancellation, unassignment), fold it
-     * into any touching open slots from the same instructor with the same
+     * into any touching open slots from the same training provider with the same
      * note so booking one hour at a time doesn't fragment availability into
      * a pile of adjacent slivers.
      */
@@ -110,7 +100,7 @@ class TrainingSessionController extends Controller
             $merged = false;
 
             $left = $matchesNote(
-                TrainingSession::where('instructor_id', $slot->instructor_id)
+                TrainingSession::where('provider_user_id', $slot->provider_user_id)
                     ->where('status', 'open')
                     ->where('id', '!=', $slot->id)
                     ->where('end_time', $slot->start_time)
@@ -124,7 +114,7 @@ class TrainingSessionController extends Controller
             }
 
             $right = $matchesNote(
-                TrainingSession::where('instructor_id', $slot->instructor_id)
+                TrainingSession::where('provider_user_id', $slot->provider_user_id)
                     ->where('status', 'open')
                     ->where('id', '!=', $slot->id)
                     ->where('start_time', $slot->end_time)
@@ -145,11 +135,8 @@ class TrainingSessionController extends Controller
 
     public function confirm($id)
     {
-        $instructor = Auth::user()->instructorProfile;
-        abort_if(!$instructor, 403, 'You do not have an instructor profile.');
-
         $slot = TrainingSession::where('id', $id)->firstOrFail();
-        abort_if($slot->instructor_id !== $instructor->id, 403);
+        abort_if((int) $slot->provider_user_id !== (int) Auth::id(), 403);
 
         if ($slot->status !== 'pending') {
             return redirect()->back()->withError('Only pending sessions can be confirmed.');
@@ -207,17 +194,23 @@ class TrainingSessionController extends Controller
         $openSlots = collect();
         if ($student->mentorable) {
             $openSlots = TrainingSession::open()
-                ->with('instructor.user')
+                ->with('provider')
                 ->orderBy('start_time')
                 ->get();
         } elseif ($student->instructor_id) {
             $openSlots = TrainingSession::open()
+                ->with('provider')
                 ->where('instructor_id', $student->instructor_id)
                 ->orderBy('start_time')
                 ->get();
         }
 
-        $myBookings = TrainingSession::where('student_id', $student->id)
+        $openSlots = $openSlots->filter(fn ($slot) => TrainingBookingEligibility::allows(
+            $student, $slot->provider, $slot->instructor_id
+        ))->values();
+
+        $myBookings = TrainingSession::with('provider')
+            ->where('student_id', $student->id)
             ->whereIn('status', ['booked', 'pending'])
             ->orderBy('start_time')
             ->get();
@@ -231,7 +224,7 @@ class TrainingSessionController extends Controller
      * Students book in fixed 1-hour windows. The chosen window must fall
      * entirely within a still-open slot; that slot is resized down to the
      * booked hour, and whatever's left before/after is split off into new
-     * open slots so the rest of the instructor's availability stays bookable.
+     * open slots so the rest of the provider's availability stays bookable.
      */
     public function book(Request $request)
     {
@@ -241,13 +234,22 @@ class TrainingSessionController extends Controller
         $request->validate([
             'start_time' => 'required|date',
             'instructor_id' => 'nullable|exists:instructors,id',
+            'provider_user_id' => 'nullable|exists:users,id',
         ]);
 
-        // Mentorable students may book with any instructor; everyone else is
+        // Mentorable students may book with eligible mentors or instructors; everyone else is
         // locked to their own assigned instructor regardless of what's posted.
         $instructorId = ($student->mentorable && $request->filled('instructor_id'))
             ? (int) $request->input('instructor_id')
             : $student->instructor_id;
+
+        $providerUserId = $student->mentorable
+            ? (int) $request->input('provider_user_id')
+            : optional(Instructor::find($student->instructor_id))->user_id;
+
+        if (!$providerUserId) {
+            return redirect()->back()->withError('That training provider is not available.');
+        }
 
         $userTz = Auth::user()->displayTimezone();
         $start = Carbon::parse($request->input('start_time'), $userTz)->setTimezone('UTC')->second(0);
@@ -257,21 +259,22 @@ class TrainingSessionController extends Controller
             return redirect()->back()->withError('That time is in the past.');
         }
 
-        $booked = DB::transaction(function () use ($student, $start, $end, $instructorId) {
-            $slot = TrainingSession::where('instructor_id', $instructorId)
+        $booked = DB::transaction(function () use ($student, $start, $end, $instructorId, $providerUserId) {
+            $slot = TrainingSession::where('provider_user_id', $providerUserId)
                 ->where('status', 'open')
                 ->where('start_time', '<=', $start)
                 ->where('end_time', '>=', $end)
-                ->lockForUpdate()
-                ->first();
+                ->when(!$student->mentorable, fn ($query) => $query->where('instructor_id', $instructorId))
+                ->lockForUpdate()->first();
 
-            if (!$slot) {
+            if (!$slot || !TrainingBookingEligibility::allows($student, $slot->provider, $slot->instructor_id)) {
                 return false;
             }
 
             if ($slot->start_time->lt($start)) {
                 TrainingSession::create([
                     'instructor_id' => $slot->instructor_id,
+                    'provider_user_id' => $slot->provider_user_id,
                     'start_time' => $slot->start_time,
                     'end_time' => $start,
                     'note' => $slot->note,
@@ -282,6 +285,7 @@ class TrainingSessionController extends Controller
             if ($slot->end_time->gt($end)) {
                 TrainingSession::create([
                     'instructor_id' => $slot->instructor_id,
+                    'provider_user_id' => $slot->provider_user_id,
                     'start_time' => $end,
                     'end_time' => $slot->end_time,
                     'note' => $slot->note,
@@ -300,14 +304,14 @@ class TrainingSessionController extends Controller
         });
 
         if (!$booked) {
-            return redirect()->back()->withError('That time is no longer available.');
+            return redirect()->back()->withError('That time is unavailable or you are not eligible to book with that provider.');
         }
 
-        if ($booked->instructor && $booked->instructor->user) {
-            $booked->instructor->user->notify(new TrainingSessionBooked($booked));
+        if ($booked->provider) {
+            $booked->provider->notify(new TrainingSessionBooked($booked));
         }
 
-        return redirect()->back()->withSuccess('Session booked — waiting on your instructor to confirm.');
+        return redirect()->back()->withSuccess('Session booked — waiting on your training provider to confirm.');
     }
 
     public function studentCancel($id)
@@ -318,8 +322,8 @@ class TrainingSessionController extends Controller
         $slot = TrainingSession::where('id', $id)->firstOrFail();
         abort_if($slot->student_id !== $student->id, 403);
 
-        if ($slot->instructor && $slot->instructor->user) {
-            $slot->instructor->user->notify(new TrainingSessionCancelled($slot, 'The student', 'instructor'));
+        if ($slot->provider) {
+            $slot->provider->notify(new TrainingSessionCancelled($slot, 'The student', 'instructor'));
         }
 
         $slot->student_id = null;
@@ -333,7 +337,7 @@ class TrainingSessionController extends Controller
 
     public function adminIndex()
     {
-        $sessions = TrainingSession::with(['instructor.user', 'student.user'])
+        $sessions = TrainingSession::with(['provider', 'instructor.user', 'student.user'])
             ->orderBy('start_time', 'desc')
             ->get();
 
@@ -394,6 +398,7 @@ class TrainingSessionController extends Controller
 
         $slot = TrainingSession::where('id', $id)->firstOrFail();
         $slot->instructor_id = $request->input('instructor_id');
+        $slot->provider_user_id = Instructor::findOrFail($request->input('instructor_id'))->user_id;
 
         if ($request->filled('student_id')) {
             $slot->student_id = $request->input('student_id');

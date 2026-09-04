@@ -29,7 +29,7 @@
     <div class="mb-4">
         <h2 class="font-weight-bold mb-0" style="color:#122b44;">All Sessions</h2>
         <p class="text-muted mb-0" style="font-size:0.875rem;">
-            {{ $sessions->count() }} session{{ $sessions->count() != 1 ? 's' : '' }} across every instructor &mdash; click a session on the calendar to jump to it below &mdash; times shown in {{ \App\Models\Users\User::timezoneLabel($userTz) }}
+            {{ $sessions->count() }} session{{ $sessions->count() != 1 ? 's' : '' }} across every mentor and instructor &mdash; click a session on the calendar to jump to it below &mdash; times shown in {{ \App\Models\Users\User::timezoneLabel($userTz) }}
             @if($userTz === 'UTC')
                 &mdash; <a href="{{ route('me.preferences') }}">set your timezone</a>
             @endif
@@ -59,7 +59,7 @@
                         <tr>
                             <th class="ts-sortable" data-sort="when" style="color:#64748b; font-weight:600; border-top:none; cursor:pointer; user-select:none;">When ({{ \App\Models\Users\User::timezoneLabel($userTz) }}) <span class="ts-sort-arrow"></span></th>
                             <th class="ts-sortable" data-sort="status" style="color:#64748b; font-weight:600; border-top:none; cursor:pointer; user-select:none;">Status <span class="ts-sort-arrow"></span></th>
-                            <th class="ts-sortable" data-sort="who" style="color:#64748b; font-weight:600; border-top:none; min-width:280px; cursor:pointer; user-select:none;">Instructor / Student <span class="ts-sort-arrow"></span></th>
+                            <th class="ts-sortable" data-sort="who" style="color:#64748b; font-weight:600; border-top:none; min-width:280px; cursor:pointer; user-select:none;">Training Provider / Student <span class="ts-sort-arrow"></span></th>
                             <th style="border-top:none;"></th>
                         </tr>
                     </thead>
@@ -68,7 +68,7 @@
                             <tr id="session-row-{{ $session->id }}" style="transition:background-color 0.6s ease;"
                                 data-when="{{ $session->start_time->timestamp }}"
                                 data-status="{{ $session->status }}"
-                                data-who="{{ strtolower(($session->instructor && $session->instructor->user ? $session->instructor->user->fullName('FL') : 'zzz') . ' ' . ($session->student && $session->student->user ? $session->student->user->fullName('FL') : '')) }}">
+                                data-who="{{ strtolower(($session->provider ? $session->provider->fullName('FL') : 'zzz') . ' ' . ($session->student && $session->student->user ? $session->student->user->fullName('FL') : '')) }}">
                                 <td style="vertical-align:middle;">
                                     @php $startLocal = $session->start_time->copy()->setTimezone($userTz); $endLocal = $session->end_time->copy()->setTimezone($userTz); @endphp
                                     <span style="color:#122b44; font-weight:600;">{{ $startLocal->format('D, M j') }}</span>
@@ -87,7 +87,7 @@
                                     @endif
                                 </td>
                                 <td style="vertical-align:middle;">
-                                    <span style="color:#122b44; font-weight:600;">{{ $session->instructor && $session->instructor->user ? $session->instructor->user->fullName('FL') : ($session->instructor ? $session->instructor->email : 'Unassigned') }}</span>
+                                    <span style="color:#122b44; font-weight:600;">{{ $session->provider ? $session->provider->fullName('FL') : 'Unassigned' }}</span>
                                     @if ($session->student)
                                         <br><span class="text-muted" style="font-size:0.78rem;">{{ $session->student->user ? $session->student->user->fullName('FL') : 'Unknown' }}</span>
                                     @endif
@@ -145,9 +145,12 @@
 
                             <form method="POST" action="{{ route('training.sessions.admin.reassign', $session->id) }}" class="ts-reassign mb-0">
                                 @csrf
-                                <label class="font-weight-bold small d-block mb-2">Instructor / Student</label>
+                                <label class="font-weight-bold small d-block mb-2">Reassign to Instructor / Student</label>
                                 <div class="form-group mb-2">
                                     <select name="instructor_id" class="form-control">
+                                        @if(!$session->instructor_id && $session->provider)
+                                            <option value="" selected disabled>Current mentor &ndash; {{ $session->provider->fullName('FL') }}</option>
+                                        @endif
                                         @foreach ($instructors as $instructor)
                                             <option value="{{ $instructor->id }}" @selected($session->instructor_id === $instructor->id)>
                                                 {{ $instructor->user_id }} &ndash; {{ $instructor->user ? $instructor->user->fullName('FL') : $instructor->email }}
@@ -188,7 +191,7 @@
         $statusColors = ['open' => '#64748b', 'pending' => '#d97706', 'booked' => '#16a34a', 'cancelled' => '#b91c1c'];
         $calendarEvents = [];
         foreach ($sessions as $session) {
-            $who = $session->instructor && $session->instructor->user ? $session->instructor->user->fullName('FL') : 'Unknown';
+            $who = $session->provider ? $session->provider->fullName('FL') : 'Unknown';
             if ($session->student && $session->student->user) {
                 $who .= ' / ' . $session->student->user->fullName('FL');
             }

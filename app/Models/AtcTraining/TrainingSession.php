@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class TrainingSession extends Model
 {
     protected $fillable = [
-        'instructor_id', 'student_id', 'start_time', 'end_time', 'status', 'note', 'network_callsign', 'instructor_comments', 'booked_at',
+        'instructor_id', 'provider_user_id', 'student_id', 'start_time', 'end_time', 'status', 'note', 'network_callsign', 'instructor_comments', 'booked_at',
     ];
 
     protected $casts = [
@@ -24,6 +24,11 @@ class TrainingSession extends Model
     public function instructor()
     {
         return $this->belongsTo(Instructor::class);
+    }
+
+    public function provider()
+    {
+        return $this->belongsTo(\App\Models\Users\User::class, 'provider_user_id');
     }
 
     public function scopeOpen($query)

@@ -16,10 +16,8 @@ class CheckInstructor
      */
     public function handle($request, Closure $next)
     {
-        if (Auth::check()) {
-            if (Auth::user()->permissions >= 3 || Auth::user()->instructorProfile !== null) {
-                return $next($request);
-            }
+        if (Auth::check() && Auth::user()->isTrainingInstructor()) {
+            return $next($request);
         }
 
         abort(403, 'Only Instructors have access to this resource!');

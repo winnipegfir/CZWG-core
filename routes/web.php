@@ -315,13 +315,19 @@ Route::get('/training/sessions/{id}/discord-confirm', 'AtcTraining\TrainingSessi
     ->name('training.sessions.discordconfirm')
     ->middleware('signed');
 Route::post('/training', 'AtcTraining\TrainingController@editTrainingTime')->middleware('staff')->name('waittime.edit');
-Route::prefix('dashboard/training')->middleware('instructor')->group(function () {
-    Route::get('/', 'AtcTraining\TrainingController@index')->name('training.index');
+
+// Mentors and instructors can manage only their own training availability.
+Route::prefix('dashboard/training')->middleware('mentor')->group(function () {
     Route::get('/sessions', 'AtcTraining\TrainingSessionController@instructorIndex')->name('training.sessions.index');
     Route::post('/sessions', 'AtcTraining\TrainingSessionController@store')->name('training.sessions.store');
     Route::delete('/sessions/{id}', 'AtcTraining\TrainingSessionController@destroy')->name('training.sessions.destroy');
     Route::post('/sessions/{id}/cancel', 'AtcTraining\TrainingSessionController@cancel')->name('training.sessions.cancel');
     Route::post('/sessions/{id}/confirm', 'AtcTraining\TrainingSessionController@confirm')->name('training.sessions.confirm');
+});
+
+Route::prefix('dashboard/training')->middleware('instructor')->group(function () {
+    Route::get('/', 'AtcTraining\TrainingController@index')->name('training.index');
+    Route::get('/sweatbox-files', 'AtcTraining\SweatboxFileController@index')->name('training.sweatbox-files');
     Route::get('/instructors', 'AtcTraining\TrainingController@instructorsIndex')->name('training.instructors');
     Route::get('/reconcile', 'AtcTraining\TrainingController@reconcile')->name('training.reconcile');
     Route::get('/students/current', 'AtcTraining\TrainingController@currentStudents')->name('training.students.current');
@@ -349,13 +355,19 @@ Route::prefix('dashboard/training')->middleware('instructor')->group(function ()
     Route::delete('/instructors/{id}', 'AtcTraining\TrainingController@removeInstructor')->name('training.instructors.remove');
 });
 
+Route::prefix('dashboard/training/sweatbox-files')->middleware('executive')->group(function () {
+    Route::post('/', 'AtcTraining\SweatboxFileController@store')->name('training.sweatbox-files.store');
+    Route::post('/{id}', 'AtcTraining\SweatboxFileController@update')->name('training.sweatbox-files.update');
+    Route::delete('/{id}', 'AtcTraining\SweatboxFileController@destroy')->name('training.sweatbox-files.destroy');
+});
+
 Route::prefix('dashboard/training/book')->middleware('auth')->group(function () {
     Route::get('/', 'AtcTraining\TrainingSessionController@studentIndex')->name('training.book.index');
     Route::post('/', 'AtcTraining\TrainingSessionController@book')->name('training.book.store');
     Route::post('/{id}/cancel', 'AtcTraining\TrainingSessionController@studentCancel')->name('training.book.cancel');
 });
 
-Route::prefix('dashboard/training/sessions/all')->middleware('staff')->group(function () {
+Route::prefix('dashboard/training/sessions/all')->middleware('instructor')->group(function () {
     Route::get('/', 'AtcTraining\TrainingSessionController@adminIndex')->name('training.sessions.all');
     Route::delete('/{id}', 'AtcTraining\TrainingSessionController@adminDestroy')->name('training.sessions.admin.destroy');
     Route::post('/{id}/cancel', 'AtcTraining\TrainingSessionController@adminCancel')->name('training.sessions.admin.cancel');

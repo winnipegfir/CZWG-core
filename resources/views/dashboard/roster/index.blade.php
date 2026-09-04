@@ -370,9 +370,9 @@ $(document).ready(function () {
         tbody.append(rows);
     });
 
-    // Default sort by CID asc
-    $('#rosterTable .sortable[data-col="0"]').trigger('click');
-    $('#rosterVisitTable .sortable[data-col="0"]').trigger('click');
+    // Default both rosters to controller name A-Z.
+    $('#rosterTable .sortable[data-col="1"]').trigger('click');
+    $('#rosterVisitTable .sortable[data-col="1"]').trigger('click');
 });
 </script>
 

@@ -71,7 +71,7 @@
                             <td style="vertical-align:middle;">
                                 <div class="d-flex align-items-center" style="gap:0.35rem;">
                                     <a href="{{ route('training.students.view', $student->id) }}" class="btn btn-sm btn-outline-secondary py-0 px-2" style="font-size:0.78rem;">View</a>
-                                    @if(Auth::user()->permissions >= 3 || Auth::user()->instructorProfile)
+                                    @if(Auth::user()->isTrainingInstructor())
                                     <form method="POST" action="{{ route('training.students.mentorable', $student->id) }}">
                                         @csrf
                                         <button type="submit" class="btn btn-sm btn-outline-danger py-0 px-2" style="font-size:0.78rem;">Unmark</button>
