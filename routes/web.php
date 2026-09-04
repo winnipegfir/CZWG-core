@@ -311,6 +311,14 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 //AtcTraining
+// Sweatbox has its own access checks; existing training permissions are unchanged.
+Route::prefix('dashboard/training/sweatbox-files')->middleware('auth')->group(function () {
+    Route::get('/', 'AtcTraining\SweatboxFileController@index')->name('training.sweatbox-files');
+    Route::post('/', 'AtcTraining\SweatboxFileController@store')->name('training.sweatbox-files.store');
+    Route::post('/{id}', 'AtcTraining\SweatboxFileController@update')->name('training.sweatbox-files.update');
+    Route::delete('/{id}', 'AtcTraining\SweatboxFileController@destroy')->name('training.sweatbox-files.destroy');
+});
+
 Route::get('/training/sessions/{id}/discord-confirm', 'AtcTraining\TrainingSessionController@discordConfirm')
     ->name('training.sessions.discordconfirm')
     ->middleware('signed');
