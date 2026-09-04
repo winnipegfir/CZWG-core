@@ -5,6 +5,12 @@
                 Training
             </a>
             <nav class="training-subnav d-flex align-items-center" style="gap:0.1rem; flex-wrap:wrap; min-width:0;">
+                @if(\App\Services\SweatboxAccess::canView(Auth::user()))
+                <a href="{{ route('training.sweatbox-files') }}"
+                   style="color:{{ Request::is('dashboard/training/sweatbox-files*') ? '#fff' : 'rgba(255,255,255,0.6)' }}; font-size:0.85rem; padding:0.3rem 0.65rem; border-radius:0.3rem; text-decoration:none; white-space:nowrap;">
+                    Sweatbox Files
+                </a>
+                @endif
                 <a href="{{ route('training.index') }}"
                    style="color:{{ Request::is('dashboard/training') ? '#fff' : 'rgba(255,255,255,0.6)' }}; font-size:0.85rem; padding:0.3rem 0.65rem; border-radius:0.3rem; text-decoration:none; white-space:nowrap; flex-shrink:0; {{ Request::is('dashboard/training') ? 'background:rgba(255,255,255,0.12);' : '' }}">
                     Home

@@ -33,6 +33,6 @@ class CreateSoloRequestsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('students');
+       Schema::dropIfExists('solo_requests');
     }
 }
