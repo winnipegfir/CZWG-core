@@ -26,11 +26,21 @@ class MentorBookingTest extends TestCase
 
     private function account(int $id, int $permission = 1, int $rating = 2): User
     {
-        return User::create([
-            'id' => $id, 'fname' => 'Test', 'lname' => 'Account',
-            'email' => "test{$id}@example.invalid", 'permissions' => $permission,
-            'rating_id' => $rating, 'timezone' => 'UTC',
+        $user = new User([
+            'id' => $id,
+            'fname' => 'Test',
+            'lname' => 'Account',
+            'email' => "test{$id}@example.invalid",
+            'permissions' => $permission,
+            'rating_id' => $rating,
+            'timezone' => 'UTC',
         ]);
+
+        // Test accounts use explicit CIDs, not generated database IDs.
+        $user->incrementing = false;
+        $user->save();
+
+        return User::findOrFail($id);
     }
 
     private function student(User $user, bool $mentorable = true, ?int $instructorId = null): Student
