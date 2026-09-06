@@ -17,6 +17,36 @@ class SettingsController extends Controller
         return view('admin.settings.index');
     }
 
+
+    public function academyDeployment()
+    {
+        $coreSettings = CoreSettings::find(1);
+
+        return view('admin.settings.academy-deployment', compact('coreSettings'));
+    }
+
+    public function saveAcademyDeployment(Request $request)
+    {
+        $coreSettings = CoreSettings::find(1);
+        abort_unless($coreSettings, 500, 'Core settings record is missing.');
+
+        $mode = $request->input('academy_access_mode', 'admin');
+        if (! in_array($mode, ['admin', 'staff', 'normal'], true)) {
+            $mode = 'admin';
+        }
+
+        $coreSettings->academy_access_mode = $mode;
+        $coreSettings->academy_maintenance_mode = $request->boolean('academy_maintenance_mode');
+
+        // Keep the v24 fields synchronized for backwards compatibility with any cached/older views.
+        $coreSettings->academy_preview_mode = $mode !== 'normal';
+        $coreSettings->academy_staff_access_enabled = in_array($mode, ['staff', 'normal'], true);
+        $coreSettings->academy_nav_enabled = true;
+        $coreSettings->save();
+
+        return back()->withSuccess('Academy deployment settings updated.');
+    }
+
     /*
     Site info
     */

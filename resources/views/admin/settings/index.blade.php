@@ -69,64 +69,6 @@
 <div class="settings-body">
     <div class="container">
         <div class="row">
-
-            <div class="col-md-3 col-sm-6 mb-3">
-                <a href="{{ route('settings.siteinformation') }}" class="setting-card">
-                    <div class="setting-card-icon"><i class="fas fa-info-circle"></i></div>
-                    <div class="setting-card-title">Site Information</div>
-                    <p class="setting-card-desc">Manage the website version, copyright, and system name.</p>
-                </a>
-            </div>
-
-            <div class="col-md-3 col-sm-6 mb-3">
-                <a href="{{ route('settings.emails') }}" class="setting-card">
-                    <div class="setting-card-icon"><i class="fas fa-envelope"></i></div>
-                    <div class="setting-card-title">Emails</div>
-                    <p class="setting-card-desc">Set staff email addresses for notifications and correspondence.</p>
-                </a>
-            </div>
-
-            <div class="col-md-3 col-sm-6 mb-3">
-                <a href="{{ route('settings.banner') }}" class="setting-card">
-                    <div class="setting-card-icon"><i class="fas fa-bullhorn"></i></div>
-                    <div class="setting-card-title">Banner</div>
-                    <p class="setting-card-desc">Set a site-wide banner for maintenance notices or announcements.</p>
-                </a>
-            </div>
-
-            <div class="col-md-3 col-sm-6 mb-3">
-                <a href="{{ route('settings.staff') }}" class="setting-card">
-                    <div class="setting-card-icon"><i class="fas fa-users"></i></div>
-                    <div class="setting-card-title">Staff</div>
-                    <p class="setting-card-desc">Manage the staff list shown on the public staff page.</p>
-                </a>
-            </div>
-
-            <div class="col-md-3 col-sm-6 mb-3">
-                <a href="{{ route('settings.images') }}" class="setting-card">
-                    <div class="setting-card-icon"><i class="fas fa-image"></i></div>
-                    <div class="setting-card-title">Homepage Images</div>
-                    <p class="setting-card-desc">Add, remove, or edit the rotating background photos on the homepage.</p>
-                </a>
-            </div>
-
-            <div class="col-md-3 col-sm-6 mb-3">
-                <a href="{{ route('settings.towns') }}" class="setting-card">
-                    <div class="setting-card-icon"><i class="fas fa-map-marker-alt"></i></div>
-                    <div class="setting-card-title">Homepage Towns</div>
-                    <p class="setting-card-desc">Manage the towns that cycle through the "We Are X." hero text.</p>
-                </a>
-            </div>
-
-            <div class="col-md-3 col-sm-6 mb-3">
-                <a href="{{ route('settings.auditlog') }}" class="setting-card">
-                    <div class="setting-card-icon"><i class="fas fa-clipboard-list"></i></div>
-                    <div class="setting-card-title">Audit Log</div>
-                    <p class="setting-card-desc">View a log of all core system events and admin actions.</p>
-                </a>
-            </div>
-
-        </div>
     </div>
 </div>
 @stop

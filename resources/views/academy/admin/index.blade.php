@@ -1,0 +1,13 @@
+@extends('layouts.master')
+@section('title', 'Academy Editor - Winnipeg FIR')
+@section('content')
+@include('academy._styles')
+<div class="academy-hero"><div class="container"><a href="{{ route('academy.admin.hub') }}" class="academy-hero-link"><i class="fas fa-arrow-left"></i> Academy</a><h1>Academy Editor</h1><p class="mb-0" style="color:rgba(255,255,255,.65)">Manage courses, modules, presentations, and self assessments.</p></div></div>
+<div class="academy-body"><div class="container"><div class="row">
+<div class="col-lg-8"><div class="academy-panel"><h5 class="font-weight-bold">Courses</h5>
+@forelse($courses as $course)<div class="academy-list-row"><div><h6 class="mb-1">{{ $course->title }}</h6><span class="academy-status {{ $course->published ? 'text-success' : 'text-muted' }}">{{ $course->published ? 'Published' : 'Draft' }}</span> <span class="academy-muted">· {{ $course->modules_count }} modules</span></div><a class="btn btn-sm btn-outline-primary" href="{{ route('academy.admin.courses.edit', $course) }}">Edit</a></div>@empty<p class="academy-muted mb-0">No courses yet.</p>@endforelse
+</div></div>
+<div class="col-lg-4"><div class="academy-panel"><h5 class="font-weight-bold">New course</h5><form method="POST" enctype="multipart/form-data" action="{{ route('academy.admin.courses.store') }}">@csrf
+<div class="form-group"><label>Title</label><input class="form-control" name="title" required></div><div class="form-group"><label>Description</label><textarea class="form-control" name="description" rows="3"></textarea></div><div class="form-group"><label>Thumbnail image</label><input class="form-control-file" type="file" name="thumbnail" accept="image/jpeg,image/png,image/webp"><small class="form-text text-muted">JPG, PNG, or WebP · maximum 4 MB.</small></div><div class="form-row"><div class="form-group col-7"><label>Icon class</label><input class="form-control" name="icon" value="fa-graduation-cap"></div><div class="form-group col-5"><label>Order</label><input class="form-control" type="number" min="0" name="sort_order" value="0"></div></div><div class="custom-control custom-switch mb-2"><input class="custom-control-input" type="checkbox" name="published" id="newCoursePublished"><label class="custom-control-label" for="newCoursePublished">Published</label></div><div class="custom-control custom-switch mb-3"><input class="custom-control-input" type="checkbox" name="default_enrollment" id="newCourseDefault"><label class="custom-control-label" for="newCourseDefault">Available to every accepted member</label></div><button class="btn btn-primary btn-block">Create course</button></form></div></div>
+</div></div></div>
+@stop
