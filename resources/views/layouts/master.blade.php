@@ -174,6 +174,13 @@
                             </div>
                         </li>
 
+                        {{-- Academy is visible only to accepted FIR members. --}}
+                        @if(\App\Services\AcademyVisibility::shouldShowNav(Auth::user()))
+                            <li class="nav-item {{ Request::is('academy') || Request::is('academy/*') ? 'active' : '' }}">
+                                <a href="{{ route('academy.index') }}" class="nav-link">Academy</a>
+                            </li>
+                        @endif
+
                         {{-- Pilots --}}
                         <li class="nav-item dropdown {{ Request::is('airports') || Request::is('pdc') ? 'active' : '' }}">
                             <a class="nav-link dropdown-toggle" id="navDropPilots" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Pilots</a>

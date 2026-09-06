@@ -35,3 +35,26 @@ Guidelines for submitting a **pull request**:
 1. Give that new account in the `users` table a `permissions` value of `5`.
 
 
+
+
+### Local Academy admin testing
+
+For local development only (`APP_ENV=local`), this branch includes a helper URL that creates/signs in a local Administrator account and opens the Academy management hub:
+
+`http://127.0.0.1:8000/dev/admin-academy`
+
+Typical Laragon/Cmder startup:
+
+```bash
+composer install
+copy .env.example .env
+php artisan key:generate
+php artisan migrate --seed
+php artisan optimize:clear
+php artisan serve
+```
+
+If `.env` already exists and your local database is already configured, do not overwrite it; just run the migrations, clear caches, and serve the app. Never point the local `.env` at the production database.
+
+## v30 deployment note
+Academy v30 adds the VATCAN Academy enrollment sync and requires `php artisan migrate --force` after deployment. The VATCAN secret remains server-side in `.env` and is not part of the repository/package.

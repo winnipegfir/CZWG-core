@@ -35,6 +35,13 @@ class LoginController extends Controller
     */
     public function connectLogin()
     {
+        // Local development does not need VATSIM Connect. Use the local-only
+        // Administrator helper so clicking "Login" while testing never leaves
+        // the local site or depends on OAuth credentials.
+        if (app()->environment('local')) {
+            return redirect()->route('dev.admin.academy');
+        }
+
         session()->forget('state');
         session()->forget('token');
         session()->put('state', $state = Str::random(40));

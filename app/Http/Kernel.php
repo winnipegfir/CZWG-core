@@ -68,7 +68,11 @@ class Kernel extends HttpKernel
         'privacy' => \App\Http\Middleware\CheckIfPrivacy::class,
         'bookingban' => \App\Http\Middleware\BookingBanMiddleware::class,
         'atc' => \App\Http\Middleware\CheckAtc::class,
-        'mentor' => \App\Http\Middleware\CheckMentor::class
+        'mentor' => \App\Http\Middleware\CheckMentor::class,
+        'academy.manager' => \App\Http\Middleware\CheckAcademyManager::class,
+        'academy.grader' => \App\Http\Middleware\CheckAcademyGrader::class,
+        'academy.oversight' => \App\Http\Middleware\CheckAcademyOversight::class,
+        'academy.visible' => \App\Http\Middleware\CheckAcademyVisibility::class
     ];
 
     /**

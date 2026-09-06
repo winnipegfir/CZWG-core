@@ -20,7 +20,16 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        // Local testing must use host-only, non-secure session cookies. This
+        // prevents a copied production .env (for example SESSION_DOMAIN set to
+        // winnipegfir.ca) from immediately losing the local admin login session.
+        if ($this->app->environment('local')) {
+            config([
+                'session.domain' => null,
+                'session.secure' => false,
+            ]);
+        }
+
         Schema::defaultStringLength(191);
 
         RosterMember::observe(RosterMemberObserver::class);

@@ -76,8 +76,84 @@ Route::get('/connect/login', 'Auth\LoginController@connectLogin')->middleware('g
 Route::get('/connect/validate', 'Auth\LoginController@validateConnectLogin')->middleware('guest');
 Route::get('/logout', 'Auth\LoginController@logout')->middleware('auth')->name('auth.logout');
 
+
+// Local development helper: creates/signs in a local Administrator and opens Academy management.
+// This route is NEVER registered outside APP_ENV=local.
+if (app()->environment('local')) {
+    $academyLocalLogin = function (int $permission, string $label) {
+        return function () use ($permission, $label) {
+            // Reuse a local user so copied/seeded databases never collide on a hard-coded CID.
+            $user = \App\Models\Users\User::where('permissions', $permission)->first()
+                ?: \App\Models\Users\User::first();
+
+            // Only create a local-only account when the users table is completely empty.
+            if (! $user) {
+                $user = new \App\Models\Users\User();
+                $user->fname = 'Local';
+                $user->lname = $label;
+                $user->email = 'local-academy-' . strtolower($label) . '@winnipegfir.test';
+                $user->rating_id = 12;
+                $user->reg_date = now();
+                $user->init = 1;
+                $user->gdpr_subscribed_emails = 0;
+                $user->display_cid_only = 0;
+                $user->display_fname = 'Local';
+                $user->display_last_name = 1;
+                $user->avatar_mode = 0;
+                $user->timezone = 'America/Winnipeg';
+            }
+
+            // Local-only role switch for permission testing.
+            $user->permissions = $permission;
+            $user->save();
+
+            \Illuminate\Support\Facades\Auth::login($user);
+
+            return redirect()->route('academy.admin.hub');
+        };
+    };
+
+    Route::get('/dev/admin-academy', $academyLocalLogin(5, 'Administrator'))->name('dev.admin.academy');
+    Route::get('/dev/instructor-academy', $academyLocalLogin(3, 'Instructor'))->name('dev.instructor.academy');
+    Route::get('/dev/mentor-academy', $academyLocalLogin(2, 'Mentor'))->name('dev.mentor.academy');
+
+    // Local-only visual preview of the maintenance screen. Does not change deployment settings.
+    Route::get('/dev/student-maintenance-preview', function () {
+        return response()->view('academy.maintenance');
+    })->name('dev.student.maintenance.preview');
+}
+
 //Base level authentication
 Route::group(['middleware' => 'auth'], function () {
+    // Winnipeg Training Academy: accepted FIR members only.
+    Route::prefix('academy')->middleware(['atc', 'academy.visible'])->group(function () {
+        Route::get('/', 'Academy\AcademyController@index')->name('academy.index');
+        Route::get('/courses/{course:slug}', 'Academy\AcademyController@course')->name('academy.courses.show');
+        Route::get('/courses/{course:slug}/{module:slug}', 'Academy\AcademyController@module')->name('academy.modules.show');
+        Route::post('/quizzes/{quiz}/submit', 'Academy\AcademyQuizController@submit')->name('academy.quizzes.submit');
+        Route::get('/submissions/{submission}', 'Academy\AcademyQuizController@show')->name('academy.submissions.show');
+    });
+
+    // Academy oversight: mentors, instructors, and administrators may review progress.
+    // Grading is restricted to instructors and administrators. Enrollment/editor remain admin-only.
+    Route::prefix('admin/academy')->middleware('academy.oversight')->group(function () {
+        Route::get('/manage', 'Academy\AcademyAdminController@hub')->name('academy.admin.hub');
+        Route::get('/progress', 'Academy\AcademyAdminController@progress')->name('academy.admin.progress');
+    });
+
+    Route::prefix('admin/academy/grading')->middleware('academy.grader')->group(function () {
+        Route::get('/', 'Academy\AcademyQuizController@gradingIndex')->name('academy.grading.index');
+        Route::get('/{submission}', 'Academy\AcademyQuizController@gradeForm')->name('academy.grading.show');
+        Route::post('/{submission}', 'Academy\AcademyQuizController@grade')->name('academy.grading.update');
+    });
+
+    Route::prefix('admin/academy/enrollments')->middleware('executive')->group(function () {
+        Route::get('/', 'Academy\AcademyEnrollmentController@index')->name('academy.enrollments.index');
+        Route::post('/', 'Academy\AcademyEnrollmentController@store')->name('academy.enrollments.store');
+        Route::post('/vatcan-sync', 'Academy\AcademyEnrollmentController@syncVatcan')->name('academy.enrollments.vatcan-sync');
+        Route::delete('/{enrollment}', 'Academy\AcademyEnrollmentController@destroy')->name('academy.enrollments.destroy');
+    });
+
     //Privacy accept
     Route::get('/privacyaccept', 'Users\UserController@privacyAccept');
     Route::get('/privacydeny', 'Users\UserController@privacyDeny');
@@ -291,6 +367,8 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/site-information', 'Settings\SettingsController@saveSiteInformation')->name('settings.siteinformation.post');
             Route::get('/emails', 'Settings\SettingsController@emails')->name('settings.emails');
             Route::post('/emails', 'Settings\SettingsController@saveEmails')->name('settings.emails.post');
+            Route::get('/academy-deployment', 'Settings\SettingsController@academyDeployment')->name('settings.academy.deployment');
+            Route::post('/academy-deployment', 'Settings\SettingsController@saveAcademyDeployment')->name('settings.academy.deployment.save');
             Route::get('/audit-log', 'Settings\SettingsController@auditLog')->name('settings.auditlog');
             Route::get('/staff', 'Users\StaffListController@editIndex')->name('settings.staff');
             Route::post('/staff/{id}', 'Users\StaffListController@editStaffMember')->name('settings.staff.editmember');
@@ -306,6 +384,23 @@ Route::group(['middleware' => 'auth'], function () {
             Route::get('/towns', 'Settings\SettingsController@townsIndex')->name('settings.towns');
             Route::post('/towns', 'Settings\SettingsController@addTown')->name('settings.towns.add');
             Route::get('/towns/{id}/delete', 'Settings\SettingsController@deleteTown')->name('settings.towns.delete');
+        });
+
+        // Academy content editing: administrators only.
+        Route::prefix('admin/academy')->group(function () {
+            Route::get('/', 'Academy\AcademyAdminController@index')->name('academy.admin.index');
+            Route::post('/courses', 'Academy\AcademyAdminController@storeCourse')->name('academy.admin.courses.store');
+            Route::get('/courses/{course}/edit', 'Academy\AcademyAdminController@editCourse')->name('academy.admin.courses.edit');
+            Route::post('/courses/{course}', 'Academy\AcademyAdminController@updateCourse')->name('academy.admin.courses.update');
+            Route::delete('/courses/{course}', 'Academy\AcademyAdminController@destroyCourse')->name('academy.admin.courses.destroy');
+            Route::post('/courses/{course}/modules', 'Academy\AcademyAdminController@storeModule')->name('academy.admin.modules.store');
+            Route::get('/modules/{module}/edit', 'Academy\AcademyAdminController@editModule')->name('academy.admin.modules.edit');
+            Route::post('/modules/{module}', 'Academy\AcademyAdminController@updateModule')->name('academy.admin.modules.update');
+            Route::delete('/modules/{module}', 'Academy\AcademyAdminController@destroyModule')->name('academy.admin.modules.destroy');
+            Route::post('/modules/{module}/quiz', 'Academy\AcademyAdminController@saveQuiz')->name('academy.admin.quizzes.save');
+            Route::post('/quizzes/{quiz}/questions', 'Academy\AcademyAdminController@storeQuestion')->name('academy.admin.questions.store');
+            Route::post('/questions/{question}', 'Academy\AcademyAdminController@updateQuestion')->name('academy.admin.questions.update');
+            Route::delete('/questions/{question}', 'Academy\AcademyAdminController@destroyQuestion')->name('academy.admin.questions.destroy');
         });
     });
 });

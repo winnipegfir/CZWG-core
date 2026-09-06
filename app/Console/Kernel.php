@@ -9,6 +9,7 @@ use App\Console\Commands\EventReminders;
 use App\Console\Commands\PurgeExpiredBookings;
 use App\Console\Commands\PurgeExpiredTrainingSlots;
 use App\Console\Commands\RatingUpdate;
+use App\Console\Commands\SyncAcademyVatcanRoster;
 use App\Console\Commands\WarmVatsimActivityCache;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -41,6 +42,9 @@ class Kernel extends ConsoleKernel
         $schedule->call(function () {
             file_get_contents(config('cronurls.minute'));
         })->everyMinute();
+
+        // Public roster fallback is intentionally polite: one request per hour.
+        $schedule->command(SyncAcademyVatcanRoster::class)->hourly()->withoutOverlapping();
 
         // 0 0 * * * schedulers
         $schedule->command(RatingUpdate::class)->daily();
