@@ -8,6 +8,7 @@ use App\Models\Settings\CoreSettings;
 use App\Models\Settings\HomepageImages;
 use App\Models\Settings\HomepageTown;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Role;
 
 class SettingsController extends Controller
@@ -15,6 +16,36 @@ class SettingsController extends Controller
     public function index()
     {
         return view('admin.settings.index');
+    }
+
+
+    public function academyDeployment()
+    {
+        $coreSettings = CoreSettings::find(1);
+
+        return view('admin.settings.academy-deployment', compact('coreSettings'));
+    }
+
+    public function saveAcademyDeployment(Request $request)
+    {
+        $coreSettings = CoreSettings::find(1);
+        abort_unless($coreSettings, 500, 'Core settings record is missing.');
+
+        $mode = $request->input('academy_access_mode', 'admin');
+        if (! in_array($mode, ['admin', 'staff', 'normal'], true)) {
+            $mode = 'admin';
+        }
+
+        $coreSettings->academy_access_mode = $mode;
+        $coreSettings->academy_maintenance_mode = $request->boolean('academy_maintenance_mode');
+
+        // Keep the v24 fields synchronized for backwards compatibility with any cached/older views.
+        $coreSettings->academy_preview_mode = $mode !== 'normal';
+        $coreSettings->academy_staff_access_enabled = in_array($mode, ['staff', 'normal'], true);
+        $coreSettings->academy_nav_enabled = true;
+        $coreSettings->save();
+
+        return back()->withSuccess('Academy deployment settings updated.');
     }
 
     /*
@@ -101,35 +132,29 @@ class SettingsController extends Controller
 
     public function bannerEdit(Request $request)
     {
-        //Get the settings
-        $coreSettings = CoreSettings::find(1);
+        $data = $request->validate([
+            'bannerMessage' => [Rule::requiredIf($request->boolean('bannerEnabled')), 'nullable', 'string', 'max:240'],
+            'bannerLink' => ['nullable', 'string', 'max:2048', function ($attribute, $value, $fail) {
+                if ($value !== null && $value !== '' && ! preg_match('~^(?:https?://|/(?!/))~i', $value)) {
+                    $fail('The banner link must begin with https://, http://, or /.');
+                }
+            }],
+            'bannerTheme' => ['required', Rule::in(['winnipeg', 'prairie_gold', 'manitoba_sky', 'aurora', 'success', 'warning', 'urgent'])],
+            'bannerAnimation' => ['required', Rule::in(['none', 'gold_swoop', 'shimmer', 'aurora', 'gentle_pulse'])],
+            'bannerIcon' => ['required', Rule::in(['bullhorn', 'star', 'plane', 'info', 'calendar', 'none'])],
+        ]);
 
-        if ($request->get('bannerMessage') == null) {
-            $bannerMessage = '';
-        } else {
-            $bannerMessage = $request->get('bannerMessage');
-        }
-
-        if ($request->get('bannerLink') == null) {
-            $bannerLink = '';
-        } else {
-            $bannerLink = $request->get('bannerLink');
-        }
-
-        if ($request->get('bannerMode') == null) {
-            $bannerMode = '';
-            $bannerMessage = '';
-            $bannerLink = '';
-        } else {
-            $bannerMode = $request->get('bannerMode');
-        }
-
-        $coreSettings->banner = $bannerMessage;
-        $coreSettings->bannerMode = $bannerMode;
-        $coreSettings->bannerLink = $bannerLink;
+        $coreSettings = CoreSettings::findOrFail(1);
+        $coreSettings->banner = trim((string) ($data['bannerMessage'] ?? ''));
+        $coreSettings->bannerLink = trim((string) ($data['bannerLink'] ?? ''));
+        $coreSettings->bannerEnabled = $request->boolean('bannerEnabled');
+        $coreSettings->bannerTheme = $data['bannerTheme'];
+        $coreSettings->bannerAnimation = $data['bannerAnimation'];
+        $coreSettings->bannerIcon = $data['bannerIcon'];
+        $coreSettings->bannerOpenNewTab = $request->boolean('bannerOpenNewTab');
         $coreSettings->save();
 
-        return back()->withSuccess('The banner has been updated!');
+        return back()->withSuccess('Banner appearance updated. The saved design is now active across the website.');
     }
 
     public function imagesIndex()

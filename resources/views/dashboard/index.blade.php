@@ -386,10 +386,12 @@
             <div class="db-card">
                 <div class="db-card-label">Quick Actions</div>
                 <div class="db-tile-grid db-tile-grid-3">
-                    <a href="https://training.winnipegfir.ca" target="_blank" class="db-tile">
+                    @if(\App\Services\AcademyVisibility::canUseStudentAcademy(Auth::user()))
+                    <a href="{{ route('academy.index') }}" class="db-tile">
                         <div class="db-tile-icon" style="background:#eff6ff; color:#2563eb;"><i class="fas fa-graduation-cap"></i></div>
-                        <span class="db-tile-label">Winnipeg365 Training</span>
+                        <span class="db-tile-label">Training Academy</span>
                     </a>
+                    @endif
                     <a href="{{ route('tickets.index', ['create' => 'yes']) }}" class="db-tile">
                         <div class="db-tile-icon" style="background:#f0fdf4; color:#16a34a;"><i class="fas fa-plus-circle"></i></div>
                         <span class="db-tile-label">New Ticket</span>
@@ -426,6 +428,12 @@
                         <div class="db-tile-icon" style="background:#eff6ff; color:#2563eb;"><i class="fas fa-chalkboard-teacher"></i></div>
                         <span class="db-tile-label">{{ Auth::user()->isTrainingInstructor() ? 'Training Management' : 'Training Availability' }}</span>
                     </a>
+                    @if(\App\Services\AcademyVisibility::canUseStaffTools(Auth::user()))
+                    <a href="{{ route('academy.admin.hub') }}" class="db-tile">
+                        <div class="db-tile-icon" style="background:#eef2ff; color:#4f46e5;"><i class="fas fa-graduation-cap"></i></div>
+                        <span class="db-tile-label">Academy</span>
+                    </a>
+                    @endif
                 </div>
             </div>
             @endif
@@ -469,6 +477,12 @@
                         <div class="db-tile-icon" style="background:#f0fdf4; color:#16a34a;"><i class="fas fa-upload"></i></div>
                         <span class="db-tile-label">File Uploader</span>
                     </a>
+                    @if(Auth::user()->isTrainingMentor() && \App\Services\AcademyVisibility::canUseStaffTools(Auth::user()))
+                    <a href="{{ route('academy.admin.hub') }}" class="db-tile">
+                        <div class="db-tile-icon" style="background:#eef2ff; color:#4f46e5;"><i class="fas fa-graduation-cap"></i></div>
+                        <span class="db-tile-label">Academy</span>
+                    </a>
+                    @endif
                     @if(Auth::user()->permissions >= 5)
                     <a href="{{ route('settings.index') }}" class="db-tile">
                         <div class="db-tile-icon" style="background:#fdf4ff; color:#9333ea;"><i class="fas fa-cog"></i></div>

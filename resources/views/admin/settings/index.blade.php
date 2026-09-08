@@ -89,8 +89,16 @@
             <div class="col-md-3 col-sm-6 mb-3">
                 <a href="{{ route('settings.banner') }}" class="setting-card">
                     <div class="setting-card-icon"><i class="fas fa-bullhorn"></i></div>
-                    <div class="setting-card-title">Banner</div>
-                    <p class="setting-card-desc">Set a site-wide banner for maintenance notices or announcements.</p>
+                    <div class="setting-card-title">Banner Appearance</div>
+                    <p class="setting-card-desc">Manage the site-wide announcement, colours, icon, link, and animation.</p>
+                </a>
+            </div>
+
+            <div class="col-md-3 col-sm-6 mb-3">
+                <a href="{{ route('settings.academy.deployment') }}" class="setting-card">
+                    <div class="setting-card-icon"><i class="fas fa-graduation-cap"></i></div>
+                    <div class="setting-card-title">Academy Deployment</div>
+                    <p class="setting-card-desc">Control Academy availability, preview access, and maintenance mode.</p>
                 </a>
             </div>
 

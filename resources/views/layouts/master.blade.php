@@ -57,6 +57,7 @@
         @else
         <link href="{{ asset('css/czqomd.css') }}?v=33" rel="stylesheet">
         @endif
+        <link href="{{ asset('css/site-banner.css') }}?v=3" rel="stylesheet">
         <!--SimpleMDE Editor-->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
         <script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
@@ -103,19 +104,7 @@
     <body>
     <!--Header-->
     @php $__cs = \App\Models\Settings\CoreSettings::where('id', 1)->firstOrFail(); @endphp
-    @if($__cs->banner)
-        @php
-            $__validModes = ['success', 'danger', 'warning', 'info'];
-            $__mode = in_array($__cs->bannerMode, $__validModes) ? $__cs->bannerMode : 'info';
-        @endphp
-        <div class="site-topbar site-topbar-{{ $__mode }}">
-            @if($__cs->bannerLink)
-                <a href="{{ $__cs->bannerLink }}" target="_blank">{{ $__cs->banner }}</a>
-            @else
-                {{ $__cs->banner }}
-            @endif
-        </div>
-    @endif
+    @include('partials.site-banner')
     <header>
         <nav id="czwgHeader" class="navbar navbar-expand-lg navbar-dark">
             <div class="container">
@@ -173,6 +162,13 @@
                                 <a class="dropdown-item" href="{{route('bookings.index')}}">ATC Bookings</a>
                             </div>
                         </li>
+
+                        {{-- Academy is visible only to accepted FIR members. --}}
+                        @if(\App\Services\AcademyVisibility::shouldShowNav(Auth::user()))
+                            <li class="nav-item {{ Request::is('academy') || Request::is('academy/*') ? 'active' : '' }}">
+                                <a href="{{ route('academy.index') }}" class="nav-link">Academy</a>
+                            </li>
+                        @endif
 
                         {{-- Pilots --}}
                         <li class="nav-item dropdown {{ Request::is('airports') || Request::is('pdc') ? 'active' : '' }}">
