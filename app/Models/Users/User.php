@@ -138,6 +138,26 @@ class User extends Authenticatable
         return $this->hasOne(AtcTraining\RosterMember::class);
     }
 
+    public function academyEnrollments()
+    {
+        return $this->hasMany(\App\Models\Academy\Enrollment::class);
+    }
+
+    public function canOverseeAcademy(): bool
+    {
+        return $this->isTrainingMentor();
+    }
+
+    public function canGradeAcademy(): bool
+    {
+        return $this->isTrainingInstructor();
+    }
+
+    public function canManageAcademyEnrollments(): bool
+    {
+        return (int) $this->permissions >= 5;
+    }
+
     public function notes()
     {
         return $this->hasMany(UserNote::class);

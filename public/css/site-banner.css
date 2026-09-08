@@ -1,0 +1,24 @@
+.site-announcement{--banner-bg:#122b44;--banner-fg:#fff;--banner-accent:#d6a84b;position:relative;isolation:isolate;overflow:hidden;background:var(--banner-bg);color:var(--banner-fg);border:0;border-bottom:1px solid rgba(255,255,255,.12);min-height:38px;box-shadow:0 2px 10px rgba(3,12,22,.14)}
+.site-announcement__inner{position:relative;z-index:2;display:flex;justify-content:center;align-items:center;gap:.55rem;min-height:38px;padding:.48rem 1rem;text-align:center;font-size:.82rem;font-weight:700;letter-spacing:.01em}
+.site-announcement__inner a{color:inherit!important;text-decoration:none;border-bottom:1px solid rgba(255,255,255,.4)}
+.site-announcement__inner a:hover{color:inherit!important;border-bottom-color:currentColor}
+.site-announcement__icon{color:var(--banner-accent)}
+.site-announcement__effect{position:absolute;z-index:1;inset:0;pointer-events:none}
+.site-announcement--winnipeg{--banner-bg:linear-gradient(110deg,#081827,#122b44 58%,#173b5c);--banner-fg:#fff;--banner-accent:#e1b657}
+.site-announcement--prairie_gold{--banner-bg:linear-gradient(105deg,#b68022,#e0b85d 52%,#c89535);--banner-fg:#14283c;--banner-accent:#122b44;border-bottom-color:rgba(18,43,68,.2)}
+.site-announcement--prairie_gold .site-announcement__inner a{border-bottom-color:rgba(18,43,68,.45)}
+.site-announcement--manitoba_sky{--banner-bg:linear-gradient(110deg,#176899,#2f86bd 55%,#70b9df);--banner-fg:#fff;--banner-accent:#ffe29a}
+.site-announcement--aurora{--banner-bg:linear-gradient(110deg,#071b2c,#0e625e 50%,#173c66);--banner-fg:#fff;--banner-accent:#7fffd4}
+.site-announcement--success{--banner-bg:#17623a;--banner-fg:#fff;--banner-accent:#9cf0bc}
+.site-announcement--warning{--banner-bg:#f2c45d;--banner-fg:#34270b;--banner-accent:#704d00;border-bottom-color:rgba(52,39,11,.16)}
+.site-announcement--urgent{--banner-bg:#a8323c;--banner-fg:#fff;--banner-accent:#ffd5d9}
+.site-announcement--anim-gold_swoop .site-announcement__effect:before{content:"";position:absolute;top:-110%;bottom:-110%;left:-48%;width:34%;background:linear-gradient(90deg,transparent 0%,rgba(88,174,230,.12) 18%,rgba(225,182,87,.32) 42%,rgba(255,239,191,.62) 52%,rgba(225,182,87,.34) 64%,rgba(88,174,230,.12) 82%,transparent 100%);filter:blur(7px);transform:skewX(-22deg);animation:siteBannerSwoop 8s cubic-bezier(.42,0,.2,1) infinite;will-change:left,opacity}
+.site-announcement--anim-shimmer .site-announcement__effect:before{content:"";position:absolute;top:-30%;bottom:-30%;left:-50%;width:38%;background:linear-gradient(100deg,transparent 0%,rgba(255,255,255,.07) 25%,rgba(255,255,255,.24) 50%,rgba(255,255,255,.07) 75%,transparent 100%);filter:blur(4px);transform:skewX(-16deg);animation:siteBannerShimmer 7s linear infinite;will-change:left,opacity}
+.site-announcement--anim-aurora .site-announcement__effect:before,.site-announcement--anim-aurora .site-announcement__effect:after{content:"";position:absolute;width:45%;height:180%;top:-50%;border-radius:50%;filter:blur(24px);opacity:.22;animation:siteBannerAurora 11s ease-in-out infinite alternate}.site-announcement--anim-aurora .site-announcement__effect:before{left:0;background:#4fffb0}.site-announcement--anim-aurora .site-announcement__effect:after{right:0;background:#58a6ff;animation-delay:-5s}
+.site-announcement--anim-gentle_pulse{animation:siteBannerPulse 4.5s ease-in-out infinite}
+@keyframes siteBannerSwoop{0%,66%{left:-48%;opacity:0}70%{opacity:.9}87%{left:122%;opacity:.9}91%,100%{left:122%;opacity:0}}
+@keyframes siteBannerShimmer{0%{left:-50%;opacity:0}7%{opacity:.72}93%{left:122%;opacity:.72}100%{left:122%;opacity:0}}
+@keyframes siteBannerAurora{from{transform:translateX(-12%) rotate(-8deg)}to{transform:translateX(14%) rotate(8deg)}}
+@keyframes siteBannerPulse{50%{filter:brightness(1.1)}}
+@media(max-width:575.98px){.site-announcement__inner{font-size:.75rem;line-height:1.35;padding:.5rem .75rem}}
+@media(prefers-reduced-motion:reduce){.site-announcement,.site-announcement__effect,.site-announcement__effect:before,.site-announcement__effect:after{animation:none!important}}

@@ -35,6 +35,13 @@ class LoginController extends Controller
     */
     public function connectLogin()
     {
+        // Local development does not need VATSIM Connect. Use the local-only
+        // Administrator helper so clicking "Login" while testing never leaves
+        // the local site or depends on OAuth credentials.
+        if (app()->environment('local')) {
+            return redirect()->route('dev.admin.academy');
+        }
+
         session()->forget('state');
         session()->forget('token');
         session()->put('state', $state = Str::random(40));
@@ -126,6 +133,19 @@ class LoginController extends Controller
             $prefs->user_id = $user->id;
             $prefs->ui_mode = 'light';
             $prefs->save();
+        }
+
+        // A VATCAN roster sync may have prepared Academy access before this CID
+        // ever created a website account. Claim that pending access on first login.
+        // Keep authentication available during deployments even if Academy tables
+        // have not been migrated yet or a sync record needs administrator review.
+        if (\Illuminate\Support\Facades\Schema::hasTable('academy_vatcan_members')
+            && \Illuminate\Support\Facades\Schema::hasTable('academy_enrollments')) {
+            try {
+                app(\App\Services\AcademyVatcanSyncService::class)->claimPendingForUser($user);
+            } catch (\Throwable $exception) {
+                report($exception);
+            }
         }
 
         return redirect('')->with('success', 'Logged in!');
