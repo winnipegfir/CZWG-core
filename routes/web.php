@@ -333,10 +333,12 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/atcresources', 'Publications\AtcResourcesController@uploadResource')->name('atcresources.upload');
         Route::get('/atcresources/delete/{id}', 'Publications\AtcResourcesController@deleteResource')->name('atcresources.delete');
 
-        // All staff may view the anonymous operational overview. Controller-specific
-        // network activity and management remain administrator-only below.
-        Route::get('/admin/network', 'Network\NetworkController@index')->name('network.index');
-        Route::get('/admin/network/operations', 'Network\NetworkController@operationalOverview')->name('network.operations.index');
+        // Network activity is available to staff; broader network management stays admin-only below.
+        Route::get('/admin/network/activity', 'Network\NetworkController@activityIndex')->name('network.activity.index');
+        Route::get('/admin/network/warnings', 'Network\ActivityWarningController@index')->name('network.warnings.index');
+        Route::post('/admin/network/warnings', 'Network\ActivityWarningController@store')->name('network.warnings.store');
+        Route::post('/admin/network/warnings/{warning}', 'Network\ActivityWarningController@update')->name('network.warnings.update');
+        Route::delete('/admin/network/warnings/{warning}', 'Network\ActivityWarningController@destroy')->name('network.warnings.destroy');
     });
 
     //ADMIN ONLY
@@ -346,11 +348,7 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/meetingminutes', 'News\NewsController@minutesUpload')->name('meetingminutes.upload');
 
         //Network
-        Route::get('/admin/network/activity', 'Network\NetworkController@activityIndex')->name('network.activity.index');
-        Route::get('/admin/network/warnings', 'Network\ActivityWarningController@index')->name('network.warnings.index');
-        Route::post('/admin/network/warnings', 'Network\ActivityWarningController@store')->name('network.warnings.store');
-        Route::post('/admin/network/warnings/{warning}', 'Network\ActivityWarningController@update')->name('network.warnings.update');
-        Route::delete('/admin/network/warnings/{warning}', 'Network\ActivityWarningController@destroy')->name('network.warnings.destroy');
+        Route::get('/admin/network', 'Network\NetworkController@index')->name('network.index');
         Route::get('/admin/network/monitoredpositions', 'Network\NetworkController@monitoredPositionsIndex')->name('network.monitoredpositions.index');
         Route::get('/admin/network/monitoredpositions/{position}', 'Network\NetworkController@viewMonitoredPosition')->name('network.monitoredpositions.view');
         Route::post('/admin/network/monitoredpositions/create', 'Network\NetworkController@createMonitoredPosition')->name('network.monitoredpositions.create');
