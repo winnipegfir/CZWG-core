@@ -9,7 +9,7 @@
     <div class="container">
         <a href="{{ route('academy.admin.hub') }}" class="academy-hero-link"><i class="fas fa-arrow-left"></i> Academy</a>
         <h1>Academy Grading</h1>
-        <p class="mb-0" style="color:rgba(255,255,255,.65)">Instructor review of written knowledge-check responses and final marks.</p>
+        <p class="mb-0" style="color:rgba(255,255,255,.65)">Instructor review of written self-assessment responses and final marks. Self-assessments are intended for reflection and feedback and must not delay or prevent a student from continuing training.</p>
     </div>
 </div>
 <div class="academy-body">

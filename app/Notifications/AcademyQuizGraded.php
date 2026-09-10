@@ -4,6 +4,7 @@ namespace App\Notifications;
 
 use App\Models\Academy\QuizSubmission;
 use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 class AcademyQuizGraded extends Notification
@@ -16,7 +17,22 @@ class AcademyQuizGraded extends Notification
 
     public function via($notifiable)
     {
-        return ['database'];
+        return ['database', 'mail'];
+    }
+
+    public function toMail($notifiable)
+    {
+        $submission = $this->submission;
+        $course = $submission->quiz->module->course;
+
+        return (new MailMessage)
+            ->subject('Your '.$course->title.' Self Assessment has been graded')
+            ->view('emails.academy-self-assessment-graded', [
+                'student' => $notifiable,
+                'course' => $course,
+                'assessment' => $submission->quiz,
+                'resultsUrl' => route('academy.submissions.show', $submission),
+            ]);
     }
 
     public function toArray($notifiable)
