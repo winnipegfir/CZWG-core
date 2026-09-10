@@ -215,3 +215,30 @@ html[data-theme="dark"] .academy-sidebar-collapse{color:#9ba5b1}html[data-theme=
 }
 @media(max-width:575.98px){.academy-module-pagination{align-items:stretch;flex-direction:column}.academy-module-pagination>div{max-width:none}.academy-module-pagination .btn{width:100%}}
 </style>
+
+<style>
+/* Airports-style Academy navigation and pending-review state. */
+.academy-review-pending{display:flex;align-items:center;gap:.42rem;color:#17627e;font-size:.76rem;font-weight:700;line-height:1.35}
+.academy-review-pending i{color:#2586a7}
+.academy-course-status-summary{display:flex;align-items:flex-end;flex-direction:column;gap:.45rem}
+.academy-submission-review-alert strong{display:block;margin-bottom:.2rem}
+.academy-course-shell-width{max-width:none;padding-left:0;padding-right:0}
+.academy-hero>.academy-course-shell-width{padding-left:calc(260px + 2.5rem);padding-right:2.5rem}
+.academy-course-body{padding:0 0 4rem}
+.academy-course-shell{grid-template-columns:260px minmax(0,1fr);gap:0}
+.academy-course-main{padding:2rem 2.5rem}
+.academy-course-sidebar{top:0;height:100vh;border:0;border-right:1px solid #e3e8ef;border-radius:0;box-shadow:none;overflow-y:auto}
+.academy-sidebar-review{margin-top:.7rem;padding-top:.65rem;border-top:1px solid #edf0f4;font-size:.7rem}
+.academy-sidebar-collapsed{grid-template-columns:74px minmax(0,1fr)}
+html[data-theme="dark"] .academy-review-pending{color:#8ed9f0}
+html[data-theme="dark"] .academy-review-pending i{color:#67c8e8}
+html[data-theme="dark"] .academy-course-sidebar{box-shadow:none}
+html[data-theme="dark"] .academy-sidebar-review{border-color:#303640}
+@media(max-width:991.98px){
+    .academy-course-shell-width{padding-left:15px;padding-right:15px}
+    .academy-hero>.academy-course-shell-width{padding-left:15px;padding-right:15px}
+    .academy-course-main{padding:1.25rem 0}
+    .academy-course-sidebar{height:auto;border-right:1px solid #e3e8ef}
+}
+@media(max-width:575.98px){.academy-course-status-summary{align-items:flex-start;width:100%;margin-top:.5rem}}
+</style>

@@ -112,8 +112,9 @@
                                 <a href="{{ route('academy.submissions.show', $latestSubmission) }}">View result</a>
                             </div>
                         @else
-                            <div class="alert alert-warning">
-                                Your latest submission is <strong>awaiting instructor review</strong>.
+                            <div class="alert alert-info academy-submission-review-alert">
+                                <strong><i class="fas fa-hourglass-half mr-1"></i> Submitted for instructor review.</strong>
+                                Your written responses are awaiting review by an instructor.
                                 <a href="{{ route('academy.submissions.show', $latestSubmission) }}">View it</a>
                             </div>
                         @endif

@@ -19,6 +19,9 @@
                         @endunless
                     </div>
                     <div class="academy-card-body"><div class="d-flex justify-content-between align-items-start"><h5 class="font-weight-bold">{{ $course->title }}</h5>@if($course->can_access)<span class="academy-progress academy-progress-{{ $course->student_progress['status'] }}">{{ ucwords(str_replace('_',' ',$course->student_progress['status'])) }}</span>@endif</div><p class="academy-muted">{{ $course->description }}</p>
+                    @if($course->can_access && !empty($course->student_progress['review_pending']))
+                        <div class="academy-review-pending mb-2"><i class="fas fa-hourglass-half"></i><span>Self Assessment submitted for instructor review</span></div>
+                    @endif
                     @if($course->can_access)<small>{{ $course->modules_count }} module{{ $course->modules_count === 1 ? '' : 's' }} <i class="fas fa-arrow-right ml-1"></i></small>@else<small class="text-muted"><i class="fas fa-lock mr-1"></i> Not currently assigned to you.</small>@endif</div>
                 @if($course->can_access)</a>@else</div>@endif
             </div>

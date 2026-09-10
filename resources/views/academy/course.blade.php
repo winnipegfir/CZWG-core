@@ -15,7 +15,12 @@
                             <h3 class="mb-1">{{ $course->title }}</h3>
                             <div class="academy-muted">Choose a module from the left to begin or continue.</div>
                         </div>
-                        <span class="academy-progress academy-progress-{{ $courseProgress['status'] }}">{{ ucwords(str_replace('_',' ',$courseProgress['status'])) }}</span>
+                        <div class="academy-course-status-summary">
+                            <span class="academy-progress academy-progress-{{ $courseProgress['status'] }}">{{ ucwords(str_replace('_',' ',$courseProgress['status'])) }}</span>
+                            @if(!empty($courseProgress['review_pending']))
+                                <span class="academy-review-pending"><i class="fas fa-hourglass-half"></i><span>Submitted for instructor review</span></span>
+                            @endif
+                        </div>
                     </div>
                 </div>
 

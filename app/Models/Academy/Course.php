@@ -36,9 +36,11 @@ class Course extends Model
         // Failed/pending attempts keep the course In Progress, and a later retry does not erase
         // a pass that was already earned.
         $complete = $submissions->contains(fn ($submission) => $submission->passed());
+        $reviewPending = ! $complete && $submissions->contains(fn ($submission) => $submission->status === 'pending_review');
 
         return [
             'status' => $complete ? 'complete' : (($viewed > 0 || $submissions->isNotEmpty()) ? 'in_progress' : 'not_started'),
+            'review_pending' => $reviewPending,
             'viewed' => $viewed,
             'total' => $moduleIds->count(),
         ];

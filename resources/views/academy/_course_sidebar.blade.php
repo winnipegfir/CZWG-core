@@ -16,6 +16,9 @@
                 <span>{{ $courseProgress['viewed'] }}/{{ $courseProgress['total'] }} viewed</span>
                 <span class="academy-progress academy-progress-{{ $courseProgress['status'] }}">{{ ucwords(str_replace('_',' ',$courseProgress['status'])) }}</span>
             </div>
+            @if(!empty($courseProgress['review_pending']))
+                <div class="academy-review-pending academy-sidebar-review"><i class="fas fa-hourglass-half"></i><span>Submitted for instructor review</span></div>
+            @endif
         @endif
     </div>
 

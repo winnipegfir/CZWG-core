@@ -42,11 +42,13 @@
                 @if($submission->final_score !== null && $submission->finalScore() !== $submission->calculatedScore())
                     <div class="academy-muted mb-3">Question tally: {{ $submission->calculatedScore() }}/{{ $submission->maximum_score }}. The instructor recorded a final mark of {{ $submission->finalScore() }}/{{ $submission->maximum_score }}.</div>
                 @endif
-                @if($submission->grader)
-                    <div class="academy-muted mb-3">Graded by {{ $submission->grader->fullName('FL') }} {{ optional($submission->graded_at)->diffForHumans() }}.</div>
-                @endif
+                <div class="academy-muted mb-3">Graded {{ optional($submission->graded_at)->diffForHumans() }}.</div>
             @else
-                <div class="alert alert-warning">Your multiple-choice questions have been marked automatically. An instructor must review the written responses before your final result is recorded.</div>
+                <div class="alert alert-info academy-submission-review-alert">
+                    <strong><i class="fas fa-hourglass-half mr-1"></i> Submitted for instructor review.</strong>
+                    Your multiple-choice questions have been marked automatically. Your written responses are awaiting instructor review before your final result is recorded.
+                </div>
+                <div class="academy-muted mb-3">Academy course status: <strong>In Progress</strong> · Self Assessment under review</div>
             @endif
 
             @foreach($submission->responses as $response)
