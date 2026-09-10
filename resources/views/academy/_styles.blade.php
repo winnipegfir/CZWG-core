@@ -218,6 +218,8 @@ html[data-theme="dark"] .academy-sidebar-collapse{color:#9ba5b1}html[data-theme=
 
 <style>
 /* Airports-style Academy navigation and pending-review state. */
+.academy-card-locked{cursor:not-allowed;filter:grayscale(.82) saturate(.3);opacity:.68;background:#eef1f4}
+.academy-card-locked .academy-card-body{color:#647180}
 .academy-review-pending{display:flex;align-items:center;gap:.42rem;color:#17627e;font-size:.76rem;font-weight:700;line-height:1.35}
 .academy-review-pending i{color:#2586a7}
 .academy-course-status-summary{display:flex;align-items:flex-end;flex-direction:column;gap:.45rem}
