@@ -488,11 +488,11 @@
                         <div class="db-tile-icon" style="background:#fdf4ff; color:#9333ea;"><i class="fas fa-cog"></i></div>
                         <span class="db-tile-label">Site Settings</span>
                     </a>
+                    @endif
                     <a href="{{ route('network.index') }}" class="db-tile">
                         <div class="db-tile-icon" style="background:#eff6ff; color:#2563eb;"><i class="fas fa-network-wired"></i></div>
                         <span class="db-tile-label">Network Data</span>
                     </a>
-                    @endif
                 </div>
             </div>
             @endif
