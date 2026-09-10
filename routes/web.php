@@ -423,8 +423,13 @@ Route::prefix('dashboard/training')->middleware('instructor')->group(function ()
 });
 
 // Booking providers manage their own availability; controller checks ownership.
+// If a student follows a provider's Sessions link, the controller redirects them
+// to the student booking page instead of failing the mentor middleware check.
+Route::get('/dashboard/training/sessions', 'AtcTraining\TrainingSessionController@instructorIndex')
+    ->middleware('auth')
+    ->name('training.sessions.index');
+
 Route::prefix('dashboard/training')->middleware('mentor')->group(function () {
-    Route::get('/sessions', 'AtcTraining\TrainingSessionController@instructorIndex')->name('training.sessions.index');
     Route::post('/sessions', 'AtcTraining\TrainingSessionController@store')->name('training.sessions.store');
     Route::delete('/sessions/{id}', 'AtcTraining\TrainingSessionController@destroy')->name('training.sessions.destroy');
     Route::post('/sessions/{id}/cancel', 'AtcTraining\TrainingSessionController@cancel')->name('training.sessions.cancel');
