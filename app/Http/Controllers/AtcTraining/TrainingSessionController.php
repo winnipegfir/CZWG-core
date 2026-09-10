@@ -20,6 +20,14 @@ class TrainingSessionController extends Controller
 {
     public function instructorIndex()
     {
+        if (!TrainingBookingEligibility::canProvide(Auth::user())) {
+            if (Auth::user()->studentProfile) {
+                return redirect()->route('training.book.index');
+            }
+
+            abort(403, 'You do not have access to training availability.');
+        }
+
         $slots = TrainingSession::where('provider_user_id', Auth::id())
             ->where('status', '!=', 'cancelled')
             ->orderBy('start_time')
