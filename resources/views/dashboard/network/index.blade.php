@@ -5,6 +5,7 @@
     <h1 class="blue-text font-weight-bold mt-2">Network</h1>
     <hr>
     <div class="card-deck">
+        @if(Auth::user()->permissions >= 5)
         <div class="card p-4 green white-text">
             <h3>Monitored Positions</h3>
             <p>Edit monitored positions and view position uptime</p>
@@ -20,10 +21,11 @@
             <p>Track whether the quarterly 14-day warning was sent and how it was resolved</p>
             <a class="text-white font-weight-bold" href="{{route('network.warnings.index')}}">Go <i class="fas fa-arrow-right"></i></a>
         </div>
+        @endif
         <div class="card p-4 purple white-text">
-            <h3>Overall Statistics</h3>
-            <p>View total statistics for Winnipeg positions (Coming Soon)</p>
-            <a class="white-text font-weight-bold" href="#">Go <i class="fas fa-arrow-right"></i></a>
+            <h3>Operational Overview</h3>
+            <p>Compare airport traffic demand, ATC coverage, and position utilization</p>
+            <a class="white-text font-weight-bold" href="{{ url('/admin/network/operations') }}">Go <i class="fas fa-arrow-right"></i></a>
         </div>
     </div>
 </div>
