@@ -93,7 +93,7 @@ class StatSimOperationalBackfill
             'icao' => $airport,
             'from' => $from->toIso8601String(),
             'to' => $to->toIso8601String(),
-        ]);
+        ], true);
         return $this->items($json);
     }
 
@@ -104,10 +104,14 @@ class StatSimOperationalBackfill
         return isset($json['positions']) || isset($json['flightPositions']) ? $json : ($items[0] ?? $json);
     }
 
-    private function request(string $path, array $query = []): array
+    private function request(string $path, array $query = [], bool $notFoundIsEmpty = false): array
     {
         $response = Http::acceptJson()->withHeaders(['X-API-Key' => $this->apiKey])
-            ->retry(3, 750)->timeout(30)->get($this->baseUrl.$path, $query)->throw();
+            ->retry(3, 750)->timeout(30)->get($this->baseUrl.$path, $query);
+        // StatSim uses 404 for a valid date/airport query with no matching
+        // flights. That is an empty day, not a failed backfill.
+        if ($notFoundIsEmpty && $response->status() === 404) return [];
+        $response->throw();
         $json = $response->json();
         if (! is_array($json)) {
             throw new \RuntimeException('StatSim returned an unexpected response.');
