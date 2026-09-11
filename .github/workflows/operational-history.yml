@@ -1,0 +1,59 @@
+name: Operational Overview Historical Import
+
+on:
+  workflow_dispatch:
+    inputs:
+      days:
+        description: UTC days to import
+        required: true
+        default: '1'
+        type: choice
+        options: ['1', '7', '30', '90']
+      airport:
+        description: Airport to import
+        required: true
+        default: CYWG
+        type: choice
+        options: [CYWG, CYXE, CYQR, CYQT, ALL]
+      dry_run:
+        description: Validate only; do not write to the database
+        required: true
+        default: true
+        type: boolean
+
+jobs:
+  import:
+    name: Import historical operational data
+    runs-on: ubuntu-latest
+    env:
+      STATSIM_API_KEY: ${{ secrets.STATSIM_API_KEY }}
+    steps:
+      - name: Verify required secret
+        shell: bash
+        run: |
+          if [ -z "$STATSIM_API_KEY" ]; then
+            echo "STATSIM_API_KEY is not configured."
+            exit 1
+          fi
+
+      - name: Run importer on production
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.DROPLET_HOST }}
+          username: ${{ secrets.DROPLET_USER }}
+          key: ${{ secrets.DROPLET_SSH_KEY }}
+          port: 22
+          envs: STATSIM_API_KEY
+          command_timeout: 60m
+          script_stop: true
+          script: |
+            set -e
+            cd ${{ secrets.DEPLOY_PATH }}
+            DRY_RUN_FLAG=""
+            if [ "${{ inputs.dry_run }}" = "true" ]; then
+              DRY_RUN_FLAG="--dry-run"
+            fi
+            php artisan winnipeg:backfill-operational-overview \
+              --days=${{ inputs.days }} \
+              --airport=${{ inputs.airport }} \
+              $DRY_RUN_FLAG
