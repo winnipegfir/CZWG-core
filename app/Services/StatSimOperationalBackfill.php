@@ -259,7 +259,8 @@ class StatSimOperationalBackfill
     private function positionType(?string $callsign): string
     {
         $callsign = strtoupper((string) $callsign);
-        return (string) substr($callsign, strrpos($callsign, '_') + 1);
+        $type = str_contains($callsign, '_') ? (string) substr($callsign, strrpos($callsign, '_') + 1) : '';
+        return in_array($type, ['DEL', 'GND', 'TWR', 'APP', 'DEP', 'TML', 'CTR', 'FSS'], true) ? $type : 'OTHER';
     }
 
     private function value(array $data, array $keys, $default = null)

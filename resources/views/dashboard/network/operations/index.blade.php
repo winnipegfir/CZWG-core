@@ -10,6 +10,7 @@
 <style>
 .ops-page{background:#f4f7fa;min-height:70vh;padding:2rem 0 4rem;color:#122b44}.ops-hero{background:linear-gradient(135deg,#081827,#17486f);color:#fff;padding:2.2rem 0}.ops-hero a{color:#9dd8ff}.ops-subtitle{color:rgba(255,255,255,.68)}.ops-panel{background:#fff;border:1px solid #e1e7ee;border-radius:12px;padding:1.25rem;box-shadow:0 5px 18px rgba(18,43,68,.05);height:100%}.ops-kicker{text-transform:uppercase;letter-spacing:.09em;font-size:.68rem;font-weight:800;color:#718096}.ops-value{font-size:1.6rem;font-weight:800;color:#122b44}.ops-meter{height:8px;background:#e8edf2;border-radius:999px;overflow:hidden}.ops-meter span{display:block;height:100%;background:linear-gradient(90deg,#2878a8,#42b883);border-radius:999px}.ops-table th{font-size:.72rem;text-transform:uppercase;letter-spacing:.05em;color:#718096;border-top:0}.ops-note{background:#eaf4fb;border-left:4px solid #2878a8;border-radius:8px;padding:.85rem 1rem;color:#31576d;font-size:.84rem}.ops-empty{color:#7b8794;padding:2rem;text-align:center}.ops-range .btn.active{background:#17486f;color:#fff;border-color:#17486f}.ops-stat{border-left:3px solid #2b7da8;padding-left:.8rem}.ops-good{border-left-color:#38a169}
 .ops-scroll{max-height:390px;overflow-x:auto;overflow-y:scroll;scrollbar-gutter:stable;scrollbar-color:#8393a3 #e8edf2;scrollbar-width:thin}.ops-scroll .ops-table thead th{position:sticky;top:0;background:#fff;z-index:2}.ops-scroll::-webkit-scrollbar{width:10px;height:10px}.ops-scroll::-webkit-scrollbar-track{background:#e8edf2}.ops-scroll::-webkit-scrollbar-thumb{background:#8393a3;border-radius:9px;border:2px solid #e8edf2}
+.ops-history-scroll{max-height:340px}
 .ops-airport-card{overflow:hidden}.ops-airport-photo{height:118px;margin:-1.25rem -1.25rem 1rem;background-position:center;background-size:cover;position:relative}.ops-airport-photo:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(4,15,25,.12),rgba(4,15,25,.82))}.ops-airport-title{position:absolute;left:1.25rem;right:1.25rem;bottom:.8rem;z-index:1;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.75)}.ops-airport-credit{font-size:.62rem;position:absolute;right:.55rem;top:.4rem;z-index:1;background:rgba(0,0,0,.58);padding:.16rem .35rem;border-radius:4px}.ops-airport-credit,.ops-airport-credit:hover{color:#fff}
 html[data-theme="dark"] .ops-page{background:#15181d;color:#e7eaee}html[data-theme="dark"] .ops-panel{background:#20242b;border-color:#303640;box-shadow:none}html[data-theme="dark"] .ops-value{color:#f1f4f7}html[data-theme="dark"] .ops-kicker,html[data-theme="dark"] .ops-table th{color:#a5afba}html[data-theme="dark"] .ops-meter{background:#343b44}html[data-theme="dark"] .ops-note{background:#172d3c;color:#acd4eb;border-color:#4aa3d3}html[data-theme="dark"] .ops-table{color:#e3e7eb}html[data-theme="dark"] .ops-table td,html[data-theme="dark"] .ops-table th{border-color:#303640}
 html[data-theme="dark"] .ops-scroll .ops-table thead th{background:#20242b}
@@ -128,13 +129,13 @@ html[data-theme="dark"] .ops-scroll{scrollbar-color:#718096 #343b44}html[data-th
             </div>
 
             <div class="ops-panel mb-4" style="height:auto">
-                <div class="ops-kicker">Existing Winnipeg activity archive</div><h4 class="font-weight-bold mb-2">Historical ATC staffing</h4>
-                <p class="text-muted small">Past controller-session hours retained by the website. Historical traffic utilization and aircraft coverage are not inferred because these session logs contain no pilot-position history.</p>
+                <div class="d-flex justify-content-between align-items-start mb-2"><div><div class="ops-kicker">Existing Winnipeg activity archive</div><h4 class="font-weight-bold mb-0">Historical ATC staffing</h4></div><small class="text-muted">Newest first · scroll for more</small></div>
+                <p class="text-muted small">Controller sessions retained by the website in the selected reporting period. APP/DEP/TML callsigns are labelled Terminal. This independent archive is not added to sampled utilization; old session logs contain no pilot-position history.</p>
                 @if($historicalStaffing->isEmpty())
                     <div class="ops-empty py-3">No historical controller sessions were found for this reporting period.</div>
                 @else
-                    <div class="table-responsive ops-scroll"><table class="table ops-table mb-0"><thead><tr><th>Airport</th><th>Position</th><th>Sessions</th><th>Staffed time</th></tr></thead><tbody>
-                        @foreach($historicalStaffing as $history)<tr><td><strong>{{ $history->airport }}</strong></td><td>{{ $history->position_type }}</td><td>{{ number_format($history->sessions) }}</td><td>{{ $formatMinutes($history->minutes) }}</td></tr>@endforeach
+                    <div class="table-responsive ops-scroll ops-history-scroll"><table class="table ops-table mb-0"><thead><tr><th>Started (UTC)</th><th>Airport</th><th>Position</th><th>Callsign</th><th>Staffed time</th></tr></thead><tbody>
+                        @foreach($historicalStaffing as $history)<tr><td>{{ $history->started_at->format('M j, Y H:i') }}Z</td><td><strong>{{ $history->airport }}</strong></td><td>{{ $history->position_type }}</td><td>{{ $history->callsign }}</td><td>{{ $formatMinutes($history->minutes) }}</td></tr>@endforeach
                     </tbody></table></div>
                 @endif
             </div>
@@ -151,7 +152,7 @@ html[data-theme="dark"] .ops-scroll{scrollbar-color:#718096 #343b44}html[data-th
             <div class="ops-panel mt-2">
                 <div class="d-flex justify-content-between align-items-start mb-3">
                     <div><div class="ops-kicker">FIR-wide tracked airports</div><h4 class="font-weight-bold mb-0">Position utilization</h4></div>
-                    <small class="text-muted">FIR-wide top-down positions appear once; FMP is excluded</small>
+                    <small class="text-muted">APP/DEP/TML are grouped as Terminal; FIR-wide Center appears once; unsupported suffixes and FMP are excluded</small>
                 </div>
                 @if($positionTypes->isEmpty())
                     <div class="ops-empty">No Winnipeg positions were observed during this period.</div>

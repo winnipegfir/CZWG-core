@@ -89,48 +89,34 @@ class NetworkController extends Controller
             ];
         })->values();
 
-        $broadCallsigns = ['CZWG\_%', 'WPG\_%', 'ZWG\_%'];
-        $localPositionTypes = OperationalPositionSample::where('sampled_at', '>=', $start)
-            ->where('position_type', '!=', 'FMP')
-            ->where(function ($query) use ($broadCallsigns) {
-                foreach ($broadCallsigns as $pattern) {
-                    $query->where('callsign', 'not like', $pattern);
-                }
-            })
-            ->selectRaw('airport, position_type, COUNT(*) AS staffed_samples, SUM(CASE WHEN relevant_aircraft > 0 THEN 1 ELSE 0 END) AS active_samples, SUM(relevant_aircraft) AS traffic_observations')
-            ->groupBy('airport', 'position_type')->orderBy('airport')->orderBy('position_type')->get()
-            ->map(function ($row) {
-                $staffed = (int) $row->staffed_samples;
-                $active = (int) $row->active_samples;
-                $row->staffed_minutes = $staffed * OperationalOverviewCollector::SAMPLE_MINUTES;
-                $row->active_minutes = $active * OperationalOverviewCollector::SAMPLE_MINUTES;
-                $row->utilization = $staffed > 0 ? round(($active / $staffed) * 100, 1) : null;
-                return $row;
-            });
-
-        // Broad Winnipeg positions are stored once per airport so they can
-        // correctly provide top-down coverage. Collapse those copies here so
-        // one FIR position is not presented four times in utilization totals.
-        $broadSamples = OperationalPositionSample::where('sampled_at', '>=', $start)
-            ->where('position_type', '!=', 'FMP')
-            ->where(function ($query) use ($broadCallsigns) {
-                foreach ($broadCallsigns as $pattern) {
-                    $query->orWhere('callsign', 'like', $pattern);
-                }
-            })->get();
-        $firPositionTypes = $broadSamples
-            ->groupBy(fn ($sample) => Carbon::parse($sample->sampled_at)->format('Y-m-d H:i:s').'|'.$sample->callsign)
-            ->map(function ($samples) {
+        // Present operational roles rather than raw callsign suffixes. APP,
+        // DEP, and TML are one Terminal function for planning purposes. Broad
+        // Winnipeg positions are stored once per airport for top-down coverage,
+        // so de-duplicate those copies before calculating FIR utilization.
+        $validPositionTypes = ['DEL', 'GND', 'TWR', 'APP', 'DEP', 'TML', 'CTR'];
+        $positionSamples = OperationalPositionSample::where('sampled_at', '>=', $start)
+            ->whereIn('position_type', $validPositionTypes)->get()
+            ->groupBy(function ($sample) {
+                $callsign = strtoupper((string) $sample->callsign);
+                $scope = $this->isFirCallsign($callsign) ? 'FIR' : strtoupper((string) $sample->airport);
+                return $scope.'|'.$this->positionGroup($sample->position_type).'|'.Carbon::parse($sample->sampled_at)->format('Y-m-d H:i:s').'|'.$callsign;
+            })->map(function ($copies) {
+                $sample = $copies->first();
+                $callsign = strtoupper((string) $sample->callsign);
                 return (object) [
-                    'position_type' => $samples->first()->position_type,
-                    'relevant_aircraft' => $samples->sum('relevant_aircraft'),
+                    'airport' => $this->isFirCallsign($callsign) ? 'FIR' : strtoupper((string) $sample->airport),
+                    'position_type' => $this->positionGroup($sample->position_type),
+                    'relevant_aircraft' => $copies->sum('relevant_aircraft'),
                 ];
-            })->groupBy('position_type')->map(function ($samples, $positionType) {
+            });
+        $positionTypes = $positionSamples
+            ->groupBy(fn ($sample) => $sample->airport.'|'.$sample->position_type)
+            ->map(function ($samples) {
                 $staffed = $samples->count();
                 $active = $samples->where('relevant_aircraft', '>', 0)->count();
                 return (object) [
-                    'airport' => 'FIR',
-                    'position_type' => $positionType,
+                    'airport' => $samples->first()->airport,
+                    'position_type' => $samples->first()->position_type,
                     'staffed_samples' => $staffed,
                     'active_samples' => $active,
                     'traffic_observations' => $samples->sum('relevant_aircraft'),
@@ -138,9 +124,7 @@ class NetworkController extends Controller
                     'active_minutes' => $active * OperationalOverviewCollector::SAMPLE_MINUTES,
                     'utilization' => $staffed > 0 ? round(($active / $staffed) * 100, 1) : null,
                 ];
-            })->values();
-        $positionTypes = $localPositionTypes->concat($firPositionTypes)
-            ->sortBy(fn ($position) => $position->airport.'|'.$position->position_type)->values();
+            })->sortBy(fn ($position) => $this->positionSortKey($position->airport, $position->position_type))->values();
 
         $latestSample = OperationalAirportSample::max('sampled_at');
 
@@ -226,42 +210,66 @@ class NetworkController extends Controller
             ];
         })->values();
 
-        // The existing activity logger predates Operational Overview and provides
-        // trustworthy historical ATC staffing time. Keep it separate from live
-        // traffic utilization because old session logs contain no pilot positions.
-        $historicalCutoff = OperationalPositionSample::min('sampled_at') ?: now();
-        $historicalStaffing = SessionLog::where('session_start', '<', $historicalCutoff)
-            ->where('session_start', '<=', now())
+        // The session archive is an independent staffing view, not an addition
+        // to sampled utilization. Show its full selected range; the former
+        // pre-sample cutoff made a populated archive appear almost empty.
+        $historicalStaffing = SessionLog::where('session_start', '<=', now())
             ->where(function ($query) use ($start) {
                 $query->whereNull('session_end')->orWhere('session_end', '>=', $start);
-            })->get()->map(function ($session) use ($start, $historicalCutoff) {
+            })->get()->map(function ($session) use ($start) {
                 $from = Carbon::parse($session->session_start)->max($start);
-                $to = Carbon::parse($session->session_end ?: now())->min(Carbon::parse($historicalCutoff));
+                $to = Carbon::parse($session->session_end ?: now())->min(now());
                 $callsign = strtoupper((string) $session->callsign);
-                $suffix = substr($callsign, strrpos($callsign, '_') + 1);
-                $airport = collect(array_keys(OperationalOverviewCollector::AIRPORTS))
-                    ->first(fn ($icao) => str_starts_with($callsign, $icao.'_')) ?: 'FIR';
+                $rawType = str_contains($callsign, '_') ? substr($callsign, strrpos($callsign, '_') + 1) : '';
+                $position = $this->positionGroup($rawType);
+                $airport = $this->positionAirport($callsign);
 
                 return (object) [
                     'airport' => $airport,
-                    'position_type' => $suffix,
+                    'position_type' => $position,
+                    'callsign' => $callsign,
+                    'started_at' => Carbon::parse($session->session_start),
                     'minutes' => $to->gt($from) ? $from->diffInMinutes($to) : 0,
                 ];
-            })->filter(fn ($row) => $row->minutes > 0 && $row->position_type !== 'FMP')
-            ->groupBy(fn ($row) => $row->airport.'|'.$row->position_type)
-            ->map(function ($rows) {
-                return (object) [
-                    'airport' => $rows->first()->airport,
-                    'position_type' => $rows->first()->position_type,
-                    'minutes' => $rows->sum('minutes'),
-                    'sessions' => $rows->count(),
-                ];
-            })->sortByDesc('minutes')->values();
+            })->filter(fn ($row) => $row->minutes > 0 && $row->airport !== null && $row->position_type !== null)
+            ->sortByDesc('started_at')->values();
 
         return view('dashboard.network.operations.index', compact(
             'airports', 'positionTypes', 'days', 'latestSample', 'flightTotals', 'recentFlights',
             'emergencies', 'rosterEfficiency', 'trainingOpportunities', 'peakTimes', 'historicalStaffing', 'setupIncomplete'
         ));
+    }
+
+    private function positionGroup(?string $positionType): ?string
+    {
+        return match (strtoupper((string) $positionType)) {
+            'DEL' => 'Delivery',
+            'GND' => 'Ground',
+            'TWR' => 'Tower',
+            'APP', 'DEP', 'TML' => 'Terminal',
+            'CTR' => 'Center',
+            default => null,
+        };
+    }
+
+    private function isFirCallsign(string $callsign): bool
+    {
+        return str_starts_with($callsign, 'CZWG_') || str_starts_with($callsign, 'WPG_') || str_starts_with($callsign, 'ZWG_');
+    }
+
+    private function positionAirport(string $callsign): ?string
+    {
+        foreach (array_keys(OperationalOverviewCollector::AIRPORTS) as $icao) {
+            if (str_starts_with($callsign, $icao.'_')) return $icao;
+        }
+        return $this->isFirCallsign($callsign) ? 'FIR' : null;
+    }
+
+    private function positionSortKey(string $airport, string $position): string
+    {
+        $airportOrder = array_flip(array_merge(array_keys(OperationalOverviewCollector::AIRPORTS), ['FIR']));
+        $positionOrder = array_flip(['Delivery', 'Ground', 'Tower', 'Terminal', 'Center']);
+        return sprintf('%02d|%02d', $airportOrder[$airport] ?? 99, $positionOrder[$position] ?? 99);
     }
 
     public function activityIndex(Request $request)
