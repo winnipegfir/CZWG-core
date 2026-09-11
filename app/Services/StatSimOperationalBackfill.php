@@ -107,7 +107,10 @@ class StatSimOperationalBackfill
     private function request(string $path, array $query = [], bool $notFoundIsEmpty = false): array
     {
         $response = Http::acceptJson()->withHeaders(['X-API-Key' => $this->apiKey])
-            ->retry(3, 750)->timeout(30)->get($this->baseUrl.$path, $query);
+            // Return the final response to us after retries so a StatSim 404
+            // can be interpreted as an empty airport/day below. Other failed
+            // responses are still thrown explicitly after that check.
+            ->retry(3, 750, null, false)->timeout(30)->get($this->baseUrl.$path, $query);
         // StatSim uses 404 for a valid date/airport query with no matching
         // flights. That is an empty day, not a failed backfill.
         if ($notFoundIsEmpty && $response->status() === 404) return [];
