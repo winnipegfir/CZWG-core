@@ -10,11 +10,14 @@ use App\Models\Network\OperationalAirportSample;
 use App\Models\Network\OperationalEmergency;
 use App\Models\Network\OperationalFlight;
 use App\Models\Network\OperationalPositionSample;
+use App\Models\Network\SessionLog;
 use App\Services\ControllerActivityService;
 use App\Services\OperationalOverviewCollector;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
 
 class NetworkController extends Controller
@@ -43,6 +46,19 @@ class NetworkController extends Controller
 
         $setupIncomplete = false;
 
+        // Production does not currently run Laravel's scheduler. Let the first
+        // staff visit in each five-minute window collect one real VATSIM sample.
+        // Cache::add is atomic on Laravel's supported cache stores, preventing a
+        // burst of staff page loads from making duplicate feed requests.
+        if (Cache::add('network.operational-overview.collect', true, now()->addMinutes(5))) {
+            try {
+                app(OperationalOverviewCollector::class)->collect();
+            } catch (\Throwable $exception) {
+                report($exception);
+                Cache::forget('network.operational-overview.collect');
+            }
+        }
+
         $airportRows = OperationalAirportSample::where('sampled_at', '>=', $start)
             ->selectRaw('airport, COUNT(*) AS sample_count, SUM(ground_aircraft) AS ground_observations, SUM(airborne_aircraft) AS airborne_observations, SUM(controlled_ground_aircraft) AS controlled_ground, SUM(controlled_airborne_aircraft) AS controlled_airborne, SUM(CASE WHEN online_positions > 0 THEN 1 ELSE 0 END) AS staffed_samples, SUM(CASE WHEN ground_aircraft + airborne_aircraft > 0 THEN 1 ELSE 0 END) AS traffic_samples, SUM(CASE WHEN ground_aircraft + airborne_aircraft > 0 AND online_positions = 0 THEN 1 ELSE 0 END) AS uncovered_samples, MAX(sampled_at) AS latest_sample')
             ->groupBy('airport')
@@ -58,6 +74,10 @@ class NetworkController extends Controller
             return (object) [
                 'icao' => $icao,
                 'name' => $details['name'],
+                'photo' => $details['photo'],
+                'photo_credit' => $details['photo_credit'],
+                'photo_license' => $details['photo_license'],
+                'photo_source' => $details['photo_source'],
                 'sample_count' => (int) ($row->sample_count ?? 0),
                 'ground_minutes' => $ground * OperationalOverviewCollector::SAMPLE_MINUTES,
                 'airborne_minutes' => $airborne * OperationalOverviewCollector::SAMPLE_MINUTES,
@@ -69,7 +89,14 @@ class NetworkController extends Controller
             ];
         })->values();
 
-        $positionTypes = OperationalPositionSample::where('sampled_at', '>=', $start)
+        $broadCallsigns = ['CZWG\_%', 'WPG\_%', 'ZWG\_%'];
+        $localPositionTypes = OperationalPositionSample::where('sampled_at', '>=', $start)
+            ->where('position_type', '!=', 'FMP')
+            ->where(function ($query) use ($broadCallsigns) {
+                foreach ($broadCallsigns as $pattern) {
+                    $query->where('callsign', 'not like', $pattern);
+                }
+            })
             ->selectRaw('airport, position_type, COUNT(*) AS staffed_samples, SUM(CASE WHEN relevant_aircraft > 0 THEN 1 ELSE 0 END) AS active_samples, SUM(relevant_aircraft) AS traffic_observations')
             ->groupBy('airport', 'position_type')->orderBy('airport')->orderBy('position_type')->get()
             ->map(function ($row) {
@@ -80,6 +107,40 @@ class NetworkController extends Controller
                 $row->utilization = $staffed > 0 ? round(($active / $staffed) * 100, 1) : null;
                 return $row;
             });
+
+        // Broad Winnipeg positions are stored once per airport so they can
+        // correctly provide top-down coverage. Collapse those copies here so
+        // one FIR position is not presented four times in utilization totals.
+        $broadSamples = OperationalPositionSample::where('sampled_at', '>=', $start)
+            ->where('position_type', '!=', 'FMP')
+            ->where(function ($query) use ($broadCallsigns) {
+                foreach ($broadCallsigns as $pattern) {
+                    $query->orWhere('callsign', 'like', $pattern);
+                }
+            })->get();
+        $firPositionTypes = $broadSamples
+            ->groupBy(fn ($sample) => Carbon::parse($sample->sampled_at)->format('Y-m-d H:i:s').'|'.$sample->callsign)
+            ->map(function ($samples) {
+                return (object) [
+                    'position_type' => $samples->first()->position_type,
+                    'relevant_aircraft' => $samples->sum('relevant_aircraft'),
+                ];
+            })->groupBy('position_type')->map(function ($samples, $positionType) {
+                $staffed = $samples->count();
+                $active = $samples->where('relevant_aircraft', '>', 0)->count();
+                return (object) [
+                    'airport' => 'FIR',
+                    'position_type' => $positionType,
+                    'staffed_samples' => $staffed,
+                    'active_samples' => $active,
+                    'traffic_observations' => $samples->sum('relevant_aircraft'),
+                    'staffed_minutes' => $staffed * OperationalOverviewCollector::SAMPLE_MINUTES,
+                    'active_minutes' => $active * OperationalOverviewCollector::SAMPLE_MINUTES,
+                    'utilization' => $staffed > 0 ? round(($active / $staffed) * 100, 1) : null,
+                ];
+            })->values();
+        $positionTypes = $localPositionTypes->concat($firPositionTypes)
+            ->sortBy(fn ($position) => $position->airport.'|'.$position->position_type)->values();
 
         $latestSample = OperationalAirportSample::max('sampled_at');
 
@@ -97,7 +158,7 @@ class NetworkController extends Controller
         $flightTotals->average_ground_minutes = $flightRows->count() > 0 ? round($flightTotals->ground_minutes / $flightRows->count(), 1) : null;
         $flightTotals->average_airborne_minutes = $flightRows->count() > 0 ? round($flightTotals->airborne_minutes / $flightRows->count(), 1) : null;
 
-        $recentFlights = $flightRows->sortByDesc('last_seen_at')->take(15)->map(function ($flight) {
+        $recentFlights = $flightRows->sortByDesc('last_seen_at')->map(function ($flight) {
             $total = $flight->ground_seconds + $flight->airborne_seconds;
             $controlled = $flight->controlled_ground_seconds + $flight->controlled_airborne_seconds;
             $flight->coverage = $total > 0 ? round(($controlled / $total) * 100, 1) : null;
@@ -136,9 +197,70 @@ class NetworkController extends Controller
             return (object) ['airport' => $airport->icao, 'name' => $airport->name, 'uncovered_minutes' => $gap, 'coverage' => $airport->coverage];
         })->sortByDesc('uncovered_minutes')->values();
 
+        $hourlyTraffic = OperationalAirportSample::where('sampled_at', '>=', $start)
+            ->selectRaw('airport, HOUR(sampled_at) AS hour_utc, SUM(ground_aircraft + airborne_aircraft) AS traffic_observations')
+            ->groupBy('airport', DB::raw('HOUR(sampled_at)'))->get();
+        $peakTimes = collect(OperationalOverviewCollector::AIRPORTS)->map(function ($details, $icao) use ($hourlyTraffic) {
+            $hours = array_fill(0, 24, 0);
+            foreach ($hourlyTraffic->where('airport', $icao) as $row) {
+                $hours[(int) $row->hour_utc] = (int) $row->traffic_observations;
+            }
+
+            $bestStart = 0;
+            $bestTraffic = 0;
+            for ($hour = 0; $hour < 24; $hour++) {
+                $traffic = $hours[$hour] + $hours[($hour + 1) % 24] + $hours[($hour + 2) % 24];
+                if ($traffic > $bestTraffic) {
+                    $bestTraffic = $traffic;
+                    $bestStart = $hour;
+                }
+            }
+
+            return (object) [
+                'airport' => $icao,
+                'name' => $details['name'],
+                'window' => $bestTraffic > 0
+                    ? sprintf('%02d:00–%02d:00Z', $bestStart, ($bestStart + 3) % 24)
+                    : null,
+                'traffic_observations' => $bestTraffic,
+            ];
+        })->values();
+
+        // The existing activity logger predates Operational Overview and provides
+        // trustworthy historical ATC staffing time. Keep it separate from live
+        // traffic utilization because old session logs contain no pilot positions.
+        $historicalCutoff = OperationalPositionSample::min('sampled_at') ?: now();
+        $historicalStaffing = SessionLog::where('session_start', '<', $historicalCutoff)
+            ->where('session_start', '<=', now())
+            ->where(function ($query) use ($start) {
+                $query->whereNull('session_end')->orWhere('session_end', '>=', $start);
+            })->get()->map(function ($session) use ($start, $historicalCutoff) {
+                $from = Carbon::parse($session->session_start)->max($start);
+                $to = Carbon::parse($session->session_end ?: now())->min(Carbon::parse($historicalCutoff));
+                $callsign = strtoupper((string) $session->callsign);
+                $suffix = substr($callsign, strrpos($callsign, '_') + 1);
+                $airport = collect(array_keys(OperationalOverviewCollector::AIRPORTS))
+                    ->first(fn ($icao) => str_starts_with($callsign, $icao.'_')) ?: 'FIR';
+
+                return (object) [
+                    'airport' => $airport,
+                    'position_type' => $suffix,
+                    'minutes' => $to->gt($from) ? $from->diffInMinutes($to) : 0,
+                ];
+            })->filter(fn ($row) => $row->minutes > 0 && $row->position_type !== 'FMP')
+            ->groupBy(fn ($row) => $row->airport.'|'.$row->position_type)
+            ->map(function ($rows) {
+                return (object) [
+                    'airport' => $rows->first()->airport,
+                    'position_type' => $rows->first()->position_type,
+                    'minutes' => $rows->sum('minutes'),
+                    'sessions' => $rows->count(),
+                ];
+            })->sortByDesc('minutes')->values();
+
         return view('dashboard.network.operations.index', compact(
             'airports', 'positionTypes', 'days', 'latestSample', 'flightTotals', 'recentFlights',
-            'emergencies', 'rosterEfficiency', 'trainingOpportunities', 'setupIncomplete'
+            'emergencies', 'rosterEfficiency', 'trainingOpportunities', 'peakTimes', 'historicalStaffing', 'setupIncomplete'
         ));
     }
 

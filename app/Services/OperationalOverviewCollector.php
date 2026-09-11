@@ -15,12 +15,13 @@ use Illuminate\Support\Facades\Schema;
 class OperationalOverviewCollector
 {
     public const SAMPLE_MINUTES = 5;
+    public const RETENTION_DAYS = 180;
 
     public const AIRPORTS = [
-        'CYWG' => ['name' => 'Winnipeg', 'lat' => 49.9100, 'lon' => -97.2399],
-        'CYXE' => ['name' => 'Saskatoon', 'lat' => 52.1708, 'lon' => -106.6997],
-        'CYQR' => ['name' => 'Regina', 'lat' => 50.4319, 'lon' => -104.6658],
-        'CYQT' => ['name' => 'Thunder Bay', 'lat' => 48.3719, 'lon' => -89.3239],
+        'CYWG' => ['name' => 'Winnipeg', 'lat' => 49.9100, 'lon' => -97.2399, 'photo' => 'cywg.jpg', 'photo_credit' => 'Ken Lund', 'photo_license' => 'CC BY-SA 2.0', 'photo_source' => 'https://commons.wikimedia.org/wiki/File:Winnipeg_James_Armstrong_Richardson_International_Airport,_Winnipeg,_Manitoba_(29035393407).jpg'],
+        'CYXE' => ['name' => 'Saskatoon', 'lat' => 52.1708, 'lon' => -106.6997, 'photo' => 'cyxe.jpg', 'photo_credit' => 'SriMesh', 'photo_license' => 'CC BY-SA 3.0', 'photo_source' => 'https://commons.wikimedia.org/wiki/File:Saskatoon_110.jpg'],
+        'CYQR' => ['name' => 'Regina', 'lat' => 50.4319, 'lon' => -104.6658, 'photo' => 'cyqr.jpg', 'photo_credit' => 'Ryan Sharpe', 'photo_license' => 'CC BY-SA 4.0', 'photo_source' => 'https://commons.wikimedia.org/wiki/File:CYQR_aerial_view_%E2%80%93_Regina,_SK_%E2%80%93_(2018-09-07).jpg'],
+        'CYQT' => ['name' => 'Thunder Bay', 'lat' => 48.3719, 'lon' => -89.3239, 'photo' => 'cyqt.jpg', 'photo_credit' => 'P199', 'photo_license' => 'CC BY-SA 3.0', 'photo_source' => 'https://commons.wikimedia.org/wiki/File:Thunder_Bay_Airport_1.JPG'],
     ];
 
     public function collect(): array
@@ -33,7 +34,11 @@ class OperationalOverviewCollector
             return ['sampled_at' => now(), 'controllers' => 0, 'tracked_aircraft' => 0, 'tracked_flights' => 0, 'skipped' => true];
         }
 
-        $feed = HttpHelper::getClient()->get(VatsimHelper::getDatafeedUrl())->object();
+        $feed = HttpHelper::getClient()
+            ->timeout(12)
+            ->get(VatsimHelper::getDatafeedUrl())
+            ->throw()
+            ->object();
         $observedAt = now()->startOfSecond();
         $sampledAt = $observedAt->copy()->startOfMinute();
         $sampledAt->subMinutes($sampledAt->minute % self::SAMPLE_MINUTES);
@@ -107,10 +112,7 @@ class OperationalOverviewCollector
                 ->where('last_seen_at', '<', $observedAt->copy()->subMinutes(10))
                 ->update(['completed_at' => $observedAt, 'updated_at' => now()]);
 
-            OperationalAirportSample::where('sampled_at', '<', now()->subDays(180))->delete();
-            OperationalPositionSample::where('sampled_at', '<', now()->subDays(180))->delete();
-            OperationalFlight::where('last_seen_at', '<', now()->subDays(180))->delete();
-            OperationalEmergency::where('last_seen_at', '<', now()->subDays(180))->delete();
+            $this->purgeExpired();
         });
 
         return [
@@ -120,6 +122,15 @@ class OperationalOverviewCollector
             'tracked_flights' => count(array_unique($seenFlightKeys)),
             'skipped' => false,
         ];
+    }
+
+    public function purgeExpired(): void
+    {
+        $cutoff = now('UTC')->subDays(self::RETENTION_DAYS);
+        OperationalAirportSample::where('sampled_at', '<', $cutoff)->delete();
+        OperationalPositionSample::where('sampled_at', '<', $cutoff)->delete();
+        OperationalFlight::where('last_seen_at', '<', $cutoff)->delete();
+        OperationalEmergency::where('last_seen_at', '<', $cutoff)->delete();
     }
 
     private function trackFlight(object $pilot, string $airport, string $phase, bool $controlled, Carbon $sampledAt): string
