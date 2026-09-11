@@ -29,6 +29,9 @@ class StatSimOperationalBackfill
     public function run(int $days, array $airports, bool $dryRun, callable $progress): array
     {
         $this->assertTablesExist();
+        if (! $dryRun) {
+            app(OperationalOverviewCollector::class)->purgeExpired();
+        }
         $totals = ['returned' => 0, 'processed' => 0, 'skipped' => 0, 'positions' => 0, 'written' => 0];
         $end = now('UTC')->startOfDay();
         $start = $end->copy()->subDays($days);

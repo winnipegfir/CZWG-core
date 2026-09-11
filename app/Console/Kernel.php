@@ -48,6 +48,12 @@ class Kernel extends ConsoleKernel
         // Public roster fallback is intentionally polite: one request per hour.
         $schedule->command(SyncAcademyVatcanRoster::class)->hourly()->withoutOverlapping();
 
+        // The dashboard exposes at most 90 days. Retain a 180-day recovery
+        // buffer and remove older operational records automatically.
+        $schedule->call(function () {
+            app(\App\Services\OperationalOverviewCollector::class)->purgeExpired();
+        })->daily()->name('purge-operational-overview')->withoutOverlapping();
+
         // 0 0 * * * schedulers
         $schedule->command(RatingUpdate::class)->daily();
         $schedule->call(function () {

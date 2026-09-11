@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Services\StatSimOperationalBackfill;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Cache;
 
 class BackfillOperationalOverview extends Command
 {
@@ -37,7 +38,17 @@ class BackfillOperationalOverview extends Command
         $dryRun = (bool) $this->option('dry-run');
         $this->info(($dryRun ? 'Dry run: ' : '').'importing '.$days.' day(s) for '.implode(', ', $airports).'.');
 
+        $lock = null;
+        $lockAcquired = false;
+
         try {
+            $lock = Cache::lock('network:operational-history-import', 10800);
+            $lockAcquired = $lock->get();
+            if (! $lockAcquired) {
+                $this->error('Another historical import is already running. Wait for it to finish, then run this workflow again.');
+                return self::FAILURE;
+            }
+
             $result = $backfill->run($days, $airports, $dryRun, function (string $message) {
                 $this->line($message);
             });
@@ -45,6 +56,10 @@ class BackfillOperationalOverview extends Command
             report($exception);
             $this->error('Import stopped safely: '.$exception->getMessage());
             return self::FAILURE;
+        } finally {
+            if ($lockAcquired && $lock) {
+                $lock->release();
+            }
         }
 
         $this->newLine();
