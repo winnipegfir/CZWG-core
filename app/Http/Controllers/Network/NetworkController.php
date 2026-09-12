@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Network;
 use App\Http\Controllers\Controller;
 use App\Models\AtcTraining\RosterMember;
 use App\Classes\VatsimStatsApi;
+use App\Classes\VatsimRating;
 use App\Models\Network\MonitoredPosition;
 use App\Models\Network\OperationalAirportSample;
 use App\Models\Network\OperationalEmergency;
@@ -144,18 +145,31 @@ class NetworkController extends Controller
                     'relevant_aircraft' => $copies->sum('relevant_aircraft'),
                 ];
             })->values();
-        $ratingRoster = RosterMember::whereIn('cid', $ratingSourceSamples->pluck('controller_cid')->unique())
+        $ratingRoster = RosterMember::with('user:id,rating_id')
+            ->whereIn('cid', $ratingSourceSamples->pluck('controller_cid')->unique())
             ->get()->keyBy(fn ($member) => (string) $member->cid);
         $ratingSamples = $ratingSourceSamples->map(function ($sample) use ($ratingRoster) {
             $member = $ratingRoster->get($sample->controller_cid);
-            $sample->rating_group = $this->ratingGroup($member?->rating);
+            $ratingId = $member?->user?->rating_id;
+            $rating = $ratingId === null ? null : VatsimRating::tryFrom((int) $ratingId);
+            $sample->rating_group = $this->ratingGroup($rating?->getShortName());
             return $sample;
         });
-        $ratingGroups = ['S1', 'S2', 'S3', 'C1+'];
-        if ($ratingSamples->contains('rating_group', 'Unmatched')) $ratingGroups[] = 'Unmatched';
-        $ratingContribution = collect(['Local & Terminal', 'Center'])->flatMap(function ($scope) use ($ratingGroups, $ratingSamples) {
-            return collect($ratingGroups)->map(function ($rating) use ($scope, $ratingSamples) {
-                $samples = $ratingSamples->where('scope', $scope)->where('rating_group', $rating);
+        $ratingContribution = collect(['Local & Terminal', 'Center'])->flatMap(function ($scope) use ($ratingSamples) {
+            $scopeSamples = $ratingSamples->where('scope', $scope);
+            // S3 trainees may work Center under supervision or solo; S1/S2
+            // Center rows are omitted unless actual samples need investigation.
+            $ratingGroups = $scope === 'Center' ? ['S3', 'C1+'] : ['S1', 'S2', 'S3', 'C1+'];
+            if ($scope === 'Center') {
+                foreach (['S1', 'S2'] as $unexpectedRating) {
+                    if ($scopeSamples->contains('rating_group', $unexpectedRating)) {
+                        $ratingGroups[] = $unexpectedRating;
+                    }
+                }
+            }
+            if ($scopeSamples->contains('rating_group', 'Unmatched')) $ratingGroups[] = 'Unmatched';
+            return collect($ratingGroups)->map(function ($rating) use ($scope, $scopeSamples) {
+                $samples = $scopeSamples->where('rating_group', $rating);
                 $staffed = $samples->count();
                 $active = $samples->where('relevant_aircraft', '>', 0)->count();
                 return (object) [
