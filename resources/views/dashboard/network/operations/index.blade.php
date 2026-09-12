@@ -129,6 +129,30 @@ html[data-theme="dark"] .ops-scroll{scrollbar-color:#718096 #343b44}html[data-th
             </div>
 
             <div class="ops-panel mb-4" style="height:auto">
+                <div class="ops-kicker">Current roster compared with sampled operations</div><h4 class="font-weight-bold mb-2">Traffic contribution by rating</h4>
+                <p class="text-muted small">Local and Terminal work is separated from Center so frequent top-down CTR coverage does not mask lower-position demand. Aircraft observations are five-minute workload observations, not unique flights.</p>
+                <div class="table-responsive">
+                    <table class="table ops-table mb-0">
+                        <thead><tr><th>Scope</th><th>Rating</th><th>Controllers</th><th>Position-hours</th><th>Hours with traffic</th><th>Aircraft observations</th><th style="min-width:180px">Utilization</th></tr></thead>
+                        <tbody>
+                        @foreach($ratingContribution as $ratingRow)
+                            <tr>
+                                <td><strong>{{ $ratingRow->scope }}</strong></td>
+                                <td><strong>{{ $ratingRow->rating }}</strong></td>
+                                <td>{{ number_format($ratingRow->controllers) }}</td>
+                                <td>{{ $formatMinutes($ratingRow->staffed_minutes) }}</td>
+                                <td>{{ $formatMinutes($ratingRow->active_minutes) }}</td>
+                                <td>{{ number_format($ratingRow->traffic_observations) }}</td>
+                                <td><div class="d-flex align-items-center" style="gap:.6rem"><div class="ops-meter flex-grow-1"><span style="width:{{ $ratingRow->utilization ?? 0 }}%"></span></div><strong>{{ $ratingRow->utilization === null ? '—' : $ratingRow->utilization.'%' }}</strong></div></td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+                <small class="text-muted d-block mt-3">Ratings are matched by controller CID to the current Winnipeg roster. Older samples use the controller's current rating because historical rating changes are not stored. “Unmatched” identifies sampled CIDs that are absent from the current roster.</small>
+            </div>
+
+            <div class="ops-panel mb-4" style="height:auto">
                 <div class="d-flex justify-content-between align-items-start mb-2"><div><div class="ops-kicker">Existing Winnipeg activity archive</div><h4 class="font-weight-bold mb-0">Historical ATC staffing</h4></div><small class="text-muted">Newest first · scroll for more</small></div>
                 <p class="text-muted small">Controller sessions retained by the website in the selected reporting period. APP/DEP/TML callsigns are labelled Terminal. This independent archive is not added to sampled utilization; old session logs contain no pilot-position history.</p>
                 @if($historicalStaffing->isEmpty())
