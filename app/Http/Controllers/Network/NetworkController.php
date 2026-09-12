@@ -126,6 +126,50 @@ class NetworkController extends Controller
                 ];
             })->sortBy(fn ($position) => $this->positionSortKey($position->airport, $position->position_type))->values();
 
+        // Compare sampled workload with each controller's current roster rating.
+        // Broad top-down positions have one database row per tracked airport;
+        // collapse those copies before calculating rating totals. Center is kept
+        // separate so frequent CTR coverage cannot hide local-position gaps.
+        $ratingSourceSamples = OperationalPositionSample::where('sampled_at', '>=', $start)
+            ->whereNotNull('controller_cid')->whereIn('position_type', $validPositionTypes)->get()
+            ->groupBy(function ($sample) {
+                $callsign = strtoupper((string) $sample->callsign);
+                $scope = $this->isFirCallsign($callsign) ? 'FIR' : strtoupper((string) $sample->airport);
+                return $scope.'|'.Carbon::parse($sample->sampled_at)->format('Y-m-d H:i:s').'|'.$callsign.'|'.$sample->controller_cid;
+            })->map(function ($copies) {
+                $sample = $copies->first();
+                return (object) [
+                    'controller_cid' => (string) $sample->controller_cid,
+                    'scope' => strtoupper((string) $sample->position_type) === 'CTR' ? 'Center' : 'Local & Terminal',
+                    'relevant_aircraft' => $copies->sum('relevant_aircraft'),
+                ];
+            })->values();
+        $ratingRoster = RosterMember::whereIn('cid', $ratingSourceSamples->pluck('controller_cid')->unique())
+            ->get()->keyBy(fn ($member) => (string) $member->cid);
+        $ratingSamples = $ratingSourceSamples->map(function ($sample) use ($ratingRoster) {
+            $member = $ratingRoster->get($sample->controller_cid);
+            $sample->rating_group = $this->ratingGroup($member?->rating);
+            return $sample;
+        });
+        $ratingGroups = ['S1', 'S2', 'S3', 'C1+'];
+        if ($ratingSamples->contains('rating_group', 'Unmatched')) $ratingGroups[] = 'Unmatched';
+        $ratingContribution = collect(['Local & Terminal', 'Center'])->flatMap(function ($scope) use ($ratingGroups, $ratingSamples) {
+            return collect($ratingGroups)->map(function ($rating) use ($scope, $ratingSamples) {
+                $samples = $ratingSamples->where('scope', $scope)->where('rating_group', $rating);
+                $staffed = $samples->count();
+                $active = $samples->where('relevant_aircraft', '>', 0)->count();
+                return (object) [
+                    'scope' => $scope,
+                    'rating' => $rating,
+                    'controllers' => $samples->pluck('controller_cid')->unique()->count(),
+                    'staffed_minutes' => $staffed * OperationalOverviewCollector::SAMPLE_MINUTES,
+                    'active_minutes' => $active * OperationalOverviewCollector::SAMPLE_MINUTES,
+                    'traffic_observations' => $samples->sum('relevant_aircraft'),
+                    'utilization' => $staffed > 0 ? round(($active / $staffed) * 100, 1) : null,
+                ];
+            });
+        })->values();
+
         $latestSample = OperationalAirportSample::max('sampled_at');
 
         $flightRows = OperationalFlight::where('last_seen_at', '>=', $start)->get();
@@ -236,7 +280,8 @@ class NetworkController extends Controller
 
         return view('dashboard.network.operations.index', compact(
             'airports', 'positionTypes', 'days', 'latestSample', 'flightTotals', 'recentFlights',
-            'emergencies', 'rosterEfficiency', 'trainingOpportunities', 'peakTimes', 'historicalStaffing', 'setupIncomplete'
+            'emergencies', 'rosterEfficiency', 'trainingOpportunities', 'peakTimes', 'historicalStaffing',
+            'ratingContribution', 'setupIncomplete'
         ));
     }
 
@@ -270,6 +315,14 @@ class NetworkController extends Controller
         $airportOrder = array_flip(array_merge(array_keys(OperationalOverviewCollector::AIRPORTS), ['FIR']));
         $positionOrder = array_flip(['Delivery', 'Ground', 'Tower', 'Terminal', 'Center']);
         return sprintf('%02d|%02d', $airportOrder[$airport] ?? 99, $positionOrder[$position] ?? 99);
+    }
+
+    private function ratingGroup(?string $rating): string
+    {
+        $rating = strtoupper(trim((string) $rating));
+        if (in_array($rating, ['S1', 'S2', 'S3'], true)) return $rating;
+        if (in_array($rating, ['C1', 'C2', 'C3', 'I1', 'I2', 'I3', 'SUP', 'ADM'], true)) return 'C1+';
+        return 'Unmatched';
     }
 
     public function activityIndex(Request $request)
