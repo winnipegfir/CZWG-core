@@ -2,7 +2,15 @@
 @section('title', 'Training Academy - Winnipeg FIR')
 @section('content')
 @include('academy._styles')
-<div class="academy-hero"><div class="container"><div class="academy-kicker">Winnipeg FIR</div><h1>Training Academy</h1><p class="mb-0" style="color:rgba(255,255,255,.65)">Courses and learning resources for Winnipeg controllers.</p></div></div>
+@php
+    $academyTimezone = Auth::user()->timezone ?: 'America/Winnipeg';
+    $academyHour = now($academyTimezone)->hour;
+    $academyGreeting = $academyHour < 12
+        ? 'Good morning'
+        : ($academyHour < 17 ? 'Good afternoon' : 'Good evening');
+    $academyFirstName = trim((string) (Auth::user()->display_fname ?: Auth::user()->fname ?: 'Controller'));
+@endphp
+<div class="academy-hero"><div class="container"><div class="academy-kicker">Winnipeg FIR Training Academy</div><h1><span id="academy-local-greeting">{{ $academyGreeting }}</span>, {{ $academyFirstName }}.</h1><p class="mb-0" style="color:rgba(255,255,255,.65)">Continue your training and pick up where you left off.</p></div></div>
 <div class="academy-body"><div class="container">
     @if($courses->isEmpty())
         <div class="academy-panel text-center py-5"><i class="fas fa-book-open fa-2x mb-3" style="color:#9aa8b5"></i><h5>No courses published yet</h5><p class="academy-muted mb-0">Academy content will appear here when it is ready.</p></div>
@@ -29,4 +37,15 @@
         </div>
     @endif
 </div></div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var greeting = document.getElementById('academy-local-greeting');
+    if (!greeting) return;
+
+    var localHour = new Date().getHours();
+    greeting.textContent = localHour < 12
+        ? 'Good morning'
+        : (localHour < 17 ? 'Good afternoon' : 'Good evening');
+});
+</script>
 @stop
