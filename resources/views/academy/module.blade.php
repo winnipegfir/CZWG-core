@@ -196,6 +196,8 @@ document.addEventListener('DOMContentLoaded', function () {
         var current = 0;
 
         function showSlide(index) {
+            var pageX = window.pageXOffset;
+            var pageY = window.pageYOffset;
             current = Math.max(0, Math.min(index, slides.length - 1));
             slides.forEach(function (slide, slideIndex) {
                 slide.hidden = slideIndex !== current;
@@ -203,6 +205,12 @@ document.addEventListener('DOMContentLoaded', function () {
             counter.textContent = (current + 1) + ' / ' + slides.length;
             previous.disabled = current === 0;
             next.disabled = current === slides.length - 1;
+
+            // Swapping a large slide image can trigger browser scroll anchoring.
+            // Keep the learner at the deck controls instead of jumping to the page top.
+            window.requestAnimationFrame(function () {
+                window.scrollTo(pageX, pageY);
+            });
         }
 
         previous.addEventListener('click', function () { showSlide(current - 1); });

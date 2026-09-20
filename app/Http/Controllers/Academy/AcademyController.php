@@ -18,6 +18,9 @@ class AcademyController extends Controller
         (new AcademyVatcanSyncService)->claimPendingForUser(Auth::user());
 
         $courses = Course::where('published', true)
+            ->withExists(['enrollments as is_assigned' => function ($query) {
+                $query->where('user_id', Auth::id())->where('active', true);
+            }])
             ->withCount(['modules' => fn ($query) => $query->where('published', true)])
             ->orderBy('sort_order')->orderBy('id')->get();
 
