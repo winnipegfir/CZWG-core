@@ -11,6 +11,7 @@ use App\Models\Settings\HomepageTown;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class HomeController extends Controller
@@ -84,14 +85,33 @@ class HomeController extends Controller
             4 => 'lightgray',
         ];
 
-        $topControllers = RosterMember::where('currency', '!=', 0)->get()->sortByDesc('currency')->take(5);
+        // Build the leaderboard from dated session records instead of the roster's
+        // rolling currency counter. The currency counter is reset by a scheduled
+        // quarterly command; if that command is missed, the homepage otherwise
+        // continues showing hours from the previous quarter.
+        $quarterStart = Carbon::now()->startOfQuarter();
+        $nextQuarterStart = $quarterStart->copy()->addQuarter();
+
+        $topControllers = RosterMember::query()
+            ->join('session_logs', 'roster.id', '=', 'session_logs.roster_member_id')
+            ->where('roster.active', 1)
+            ->whereNotNull('session_logs.session_end')
+            ->where('session_logs.session_start', '>=', $quarterStart)
+            ->where('session_logs.session_start', '<', $nextQuarterStart)
+            ->groupBy('roster.user_id')
+            ->orderByDesc(DB::raw('SUM(session_logs.duration)'))
+            ->limit(5)
+            ->get([
+                'roster.user_id',
+                DB::raw('SUM(session_logs.duration) as quarterly_hours'),
+            ]);
 
         $n = -1;
         foreach ($topControllers as $top) {
             $top = [
                 'id' => $n += 1,
                 'cid' => $top['user_id'],
-                'time' => decimal_to_hm($top['currency']),
+                'time' => decimal_to_hm($top['quarterly_hours']),
                 'colour' => $colourArray[$n],
             ];
             array_push($topControllersArray, $top);
