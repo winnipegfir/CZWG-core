@@ -29,7 +29,7 @@ class VatcanService
 
     public function preferredRosterSourceLabel(): string
     {
-        return $this->isConfigured() ? 'Authenticated VATCAN API' : 'Public VATCAN CZWG roster';
+        return filled($this->publicRosterUrl) ? 'Public VATCAN CZWG roster' : 'Authenticated VATCAN API';
     }
 
     public function getNotes(int $cid): array
@@ -113,6 +113,16 @@ class VatcanService
         }
 
         return ['status' => 'error', 'message' => $message, 'data' => null];
+    }
+
+    /**
+     * Academy membership intentionally uses VATCAN's public CZWG facility page.
+     * Other training features continue using getRoster(), preserving their
+     * existing authenticated-API-first behavior.
+     */
+    public function getPublicRoster(): array
+    {
+        return $this->getRosterFromPublicPage();
     }
 
     protected function getRosterFromApi(): array
@@ -250,6 +260,15 @@ class VatcanService
             }
 
             $ratingText = trim($cells->item($headers['rating'])?->textContent ?? '');
+            $normalizedRating = strtoupper(preg_replace('/[^A-Z0-9]+/i', '', $ratingText));
+
+            // VATCAN can retain suspended/inactive members in the public home
+            // roster. They must not receive Academy access, but their presence
+            // must not invalidate the entire roster synchronization.
+            if ($strictRatings && in_array($normalizedRating, ['SUSPENDED', 'INACTIVE'], true)) {
+                continue;
+            }
+
             $rating = $this->ratingIdFromLabel($ratingText);
             if ($strictRatings && $rating === null) {
                 return ['status' => 'error', 'message' => 'VATCAN roster safety check failed: unknown rating "'.$ratingText.'".', 'data' => null];
