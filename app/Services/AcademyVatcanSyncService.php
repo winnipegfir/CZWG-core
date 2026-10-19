@@ -72,7 +72,7 @@ class AcademyVatcanSyncService
             return $run->fresh();
         }
 
-        $result = $vatcan->getRoster();
+        $result = $vatcan->getPublicRoster();
         if (($result['status'] ?? 'error') !== 'ok') {
             $run->update(['status' => 'error', 'message' => $result['message'] ?? 'VATCAN roster request failed.']);
             return $run->fresh();
