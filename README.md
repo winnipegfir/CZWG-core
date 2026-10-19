@@ -1,58 +1,57 @@
-# CZWG “Top This Quarter” focused fix
+# Public VATCAN Academy roster sync fix
 
-## Cause
+## What failed
 
-The homepage label says “Top This Quarter,” but `HomeController` was sorting the
-roster table's rolling `currency` value. That value only returns to zero when the
-scheduled quarterly command runs. If the scheduler misses the boundary, the
-homepage carries the previous quarter's totals forward.
+The Academy was selecting the authenticated VATCAN API whenever an API key was
+present, even though this installation was designed to obtain membership from
+the public CZWG facility page. The public page also currently contains one home
+member whose rating is `Suspended`; the old strict rating parser treated that
+status as a broken roster and rejected the entire synchronization.
 
-## Fix
+## What this changes
 
-The homepage leaderboard now sums completed `session_logs` rows whose
-`session_start` is inside the current calendar quarter. Quarter boundaries come
-from Laravel/Carbon using the application's configured timezone. The query also
-requires an active roster member and returns only the top five.
-
-There is no manual reset and no cache to clear for the leaderboard itself. At a
-quarter boundary, the date filter automatically starts using the new quarter.
+- The public CZWG facility roster is the primary Academy roster source.
+- A configured authenticated API is retained only as a validated fallback when
+  the public page is unavailable.
+- `Suspended` and `Inactive` home entries are safely excluded from Academy
+  membership rather than invalidating the full roster.
+- Existing minimum-member and maximum-drop safety checks remain unchanged.
+- Existing Academy memberships and enrollments are left untouched if neither
+  source supplies a valid roster.
 
 ## Scope
 
-Only this application file changes:
+Only these repository files change:
 
-`app/Http/Controllers/HomeController.php`
+- `app/Services/VatcanService.php`
+- `tests/Unit/VatcanPublicRosterTest.php`
 
-No Academy, Site Settings, banner, view, route, migration, JavaScript, CSS, or
-deployment file is changed.
+No migrations, courses, views, routes, Site Settings, homepage files, or
+unrelated controller-tracking systems are changed.
 
-## Local verification
+## Test and deploy
 
-Replace the matching controller file, then run:
+After replacing the two files in their matching repository folders, run:
 
 ```bat
+php artisan test --filter=VatcanPublicRosterTest
 php artisan optimize:clear
-php artisan serve
 ```
 
-Open the homepage and advance the information strip to **Top This Quarter**.
+After deployment, open **Academy Enrollments** and select **Sync VATCAN Roster
+Now**. The source should read **Public VATCAN CZWG roster**. The current public
+page has 47 home rows; one is suspended, so 46 eligible home controllers should
+synchronize. It currently has 10 visiting-controller rows.
 
-For October 17, 2026, the active quarter is Q4 2026: October 1, 2026 through
-December 31, 2026. Sessions from before October 1 must not appear in the totals.
+No migration is required.
 
-Run the project test suite before merging:
+## Pull request
 
-```bat
-php artisan test
-```
-
-## Pull-request summary
-
-**Title:** Fix homepage Top This Quarter date filtering
+**Title:** Use the public VATCAN roster for Academy sync
 
 **Description:**
 
-The homepage leaderboard was reading the roster's rolling currency counter,
-which could retain hours from a previous quarter when the scheduled reset was
-missed. It now calculates the top five directly from completed session records
-within the current calendar quarter. This PR changes only `HomeController.php`.
+Uses the public CZWG facility roster as the Academy's primary membership source,
+retains the authenticated endpoint only as a validated fallback, and safely
+excludes suspended/inactive members without rejecting the complete roster. All
+existing destructive-change safety checks remain in place.
