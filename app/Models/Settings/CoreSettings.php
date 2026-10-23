@@ -14,6 +14,8 @@ class CoreSettings extends Model
         'bannerAnimation', 'bannerIcon', 'bannerOpenNewTab',
         'emailfirchief', 'emaildepfirchief', 'emailcinstructor',
         'emaileventc', 'emailfacilitye', 'emailwebmaster',
+        'welcome_email_enabled', 'welcome_email_subject',
+        'welcome_email_body', 'welcome_email_signature',
         'academy_preview_mode', 'academy_nav_enabled', 'academy_staff_access_enabled',
         'academy_access_mode', 'academy_maintenance_mode',
     ];
@@ -25,5 +27,6 @@ class CoreSettings extends Model
         'academy_maintenance_mode' => 'boolean',
         'bannerEnabled' => 'boolean',
         'bannerOpenNewTab' => 'boolean',
+        'welcome_email_enabled' => 'boolean',
     ];
 }

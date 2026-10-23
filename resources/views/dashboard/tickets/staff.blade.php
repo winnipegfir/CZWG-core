@@ -28,7 +28,7 @@
                     <br>No open tickets.<br></br>
                 @else
                     <p><br>Returned {{count($openTickets) }} tickets</p>
-                    <table id="dataTable" class="table table-hover">
+                    <table id="openTicketsTable" class="table table-hover ticket-data-table">
                         <thead>
                         <tr>
                             <th scope="col">ID</th>
@@ -48,7 +48,7 @@
                             <td>{{count($ticket->replies)}}</td>
                             <td>{{$ticket->submission_time}}</td>
                             <td>
-                                <a href="{{url('/dashboard/tickets/'.$ticket->ticket_id)}}"><i class="fa fa-eye"></i></a>
+                                <a href="{{ route('tickets.viewticket', ['id' => $ticket->ticket_id, 'from' => 'staff']) }}"><i class="fa fa-eye"></i></a>
                             </td>
                             </tr>
                         @endforeach
@@ -61,7 +61,7 @@
                     <br>No closed tickets.<br></br>
                 @else
                     <p><br>Returned {{count($closedTickets) }} tickets</p>
-                    <table id="dataTable" class="table table-hover">
+                    <table id="closedTicketsTable" class="table table-hover ticket-data-table">
                         <thead>
                         <tr>
                             <th scope="col">ID</th>
@@ -81,7 +81,7 @@
                             <td>{{count($ticket->replies)}}</td>
                             <td>{{$ticket->submission_time}}</td>
                             <td>
-                                <a href="{{url('/dashboard/tickets/'.$ticket->ticket_id)}}"><i class="fa fa-eye"></i></a>
+                                <a href="{{ route('tickets.viewticket', ['id' => $ticket->ticket_id, 'from' => 'staff']) }}"><i class="fa fa-eye"></i></a>
                             </td>
                             </tr>
                         @endforeach
@@ -94,7 +94,7 @@
                     <br>No on hold tickets.<br></br>
                 @else
                     <p><br>Returned {{count($onHoldTickets) }} tickets</p>
-                    <table id="dataTable" class="table table-hover">
+                    <table id="onHoldTicketsTable" class="table table-hover ticket-data-table">
                         <thead>
                         <tr>
                             <th scope="col">ID</th>
@@ -114,7 +114,7 @@
                             <td>{{count($ticket->replies)}}</td>
                             <td>{{$ticket->submission_time}}</td>
                             <td>
-                                <a href="{{url('/dashboard/tickets/'.$ticket->ticket_id)}}"><i class="fa fa-eye"></i></a>
+                                <a href="{{ route('tickets.viewticket', ['id' => $ticket->ticket_id, 'from' => 'staff']) }}"><i class="fa fa-eye"></i></a>
                             </td>
                             </tr>
                         @endforeach

@@ -46,7 +46,11 @@ class TicketsController extends Controller
 
         $replies = TicketReply::where('ticket_id', $id)->get()->sortBy('submission_time');
 
-        return view('dashboard.tickets.viewticket', compact('ticket', 'replies'));
+        $backRoute = request()->query('from') === 'staff'
+            ? route('tickets.staff')
+            : route('tickets.index');
+
+        return view('dashboard.tickets.viewticket', compact('ticket', 'replies', 'backRoute'));
     }
 
     public function startNewTicket(Request $request)

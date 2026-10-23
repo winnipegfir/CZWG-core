@@ -55,7 +55,17 @@ class DashboardController extends Controller
         $openTickets = Ticket::where('user_id', $user->id)->where('status', 0)->get();
         $staffTickets = Ticket::where('staff_member_cid', $user->id)->where('status', 0)->get();
 
-        $unconfirmedapp = ControllerApplication::where('user_id', $user->id)->get();
+        // Only show applications for events that still exist and have not ended.
+        // Historical/orphaned applications previously inflated the dashboard badge
+        // while the modal remained empty.
+        $unconfirmedapp = ControllerApplication::query()
+            ->with('event')
+            ->where('user_id', $user->id)
+            ->whereHas('event', function ($query) {
+                $query->where('end_timestamp', '>=', Carbon::now());
+            })
+            ->get()
+            ->sortBy(fn ($application) => $application->event->start_timestamp);
         $confirmedapp = EventConfirm::where('user_id', $user->id)->get()->sortBy('start_timestamp');
 
         $event = Event::all()->sortBy('start_timestamp');
