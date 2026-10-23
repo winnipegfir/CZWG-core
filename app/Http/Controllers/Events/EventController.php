@@ -118,7 +118,9 @@ class EventController extends Controller
             'airport' => $request->input('airport'),
             'position' => $request->input('position'),
         ]);
-        $applications = ControllerApplication::where('user_id', $request->input('user_cid'))->firstorFail();
+        $applications = ControllerApplication::where('user_id', $request->input('user_cid'))
+            ->where('event_id', $event->id)
+            ->firstOrFail();
         $applications->delete();
 
         if ($controllerconfirm->user) {

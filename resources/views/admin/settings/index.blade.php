@@ -87,6 +87,22 @@
             </div>
 
             <div class="col-md-3 col-sm-6 mb-3">
+                <a href="{{ route('settings.welcome-email') }}" class="setting-card">
+                    <div class="setting-card-icon"><i class="fas fa-paper-plane"></i></div>
+                    <div class="setting-card-title">Welcome Email</div>
+                    <p class="setting-card-desc">Edit the automatic email sent when someone first joins the website.</p>
+                </a>
+            </div>
+
+            <div class="col-md-3 col-sm-6 mb-3">
+                <a href="{{ route('settings.vatis-download') }}" class="setting-card">
+                    <div class="setting-card-icon"><i class="fas fa-file-download"></i></div>
+                    <div class="setting-card-title">vATIS Download</div>
+                    <p class="setting-card-desc">Update the vATIS facility-file link shown under ATC Resources.</p>
+                </a>
+            </div>
+
+            <div class="col-md-3 col-sm-6 mb-3">
                 <a href="{{ route('settings.banner') }}" class="setting-card">
                     <div class="setting-card-icon"><i class="fas fa-bullhorn"></i></div>
                     <div class="setting-card-title">Banner Appearance</div>

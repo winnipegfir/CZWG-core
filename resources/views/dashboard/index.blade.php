@@ -870,17 +870,15 @@
                 <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
             </div>
             <div class="modal-body">
-                @foreach($confirmedevent as $cevent)
-                    @foreach($unconfirmedapp as $uapp)
-                        @if($cevent->name == $uapp->event->name)
-                            <p class="font-weight-bold mb-1">{{ $cevent->name }} <span class="font-weight-normal text-muted">&mdash; {{ $cevent->start_timestamp_pretty() }}</span></p>
-                            <p class="mb-2 ml-2" style="font-size:0.875rem;">
-                                <strong>Requested:</strong> {{ $uapp->position }}
-                                &mdash; {{ $uapp->start_availability_timestamp }}z &ndash; {{ $uapp->end_availability_timestamp }}z
-                            </p>
-                        @endif
-                    @endforeach
-                @endforeach
+                @forelse($unconfirmedapp as $uapp)
+                    <p class="font-weight-bold mb-1">{{ $uapp->event->name }} <span class="font-weight-normal text-muted">&mdash; {{ $uapp->event->start_timestamp_pretty() }}</span></p>
+                    <p class="mb-2 ml-2" style="font-size:0.875rem;">
+                        <strong>Requested:</strong> {{ $uapp->position }}
+                        &mdash; {{ $uapp->start_availability_timestamp }}z &ndash; {{ $uapp->end_availability_timestamp }}z
+                    </p>
+                @empty
+                    <p class="mb-0 text-muted">You have no pending event applications.</p>
+                @endforelse
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>

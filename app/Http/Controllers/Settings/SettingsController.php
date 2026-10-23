@@ -7,6 +7,7 @@ use App\Models\Settings\AuditLogEntry;
 use App\Models\Settings\CoreSettings;
 use App\Models\Settings\HomepageImages;
 use App\Models\Settings\HomepageTown;
+use App\Models\Publications\AtcResource;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Spatie\Permission\Models\Role;
@@ -110,6 +111,64 @@ class SettingsController extends Controller
 
         //Return the view
         return view('admin.settings.emails', compact('coreSettings'))->with('success', 'Emails saved');
+    }
+
+    public function welcomeEmail()
+    {
+        $coreSettings = CoreSettings::findOrFail(1);
+
+        return view('admin.settings.welcome-email', compact('coreSettings'));
+    }
+
+    public function saveWelcomeEmail(Request $request)
+    {
+        $data = $request->validate([
+            'welcome_email_subject' => ['required', 'string', 'max:180'],
+            'welcome_email_body' => ['required', 'string', 'max:10000'],
+            'welcome_email_signature' => ['required', 'string', 'max:2000'],
+        ]);
+
+        $coreSettings = CoreSettings::findOrFail(1);
+        $coreSettings->welcome_email_enabled = $request->boolean('welcome_email_enabled');
+        $coreSettings->welcome_email_subject = trim($data['welcome_email_subject']);
+        $coreSettings->welcome_email_body = trim($data['welcome_email_body']);
+        $coreSettings->welcome_email_signature = trim($data['welcome_email_signature']);
+        $coreSettings->save();
+
+        return back()->withSuccess('Welcome email settings updated.');
+    }
+
+    public function vatisDownload()
+    {
+        $vatisResource = AtcResource::query()
+            ->whereRaw('LOWER(title) LIKE ?', ['%vatis%'])
+            ->first();
+
+        return view('admin.settings.vatis-download', compact('vatisResource'));
+    }
+
+    public function saveVatisDownload(Request $request)
+    {
+        $data = $request->validate([
+            'vatis_url' => ['required', 'url', 'max:2048'],
+        ]);
+
+        $vatisResource = AtcResource::query()
+            ->whereRaw('LOWER(title) LIKE ?', ['%vatis%'])
+            ->first();
+
+        if (! $vatisResource) {
+            $vatisResource = new AtcResource([
+                'title' => 'vATIS Facility Files (Right-Click "Save Link As")',
+                'description' => 'Current Winnipeg FIR vATIS facility profile.',
+                'atc_only' => 1,
+            ]);
+        }
+
+        $vatisResource->url = $data['vatis_url'];
+        $vatisResource->save();
+
+        return back()->withSuccess('vATIS download link updated.');
     }
 
     /*
