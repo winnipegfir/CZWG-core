@@ -1,0 +1,321 @@
+<?php
+
+namespace App\Http\Controllers\Settings;
+
+use App\Http\Controllers\Controller;
+use App\Models\Settings\AuditLogEntry;
+use App\Models\Settings\CoreSettings;
+use App\Models\Settings\HomepageImages;
+use App\Models\Settings\HomepageTown;
+use App\Models\Publications\AtcResource;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use Spatie\Permission\Models\Role;
+
+class SettingsController extends Controller
+{
+    public function index()
+    {
+        return view('admin.settings.index');
+    }
+
+
+    public function academyDeployment()
+    {
+        $coreSettings = CoreSettings::find(1);
+
+        return view('admin.settings.academy-deployment', compact('coreSettings'));
+    }
+
+    public function saveAcademyDeployment(Request $request)
+    {
+        $coreSettings = CoreSettings::find(1);
+        abort_unless($coreSettings, 500, 'Core settings record is missing.');
+
+        $mode = $request->input('academy_access_mode', 'admin');
+        if (! in_array($mode, ['admin', 'staff', 'normal'], true)) {
+            $mode = 'admin';
+        }
+
+        $coreSettings->academy_access_mode = $mode;
+        $coreSettings->academy_maintenance_mode = $request->boolean('academy_maintenance_mode');
+
+        // Keep the v24 fields synchronized for backwards compatibility with any cached/older views.
+        $coreSettings->academy_preview_mode = $mode !== 'normal';
+        $coreSettings->academy_staff_access_enabled = in_array($mode, ['staff', 'normal'], true);
+        $coreSettings->academy_nav_enabled = true;
+        $coreSettings->save();
+
+        return back()->withSuccess('Academy deployment settings updated.');
+    }
+
+    /*
+    Site info
+    */
+    public function siteInformation()
+    {
+        //Get the settings
+        $coreSettings = CoreSettings::find(1);
+
+        //Return the view
+        return view('admin.settings.siteinformation', compact('coreSettings'));
+    }
+
+    /*
+    Save site info
+    */
+    public function saveSiteInformation(Request $request)
+    {
+        //Get the settings
+        $coreSettings = CoreSettings::find(1);
+
+        //Save changes
+        $coreSettings->sys_name = $request->get('sys_name');
+        $coreSettings->release = $request->get('release');
+        $coreSettings->sys_build = $request->get('sys_build');
+        $coreSettings->copyright_year = $request->get('copyright_year');
+        $coreSettings->save();
+
+        //Return the view
+        return view('admin.settings.siteinformation', compact('coreSettings'))->with('success', 'Settings saved');
+    }
+
+    /*
+    Emails
+    */
+    public function emails()
+    {
+        //Get settings
+        $coreSettings = CoreSettings::find(1);
+
+        //Return the view
+        return view('admin.settings.emails', compact('coreSettings'));
+    }
+
+    /*
+    Save emails
+    */
+    public function saveEmails(Request $request)
+    {
+        //Get the settings
+        $coreSettings = CoreSettings::find(1);
+
+        //Save changes
+        $coreSettings->emailfirchief = $request->get('emailfirchief');
+        $coreSettings->emaildepfirchief = $request->get('emaildepfirchief');
+        $coreSettings->emailcinstructor = $request->get('emailcinstructor');
+        $coreSettings->emaileventc = $request->get('emaileventc');
+        $coreSettings->emailfacilitye = $request->get('emailfacilitye');
+        $coreSettings->emailwebmaster = $request->get('emailwebmaster');
+        $coreSettings->save();
+
+        //Return the view
+        return view('admin.settings.emails', compact('coreSettings'))->with('success', 'Emails saved');
+    }
+
+    public function welcomeEmail()
+    {
+        $coreSettings = CoreSettings::findOrFail(1);
+
+        return view('admin.settings.welcome-email', compact('coreSettings'));
+    }
+
+    public function saveWelcomeEmail(Request $request)
+    {
+        $data = $request->validate([
+            'welcome_email_subject' => ['required', 'string', 'max:180'],
+            'welcome_email_body' => ['required', 'string', 'max:10000'],
+            'welcome_email_signature' => ['required', 'string', 'max:2000'],
+        ]);
+
+        $coreSettings = CoreSettings::findOrFail(1);
+        $coreSettings->welcome_email_enabled = $request->boolean('welcome_email_enabled');
+        $coreSettings->welcome_email_subject = trim($data['welcome_email_subject']);
+        $coreSettings->welcome_email_body = trim($data['welcome_email_body']);
+        $coreSettings->welcome_email_signature = trim($data['welcome_email_signature']);
+        $coreSettings->save();
+
+        return back()->withSuccess('Welcome email settings updated.');
+    }
+
+    public function vatisDownload()
+    {
+        $vatisResource = AtcResource::query()
+            ->whereRaw('LOWER(title) LIKE ?', ['%vatis%'])
+            ->first();
+
+        return view('admin.settings.vatis-download', compact('vatisResource'));
+    }
+
+    public function saveVatisDownload(Request $request)
+    {
+        $data = $request->validate([
+            'vatis_url' => ['required', 'url', 'max:2048'],
+        ]);
+
+        $vatisResource = AtcResource::query()
+            ->whereRaw('LOWER(title) LIKE ?', ['%vatis%'])
+            ->first();
+
+        if (! $vatisResource) {
+            $vatisResource = new AtcResource([
+                'title' => 'vATIS Facility Files (Right-Click "Save Link As")',
+                'description' => 'Current Winnipeg FIR vATIS facility profile.',
+                'atc_only' => 1,
+            ]);
+        }
+
+        $vatisResource->url = $data['vatis_url'];
+        $vatisResource->save();
+
+        return back()->withSuccess('vATIS download link updated.');
+    }
+
+    /*
+    Audit log
+    */
+    public function auditLog()
+    {
+        $entriesall = AuditLogEntry::all();
+        $entries = $entriesall->sortByDesc('created_at');
+
+        return view('admin.settings.auditlog', compact('entries'));
+    }
+
+    public function banner()
+    {
+        $banner = CoreSettings::find(1);
+
+        return view('admin.settings.banner', compact('banner'));
+    }
+
+    public function bannerEdit(Request $request)
+    {
+        $data = $request->validate([
+            'bannerMessage' => [Rule::requiredIf($request->boolean('bannerEnabled')), 'nullable', 'string', 'max:240'],
+            'bannerLink' => ['nullable', 'string', 'max:2048', function ($attribute, $value, $fail) {
+                if ($value !== null && $value !== '' && ! preg_match('~^(?:https?://|/(?!/))~i', $value)) {
+                    $fail('The banner link must begin with https://, http://, or /.');
+                }
+            }],
+            'bannerTheme' => ['required', Rule::in(['winnipeg', 'prairie_gold', 'manitoba_sky', 'aurora', 'success', 'warning', 'urgent'])],
+            'bannerAnimation' => ['required', Rule::in(['none', 'gold_swoop', 'shimmer', 'aurora', 'gentle_pulse'])],
+            'bannerIcon' => ['required', Rule::in(['bullhorn', 'star', 'plane', 'info', 'calendar', 'none'])],
+        ]);
+
+        $coreSettings = CoreSettings::findOrFail(1);
+        $coreSettings->banner = trim((string) ($data['bannerMessage'] ?? ''));
+        $coreSettings->bannerLink = trim((string) ($data['bannerLink'] ?? ''));
+        $coreSettings->bannerEnabled = $request->boolean('bannerEnabled');
+        $coreSettings->bannerTheme = $data['bannerTheme'];
+        $coreSettings->bannerAnimation = $data['bannerAnimation'];
+        $coreSettings->bannerIcon = $data['bannerIcon'];
+        $coreSettings->bannerOpenNewTab = $request->boolean('bannerOpenNewTab');
+        $coreSettings->save();
+
+        return back()->withSuccess('Banner appearance updated. The saved design is now active across the website.');
+    }
+
+    public function imagesIndex()
+    {
+        $images = HomepageImages::all();
+
+        return view('admin.settings.homepageimages', compact('images'));
+    }
+
+    public function uploadImage(Request $request)
+    {
+        $this->validate($request, [
+            'URL' => 'required',
+            'nameCredit' => 'required',
+        ]);
+
+        $image = new HomepageImages();
+        $image->url = $request->URL;
+        $image->credit = $request->nameCredit;
+        $image->css = $request->CSS;
+        $image->save();
+
+        return back()->withSuccess('Image uploaded successfully!');
+    }
+
+    public function editImage(Request $request, $id)
+    {
+        $this->validate($request, [
+            'URL' => 'required',
+            'nameCredit' => 'required',
+        ]);
+
+        $image = HomepageImages::where('id', $id)->first();
+        $image->url = $request->URL;
+        $image->credit = $request->nameCredit;
+        $image->CSS = $request->CSS;
+        $image->save();
+
+        return back()->withSuccess('Image edited successfully!');
+    }
+
+    public function testImage($id)
+    {
+        $image = HomepageImages::where('id', $id)->first();
+
+        return view('admin.settings.testimage', compact('image'));
+    }
+
+    public function deleteImage($id)
+    {
+        $image = HomepageImages::where('id', $id)->first();
+        $image->delete();
+
+        return back()->withSuccess('Image deleted successfully!');
+    }
+
+    public function townsIndex()
+    {
+        $towns = HomepageTown::orderBy('name')->get();
+        return view('admin.settings.hometowns', compact('towns'));
+    }
+
+    public function addTown(Request $request)
+    {
+        $this->validate($request, ['name' => 'required|max:60']);
+        HomepageTown::create([
+            'name' => $request->name,
+            'icao' => strtoupper($request->icao) ?: null,
+        ]);
+        return back()->withSuccess('Town added!');
+    }
+
+    public function deleteTown($id)
+    {
+        HomepageTown::findOrFail($id)->delete();
+        return back()->withSuccess('Town removed!');
+    }
+
+    public function viewRoles()
+    {
+        $roles = Role::all();
+
+        return view('admin.settings.roles', compact('roles'));
+    }
+
+    public function addRole(Request $request)
+    {
+        $check = Role::where('name', $request->input('name'))->first();
+        if ($check != null) {
+            return back()->withError('This role already exists!');
+        }
+        $role = Role::create(['name' => $request->input('name'), 'protected' => $request->input('secure')]);
+
+        return back()->withSuccess('Added the role!');
+    }
+
+    public function deleteRole($id)
+    {
+        $role = Role::findByName($id);
+        $message = $role->name;
+        $role->delete();
+
+        return back()->withSuccess('Deleted the '.$message.' Role!');
+    }
+}
