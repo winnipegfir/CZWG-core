@@ -1,0 +1,17 @@
+.academy-nav-item { display: flex; align-items: center; gap: 3px; }
+.academy-launch-notice[hidden] { display: none !important; }
+.academy-launch-notice {
+    display: inline-block;
+    flex-shrink: 0;
+    padding: 3px 6px;
+    margin-right: 8px;
+    border-radius: 4px;
+    background: #d5eee7;
+    color: #195d50;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: .02em;
+    vertical-align: middle;
+}
+html[data-theme="dark"] .academy-launch-notice { background: #254e49; color: #b6e9db; }

@@ -125,6 +125,8 @@ if (app()->environment('local')) {
 
 //Base level authentication
 Route::group(['middleware' => 'auth'], function () {
+    Route::post('/academy/launch-notice', 'Academy\AcademyLaunchNoticeController@update')->name('academy.launch-notice');
+
     // Winnipeg Training Academy: accepted FIR members only.
     Route::prefix('academy')->middleware(['atc', 'academy.visible'])->group(function () {
         Route::get('/', 'Academy\AcademyController@index')->name('academy.index');
@@ -369,10 +371,8 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/site-information', 'Settings\SettingsController@saveSiteInformation')->name('settings.siteinformation.post');
             Route::get('/emails', 'Settings\SettingsController@emails')->name('settings.emails');
             Route::post('/emails', 'Settings\SettingsController@saveEmails')->name('settings.emails.post');
-            Route::get('/welcome-email', 'Settings\SettingsController@welcomeEmail')->name('settings.welcome-email');
-            Route::post('/welcome-email', 'Settings\SettingsController@saveWelcomeEmail')->name('settings.welcome-email.save');
-            Route::get('/vatis-download', 'Settings\SettingsController@vatisDownload')->name('settings.vatis-download');
-            Route::post('/vatis-download', 'Settings\SettingsController@saveVatisDownload')->name('settings.vatis-download.save');
+            Route::get('/communications', 'Settings\SettingsController@communications')->name('settings.communications');
+            Route::post('/communications', 'Settings\SettingsController@saveCommunications')->name('settings.communications.save');
             Route::get('/academy-deployment', 'Settings\SettingsController@academyDeployment')->name('settings.academy.deployment');
             Route::post('/academy-deployment', 'Settings\SettingsController@saveAcademyDeployment')->name('settings.academy.deployment.save');
             Route::get('/audit-log', 'Settings\SettingsController@auditLog')->name('settings.auditlog');
