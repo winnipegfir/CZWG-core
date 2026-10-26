@@ -167,12 +167,109 @@ $status = $statusMap[$training_time->colour] ?? $statusMap['grey'];
 @media (max-width: 600px) {
     .training-hero h1 { font-size: 1.8rem; }
 }
+
+/* Public training page refresh; wait-time colours and editor remain unchanged. */
+.training-wrap .training-hero {
+    position: relative;
+    overflow: hidden;
+    background: #122b44;
+    isolation: isolate;
+    border-radius: 16px;
+    padding: 2.4rem 2.2rem;
+    box-shadow: 0 10px 28px rgba(18, 43, 68, 0.10);
+}
+.training-wrap .training-hero-scope {
+    position: absolute;
+    inset: 0 0 0 auto;
+    width: 48%;
+    clip-path: polygon(24% 0, 100% 0, 100% 100%, 0 100%);
+    z-index: -1;
+    pointer-events: none;
+}
+.training-wrap .training-hero-scope img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+.training-wrap .training-hero-scope::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(105deg, rgba(18,43,68,0.82), rgba(9,23,39,0.42));
+}
+.training-wrap .training-hero h1 {
+    color: #fff;
+    letter-spacing: -0.035em;
+    position: relative;
+    max-width: 70%;
+}
+.training-wrap .training-hero p { color: #d9e6ef; position: relative; max-width: 57%; }
+@media (max-width: 767px) {
+    .training-wrap .training-hero h1,
+    .training-wrap .training-hero p { max-width: 100%; }
+    .training-wrap .training-hero-scope { width: 55%; }
+    .training-wrap .training-hero-scope::after {
+        background: linear-gradient(105deg, rgba(18,43,68,0.95), rgba(9,23,39,0.72));
+    }
+}
+.training-wrap .section-label { color: #52667a; }
+.training-wrap .academy-feature {
+    background: #fff;
+    border: 1px solid #e0e7ed;
+    border-left: 4px solid #248378;
+    border-radius: 12px;
+    padding: 1.7rem 1.8rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 18px rgba(18,43,68,0.04);
+}
+.training-wrap .academy-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: #1a675e;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.65rem;
+}
+.training-wrap .academy-feature h2 {
+    color: #122b44;
+    font-size: 1.45rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0 0 0.8rem;
+}
+.training-wrap .academy-feature p { color: #495057; font-size: 0.925rem; line-height: 1.8; margin: 0; }
+.training-wrap .academy-feature p + p { margin-top: 0.75rem; }
+.training-wrap .training-card { border-radius: 12px; }
+.training-wrap .join-cta-big:focus-visible { outline: 3px solid #248378; outline-offset: 3px; }
+html[data-theme="dark"] .training-wrap { background: #161e28; }
+html[data-theme="dark"] .training-wrap .academy-feature,
+html[data-theme="dark"] .training-wrap .training-card { background: #1e2b3a; border-color: #35495c; }
+html[data-theme="dark"] .training-wrap .academy-feature { border-left-color: #5fc6b5; }
+html[data-theme="dark"] .training-wrap .academy-feature h2,
+html[data-theme="dark"] .training-wrap .training-card h3 { color: #edf4fa; }
+html[data-theme="dark"] .training-wrap .academy-feature p,
+html[data-theme="dark"] .training-wrap .training-card p,
+html[data-theme="dark"] .training-wrap .section-label,
+html[data-theme="dark"] .training-wrap .training-footer .muted-link { color: #c2cdd8; }
+html[data-theme="dark"] .training-wrap .academy-eyebrow { color: #8ad8ca; }
+@media (max-width: 600px) {
+    .training-wrap .training-hero { padding: 1.7rem 1.3rem; }
+    .training-wrap .academy-feature { padding: 1.3rem; }
+    .training-wrap .academy-feature h2 { font-size: 1.25rem; }
+}
 </style>
 
 <div class="training-wrap">
 <div class="container training-container">
 
     <div class="training-hero">
+        <div class="training-hero-scope" aria-hidden="true">
+            <img src="{{ asset('images/training/winnipeg-radar-scope.png') }}" alt="" width="991" height="320">
+        </div>
         <h1>Controller Training</h1>
         <p>Everything you need to know about getting on the scope at the Winnipeg FIR — our training platform, wait times, and what to expect.</p>
     </div>
@@ -196,9 +293,12 @@ $status = $statusMap[$training_time->colour] ?? $statusMap['grey'];
         @endif
     </div>
     
-    <h3 style="font-size:1.05rem;font-weight:700;color:#122b44;margin:0 0 0.6rem;">Training, on Your Schedule</h3>
-    <p style="font-size:0.875rem;color:#495057;line-height:1.7;margin:0;">For many years, VATSIM controllers-to-be had the same pathway to getting on the scope — join a FIR, then wait for an instructor to become available. That causes bottlenecks, and the Winnipeg team built <a href="https://training.winnipegfir.ca" target="_blank" rel="noopener noreferrer" style="color:#122b44;font-weight:600;">Winnipeg365</a> to fix that: a state-of-the-art online training platform built for both students and instructors.</p>
-    <p style="font-size:0.875rem;color:#495057;line-height:1.7;margin:0.6rem 0 2rem;">Once accepted into the FIR — typically only a few days — you're automatically enrolled and can get right into the fundamentals: the laws of aviation, taxiing, aircraft types, and more. You'll still need to wait for an instructor before controlling live on the network, but Winnipeg365 speeds that process up for everyone.</p>
+    <section class="academy-feature" aria-labelledby="academy-training-title">
+        <span class="academy-eyebrow"><i class="fas fa-graduation-cap" aria-hidden="true"></i> Winnipeg Academy</span>
+        <h2 id="academy-training-title">Training, on Your Schedule</h2>
+        <p>Winnipeg Academy brings self-paced controller learning directly into the Winnipeg FIR website. Work through your training material, build your knowledge, and prepare for practical sessions with an instructor &mdash; all in one place, at your own pace.</p>
+        <p>While you wait to be linked with an instructor, you can focus on the foundations and arrive better prepared for your next step. Self-paced learning complements instructor-led training; you'll still need the required instruction and authorization before controlling live on the network.</p>
+    </section>
 
     <div style="display:flex;gap:1rem;margin-bottom:1rem;flex-wrap:wrap;">
         <div class="training-card" style="flex:1;min-width:220px;margin-bottom:0;">

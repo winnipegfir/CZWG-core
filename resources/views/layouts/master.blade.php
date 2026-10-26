@@ -165,8 +165,9 @@
 
                         {{-- Academy is visible only to accepted FIR members. --}}
                         @if(\App\Services\AcademyVisibility::shouldShowNav(Auth::user()))
-                            <li class="nav-item {{ Request::is('academy') || Request::is('academy/*') ? 'active' : '' }}">
-                                <a href="{{ route('academy.index') }}" class="nav-link">Academy</a>
+                            <li class="nav-item academy-nav-item {{ Request::is('academy') || Request::is('academy/*') ? 'active' : '' }}">
+                                <a href="{{ route('academy.index') }}" class="nav-link" data-academy-nav-link>Academy</a>
+                                @include('partials.academy-launch-notice')
                             </li>
                         @endif
 
