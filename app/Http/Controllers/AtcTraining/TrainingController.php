@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\DB;
 
 class TrainingController extends Controller
 {
+    private const ARCHIVED_STUDENT_STATUS = 2;
     public function index()
     {
         $user = Auth::user();
@@ -26,7 +27,7 @@ class TrainingController extends Controller
             $yourStudents = Student::where('instructor_id', $instructor->id)->get();
         }
 
-        $longestWaiting = Student::whereNull('instructor_id')
+        $longestWaiting = Student::where('status', '!=', self::ARCHIVED_STUDENT_STATUS)->whereNull('instructor_id')
             ->whereNotNull('waitlist_added_at')
             ->orderBy('waitlist_added_at', 'asc')
             ->first();
@@ -34,9 +35,9 @@ class TrainingController extends Controller
         $recentActivity = Student::orderBy('updated_at', 'desc')->limit(5)->get();
 
         $waitlistBreakdown = [
-            'home'     => Student::whereNull('instructor_id')->where('entry_type', 'New Student')->count(),
-            'visiting' => Student::whereNull('instructor_id')->where('entry_type', 'New Visitor')->count(),
-            'transfer' => Student::whereNull('instructor_id')->where('entry_type', 'New Transfer')->count(),
+            'home'     => Student::where('status', '!=', self::ARCHIVED_STUDENT_STATUS)->whereNull('instructor_id')->where('entry_type', 'New Student')->count(),
+            'visiting' => Student::where('status', '!=', self::ARCHIVED_STUDENT_STATUS)->whereNull('instructor_id')->where('entry_type', 'New Visitor')->count(),
+            'transfer' => Student::where('status', '!=', self::ARCHIVED_STUDENT_STATUS)->whereNull('instructor_id')->where('entry_type', 'New Transfer')->count(),
         ];
 
         return view('dashboard.training.indexinstructor', compact('yourStudents', 'longestWaiting', 'recentActivity', 'waitlistBreakdown'));
@@ -73,7 +74,7 @@ class TrainingController extends Controller
             ->filter(fn($s) => !$vatcanLinkedCids->has($s->user_id));
 
         // New: students in our system (waitlist or linked) not on the VATCAN roster at all
-        $studentsNotOnRoster = Student::all()
+        $studentsNotOnRoster = Student::where('status', '!=', self::ARCHIVED_STUDENT_STATUS)->get()
             ->filter(fn($s) => !$allVatcanCids->has($s->user_id));
 
         // New: VATCAN roster members not in our training system at all
@@ -209,7 +210,7 @@ class TrainingController extends Controller
             : (int) $request->input('student_id');
 
         $check = Student::where('user_id', $userId)->first();
-        if ($check != null) {
+        if ($check != null && (int) $check->status !== self::ARCHIVED_STUDENT_STATUS) {
             return redirect()->back()->withError('This student already exists in the system!');
         }
 
@@ -225,15 +226,28 @@ class TrainingController extends Controller
             return redirect()->back()->withError('CID ' . $userId . ' is not on the CZWG home roster. If they are visiting, add them as "New Visitor".');
         }
 
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        $student = Student::create([
-            'user_id'            => $userId,
-            'status'             => '0',
-            'last_status_change' => Carbon::now()->toDateTimeString(),
-            'entry_type'         => $request->input('entry_type'),
-            'waitlist_added_at'  => Carbon::now(),
-        ]);
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        if ($check) {
+            $student = $check;
+            $student->fill([
+                'user_id'            => $userId,
+                'status'             => '0',
+                'last_status_change' => Carbon::now()->toDateTimeString(),
+                'entry_type'         => $request->input('entry_type'),
+                'waitlist_added_at'  => Carbon::now(),
+            ]);
+            $student->instructor_id = null;
+            $student->saveOrFail();
+        } else {
+            DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+            $student = Student::create([
+                'user_id'            => $userId,
+                'status'             => '0',
+                'last_status_change' => Carbon::now()->toDateTimeString(),
+                'entry_type'         => $request->input('entry_type'),
+                'waitlist_added_at'  => Carbon::now(),
+            ]);
+            DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        }
 
         $name = $student->user ? $student->user->fullName('FLC') : 'CID ' . $userId;
 
@@ -289,7 +303,7 @@ class TrainingController extends Controller
             : (int) $request->input('student_id');
 
         $check = Student::where('user_id', $userId)->first();
-        if ($check != null) {
+        if ($check != null && (int) $check->status !== self::ARCHIVED_STUDENT_STATUS) {
             return redirect()->back()->withError('This student already exists in the system!');
         }
 
@@ -305,16 +319,30 @@ class TrainingController extends Controller
             return redirect()->back()->withError('CID ' . $userId . ' is not on the CZWG home roster. If they are visiting, add them as "New Visitor".');
         }
 
-        DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-        $student = Student::create([
-            'user_id'            => $userId,
-            'status'             => '1',
-            'instructor_id'      => $request->input('instructor_id') ?: null,
-            'last_status_change' => Carbon::now()->toDateTimeString(),
-            'entry_type'         => $request->input('entry_type'),
-            'waitlist_added_at'  => null,
-        ]);
-        DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        if ($check) {
+            $student = $check;
+            $student->fill([
+                'user_id'            => $userId,
+                'status'             => '1',
+                'instructor_id'      => $request->input('instructor_id') ?: null,
+                'last_status_change' => Carbon::now()->toDateTimeString(),
+                'entry_type'         => $request->input('entry_type'),
+                'waitlist_added_at'  => null,
+            ]);
+            $student->instructor_id = $request->input('instructor_id') ?: null;
+            $student->saveOrFail();
+        } else {
+            DB::statement('SET FOREIGN_KEY_CHECKS=0;');
+            $student = Student::create([
+                'user_id'            => $userId,
+                'status'             => '1',
+                'instructor_id'      => $request->input('instructor_id') ?: null,
+                'last_status_change' => Carbon::now()->toDateTimeString(),
+                'entry_type'         => $request->input('entry_type'),
+                'waitlist_added_at'  => null,
+            ]);
+            DB::statement('SET FOREIGN_KEY_CHECKS=1;');
+        }
 
         if ($student->instructor_id && $student->instructor) {
             (new VatcanService)->assignInstructor($student->user_id, $student->instructor->user->id, Auth::id());
@@ -338,7 +366,7 @@ class TrainingController extends Controller
     {
         $filter = $request->input('filter', 'all');
 
-        $query = Student::whereNull('instructor_id')
+        $query = Student::where('status', '!=', self::ARCHIVED_STUDENT_STATUS)->whereNull('instructor_id')
             ->orderByRaw('waitlist_added_at IS NULL ASC')
             ->orderBy('waitlist_added_at', 'asc');
 
@@ -459,23 +487,66 @@ class TrainingController extends Controller
 
     public function bulkRemoveStudents(Request $request)
     {
-        $ids = $request->input('student_ids', []);
-        if (!empty($ids)) {
-            Student::whereIn('id', $ids)->delete();
+        $request->validate([
+            'student_ids' => 'required|array|min:1',
+            'student_ids.*' => 'required|integer|distinct|exists:students,id',
+        ]);
+
+        $ids = $request->input('student_ids');
+        $count = DB::transaction(function () use ($ids) {
+            $students = Student::whereIn('id', $ids)->lockForUpdate()->get();
+            // A linked student must be unlinked first so VATCAN is synchronized.
+            if ($students->contains(fn($student) => $student->instructor_id !== null)) {
+                return null;
+            }
+
+            $count = 0;
+            foreach ($students as $student) {
+                if ((int) $student->status !== self::ARCHIVED_STUDENT_STATUS) {
+                    $this->archiveWaitlistStudent($student);
+                    $count++;
+                }
+            }
+
+            return $count;
+        });
+
+        if ($count === null) {
+            return redirect()->back()->withError('Unlink assigned students before removing them. No students were removed.');
         }
 
-        return redirect()->back()->withSuccess(count($ids) . ' student(s) removed from the training system.');
+        return redirect()->back()->withSuccess($count . ' student(s) removed from the waitlist. Training history preserved.');
     }
 
     public function removeStudent($id)
     {
-        $student = Student::where('id', $id)->firstOrFail();
+        $result = DB::transaction(function () use ($id) {
+            $student = Student::where('id', $id)->lockForUpdate()->firstOrFail();
+            if ($student->instructor_id !== null) {
+                return null;
+            }
 
-        $name = $student->user ? $student->user->fullName('FLC') : 'CID ' . $student->user_id;
-        $student->delete();
+            $name = $student->user ? $student->user->fullName('FLC') : 'CID ' . $student->user_id;
+            $this->archiveWaitlistStudent($student);
+
+            return $name;
+        });
+
+        if ($result === null) {
+            return redirect()->back()->withError('Unlink this student from their instructor before removing them from the waitlist.');
+        }
 
         return redirect()->route('training.students.waitlist')
-            ->withSuccess('Removed ' . $name . ' from the training system.');
+            ->withSuccess('Removed ' . $result . ' from the waitlist. Training history preserved.');
+    }
+
+    private function archiveWaitlistStudent(Student $student): void
+    {
+        $student->status = self::ARCHIVED_STUDENT_STATUS;
+        $student->waitlist_added_at = null;
+        $student->mentorable = false;
+        $student->last_status_change = Carbon::now()->toDateTimeString();
+        $student->saveOrFail();
     }
 
     public function assignInstructorToStudent(Request $request, $id)
@@ -506,18 +577,31 @@ class TrainingController extends Controller
         }
 
         $name = $student->user ? $student->user->fullName('FLC') : 'CID ' . $student->user_id;
-        $vatcan->unassignInstructor($student->user_id);
+        $studentName = $student->user ? $student->user->fullName('FL') : 'CID ' . $student->user_id;
+
+        // Unlink the pairing without deleting the record referenced by training history.
+        $student->instructor_id = null;
+        $student->status = '0';
+        $student->last_status_change = Carbon::now()->toDateTimeString();
+        $student->waitlist_added_at = Carbon::now();
+        $student->saveOrFail();
+
+        $vatcanUnassigned = $vatcan->unassignInstructor($student->user_id);
 
         (new DiscordTrainingWebhook)->studentUnlinked(
-            $student->user ? $student->user->fullName('FL') : 'CID ' . $student->user_id,
+            $studentName,
             $student->user_id,
             Auth::user()->fullName('FL')
         );
 
-        $student->delete();
+        $response = redirect()->route('training.students.current')
+            ->withSuccess('Unlinked ' . $name . ' from their instructor and returned them to the waitlist.');
 
-        return redirect()->route('training.students.current')
-            ->withSuccess('Unlinked and removed ' . $name . ' from the training system.');
+        if (!$vatcanUnassigned) {
+            $response->withError('The local pairing was removed, but VATCAN did not confirm the unlink. Check the VATCAN assignment and retry synchronization.');
+        }
+
+        return $response;
     }
 
     public function assignExam(Request $request)

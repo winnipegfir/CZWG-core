@@ -25,7 +25,9 @@
             </p>
         </div>
         <div class="ml-auto text-right">
-            @if($student->instructor_id)
+            @if((int) $student->status === 2)
+                <span class="badge badge-secondary">Archived</span>
+            @elseif($student->instructor_id)
                 <span style="background:#dcfce7; color:#15803d; font-size:0.8rem; font-weight:700; padding:0.3em 0.75em; border-radius:0.4rem;">Linked</span>
             @else
                 <span style="background:#fef3c7; color:#92400e; font-size:0.8rem; font-weight:700; padding:0.3em 0.75em; border-radius:0.4rem;">Waitlisted</span>
@@ -207,7 +209,7 @@
                 <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
             </div>
             <div class="modal-body">
-                <p style="font-size:0.875rem;">Are you sure you want to remove <strong>{{ $student->user ? $student->user->fullName('FL') : 'CID ' . $student->user_id }}</strong> from the training system? This cannot be undone.</p>
+                <p style="font-size:0.875rem;">Are you sure you want to remove <strong>{{ $student->user ? $student->user->fullName('FL') : 'CID ' . $student->user_id }}</strong> from the waitlist? Training history will be preserved. You can add them again later.</p>
             </div>
             <div class="modal-footer" style="border-top:1px solid #e9ecef;">
                 <button type="button" class="btn btn-light btn-sm" data-dismiss="modal">Cancel</button>

@@ -56,11 +56,11 @@ class DiscordTrainingWebhook
     {
         $this->send([
             'embeds' => [[
-                'title'       => 'Student Unlinked & Removed',
-                'description' => "**{$studentName}** ({$studentCid}) was unlinked from their instructor and removed from the training system.",
+                'title'       => 'Student Unlinked',
+                'description' => "**{$studentName}** ({$studentCid}) was unlinked locally from their instructor and returned to the waitlist. Training history was preserved.",
                 'color'       => 0xef4444,
                 'fields'      => [
-                    ['name' => 'Removed by', 'value' => $removedBy, 'inline' => true],
+                    ['name' => 'Unlinked by', 'value' => $removedBy, 'inline' => true],
                 ],
                 'timestamp'   => now()->toIso8601String(),
             ]],
