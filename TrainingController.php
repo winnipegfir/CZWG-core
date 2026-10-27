@@ -20,10 +20,14 @@ class TrainingController extends Controller
     public function index()
     {
         $user = Auth::user();
+        $isInstructor = $user->isTrainingInstructor();
         $instructor = Instructor::where('user_id', $user->id)->first();
-        $yourStudents = null;
-        if ($instructor) {
+        if ($isInstructor && $instructor) {
             $yourStudents = Student::where('instructor_id', $instructor->id)->get();
+        } elseif (! $isInstructor) {
+            $yourStudents = Student::where('mentorable', true)->get();
+        } else {
+            $yourStudents = collect();
         }
 
         $longestWaiting = Student::whereNull('instructor_id')
@@ -31,7 +35,8 @@ class TrainingController extends Controller
             ->orderBy('waitlist_added_at', 'asc')
             ->first();
 
-        $recentActivity = Student::orderBy('updated_at', 'desc')->limit(5)->get();
+        $recentActivity = Student::when(! $isInstructor, fn ($query) => $query->where('mentorable', true))
+            ->orderBy('updated_at', 'desc')->limit(5)->get();
 
         $waitlistBreakdown = [
             'home'     => Student::whereNull('instructor_id')->where('entry_type', 'New Student')->count(),
@@ -506,31 +511,18 @@ class TrainingController extends Controller
         }
 
         $name = $student->user ? $student->user->fullName('FLC') : 'CID ' . $student->user_id;
-        $studentName = $student->user ? $student->user->fullName('FL') : 'CID ' . $student->user_id;
-
-        // Unlink the pairing without deleting the record referenced by training history.
-        $student->instructor_id = null;
-        $student->status = '0';
-        $student->last_status_change = Carbon::now()->toDateTimeString();
-        $student->waitlist_added_at = Carbon::now();
-        $student->saveOrFail();
-
-        $vatcanUnassigned = $vatcan->unassignInstructor($student->user_id);
+        $vatcan->unassignInstructor($student->user_id);
 
         (new DiscordTrainingWebhook)->studentUnlinked(
-            $studentName,
+            $student->user ? $student->user->fullName('FL') : 'CID ' . $student->user_id,
             $student->user_id,
             Auth::user()->fullName('FL')
         );
 
-        $response = redirect()->route('training.students.current')
-            ->withSuccess('Unlinked ' . $name . ' from their instructor and returned them to the waitlist.');
+        $student->delete();
 
-        if (!$vatcanUnassigned) {
-            $response->withError('The local pairing was removed, but VATCAN did not confirm the unlink. Check the VATCAN assignment and retry synchronization.');
-        }
-
-        return $response;
+        return redirect()->route('training.students.current')
+            ->withSuccess('Unlinked and removed ' . $name . ' from the training system.');
     }
 
     public function assignExam(Request $request)
