@@ -21,10 +21,14 @@ class TrainingController extends Controller
     public function index()
     {
         $user = Auth::user();
+        $isInstructor = $user->isTrainingInstructor();
         $instructor = Instructor::where('user_id', $user->id)->first();
-        $yourStudents = null;
-        if ($instructor) {
+        if ($isInstructor && $instructor) {
             $yourStudents = Student::where('instructor_id', $instructor->id)->get();
+        } elseif (! $isInstructor) {
+            $yourStudents = Student::where('mentorable', true)->get();
+        } else {
+            $yourStudents = collect();
         }
 
         $longestWaiting = Student::where('status', '!=', self::ARCHIVED_STUDENT_STATUS)->whereNull('instructor_id')
@@ -32,7 +36,8 @@ class TrainingController extends Controller
             ->orderBy('waitlist_added_at', 'asc')
             ->first();
 
-        $recentActivity = Student::orderBy('updated_at', 'desc')->limit(5)->get();
+        $recentActivity = Student::when(! $isInstructor, fn ($query) => $query->where('mentorable', true))
+            ->orderBy('updated_at', 'desc')->limit(5)->get();
 
         $waitlistBreakdown = [
             'home'     => Student::where('status', '!=', self::ARCHIVED_STUDENT_STATUS)->whereNull('instructor_id')->where('entry_type', 'New Student')->count(),

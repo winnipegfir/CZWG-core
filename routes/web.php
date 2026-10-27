@@ -375,6 +375,10 @@ Route::group(['middleware' => 'auth'], function () {
             Route::post('/communications', 'Settings\SettingsController@saveCommunications')->name('settings.communications.save');
             Route::get('/academy-deployment', 'Settings\SettingsController@academyDeployment')->name('settings.academy.deployment');
             Route::post('/academy-deployment', 'Settings\SettingsController@saveAcademyDeployment')->name('settings.academy.deployment.save');
+            Route::get('/welcome-email', 'Settings\SettingsController@welcomeEmail')->name('settings.welcome-email');
+            Route::post('/welcome-email', 'Settings\SettingsController@saveWelcomeEmail')->name('settings.welcome-email.save');
+            Route::get('/vatis-download', 'Settings\SettingsController@vatisDownload')->name('settings.vatis-download');
+            Route::post('/vatis-download', 'Settings\SettingsController@saveVatisDownload')->name('settings.vatis-download.save');
             Route::get('/audit-log', 'Settings\SettingsController@auditLog')->name('settings.auditlog');
             Route::get('/staff', 'Users\StaffListController@editIndex')->name('settings.staff');
             Route::post('/staff/{id}', 'Users\StaffListController@editStaffMember')->name('settings.staff.editmember');
@@ -424,8 +428,13 @@ Route::get('/training/sessions/{id}/discord-confirm', 'AtcTraining\TrainingSessi
     ->name('training.sessions.discordconfirm')
     ->middleware('signed');
 Route::post('/training', 'AtcTraining\TrainingController@editTrainingTime')->middleware('staff')->name('waittime.edit');
-Route::prefix('dashboard/training')->middleware('instructor')->group(function () {
+Route::prefix('dashboard/training')->middleware('mentor')->group(function () {
     Route::get('/', 'AtcTraining\TrainingController@index')->name('training.index');
+    Route::get('/instructors', 'AtcTraining\TrainingController@instructorsIndex')->name('training.instructors');
+    Route::get('/students/mentorable', 'AtcTraining\TrainingController@mentorableStudents')->name('training.students.mentorablelist');
+    Route::get('/students/{id}', 'AtcTraining\TrainingController@viewStudent')
+        ->where('id', '[0-9]+')
+        ->name('training.students.view');
 });
 
 // Booking providers manage their own availability; controller checks ownership.
@@ -443,18 +452,15 @@ Route::prefix('dashboard/training')->middleware('mentor')->group(function () {
 });
 
 Route::prefix('dashboard/training')->middleware('instructor')->group(function () {
-    Route::get('/instructors', 'AtcTraining\TrainingController@instructorsIndex')->name('training.instructors');
     Route::get('/reconcile', 'AtcTraining\TrainingController@reconcile')->name('training.reconcile');
     Route::get('/students/current', 'AtcTraining\TrainingController@currentStudents')->name('training.students.current');
     Route::get('/students/new', 'AtcTraining\TrainingController@newStudents')->name('training.students.new');
     Route::get('/students/completed', 'AtcTraining\TrainingController@completedStudents')->name('training.students.completed');
     Route::get('/students/waitlist', 'AtcTraining\TrainingController@newStudents')->name('training.students.waitlist');
-    Route::get('/students/mentorable', 'AtcTraining\TrainingController@mentorableStudents')->name('training.students.mentorablelist');
     Route::get('/students/check-membership', 'AtcTraining\TrainingController@checkMembership')->name('training.students.checkmembership');
     Route::post('/students/add', 'AtcTraining\TrainingController@newStudent')->name('instructor.student.add.new');
     Route::post('/students/add-linked', 'AtcTraining\TrainingController@newLinkedStudent')->name('training.students.add.linked');
     Route::post('/students/bulk-remove', 'AtcTraining\TrainingController@bulkRemoveStudents')->name('training.students.bulkremove');
-    Route::get('/students/{id}', 'AtcTraining\TrainingController@viewStudent')->name('training.students.view');
     Route::post('/students/{id}/assigninstructor', 'AtcTraining\TrainingController@assignInstructorToStudent')->name('training.students.assigninstructor');
     Route::post('/students/{id}/setstatus', 'AtcTraining\TrainingController@changeStudentStatus')->name('training.students.setstatus');
     Route::post('/students/{id}/activate', 'AtcTraining\TrainingController@activateWithInstructor')->name('training.students.activate');

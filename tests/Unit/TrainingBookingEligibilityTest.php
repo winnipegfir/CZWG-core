@@ -42,7 +42,8 @@ class TrainingBookingEligibilityTest extends TestCase
             'mentorable can book unassigned instructor' => [8, 2, true, true, true, false, false, true],
             'self booking mentor denied' => [5, 4, true, false, true, false, true, false],
             'self booking instructor denied' => [8, 4, true, true, true, true, true, false],
-            'supervisor rating not controller qualification' => [11, 2, true, false, true, false, false, false],
+            'supervisor with mentor role may train' => [11, 2, true, false, true, false, false, true],
+            'administrator is not included in supervisor exception' => [12, 2, true, false, true, false, false, false],
             'inactive student denied mentor' => [4, -1, true, false, true, false, false, false],
         ];
     }
