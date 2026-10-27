@@ -114,7 +114,7 @@
         <div class="{{ Auth::user()->permissions >= 4 ? 'col-md-6' : 'col-12' }} mb-4">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="font-weight-bold mb-3" style="color:#122b44;">Your Students</h5>
+                    <h5 class="font-weight-bold mb-3" style="color:#122b44;">{{ Auth::user()->isTrainingInstructor() ? 'Your Students' : 'Mentorable Students' }}</h5>
                     @if($yourStudents && $yourStudents->count() > 0)
                         @foreach($yourStudents as $student)
                         <a href="{{ route('training.students.view', $student->id) }}"
@@ -135,7 +135,7 @@
                         </a>
                         @endforeach
                     @else
-                        <p class="text-muted mb-0" style="font-size:0.875rem;">No students are assigned to you.</p>
+                        <p class="text-muted mb-0" style="font-size:0.875rem;">{{ Auth::user()->isTrainingInstructor() ? 'No students are assigned to you.' : 'No students are currently marked as mentorable.' }}</p>
                     @endif
                 </div>
             </div>

@@ -80,6 +80,42 @@ class MentorBookingTest extends TestCase
         $this->get(route('training.sessions.index'))->assertOk();
     }
 
+    public function test_mentor_can_open_read_only_training_management_pages(): void
+    {
+        $mentor = $this->account(910001, 2, 4);
+        $studentAccount = $this->account(910002, 1, 2);
+        $student = $this->student($studentAccount, true);
+
+        $this->actingAs($mentor)->get(route('training.index'))->assertOk();
+        $this->get(route('training.instructors'))->assertOk();
+        $this->get(route('training.students.mentorablelist'))->assertOk();
+        $this->get(route('training.students.view', $student->id))->assertOk();
+    }
+
+    public function test_mentor_cannot_open_instructor_only_waitlist(): void
+    {
+        $mentor = $this->account(910001, 2, 4);
+
+        $this->actingAs($mentor)
+            ->get(route('training.students.waitlist'))
+            ->assertForbidden();
+    }
+
+    public function test_supervisor_with_mentor_role_can_post_availability(): void
+    {
+        $supervisorMentor = $this->account(910001, 2, 11);
+
+        $this->actingAs($supervisorMentor)->post(route('training.sessions.store'), [
+            'start_time' => now()->addDays(2)->format('Y-m-d H:i:s'),
+            'end_time' => now()->addDays(2)->addHours(2)->format('Y-m-d H:i:s'),
+        ])->assertRedirect()->assertSessionHasNoErrors();
+
+        $this->assertDatabaseHas('training_sessions', [
+            'provider_user_id' => $supervisorMentor->id,
+            'status' => 'open',
+        ]);
+    }
+
     public function test_low_rated_mentor_and_staff_only_cannot_post(): void
     {
         $payload = ['start_time' => now()->addDay()->toDateTimeString(), 'end_time' => now()->addDay()->addHour()->toDateTimeString()];

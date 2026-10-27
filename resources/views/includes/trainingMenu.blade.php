@@ -1,12 +1,12 @@
 <div style="background:#272727; border-bottom:1px solid #1a1a1a;">
-    @php $trainingHomeRoute = Auth::user()->isTrainingInstructor() ? 'training.index' : 'training.sessions.index'; @endphp
+    @php $trainingHomeRoute = 'training.index'; @endphp
     <div class="container">
         <div class="d-flex align-items-center" style="min-height:38px; gap:0.25rem; padding:0.3rem 0;">
             <a href="{{ route($trainingHomeRoute) }}" style="color:#fff; font-weight:700; font-size:1rem; text-decoration:none; margin-right:0.5rem; white-space:nowrap; flex-shrink:0;">
                 Training
             </a>
             <nav class="training-subnav d-flex align-items-center" style="gap:0.1rem; flex-wrap:wrap; min-width:0;">
-                @if(Auth::user()->isTrainingInstructor())
+                @if(Auth::user()->isTrainingMentor())
                     <a href="{{ route($trainingHomeRoute) }}"
                        style="color:{{ Request::is('dashboard/training') ? '#fff' : 'rgba(255,255,255,0.6)' }}; font-size:0.85rem; padding:0.3rem 0.65rem; border-radius:0.3rem; text-decoration:none; white-space:nowrap; flex-shrink:0; {{ Request::is('dashboard/training') ? 'background:rgba(255,255,255,0.12);' : '' }}">
                         Home
@@ -28,7 +28,7 @@
                 </a>
                 @endif
 
-                @if(Auth::user()->isTrainingInstructor())
+                @if(Auth::user()->isTrainingMentor())
                 <a href="{{ route('training.instructors') }}"
                    style="color:{{ Request::is('dashboard/training/instructors*') ? '#fff' : 'rgba(255,255,255,0.6)' }}; font-size:0.85rem; padding:0.3rem 0.65rem; border-radius:0.3rem; text-decoration:none; white-space:nowrap; flex-shrink:0; {{ Request::is('dashboard/training/instructors*') ? 'background:rgba(255,255,255,0.12);' : '' }}">
                     Instructors
@@ -36,19 +36,17 @@
 
                 @endif
 
-                @if(Auth::user()->isTrainingInstructor())
+                @if(Auth::user()->isTrainingMentor())
                 <div class="dropdown" style="flex-shrink:0;">
                     <a href="#" data-toggle="dropdown"
                        style="color:{{ Request::is('dashboard/training/students*') ? '#fff' : 'rgba(255,255,255,0.6)' }}; font-size:0.85rem; padding:0.3rem 0.65rem; border-radius:0.3rem; text-decoration:none; white-space:nowrap; {{ Request::is('dashboard/training/students*') ? 'background:rgba(255,255,255,0.12);' : '' }}">
                         Students <i class="fas fa-chevron-down fa-xs ml-1"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" style="min-width:160px;">
-                        <a class="dropdown-item {{ Request::is('dashboard/training/students/waitlist') ? 'active' : '' }}" href="{{ route('training.students.waitlist') }}">
-                            Waitlist
-                        </a>
-                        <a class="dropdown-item {{ Request::is('dashboard/training/students/current') ? 'active' : '' }}" href="{{ route('training.students.current') }}">
-                            Linked
-                        </a>
+                        @if(Auth::user()->isTrainingInstructor())
+                            <a class="dropdown-item {{ Request::is('dashboard/training/students/waitlist') ? 'active' : '' }}" href="{{ route('training.students.waitlist') }}">Waitlist</a>
+                            <a class="dropdown-item {{ Request::is('dashboard/training/students/current') ? 'active' : '' }}" href="{{ route('training.students.current') }}">Linked</a>
+                        @endif
                         <a class="dropdown-item {{ Request::is('dashboard/training/students/mentorable') ? 'active' : '' }}" href="{{ route('training.students.mentorablelist') }}">
                             Mentorable
                         </a>
