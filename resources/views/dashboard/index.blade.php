@@ -443,6 +443,10 @@
             <div class="db-card">
                 <div class="db-card-label">Staff</div>
                 <div class="db-tile-grid db-tile-grid-3">
+                    <a href="{{ route('sector-files.manage') }}" class="db-tile">
+                        <div class="db-tile-icon" style="background:#eff6ff; color:#2563eb;"><i class="fas fa-file-archive"></i></div>
+                        <span class="db-tile-label">Sector Files</span>
+                    </a>
                     @if(Auth::user()->isTrainingMentor())
                     <a href="{{ route('training.index') }}" class="db-tile">
                         <div class="db-tile-icon" style="background:#eff6ff; color:#2563eb;"><i class="fas fa-graduation-cap"></i></div>
@@ -504,7 +508,7 @@
         <div class="col-lg-4">
 
             {{-- ATC Resources --}}
-            @if((Auth::user()->rosterProfile && Auth::user()->rosterProfile->status != 'not_certified') || Auth::user()->permissions >= 4)
+            @if(Auth::check())
             <div class="db-card">
                 <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.9rem;">
                     <div class="db-card-label" style="margin-bottom:0;">ATC Resources</div>
@@ -514,7 +518,13 @@
                         </a>
                     @endif
                 </div>
+                <div class="db-resource-row">
+                    <span style="flex:1;">Winnipeg Enhanced Sector Files</span>
+                    <a href="https://github.com/winnipegfir/ZWG-Enhanced-Sector-File/releases" target="_blank" rel="noopener" aria-label="View Winnipeg Enhanced Sector File releases" style="color:#94a3b8; font-size:0.8rem; margin-left:0.75rem; text-decoration:none;"><i class="fas fa-external-link-alt fa-xs"></i></a>
+                </div>
+                @if((Auth::user()->rosterProfile && Auth::user()->rosterProfile->status != 'not_certified') || Auth::user()->permissions >= 4)
                 @forelse($atcResources as $resource)
+                    @continue(str_contains(strtolower($resource->title), 'winnipeg') && str_contains(strtolower($resource->title), 'sector') && !str_contains(strtolower($resource->title), 'vatsim'))
                     @if(!$resource->atc_only || Auth::user()->permissions >= 1)
                     <div class="db-resource-row" style="{{ $loop->last ? 'border-bottom:none;' : '' }}">
                         <span style="flex:1;">{{ $resource->title }}</span>
@@ -525,7 +535,7 @@
                     </div>
                     @endif
                 @empty
-                    <p style="font-size:0.82rem; color:#94a3b8; margin:0;">No resources yet.</p>
+                    {{-- The public Sector Files link remains available without database resources. --}}
                 @endforelse
 
                 @if($yourinstructor && $yourinstructor->status != 0 && $yourinstructor->instructor != null)
@@ -544,6 +554,7 @@
                 <div style="margin-top:0.9rem; padding-top:0.9rem; border-top:1px solid #f1f5f9; font-size:0.82rem; color:#94a3b8;">
                     No instructor assigned yet. Contact staff if you have questions.
                 </div>
+                @endif
                 @endif
             </div>
             @endif

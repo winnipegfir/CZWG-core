@@ -13,6 +13,8 @@
 
 use Illuminate\Support\Facades\Route;
 
+require __DIR__.'/sector-files.php';
+
 //ALL Public Views
 Route::get('/', 'HomeController@view')->name('index');
 Route::view('/airports', 'airports')->name('airports');

@@ -148,9 +148,10 @@
                         @endif
 
                         {{-- ATC --}}
-                        <li class="nav-item dropdown {{ Request::is('roster') || Request::is('atcresources') || Request::is('join') || Request::is('training') || Request::is('bookings') ? 'active' : '' }}">
+                        <li class="nav-item dropdown {{ Request::is('atc/sector-files') || Request::is('roster') || Request::is('atcresources') || Request::is('join') || Request::is('training') || Request::is('bookings') ? 'active' : '' }}">
                             <a class="nav-link dropdown-toggle" id="navDropATC" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">ATC</a>
                             <div class="dropdown-menu" aria-labelledby="navDropATC">
+                                <a class="dropdown-item" href="{{route('sector-files.index')}}">Sector Files</a>
                                 <a class="dropdown-item" href="{{route('roster.public')}}">Roster</a>
                                 @if(Auth::check() && Auth::user()->permissions >= 4)
                                     <a class="dropdown-item" href="{{route('roster.index')}}">Manage Roster</a>
