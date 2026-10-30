@@ -6,6 +6,7 @@ return [
     // Fine-grained token restricted to this repository, with Contents read/write.
     'token' => env('SECTOR_FILES_GITHUB_TOKEN'),
     'tag_prefix' => env('SECTOR_FILES_TAG_PREFIX', 'sector-'),
+    'scheduling_enabled' => env('SECTOR_FILES_SCHEDULING_ENABLED', false),
     'max_upload_kb' => 102400,
     'public_url' => env('SECTOR_FILES_PUBLIC_URL', 'https://winnipegfir.ca/atc/sector-files'),
     // Optional existing forum post/thread within the webhook's channel.

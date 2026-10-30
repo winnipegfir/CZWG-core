@@ -34,6 +34,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        $schedule->command('sector-files:publish-due')->everyMinute()->withoutOverlapping(10);
+
         // * * * * * schedulers
         $schedule->command(ActivityLog::class)->everyMinute()->evenInMaintenanceMode();
         $schedule->command(EventReminders::class)->everyMinute();

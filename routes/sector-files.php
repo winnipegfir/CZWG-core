@@ -9,6 +9,7 @@ Route::prefix('dashboard/staff/sector-files')->middleware(['auth', 'staff'])->gr
     Route::get('/', [SectorFilesController::class, 'manage'])->name('sector-files.manage');
     Route::post('/', [SectorFilesController::class, 'store'])->middleware('throttle:10,1')->name('sector-files.store');
     Route::post('/{release}/publish', [SectorFilesController::class, 'publish'])->whereNumber('release')->name('sector-files.publish');
+    Route::patch('/{release}/schedule', [SectorFilesController::class, 'schedule'])->whereNumber('release')->name('sector-files.schedule');
     Route::patch('/{release}', [SectorFilesController::class, 'update'])->whereNumber('release')->name('sector-files.update');
     Route::patch('/{release}/archive', [SectorFilesController::class, 'archive'])->whereNumber('release')->name('sector-files.archive');
     Route::delete('/{release}', [SectorFilesController::class, 'destroy'])->whereNumber('release')->name('sector-files.destroy');

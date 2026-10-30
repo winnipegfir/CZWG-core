@@ -9,7 +9,7 @@ remain available as explicitly labelled legacy downloads; they are not assumed t
 
 Ryan's working files can remain on Google Drive. Staff prepare both ZIPs, enter the version/AIRAC,
 title and notes, then publish after 0900Z on publication day in accordance with the team SOP.
-Publishing is immediate, not scheduled. This update does not edit repository branch files or Drive.
+Publishing is immediate by default, with optional UTC scheduling. This update does not edit repository branch files or Drive.
 
 ## Pages and access
 
@@ -120,7 +120,7 @@ already stored on GitHub. Keep deployment backups and do not delete valid releas
 
 ## Validation
 
-25 feature tests / 126 assertions cover both uploads before publication, failed second uploads,
+35 feature tests / 177 assertions cover both uploads before publication, failed second uploads,
 public ordering, separate download labels, legacy compatibility, private-repository protection,
 all staff-route permission checks, archive/restore/edit/delete behavior, concurrency locks, pagination,
 Discord content bounds/public links/no mentions, and no announcement on edit.
@@ -130,3 +130,55 @@ The test fixture layouts avoid unrelated site database requirements. Sample-data
 The existing Composer lock/manifest mismatch was not changed as part of this feature.
 
 Discord Update Hub: create the webhook on the parent tech-support forum channel. The optional thread ID targets the existing UPDATE HUB post. Leave it blank for a regular text channel. Confirm posting works with the thread moderation state before launch; an archived locked thread cannot be automatically reopened by a webhook. No live Discord message was sent during automated checks.
+
+
+# Scheduled Sector Files publishing
+
+This is an incremental update for the feature deployed in PR #246. No database migration, Composer dependency, or queue worker is required.
+
+## Staff workflow
+
+- Leave Publish at blank to publish immediately, or enter a future UTC/Zulu date and time.
+- Both ZIPs upload now to a hidden GitHub draft. The release becomes public on the first successful scheduler run at or after the chosen time.
+- The optional Discord announcement is sent after publication, using the checkbox preference saved with the schedule.
+- Staff can edit a schedule, cancel it and keep the draft, delete the draft, or publish it immediately. The immediate Publish draft now form has its own announcement checkbox.
+- Notes/title edits preserve the schedule. Only complete two-package drafts can be scheduled.
+- The displayed UTC clock is server time at page load. No browser-local timezone conversion is applied.
+
+## Production activation
+
+Scheduling is disabled by default; immediate publishing remains available.
+
+1. Merge and deploy the update using the existing website process.
+2. Confirm how the existing Laravel scheduler is invoked on this server. Check the cron/timer configuration and execution history. Do not add duplicate scheduler entries.
+3. A standard cron entry, under the application's normal service user and with its actual PHP path, is:
+
+```cron
+* * * * * cd /var/www/winnipegfir.ca && /usr/bin/php artisan schedule:run >> /dev/null 2>&1
+```
+
+4. Confirm the scheduler user can read the production environment and share the application's cache locks. Confirm the server clock is synchronized (`timedatectl status`).
+5. Add this production environment setting only after confirming the scheduler works:
+
+```dotenv
+SECTOR_FILES_SCHEDULING_ENABLED=true
+```
+
+6. Clear/rebuild the configuration and route caches using the usual deployment process. `php artisan schedule:list` should list `sector-files:publish-due` every minute; this shows registration, not proof that cron runs.
+7. Verify a disposable scheduled release with a test repository and restricted Discord destination. Confirm it is hidden before its time and that both downloads and the announcement appear after publication.
+
+Do not invoke `sector-files:publish-due` against production as a read-only check: it publishes due releases when enabled.
+
+## Timing and recovery
+
+Publication has one-minute granularity, not an exact-second guarantee. After downtime or a GitHub failure, overdue drafts publish on a subsequent successful run. Turning the setting off pauses pending schedules. Reenabling it publishes overdue drafts on the next run; cancel unwanted schedules first.
+
+Scheduling metadata stays in a reserved comment on the GitHub draft, hidden from website notes and removed on publication. GitHub remains the source of truth. Both packages must be confirmed before the schedule is saved. No permanent local ZIP copies are needed.
+
+The scheduler and staff actions use the same 600-second cache lock. Multiple app servers require a shared lock-capable cache.
+
+Discord is attempted after publication. Failed or uncertain delivery is logged without secrets and is not automatically retried, to avoid duplicate announcements. A process interruption after publication can also leave no announcement. Check Update Hub before posting manually. Publication is not undone by announcement failure. Sanitized failures appear in the Laravel log.
+
+## Verification
+
+35 tests / 177 assertions passed with all external calls simulated. Coverage includes UTC independent of app timezone, disabled/past/invalid schedules, staff authorization, cancellation, schedule preservation on edits, hidden drafts, complete-package requirements, locks, publication failure, and no repeated Discord announcement. Blade compilation and all eight feature routes checked. Production cron execution and live scheduled delivery remain to be verified.

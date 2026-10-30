@@ -23,10 +23,20 @@
                 <div class="form-group"><label for="release-notes">Release notes</label><textarea id="release-notes" name="notes" class="form-control" rows="6" maxlength="30000">{{ old('notes') }}</textarea></div>
                 <div class="form-group"><label for="release-full-zip">Full Install Package (ZIP)</label><input id="release-full-zip" type="file" name="full_zip" class="form-control-file" accept=".zip,application/zip" required><small class="form-text text-muted">Everything needed for a new installation. Maximum 100 MB.</small></div>
                 <div class="form-group"><label for="release-nav-zip">Nav Data Update (ZIP)</label><input id="release-nav-zip" type="file" name="nav_zip" class="form-control-file" accept=".zip,application/zip" required><small class="form-text text-muted">Updated navigation files for an existing installation. Maximum 100 MB.</small></div>
-                <p class="text-muted small">Prepare both packages in your usual working location. Publish after 0900Z on the AIRAC publication date, as specified in the team SOP. This button publishes immediately once both uploads succeed.</p>
+                <p class="text-muted small">Prepare both packages in your usual working location. Publish after 0900Z on the AIRAC publication date, as specified in the team SOP. Leave the publication time blank to publish immediately after both uploads succeed.</p>
+                <div class="form-group">
+                    <label for="release-publish-at">Publish at (UTC / Zulu) — optional</label>
+                    <input id="release-publish-at" name="publish_at" type="datetime-local" class="form-control" value="{{ old('publish_at') }}" @disabled(!config('sector-files.scheduling_enabled'))>
+                    <small class="form-text text-muted">Enter a UTC date and time, not your local time. Leave blank to publish now. Current server time: {{ now('UTC')->format('Y-m-d H:i') }}Z (at page load).</small>
+                    @if(config('sector-files.scheduling_enabled'))
+                        <small class="form-text text-muted">Packages upload now as a hidden draft. Publication is checked every minute; if the service is interrupted, it publishes when service resumes. Discord is sent after publication if selected.</small>
+                    @else
+                        <small class="form-text text-muted">Scheduled publishing will be available after the administrator enables the server scheduler.</small>
+                    @endif
+                </div>
                 <div class="form-check mb-3"><input id="release-announce" type="checkbox" class="form-check-input" name="announce" value="1" @checked(old('announce')) @disabled(!$discordConfigured)><label for="release-announce" class="form-check-label">Post Discord announcement</label></div>
                 @if(!$discordConfigured)<p class="text-muted small">Discord announcements can be enabled later by the website administrator.</p>@endif
-                <button class="btn btn-primary" type="submit">Upload and publish</button>
+                <button class="btn btn-primary" type="submit">Upload and publish / schedule</button>
             </fieldset>
         </form>
     </div></div>
@@ -38,6 +48,12 @@
             <p class="text-muted">{{ $release['draft'] ? 'Unpublished draft' : ($release['archived'] ? 'Archived' : 'Published') }}
                 &middot; {{ \Carbon\Carbon::parse($release['published_at'] ?? $release['created_at'])->timezone('America/Winnipeg')->format('F j, Y') }}
                 &middot; {{ $release['packages_complete'] ? 'Both packages uploaded' : ($release['legacy_asset'] ? 'Legacy single ZIP' : 'Incomplete package upload') }}</p>
+            @if($release['draft'] && $release['schedule'])
+                <p class="alert alert-info">Scheduled: {{ \Carbon\CarbonImmutable::createFromTimestamp($release['schedule']['at'], 'UTC')->format('Y-m-d H:i') }}Z
+                    · Discord announcement: {{ $release['schedule']['announce'] ? 'Yes' : 'No' }}.
+                    @if(!config('sector-files.scheduling_enabled')) Scheduling is currently disabled; this release will remain a draft. @endif
+                </p>
+            @endif
             <details class="mb-3"><summary>Edit title and notes</summary>
                 <form class="mt-3" method="POST" action="{{ route('sector-files.update', $release['id']) }}">
                     @csrf @method('PATCH')
@@ -47,10 +63,25 @@
                 </form>
             </details>
             @if($release['draft'] && $release['packages_complete'])
+                @if(config('sector-files.scheduling_enabled'))
+                    <form method="POST" action="{{ route('sector-files.schedule', $release['id']) }}" class="mb-3">
+                        @csrf @method('PATCH')
+                        <label for="schedule-{{ $release['id'] }}">Schedule publication (UTC / Zulu)</label>
+                        <input id="schedule-{{ $release['id'] }}" type="datetime-local" name="publish_at" class="form-control mb-2" required value="{{ $release['schedule'] ? \Carbon\CarbonImmutable::createFromTimestamp($release['schedule']['at'], 'UTC')->format('Y-m-d\TH:i') : '' }}">
+                        @if($discordConfigured)<label><input type="checkbox" name="announce" value="1" @checked($release['schedule']['announce'] ?? false)> Post Discord announcement when published</label>@endif
+                        <button class="btn btn-outline-primary" type="submit">Save schedule</button>
+                    </form>
+                @endif
+                @if($release['schedule'])
+                    <form method="POST" action="{{ route('sector-files.schedule', $release['id']) }}" class="mb-3">
+                        @csrf @method('PATCH')
+                        <button class="btn btn-outline-secondary" type="submit">Cancel schedule and keep draft</button>
+                    </form>
+                @endif
                 <form method="POST" action="{{ route('sector-files.publish', $release['id']) }}" class="mb-3">
                     @csrf
                     @if($discordConfigured)<label><input type="checkbox" name="announce" value="1"> Post Discord announcement</label>@endif
-                    <button class="btn btn-primary" type="submit">Publish draft</button>
+                    <button class="btn btn-primary" type="submit">Publish draft now</button>
                 </form>
             @elseif(!$release['draft'])
                 <form method="POST" action="{{ route('sector-files.archive', $release['id']) }}" class="mb-3">
