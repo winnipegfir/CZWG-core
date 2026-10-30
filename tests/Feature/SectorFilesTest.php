@@ -481,4 +481,31 @@ class SectorFilesTest extends TestCase
         $this->artisan('sector-files:publish-due')->assertExitCode(0);
         $this->assertCount(1, Http::recorded(fn ($r) => str_contains($r->url(), 'discord.com')));
     }
+
+    public function test_schedule_checkbox_requires_a_time_when_checked(): void
+    {
+        config(['sector-files.scheduling_enabled' => true]);
+        $this->staff()->post(route('sector-files.store'), [
+            'title' => 'New', 'version' => '2026.1', 'schedule_later' => 1,
+            'full_zip' => UploadedFile::fake()->create('full.zip', 10, 'application/zip'),
+            'nav_zip' => UploadedFile::fake()->create('nav.zip', 10, 'application/zip'),
+        ])->assertSessionHasErrors('publish_at');
+        Http::assertNothingSent();
+    }
+
+    public function test_unchecked_schedule_discards_old_time_and_publishes_now(): void
+    {
+        Http::fake([
+            'https://api.github.com/repos/example/sectors' => Http::response(['private' => false]),
+            'https://api.github.com/repos/example/sectors/releases' => Http::response($this->release(1, ['draft' => true]), 201),
+            'https://uploads.github.com/*' => Http::response(['state' => 'uploaded'], 201),
+            'https://api.github.com/repos/example/sectors/releases/1' => Http::sequence()->push($this->release(1, ['draft' => true]))->push($this->release()),
+        ]);
+        $this->staff()->post(route('sector-files.store'), [
+            'title' => 'New', 'version' => '2026.1', 'schedule_later' => 0, 'publish_at' => '2099-01-01T09:00',
+            'full_zip' => UploadedFile::fake()->create('full.zip', 10, 'application/zip'),
+            'nav_zip' => UploadedFile::fake()->create('nav.zip', 10, 'application/zip'),
+        ])->assertSessionHasNoErrors()->assertSessionHas('sector_status', 'Release published successfully.');
+        Http::assertSent(fn ($r) => $r->method() === 'PATCH' && $r['draft'] === false);
+    }
 }

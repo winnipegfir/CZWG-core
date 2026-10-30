@@ -84,12 +84,17 @@ class SectorFilesController extends Controller
 
     public function store(Request $request, GitHubReleases $github, DiscordAnnouncement $discord)
     {
+        // An explicit immediate choice must never retain a stale scheduled time.
+        if ($request->has('schedule_later') && !$request->boolean('schedule_later')) {
+            $request->merge(['publish_at' => null]);
+        }
         $data = $request->validate($this->rules() + [
             'version' => ['required', 'string', 'max:64', 'regex:/^[A-Za-z0-9]+(?:[._-][A-Za-z0-9]+)*$/'],
             'full_zip' => 'required|file|mimes:zip|max:'.config('sector-files.max_upload_kb'),
             'nav_zip' => 'required|file|mimes:zip|max:'.config('sector-files.max_upload_kb'),
             'announce' => 'sometimes|boolean',
-            'publish_at' => $this->scheduleRules(),
+            'schedule_later' => 'sometimes|boolean',
+            'publish_at' => array_merge(['required_if:schedule_later,1'], $this->scheduleRules()),
         ]);
         return $this->mutation($github, fn () => $this->published($github->create($data, $request->file('full_zip'), $request->file('nav_zip')), $request, $discord));
     }

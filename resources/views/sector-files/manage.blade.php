@@ -23,20 +23,46 @@
                 <div class="form-group"><label for="release-notes">Release notes</label><textarea id="release-notes" name="notes" class="form-control" rows="6" maxlength="30000">{{ old('notes') }}</textarea></div>
                 <div class="form-group"><label for="release-full-zip">Full Install Package (ZIP)</label><input id="release-full-zip" type="file" name="full_zip" class="form-control-file" accept=".zip,application/zip" required><small class="form-text text-muted">Everything needed for a new installation. Maximum 100 MB.</small></div>
                 <div class="form-group"><label for="release-nav-zip">Nav Data Update (ZIP)</label><input id="release-nav-zip" type="file" name="nav_zip" class="form-control-file" accept=".zip,application/zip" required><small class="form-text text-muted">Updated navigation files for an existing installation. Maximum 100 MB.</small></div>
-                <p class="text-muted small">Prepare both packages in your usual working location. Publish after 0900Z on the AIRAC publication date, as specified in the team SOP. Leave the publication time blank to publish immediately after both uploads succeed.</p>
-                <div class="form-group">
-                    <label for="release-publish-at">Publish at (UTC / Zulu) — optional</label>
-                    <input id="release-publish-at" name="publish_at" type="datetime-local" class="form-control" value="{{ old('publish_at') }}" @disabled(!config('sector-files.scheduling_enabled'))>
-                    <small class="form-text text-muted">Enter a UTC date and time, not your local time. Leave blank to publish now. Current server time: {{ now('UTC')->format('Y-m-d H:i') }}Z (at page load).</small>
-                    @if(config('sector-files.scheduling_enabled'))
-                        <small class="form-text text-muted">Packages upload now as a hidden draft. Publication is checked every minute; if the service is interrupted, it publishes when service resumes. Discord is sent after publication if selected.</small>
-                    @else
-                        <small class="form-text text-muted">Scheduled publishing will be available after the administrator enables the server scheduler.</small>
+                <p class="text-muted small">Prepare both packages in your usual working location. Publish after 0900Z on the AIRAC publication date, as specified in the team SOP. Choose immediate publishing or schedule a future release below.</p>
+                <div class="border rounded p-3 mb-3" data-sector-schedule>
+                    <h3 class="h6">Publication</h3>
+                    <input type="hidden" name="schedule_later" value="0">
+                    <div class="form-check">
+                        <input id="release-schedule-later" class="form-check-input" type="checkbox" name="schedule_later" value="1" data-schedule-toggle aria-controls="release-schedule-fields" aria-expanded="false" @checked(old('schedule_later', old('publish_at') ? 1 : 0)) @disabled(!config('sector-files.scheduling_enabled'))>
+                        <label class="form-check-label" for="release-schedule-later">Schedule for later (UTC / Zulu)</label>
+                    </div>
+                    <p class="small text-muted mt-2 mb-0" data-schedule-help>Publish immediately after both packages finish uploading.</p>
+                    @if(!config('sector-files.scheduling_enabled'))
+                        <p class="small text-warning mt-2 mb-0">Scheduling is not enabled yet. You can publish now; the website administrator must activate automatic publishing before scheduling is available.</p>
                     @endif
+                    <div id="release-schedule-fields" class="mt-3" data-schedule-fields hidden>
+                        <div class="form-row" style="max-width: 440px">
+                            <div class="form-group col-sm-7">
+                                <label for="release-date">Publication date (UTC)</label>
+                                <input id="release-date" type="date" class="form-control" data-schedule-date disabled>
+                            </div>
+                            <div class="form-group col-sm-5">
+                                <label for="release-time">Time (24-hour UTC)</label>
+                                <div class="d-flex align-items-center">
+                                    <select id="release-time" class="form-control" data-schedule-hour aria-label="UTC hour" disabled>
+                                        @for($hour = 0; $hour < 24; $hour++)<option value="{{ sprintf('%02d', $hour) }}">{{ sprintf('%02d', $hour) }}</option>@endfor
+                                    </select>
+                                    <span class="mx-1" aria-hidden="true">:</span>
+                                    <select class="form-control" data-schedule-minute aria-label="UTC minute" disabled>
+                                        @for($minute = 0; $minute < 60; $minute++)<option value="{{ sprintf('%02d', $minute) }}">{{ sprintf('%02d', $minute) }}</option>@endfor
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="small mb-1" data-schedule-summary aria-live="polite"></p>
+                        <p class="small text-muted mb-0">Choose the date from the calendar and the time in UTC, not local time. Follow the SOP: after 0900Z on publication day. Packages upload now and stay hidden until publication. Automatic publishing is checked every minute.</p>
+                    </div>
+                    <input type="hidden" name="publish_at" value="{{ old('publish_at') }}" data-schedule-value disabled>
+                    <noscript><p class="text-warning mt-2">Enable JavaScript to schedule a release. With JavaScript disabled, uploads publish immediately.</p></noscript>
                 </div>
                 <div class="form-check mb-3"><input id="release-announce" type="checkbox" class="form-check-input" name="announce" value="1" @checked(old('announce')) @disabled(!$discordConfigured)><label for="release-announce" class="form-check-label">Post Discord announcement</label></div>
                 @if(!$discordConfigured)<p class="text-muted small">Discord announcements can be enabled later by the website administrator.</p>@endif
-                <button class="btn btn-primary" type="submit">Upload and publish / schedule</button>
+                <button class="btn btn-primary" type="submit" data-publish-button>Upload and publish now</button>
             </fieldset>
         </form>
     </div></div>
@@ -50,7 +76,7 @@
                 &middot; {{ $release['packages_complete'] ? 'Both packages uploaded' : ($release['legacy_asset'] ? 'Legacy single ZIP' : 'Incomplete package upload') }}</p>
             @if($release['draft'] && $release['schedule'])
                 <p class="alert alert-info">Scheduled: {{ \Carbon\CarbonImmutable::createFromTimestamp($release['schedule']['at'], 'UTC')->format('Y-m-d H:i') }}Z
-                    · Discord announcement: {{ $release['schedule']['announce'] ? 'Yes' : 'No' }}.
+                    Â· Discord announcement: {{ $release['schedule']['announce'] ? 'Yes' : 'No' }}.
                     @if(!config('sector-files.scheduling_enabled')) Scheduling is currently disabled; this release will remain a draft. @endif
                 </p>
             @endif
@@ -102,4 +128,5 @@
         @unless($unavailable)<p>No sector-file releases yet.</p>@endunless
     @endforelse
 </div>
+<script src="{{ asset('js/sector-files-schedule.js') }}" defer></script>
 @endsection
