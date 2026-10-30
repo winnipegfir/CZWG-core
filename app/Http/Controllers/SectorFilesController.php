@@ -44,8 +44,8 @@ class SectorFilesController extends Controller
         return ['title' => 'required|string|max:150', 'notes' => [
             'nullable', 'string', 'max:30000',
             function ($attribute, $value, $fail) {
-                if (str_contains($value, GitHubReleases::ARCHIVED)) {
-                    $fail('Release notes contain a reserved archive marker.');
+                if (str_contains($value, GitHubReleases::ARCHIVED) || str_contains($value, GitHubReleases::SCHEDULE)) {
+                    $fail('Release notes contain a reserved release marker.');
                 }
             },
         ]];
@@ -73,6 +73,9 @@ class SectorFilesController extends Controller
 
     private function published(array $release, Request $request, DiscordAnnouncement $discord): string
     {
+        if ($release['draft']) {
+            return 'Both packages uploaded. Release scheduled in UTC; it remains hidden until publication.';
+        }
         if ($request->boolean('announce') && !$discord->send($release)) {
             return 'Release published. The Discord announcement was not confirmed; check the channel before posting it manually.';
         }
@@ -86,8 +89,36 @@ class SectorFilesController extends Controller
             'full_zip' => 'required|file|mimes:zip|max:'.config('sector-files.max_upload_kb'),
             'nav_zip' => 'required|file|mimes:zip|max:'.config('sector-files.max_upload_kb'),
             'announce' => 'sometimes|boolean',
+            'publish_at' => $this->scheduleRules(),
         ]);
         return $this->mutation($github, fn () => $this->published($github->create($data, $request->file('full_zip'), $request->file('nav_zip')), $request, $discord));
+    }
+
+    private function scheduleRules(): array
+    {
+        return ['nullable', 'date_format:Y-m-d\TH:i', function ($attribute, $value, $fail) {
+            if (!config('sector-files.scheduling_enabled')) {
+                $fail('Scheduled publishing has not been enabled by the website administrator.');
+                return;
+            }
+            try {
+                $date = \Carbon\CarbonImmutable::createFromFormat('!Y-m-d\TH:i', $value, 'UTC');
+                if (!$date || $date->format('Y-m-d\TH:i') !== $value || !$date->isFuture()) {
+                    $fail('Choose a future date and time in UTC.');
+                }
+            } catch (\Throwable $e) {
+                $fail('Choose a valid UTC date and time.');
+            }
+        }];
+    }
+
+    public function schedule(Request $request, int $release, GitHubReleases $github)
+    {
+        $data = $request->validate(['publish_at' => $this->scheduleRules(), 'announce' => 'sometimes|boolean']);
+        return $this->mutation($github, function () use ($github, $release, $data, $request) {
+            $github->schedule($release, $data['publish_at'] ?? null, $request->boolean('announce'));
+            return empty($data['publish_at']) ? 'Schedule cancelled. Release remains an unpublished draft.' : 'Publication schedule updated (UTC).';
+        });
     }
 
     public function publish(Request $request, int $release, GitHubReleases $github, DiscordAnnouncement $discord)

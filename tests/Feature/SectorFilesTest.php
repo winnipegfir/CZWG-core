@@ -19,6 +19,7 @@ class SectorFilesTest extends TestCase
             'sector-files.token' => 'test-only-token', 'sector-files.tag_prefix' => 'sector-',
             'sector-files.discord_webhook' => null,
             'sector-files.discord_thread_id' => null,
+            'sector-files.scheduling_enabled' => false,
         ]);
         Cache::flush();
         Http::preventStrayRequests();
@@ -65,7 +66,7 @@ class SectorFilesTest extends TestCase
     {
         $routes = [
             ['GET', 'sector-files.manage', []], ['POST', 'sector-files.store', []],
-            ['POST', 'sector-files.publish', [1]], ['PATCH', 'sector-files.update', [1]],
+            ['POST', 'sector-files.publish', [1]], ['PATCH', 'sector-files.schedule', [1]], ['PATCH', 'sector-files.update', [1]],
             ['PATCH', 'sector-files.archive', [1]], ['DELETE', 'sector-files.destroy', [1]],
         ];
         foreach ($routes as [$method, $route, $parameters]) {
@@ -336,5 +337,148 @@ class SectorFilesTest extends TestCase
         Http::fake();
         $this->assertFalse(app(\App\Services\SectorFiles\DiscordAnnouncement::class)->send([]));
         Http::assertNothingSent();
+    }
+
+    private function scheduledBody(int $at, bool $announce = false): string
+    {
+        return 'Notes 1'."\n\n".GitHubReleases::SCHEDULE.base64_encode(json_encode(['at' => $at, 'announce' => $announce])).' -->';
+    }
+
+    public function test_scheduled_upload_remains_a_complete_hidden_draft_without_announcement(): void
+    {
+        config(['sector-files.scheduling_enabled' => true]);
+        $at = now('UTC')->addDay()->startOfMinute();
+        Http::fake([
+            'https://api.github.com/repos/example/sectors' => Http::response(['private' => false]),
+            'https://api.github.com/repos/example/sectors/releases' => Http::response($this->release(1, ['draft' => true]), 201),
+            'https://uploads.github.com/*' => Http::response(['state' => 'uploaded'], 201),
+            'https://api.github.com/repos/example/sectors/releases/1' => Http::sequence()
+                ->push($this->release(1, ['draft' => true]))
+                ->push($this->release(1, ['draft' => true, 'body' => $this->scheduledBody($at->timestamp, true)])),
+        ]);
+        $this->staff()->post(route('sector-files.store'), [
+            'title' => 'New', 'version' => '2026.1', 'publish_at' => $at->format('Y-m-d\TH:i'), 'announce' => 1,
+            'full_zip' => UploadedFile::fake()->create('full.zip', 10, 'application/zip'),
+            'nav_zip' => UploadedFile::fake()->create('nav.zip', 10, 'application/zip'),
+        ])->assertSessionHasNoErrors();
+        Http::assertSent(fn ($r) => $r->method() === 'PATCH' && $r['body'] === $this->scheduledBody($at->timestamp, true));
+        Http::assertNotSent(fn ($r) => isset($r['draft']) && $r['draft'] === false || str_contains($r->url(), 'discord.com'));
+    }
+
+    public function test_schedule_rejects_past_invalid_and_disabled_dates_before_network(): void
+    {
+        $this->staff();
+        foreach ([false, true] as $enabled) {
+            config(['sector-files.scheduling_enabled' => $enabled]);
+            foreach (['2020-01-01T09:00', 'not-a-date', '2099-02-30T09:00'] as $at) {
+                $this->patch(route('sector-files.schedule', 1), ['publish_at' => $at])->assertSessionHasErrors('publish_at');
+            }
+        }
+        config(['sector-files.scheduling_enabled' => false]);
+        $this->patch(route('sector-files.schedule', 1), ['publish_at' => '2099-01-01T09:00'])->assertSessionHasErrors('publish_at');
+        Http::assertNothingSent();
+    }
+
+    public function test_schedule_can_be_cancelled_even_when_scheduling_is_disabled(): void
+    {
+        Http::fake(['api.github.com/*' => Http::response($this->release(1, ['draft' => true, 'body' => $this->scheduledBody(time() + 3600)]))]);
+        $this->staff()->patch(route('sector-files.schedule', 1), [])->assertSessionHasNoErrors();
+        Http::assertSent(fn ($r) => $r->method() === 'PATCH' && $r['body'] === 'Notes 1');
+    }
+
+    public function test_edit_preserves_schedule_and_hides_marker_from_notes(): void
+    {
+        $body = $this->scheduledBody(time() + 3600, true);
+        Http::fake(['api.github.com/*' => Http::response($this->release(1, ['draft' => true, 'body' => $body]))]);
+        $release = app(GitHubReleases::class)->get(1);
+        $this->assertSame('Notes 1', $release['notes']);
+        $this->staff()->patch(route('sector-files.update', 1), ['title' => 'Edited', 'notes' => 'New notes'])->assertSessionHasNoErrors();
+        Http::assertSent(fn ($r) => $r->method() === 'PATCH' && $r['body'] === str_replace('Notes 1', 'New notes', $body));
+    }
+
+    public function test_scheduler_publishes_due_only_and_does_not_repeat_discord(): void
+    {
+        config(['sector-files.scheduling_enabled' => true,
+            'sector-files.discord_webhook' => 'https://discord.com/api/webhooks/123/test-token',
+            'sector-files.public_url' => 'https://winnipegfir.ca/atc/sector-files']);
+        $due = $this->release(1, ['draft' => true, 'body' => $this->scheduledBody(time() - 60, true)]);
+        $future = $this->release(2, ['draft' => true, 'body' => $this->scheduledBody(time() + 3600)]);
+        $incomplete = $this->release(3, ['draft' => true, 'body' => $this->scheduledBody(time() - 60), 'assets' => []]);
+        Http::fake([
+            'https://api.github.com/repos/example/sectors/releases?*' => Http::sequence()->push([$due, $future, $incomplete])->push([$this->release(), $future, $incomplete]),
+            'https://api.github.com/repos/example/sectors/releases/1' => Http::sequence()->push($due)->push($this->release()),
+            'discord.com/*' => Http::response([], 200),
+        ]);
+        $this->artisan('sector-files:publish-due')->assertExitCode(0);
+        $this->artisan('sector-files:publish-due')->assertExitCode(0);
+        $this->assertCount(1, Http::recorded(fn ($r) => str_contains($r->url(), 'discord.com')));
+        Http::assertSent(fn ($r) => $r->method() === 'PATCH' && $r['draft'] === false && $r['body'] === 'Notes 1');
+        Http::assertNotSent(fn ($r) => str_ends_with($r->url(), '/releases/2') || str_ends_with($r->url(), '/releases/3'));
+    }
+
+    public function test_scheduler_respects_disabled_setting_and_staff_lock(): void
+    {
+        Http::fake();
+        $this->artisan('sector-files:publish-due')->assertExitCode(0);
+        config(['sector-files.scheduling_enabled' => true]);
+        $lock = Cache::lock(app(GitHubReleases::class)->cacheKey().':write', 600);
+        $lock->get();
+        try {
+            $this->artisan('sector-files:publish-due')->assertExitCode(0);
+            Http::assertNothingSent();
+        } finally {
+            $lock->release();
+        }
+    }
+
+    public function test_schedule_uses_utc_even_if_application_timezone_differs(): void
+    {
+        config(['sector-files.scheduling_enabled' => true, 'app.timezone' => 'America/Winnipeg']);
+        Http::fake(['api.github.com/*' => Http::response($this->release(1, ['draft' => true]))]);
+        $this->staff()->patch(route('sector-files.schedule', 1), ['publish_at' => '2099-01-01T09:00'])->assertSessionHasNoErrors();
+        $at = \Carbon\CarbonImmutable::parse('2099-01-01T09:00:00Z')->timestamp;
+        Http::assertSent(fn ($r) => $r->method() === 'PATCH' && $r['body'] === $this->scheduledBody($at));
+    }
+
+    public function test_scheduled_draft_is_visible_to_staff_but_not_public(): void
+    {
+        config(['sector-files.scheduling_enabled' => true]);
+        $draft = $this->release(1, ['draft' => true, 'body' => $this->scheduledBody(time() + 3600, true)]);
+        Http::fake([
+            'https://api.github.com/repos/example/sectors' => Http::response(['private' => false]),
+            'https://api.github.com/repos/example/sectors/releases?*' => Http::response([$draft]),
+        ]);
+        $this->get(route('sector-files.index'))->assertOk()->assertDontSee('Release 1');
+        $this->staff()->get(route('sector-files.manage'))->assertOk()->assertSee('Scheduled:')->assertSee('Cancel schedule and keep draft')->assertDontSee(GitHubReleases::SCHEDULE);
+    }
+
+    public function test_scheduled_publish_failure_does_not_announce_and_releases_lock(): void
+    {
+        config(['sector-files.scheduling_enabled' => true]);
+        $due = $this->release(1, ['draft' => true, 'body' => $this->scheduledBody(time() - 60, true)]);
+        Http::fake([
+            'https://api.github.com/repos/example/sectors/releases?*' => Http::response([$due]),
+            'https://api.github.com/repos/example/sectors/releases/1' => Http::sequence()->push($due)->push([], 500),
+        ]);
+        $this->artisan('sector-files:publish-due')->assertExitCode(1);
+        Http::assertNotSent(fn ($r) => str_contains($r->url(), 'discord.com'));
+        $lock = Cache::lock(app(GitHubReleases::class)->cacheKey().':write', 600);
+        $this->assertTrue($lock->get());
+        $lock->release();
+    }
+
+    public function test_scheduled_discord_failure_is_not_retried_after_publication(): void
+    {
+        config(['sector-files.scheduling_enabled' => true,
+            'sector-files.discord_webhook' => 'https://discord.com/api/webhooks/123/test-token']);
+        $due = $this->release(1, ['draft' => true, 'body' => $this->scheduledBody(time() - 60, true)]);
+        Http::fake([
+            'https://api.github.com/repos/example/sectors/releases?*' => Http::sequence()->push([$due])->push([$this->release()]),
+            'https://api.github.com/repos/example/sectors/releases/1' => Http::sequence()->push($due)->push($this->release()),
+            'discord.com/*' => Http::response([], 500),
+        ]);
+        $this->artisan('sector-files:publish-due')->assertExitCode(1);
+        $this->artisan('sector-files:publish-due')->assertExitCode(0);
+        $this->assertCount(1, Http::recorded(fn ($r) => str_contains($r->url(), 'discord.com')));
     }
 }

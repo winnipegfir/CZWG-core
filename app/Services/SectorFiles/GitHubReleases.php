@@ -9,6 +9,8 @@ use RuntimeException;
 
 class GitHubReleases
 {
+    public const SCHEDULE = '<!-- winnipeg-sector-files:schedule:';
+
     public const ARCHIVED = '<!-- winnipeg-sector-files:archived -->';
 
     public function configured(): bool
@@ -96,7 +98,16 @@ class GitHubReleases
     {
         $release['version'] = substr($release['tag_name'], strlen(config('sector-files.tag_prefix')));
         $release['archived'] = str_contains($release['body'] ?? '', self::ARCHIVED);
-        $release['notes'] = trim(str_replace(self::ARCHIVED, '', $release['body'] ?? ''));
+        $body = $release['body'] ?? '';
+        $release['schedule'] = null;
+        if (preg_match('/<!-- winnipeg-sector-files:schedule:([A-Za-z0-9+\/=]+) -->/', $body, $match)) {
+            $schedule = json_decode(base64_decode($match[1], true) ?: '', true);
+            if (is_array($schedule) && isset($schedule['at'], $schedule['announce'])
+                && is_int($schedule['at']) && $schedule['at'] > 0 && is_bool($schedule['announce'])) {
+                $release['schedule'] = $schedule;
+            }
+        }
+        $release['notes'] = trim(preg_replace('/<!-- winnipeg-sector-files:schedule:.*? -->/s', '', str_replace(self::ARCHIVED, '', $body)));
         $release['full_asset'] = null;
         $release['nav_asset'] = null;
         $release['legacy_asset'] = null;
@@ -134,6 +145,9 @@ class GitHubReleases
         $id = (int) $release['id'];
         $this->upload($id, $fullZip, 'winnipeg-full-install-'.$data['version'].'.zip');
         $this->upload($id, $navZip, 'winnipeg-nav-data-'.$data['version'].'.zip');
+        if (!empty($data['publish_at'])) {
+            return $this->schedule($id, $data['publish_at'], (bool) ($data['announce'] ?? false));
+        }
         return $this->publish($id);
     }
 
@@ -164,7 +178,7 @@ class GitHubReleases
         if (!$release['draft'] || !$release['packages_complete']) {
             throw new RuntimeException('Both the full install and nav data ZIPs must finish uploading before publishing.');
         }
-        $published = $this->request('PATCH', '/releases/'.$id, ['draft' => false, 'make_latest' => 'false']);
+        $published = $this->request('PATCH', '/releases/'.$id, ['draft' => false, 'make_latest' => 'false', 'body' => $release['notes']]);
         $this->forget();
         return $this->present($published);
     }
@@ -174,9 +188,38 @@ class GitHubReleases
         $release = $this->get($id);
         $this->request('PATCH', '/releases/'.$id, [
             'name' => $data['title'],
-            'body' => ($data['notes'] ?? '').($release['archived'] ? "\n\n".self::ARCHIVED : ''),
+            'body' => ($data['notes'] ?? '').($release['archived'] ? "\n\n".self::ARCHIVED : '').$this->scheduleMarker($release['schedule']),
         ]);
         $this->forget();
+    }
+
+    private function scheduleMarker(?array $schedule): string
+    {
+        return $schedule ? "\n\n".self::SCHEDULE.base64_encode(json_encode($schedule)).' -->' : '';
+    }
+
+    public function schedule(int $id, ?string $at, bool $announce): array
+    {
+        $release = $this->get($id);
+        if (!$release['draft'] || !$release['packages_complete']) {
+            throw new RuntimeException('Only complete unpublished drafts can be scheduled.');
+        }
+        $schedule = null;
+        if ($at) {
+            if (!config('sector-files.scheduling_enabled')) {
+                throw new RuntimeException('Scheduling is not enabled.');
+            }
+            $date = \Carbon\CarbonImmutable::createFromFormat('!Y-m-d\TH:i', $at, 'UTC');
+            if (!$date || $date->format('Y-m-d\TH:i') !== $at || !$date->isFuture()) {
+                throw new RuntimeException('Choose a future UTC date and time.');
+            }
+            $schedule = ['at' => $date->getTimestamp(), 'announce' => $announce];
+        }
+        $updated = $this->request('PATCH', '/releases/'.$id, [
+            'body' => $release['notes'].$this->scheduleMarker($schedule),
+        ]);
+        $this->forget();
+        return $this->present($updated);
     }
 
     public function archive(int $id, bool $archived): void
