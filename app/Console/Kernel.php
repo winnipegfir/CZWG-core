@@ -34,6 +34,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        $schedule->command('controllers:announce-online')->everyMinute()->withoutOverlapping(10)->runInBackground();
         $schedule->command('sector-files:publish-due')->everyMinute()->withoutOverlapping(10);
 
         // * * * * * schedulers

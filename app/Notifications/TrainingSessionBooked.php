@@ -30,7 +30,7 @@ class TrainingSessionBooked extends Notification
         $when = $this->session->start_time->copy()->setTimezone($notifiable->displayTimezone())->format('D, M j g:i A');
 
         return [
-            'title' => 'New training slot booked',
+            'title' => $this->session->capacity === 2 ? 'Double training seat booked' : 'New training slot booked',
             'body'  => $studentName . ' booked ' . $when . ' — confirm it to lock it in.',
             'url'   => route('training.sessions.index'),
             'icon'  => 'fa-calendar-check',

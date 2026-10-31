@@ -73,7 +73,7 @@
                                     <br>
                                     <span class="text-muted" style="font-size:0.78rem;">{{ $startLocal->format('g:i A') }} &ndash; {{ $endLocal->format('g:i A') }}</span>
                                 </td>
-                                <td style="vertical-align:middle; color:#495057;">{{ $slot->note ?? '—' }}</td>
+                                <td style="vertical-align:middle; color:#495057;">{{ $slot->note ?? '—' }} @if($slot->capacity === 2)<span class="badge badge-info">Double training - seat {{ $slot->seat }}/2</span>@endif</td>
                                 <td style="vertical-align:middle;">
                                     @if($slot->status === 'booked')
                                         <span class="ts-badge ts-badge-booked">Booked</span>
@@ -140,6 +140,11 @@
                         <label class="font-weight-bold small">End <span class="text-muted font-weight-normal">({{ \App\Models\Users\User::timezoneLabel($userTz) }})</span></label>
                         <input type="datetime-local" name="end_time" id="addSlotEnd" class="form-control" required>
                     </div>
+                    <div class="form-check mb-3">
+                        <input id="double-training" type="checkbox" class="form-check-input" name="double_training" value="1">
+                        <label for="double-training" class="form-check-label">Double training: allow two students at the same time</label>
+                        <small class="form-text text-muted">Each student books a separate seat and is confirmed or cancelled individually. Only select this when you can supervise both students.</small>
+                    </div>
                     <div class="form-group mb-0">
                         <label class="font-weight-bold small">Note (optional)</label>
                         <input type="text" name="note" class="form-control" placeholder="e.g. S1 Practical">
@@ -165,6 +170,7 @@
         $studentName = $slot->student && $slot->student->user ? $slot->student->user->fullName('FL') : null;
         $statusLabels = ['booked' => $studentName ?: 'Booked', 'pending' => 'Pending — ' . ($studentName ?: 'Student')];
         $title = $statusLabels[$slot->status] ?? 'Open';
+        if ($slot->capacity === 2) { $title .= ' (Double training, seat '.$slot->seat.'/2)'; }
         if ($slot->note) {
             $title .= ' — ' . $slot->note;
         }

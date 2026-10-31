@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 class TrainingSession extends Model
 {
     protected $fillable = [
-        'instructor_id', 'provider_user_id', 'student_id', 'start_time', 'end_time', 'status', 'note', 'network_callsign', 'instructor_comments', 'booked_at',
+        'availability_group', 'seat', 'capacity', 'instructor_id', 'provider_user_id', 'student_id', 'start_time', 'end_time', 'status', 'note', 'network_callsign', 'instructor_comments', 'booked_at',
     ];
 
     protected $casts = [
+        'capacity' => 'integer', 'seat' => 'integer',
         'start_time' => 'datetime',
         'end_time' => 'datetime',
         'booked_at' => 'datetime',

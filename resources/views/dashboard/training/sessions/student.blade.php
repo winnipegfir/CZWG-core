@@ -102,7 +102,7 @@
                                             @if($student->mentorable && $slot->provider)
                                                 &middot; {{ $slot->provider->fullName('FL') }}
                                             @endif
-                                            @if($slot->note) &middot; {{ $slot->note }} @endif
+                                            @if($slot->capacity === 2)<span class="badge badge-info">Double training - may be shared with another student</span>@endif @if($slot->note) &middot; {{ $slot->note }} @endif
                                         </div>
                                     </div>
                                     <form method="POST" action="{{ route('training.book.store') }}" class="d-flex align-items-center" style="gap:0.3rem;">
@@ -140,7 +140,7 @@
                                         <div style="font-size:0.78rem; color:#64748b;">
                                             {{ $startLocal->format('g:i A') }} &ndash; {{ $endLocal->format('g:i A') }}
                                             @if($slot->provider) &middot; {{ $slot->provider->fullName('FL') }} @endif
-                                            @if($slot->note) &middot; {{ $slot->note }} @endif
+                                            @if($slot->capacity === 2)<span class="badge badge-info">Double training - may be shared with another student</span>@endif @if($slot->note) &middot; {{ $slot->note }} @endif
                                         </div>
                                     </div>
                                     @if($slot->status === 'pending')
@@ -191,6 +191,7 @@
                 if ($student->mentorable && $slot->provider) {
                     $title = $slot->provider->fullName('FL');
                 }
+                if ($slot->capacity === 2) { $title .= ' (Double training)'; }
                 if ($slot->note) {
                     $title .= ' — ' . $slot->note;
                 }
@@ -210,6 +211,7 @@
             }
             foreach ($myBookings as $slot) {
                 $title = $slot->status === 'pending' ? 'Pending' : 'Booked';
+                if ($slot->capacity === 2) { $title .= ' (Double training)'; }
                 if ($slot->note) {
                     $title .= ' — ' . $slot->note;
                 }
