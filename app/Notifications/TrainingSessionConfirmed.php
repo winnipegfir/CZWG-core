@@ -29,7 +29,7 @@ class TrainingSessionConfirmed extends Notification
         $when = $this->session->start_time->copy()->setTimezone($notifiable->displayTimezone())->format('D, M j g:i A');
 
         return [
-            'title' => 'Training session confirmed',
+            'title' => $this->session->capacity === 2 ? 'Double training session confirmed' : 'Training session confirmed',
             'body'  => $providerName . ' confirmed your session on ' . $when . '.',
             'url'   => route('training.book.index'),
             'icon'  => 'fa-chalkboard-teacher',

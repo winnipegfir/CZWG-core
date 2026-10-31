@@ -45,6 +45,7 @@ class TrainingSessionController extends Controller
             'start_time' => 'required|date',
             'end_time'   => 'required|date|after:start_time',
             'note'       => 'nullable|string|max:255',
+            'double_training' => 'sometimes|boolean',
         ]);
 
         $userTz = Auth::user()->displayTimezone();
@@ -62,7 +63,11 @@ class TrainingSessionController extends Controller
                 ->where('start_time', '<', $end)->where('end_time', '>', $start)->exists()) {
                 return false;
             }
-            return TrainingSession::create([
+            $capacity = $request->boolean('double_training') ? 2 : 1;
+            $group = $capacity === 2 ? (string) \Illuminate\Support\Str::uuid() : null;
+            for ($seat = 1; $seat <= $capacity; $seat++) {
+                TrainingSession::create([
+            'availability_group' => $group, 'seat' => $seat, 'capacity' => $capacity,
             'instructor_id' => optional(Auth::user()->instructorProfile)->id,
             'provider_user_id' => Auth::id(),
             'start_time'    => $start,
@@ -70,6 +75,8 @@ class TrainingSessionController extends Controller
             'note'          => $request->input('note'),
             'status'        => 'open',
             ]);
+            }
+            return true;
         });
 
         if (!$created) {
@@ -125,6 +132,7 @@ class TrainingSessionController extends Controller
     private function mergeAdjacentOpenSlots(TrainingSession $slot): TrainingSession
     {
         $matchesNote = function ($query) use ($slot) {
+            $query->where('availability_group', $slot->availability_group)->where('seat', $slot->seat)->where('capacity', $slot->capacity);
             return is_null($slot->note) ? $query->whereNull('note') : $query->where('note', $slot->note);
         };
 
@@ -315,10 +323,7 @@ class TrainingSessionController extends Controller
             $student->refresh();
             if (TrainingSession::whereIn('status', ['pending', 'booked'])
                 ->where('start_time', '<', $end)->where('end_time', '>', $start)
-                ->where(function ($query) use ($student, $providerUserId) {
-                    $query->where('student_id', $student->id)
-                        ->orWhere('provider_user_id', $providerUserId);
-                })->exists()) {
+                ->where('student_id', $student->id)->exists()) {
                 return false;
             }
             $slot = TrainingSession::where('provider_user_id', $providerUserId)
@@ -326,7 +331,12 @@ class TrainingSessionController extends Controller
                 ->where('start_time', '<=', $start)
                 ->where('end_time', '>=', $end)
                 ->when(!$student->mentorable, fn ($query) => $query->where('instructor_id', $instructorId))
-                ->lockForUpdate()->first();
+                ->orderBy('seat')->lockForUpdate()->get()->first(function ($candidate) use ($start, $end) {
+                    return !TrainingSession::where('provider_user_id', $candidate->provider_user_id)
+                        ->whereIn('status', ['pending', 'booked'])
+                        ->where('start_time', '<', $end)->where('end_time', '>', $start)
+                        ->get()->contains(fn ($other) => !$this->parallelSeats($candidate, $other));
+                });
 
             if (!$slot || !TrainingBookingEligibility::allows($student, $slot->provider, $slot->instructor_id)) {
                 return false;
@@ -334,6 +344,7 @@ class TrainingSessionController extends Controller
 
             if ($slot->start_time->lt($start)) {
                 TrainingSession::create([
+                    'availability_group' => $slot->availability_group, 'seat' => $slot->seat, 'capacity' => $slot->capacity,
                     'instructor_id' => $slot->instructor_id,
                     'provider_user_id' => $slot->provider_user_id,
                     'start_time' => $slot->start_time,
@@ -345,6 +356,7 @@ class TrainingSessionController extends Controller
 
             if ($slot->end_time->gt($end)) {
                 TrainingSession::create([
+                    'availability_group' => $slot->availability_group, 'seat' => $slot->seat, 'capacity' => $slot->capacity,
                     'instructor_id' => $slot->instructor_id,
                     'provider_user_id' => $slot->provider_user_id,
                     'start_time' => $end,
@@ -510,6 +522,13 @@ class TrainingSessionController extends Controller
         return $slot;
     }
 
+    private function parallelSeats(TrainingSession $a, TrainingSession $b): bool
+    {
+        return $a->capacity === 2 && $b->capacity === 2
+            && $a->availability_group && $a->availability_group === $b->availability_group
+            && $a->seat !== $b->seat;
+    }
+
     private function assertNoOverlap(TrainingSession $slot): void
     {
         if ($slot->status === 'cancelled') {
@@ -525,7 +544,13 @@ class TrainingSessionController extends Controller
                         $query->where('student_id', $slot->student_id)->whereIn('status', ['pending', 'booked']);
                     });
                 }
-            })->exists();
+            })->get()->contains(function ($other) use ($slot) {
+                if ($slot->student_id && $other->student_id == $slot->student_id
+                    && in_array($other->status, ['pending', 'booked'])) {
+                    return true;
+                }
+                return !$this->parallelSeats($slot, $other);
+            });
         abort_if($conflict, 409, 'This change would overlap another session.');
     }
 }

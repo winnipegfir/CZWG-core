@@ -76,6 +76,7 @@
                                     <span class="text-muted" style="font-size:0.78rem;">{{ $startLocal->format('g:i A') }} &ndash; {{ $endLocal->format('g:i A') }}</span>
                                 </td>
                                 <td style="vertical-align:middle;">
+                                    @if($session->capacity === 2)<span class="badge badge-info">Double training - seat {{ $session->seat }}/2</span><br>@endif
                                     @if ($session->status === 'booked')
                                         <span class="ts-badge ts-badge-booked">Booked</span>
                                     @elseif ($session->status === 'pending')
@@ -195,6 +196,7 @@
             if ($session->student && $session->student->user) {
                 $who .= ' / ' . $session->student->user->fullName('FL');
             }
+            if ($session->capacity === 2) { $who .= ' (Double training, seat '.$session->seat.'/2)'; }
             $color = $statusColors[$session->status] ?? '#64748b';
             $calendarEvents[] = [
                 'id' => $session->id,
