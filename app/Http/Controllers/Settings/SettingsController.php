@@ -200,7 +200,7 @@ class SettingsController extends Controller
             }],
             'bannerTheme' => ['required', Rule::in(['winnipeg', 'prairie_gold', 'manitoba_sky', 'aurora', 'success', 'warning', 'urgent'])],
             'bannerAnimation' => ['required', Rule::in(['none', 'gold_swoop', 'shimmer', 'aurora', 'gentle_pulse'])],
-            'bannerIcon' => ['required', Rule::in(['bullhorn', 'star', 'plane', 'info', 'calendar', 'none'])],
+            'bannerIcon' => ['required', Rule::in(['bullhorn', 'star', 'plane', 'info', 'calendar', 'academy', 'academy_book', 'academy_chalkboard', 'none'])],
         ]);
 
         $coreSettings = CoreSettings::findOrFail(1);

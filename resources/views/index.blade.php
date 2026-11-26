@@ -7,7 +7,7 @@
 
     {{-- Hero --}}
     <div class="winnipeg-blue">
-        <div id="hero-panel" style="height: calc(100vh - 113px); position:relative; overflow:hidden;">
+        <div id="hero-panel" class="homepage-hero-panel" style="height: calc(100vh - 113px); position:relative; overflow:hidden;">
             {{-- Parallax background --}}
             <div data-jarallax data-speed="0.2" class="jarallax" style="position:absolute; top:0; left:0; right:0; bottom:0; background-image: url({{$background->url}}); {{$background->css}}"></div>
             {{-- Gradient overlay: dark left+bottom, open top-right --}}
