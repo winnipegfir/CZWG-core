@@ -1,4 +1,4 @@
-@if(\App\Services\AcademyLaunchNotice::eligible(Auth::user()))
+@if(\App\Services\AcademyLaunchNotice::eligible(Auth::user()) && \App\Services\AcademyLaunchNotice::withinLaunchWindow())
     <span class="academy-launch-notice" data-academy-launch-notice data-endpoint="{{ route('academy.launch-notice') }}" hidden>New</span>
     @once
         <link rel="stylesheet" href="{{ asset('css/academy-launch-notice.css') }}?v=2">

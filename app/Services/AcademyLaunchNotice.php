@@ -27,7 +27,6 @@ class AcademyLaunchNotice
     public static function eligible(?User $user): bool
     {
         return $user !== null
-            && self::withinLaunchWindow()
             && AcademyVisibility::accessMode() === 'normal'
             && AcademyVisibility::shouldShowNav($user)
             && ! AcademyVisibility::maintenanceMode();
