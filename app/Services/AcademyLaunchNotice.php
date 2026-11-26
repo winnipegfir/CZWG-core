@@ -3,16 +3,31 @@
 namespace App\Services;
 
 use App\Models\Users\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 class AcademyLaunchNotice
 {
     public const MAX_DISPLAYS = 5;
+    // The Academy launch badge is intentionally temporary: it is shown from
+    // launch day through the end of the first month, then disappears for
+    // everyone without requiring a follow-up deployment.
+    public const LAUNCH_DATE = '2026-12-01';
+    public const BADGE_END_DATE = '2027-01-01';
+
+    public static function withinLaunchWindow(): bool
+    {
+        $today = Carbon::today();
+
+        return $today->gte(Carbon::parse(self::LAUNCH_DATE))
+            && $today->lt(Carbon::parse(self::BADGE_END_DATE));
+    }
 
     public static function eligible(?User $user): bool
     {
         return $user !== null
+            && self::withinLaunchWindow()
             && AcademyVisibility::accessMode() === 'normal'
             && AcademyVisibility::shouldShowNav($user)
             && ! AcademyVisibility::maintenanceMode();

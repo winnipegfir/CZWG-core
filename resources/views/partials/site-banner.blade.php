@@ -8,6 +8,9 @@
         'plane' => 'fa-plane',
         'info' => 'fa-info-circle',
         'calendar' => 'fa-calendar-alt',
+        'academy' => 'fa-graduation-cap',
+        'academy_book' => 'fa-book-open',
+        'academy_chalkboard' => 'fa-chalkboard-teacher',
     ];
     $__bannerTheme = in_array($__bannerSettings->bannerTheme ?? '', $__bannerThemes, true) ? $__bannerSettings->bannerTheme : 'winnipeg';
     $__bannerAnimation = in_array($__bannerSettings->bannerAnimation ?? '', $__bannerAnimations, true) ? $__bannerSettings->bannerAnimation : 'none';
